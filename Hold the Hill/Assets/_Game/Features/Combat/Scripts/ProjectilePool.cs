@@ -34,11 +34,28 @@ namespace HoldTheHill.Features.Combat
 
         private void Awake()
         {
+            EnsurePool();
+        }
+
+        /// <summary>
+        /// Builds the pool if it does not exist yet. Returns false when there is no prefab
+        /// to pool.
+        /// </summary>
+        /// <remarks>
+        /// Deliberately lazy rather than Awake-only. A pool created from code has its prefab
+        /// assigned after <c>AddComponent</c>, which is after Awake has already run, so an
+        /// Awake-only build would leave the pool permanently empty.
+        /// </remarks>
+        private bool EnsurePool()
+        {
+            if (_pool != null)
+            {
+                return true;
+            }
+
             if (_prefab == null)
             {
-                Debug.LogError($"[ProjectilePool] '{name}' has no prefab assigned; it cannot spawn anything.", this);
-                enabled = false;
-                return;
+                return false;
             }
 
             _pool = new ObjectPool<Projectile>(
@@ -51,6 +68,7 @@ namespace HoldTheHill.Features.Combat
                 maxSize: Mathf.Max(1, _maxSize));
 
             Prewarm(_prewarmCount);
+            return true;
         }
 
         private void OnDestroy()
@@ -69,18 +87,24 @@ namespace HoldTheHill.Features.Combat
                 return null;
             }
 
+            // Created inactive so Awake does not run before the prefab is assigned.
             var host = new GameObject($"Pool [{prefab.name}]");
+            host.SetActive(false);
+
             var pool = host.AddComponent<ProjectilePool>();
             pool._prefab = prefab;
             pool._prewarmCount = prewarm;
+
+            host.SetActive(true);
             return pool;
         }
 
         /// <summary>Takes a projectile from the pool, creating one if none are spare.</summary>
         public Projectile Get()
         {
-            if (_pool == null)
+            if (!EnsurePool())
             {
+                Debug.LogError($"[ProjectilePool] '{name}' has no prefab assigned; it cannot spawn anything.", this);
                 return null;
             }
 

@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4b9c1f8a204652a135e89d6e4b1049, type: 3}
+  m_Name: GrayboxWaves
+  m_EditorClassIdentifier: Assembly-CSharp::MapWaveDataSO
+  mapId: Graybox
+  waves:
+  - waveName: Graybox Wave 1
+    enemies:
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+  - waveName: Graybox Wave 2
+    enemies:
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+  - waveName: Graybox Wave 3
+    enemies:
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 6374858206219947752, guid: 7a75541af4359bd46a83512f3afcc723, type: 3}
+      delayBeforeNext: 0.8
+      spawnPointOverride: {fileID: 0}

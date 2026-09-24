@@ -1,0 +1,492 @@
+using System.Collections.Generic;
+using HoldTheHill.Features.Combat;
+using HoldTheHill.Features.Enemies;
+using HoldTheHill.Features.Towers;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+namespace HoldTheHill.Sandbox.NillyCtrl
+{
+    /// <summary>
+    /// Generates a gray-box scene for exercising the combat system: a path, a spawner,
+    /// and one tower per weapon type, all built from primitives.
+    /// </summary>
+    /// <remarks>
+    /// Everything here is generated rather than hand-placed so the scene can be rebuilt
+    /// from scratch after a change instead of being repaired by hand, and so it can be
+    /// produced in batch mode without the editor UI.
+    ///
+    /// This lives in <c>_Sandbox/nilly-ctrl/Editor/</c> rather than <c>_Game/Editor/</c>
+    /// on purpose. <c>_Game/Editor/</c> is the <c>HoldTheHill.Editor</c> assembly, which
+    /// cannot see <c>EnemySpawner</c> (that compiles into <c>Assembly-CSharp</c>). A script
+    /// here has no asmdef, so it lands in <c>Assembly-CSharp-Editor</c> and can reach both.
+    /// </remarks>
+    internal static class GrayboxBuilder
+    {
+        private const string SandboxRoot = "Assets/_Sandbox/nilly-ctrl";
+        private const string GrayboxRoot = SandboxRoot + "/Graybox";
+        private const string PrefabRoot = GrayboxRoot + "/Prefabs";
+        private const string ScenePath = GrayboxRoot + "/GrayboxCombatTest.unity";
+        private const string WaveAssetPath = GrayboxRoot + "/GrayboxWaves.asset";
+        private const string LineMaterialPath = GrayboxRoot + "/GrayboxLine.mat";
+
+        // The same S-shaped route the Tools menu builds, in grid cells.
+        private static readonly Vector2Int[] Route =
+        {
+            new Vector2Int(-10, 2), new Vector2Int(-4, 2), new Vector2Int(-4, -3),
+            new Vector2Int(2, -3), new Vector2Int(2, 3), new Vector2Int(9, 3),
+        };
+
+        [MenuItem("Tools/Hold the Hill/Build Graybox Combat Test")]
+        public static void Build()
+        {
+            EnsureFolders();
+
+            Material lineMaterial = CreateLineMaterial();
+            Sprite circle = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Knob.psd");
+            Sprite square = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+
+            // Fragments must exist before the cluster shell that references them.
+            GameObject fragment = BuildFragmentPrefab(circle);
+            GameObject hazard = BuildHazardPrefab(circle);
+            GameObject bullet = BuildBulletPrefab(circle);
+            GameObject homing = BuildHomingPrefab(circle);
+            GameObject mortar = BuildMortarPrefab(circle, fragment, hazard);
+            GameObject ricochet = BuildRicochetPrefab(circle);
+            GameObject enemy = BuildEnemyPrefab(circle);
+
+            MapWaveDataSO waves = BuildWaveAsset(enemy);
+
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            BuildCamera();
+            EnemyPath path = BuildPath();
+            BuildSpawner(path, waves);
+            BuildTowers(path, bullet, homing, mortar, ricochet, lineMaterial, square);
+            BuildReadmeLabel();
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, ScenePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log($"[Graybox] Built {ScenePath}. Open it and press Play.");
+        }
+
+        private static void EnsureFolders()
+        {
+            CreateFolderIfMissing(SandboxRoot, "Graybox");
+            CreateFolderIfMissing(GrayboxRoot, "Prefabs");
+        }
+
+        private static void CreateFolderIfMissing(string parent, string child)
+        {
+            if (!AssetDatabase.IsValidFolder($"{parent}/{child}"))
+            {
+                AssetDatabase.CreateFolder(parent, child);
+            }
+        }
+
+        // ---------- prefabs ----------
+
+        private static GameObject BuildEnemyPrefab(Sprite sprite)
+        {
+            var go = new GameObject("GrayboxEnemy");
+            AddSprite(go, sprite, new Color(0.85f, 0.25f, 0.25f), 0.6f, sortingOrder: 2);
+
+            var collider = go.AddComponent<CircleCollider2D>();
+            collider.radius = 0.3f;
+
+            // Kinematic body so Unity treats these as moving colliders rather than
+            // rebuilding the static collider tree every frame.
+            var body = go.AddComponent<Rigidbody2D>();
+            body.bodyType = RigidbodyType2D.Kinematic;
+            body.gravityScale = 0f;
+
+            EnemyHealth health = go.AddComponent<EnemyHealth>();
+            Apply(health, so =>
+            {
+                so.FindProperty("_maxHealth").floatValue = 40f;
+                so.FindProperty("_despawnDelay").floatValue = 0f;
+            });
+
+            EnemyMover mover = go.AddComponent<EnemyMover>();
+            Apply(mover, so =>
+            {
+                so.FindProperty("_speed").floatValue = 1.4f;
+                so.FindProperty("_onReachEnd").enumValueIndex = (int)EnemyMover.EndBehaviour.Despawn;
+            });
+
+            return SavePrefab(go, "GrayboxEnemy");
+        }
+
+        private static GameObject BuildBulletPrefab(Sprite sprite)
+        {
+            var go = new GameObject("GrayboxBullet");
+            AddSprite(go, sprite, new Color(1f, 0.9f, 0.3f), 0.22f, sortingOrder: 3);
+
+            Projectile p = go.AddComponent<Projectile>();
+            Apply(p, so =>
+            {
+                so.FindProperty("_flightMode").enumValueIndex = (int)FlightMode.Linear;
+                so.FindProperty("_speed").floatValue = 9f;
+                so.FindProperty("_damage").floatValue = 7f;
+                so.FindProperty("_lifetime").floatValue = 3f;
+                so.FindProperty("_hitRadius").floatValue = 0.28f;
+            });
+
+            return SavePrefab(go, "GrayboxBullet");
+        }
+
+        private static GameObject BuildHomingPrefab(Sprite sprite)
+        {
+            var go = new GameObject("GrayboxHomingBullet");
+            AddSprite(go, sprite, new Color(0.4f, 1f, 0.6f), 0.24f, sortingOrder: 3);
+
+            Projectile p = go.AddComponent<Projectile>();
+            Apply(p, so =>
+            {
+                so.FindProperty("_flightMode").enumValueIndex = (int)FlightMode.Homing;
+                so.FindProperty("_speed").floatValue = 5.5f;
+                // Deliberately low, so the shot visibly overshoots and loops back around.
+                so.FindProperty("_turnRate").floatValue = 110f;
+                so.FindProperty("_damage").floatValue = 9f;
+                so.FindProperty("_lifetime").floatValue = 7f;
+                so.FindProperty("_hitRadius").floatValue = 0.3f;
+            });
+
+            return SavePrefab(go, "GrayboxHomingBullet");
+        }
+
+        private static GameObject BuildFragmentPrefab(Sprite sprite)
+        {
+            var go = new GameObject("GrayboxFragment");
+            AddSprite(go, sprite, new Color(1f, 0.6f, 0.2f), 0.16f, sortingOrder: 3);
+
+            Projectile p = go.AddComponent<Projectile>();
+            Apply(p, so =>
+            {
+                so.FindProperty("_flightMode").enumValueIndex = (int)FlightMode.Linear;
+                so.FindProperty("_speed").floatValue = 5f;
+                so.FindProperty("_damage").floatValue = 3f;
+                so.FindProperty("_lifetime").floatValue = 1.1f;
+                so.FindProperty("_hitRadius").floatValue = 0.22f;
+            });
+
+            return SavePrefab(go, "GrayboxFragment");
+        }
+
+        private static GameObject BuildMortarPrefab(Sprite sprite, GameObject fragment, GameObject hazard)
+        {
+            var go = new GameObject("GrayboxMortar");
+            AddSprite(go, sprite, new Color(0.9f, 0.4f, 0.1f), 0.3f, sortingOrder: 3);
+
+            ClusterProjectile p = go.AddComponent<ClusterProjectile>();
+            Apply(p, so =>
+            {
+                so.FindProperty("_flightMode").enumValueIndex = (int)FlightMode.Lobbed;
+                so.FindProperty("_speed").floatValue = 4.5f;
+                so.FindProperty("_arcHeight").floatValue = 2.5f;
+                so.FindProperty("_damage").floatValue = 6f;
+                so.FindProperty("_lifetime").floatValue = 6f;
+                so.FindProperty("_splashRadius").floatValue = 1.2f;
+                so.FindProperty("_splashDamage").floatValue = 5f;
+                so.FindProperty("_hitRadius").floatValue = 0.3f;
+                so.FindProperty("_fragmentCount").intValue = 8;
+                so.FindProperty("_spreadAngle").floatValue = 360f;
+                so.FindProperty("_splitOn").enumValueIndex = (int)ClusterProjectile.SplitTrigger.OnImpact;
+                so.FindProperty("_fragmentPrefab").objectReferenceValue = fragment.GetComponent<Projectile>();
+                so.FindProperty("_groundHazardPrefab").objectReferenceValue = hazard.GetComponent<GroundHazard>();
+                so.FindProperty("_groundHazardRadius").floatValue = 1.1f;
+                so.FindProperty("_groundHazardDuration").floatValue = 4f;
+                so.FindProperty("_groundHazardDamagePerTick").floatValue = 2f;
+            });
+
+            return SavePrefab(go, "GrayboxMortar");
+        }
+
+        private static GameObject BuildRicochetPrefab(Sprite sprite)
+        {
+            var go = new GameObject("GrayboxRicochet");
+            AddSprite(go, sprite, new Color(0.6f, 0.8f, 1f), 0.24f, sortingOrder: 3);
+
+            RicochetProjectile p = go.AddComponent<RicochetProjectile>();
+            Apply(p, so =>
+            {
+                so.FindProperty("_flightMode").enumValueIndex = (int)FlightMode.Linear;
+                so.FindProperty("_speed").floatValue = 10f;
+                so.FindProperty("_damage").floatValue = 8f;
+                so.FindProperty("_lifetime").floatValue = 4f;
+                so.FindProperty("_hitRadius").floatValue = 0.28f;
+                so.FindProperty("_maxBounces").intValue = 3;
+                so.FindProperty("_bounceRange").floatValue = 3.5f;
+                so.FindProperty("_damageFalloff").floatValue = 0.75f;
+            });
+
+            return SavePrefab(go, "GrayboxRicochet");
+        }
+
+        private static GameObject BuildHazardPrefab(Sprite sprite)
+        {
+            var go = new GameObject("GrayboxHazard");
+            AddSprite(go, sprite, new Color(1f, 0.45f, 0.1f, 0.45f), 2.2f, sortingOrder: 0);
+
+            go.AddComponent<CircleCollider2D>();
+            GroundHazard hazard = go.AddComponent<GroundHazard>();
+            Apply(hazard, so =>
+            {
+                so.FindProperty("_radius").floatValue = 1.1f;
+                so.FindProperty("_damagePerTick").floatValue = 2f;
+                so.FindProperty("_tickInterval").floatValue = 0.5f;
+                so.FindProperty("_duration").floatValue = 4f;
+            });
+
+            return SavePrefab(go, "GrayboxHazard");
+        }
+
+        private static MapWaveDataSO BuildWaveAsset(GameObject enemy)
+        {
+            var asset = ScriptableObject.CreateInstance<MapWaveDataSO>();
+            asset.mapId = "Graybox";
+            asset.waves = new List<Wave>();
+
+            // Three waves of increasing size, so the pool and the targeting priorities
+            // both get something to chew on.
+            int[] counts = { 5, 8, 12 };
+            for (int w = 0; w < counts.Length; w++)
+            {
+                var wave = new Wave { waveName = $"Graybox Wave {w + 1}", enemies = new List<EnemySpawnEntry>() };
+                for (int i = 0; i < counts[w]; i++)
+                {
+                    wave.enemies.Add(new EnemySpawnEntry { enemyPrefab = enemy, delayBeforeNext = 0.8f });
+                }
+
+                asset.waves.Add(wave);
+            }
+
+            AssetDatabase.DeleteAsset(WaveAssetPath);
+            AssetDatabase.CreateAsset(asset, WaveAssetPath);
+            return asset;
+        }
+
+        // ---------- scene ----------
+
+        private static void BuildCamera()
+        {
+            var go = new GameObject("Main Camera");
+            go.tag = "MainCamera";
+            go.transform.position = new Vector3(0f, 0f, -10f);
+
+            Camera camera = go.AddComponent<Camera>();
+            camera.orthographic = true;
+            camera.orthographicSize = 8f;
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(0.16f, 0.17f, 0.19f);
+        }
+
+        private static EnemyPath BuildPath()
+        {
+            var go = new GameObject("Enemy Path");
+            EnemyPath path = go.AddComponent<EnemyPath>();
+
+            for (int i = 0; i < Route.Length; i++)
+            {
+                var waypoint = new GameObject($"Waypoint {i}");
+                waypoint.transform.SetParent(go.transform);
+                waypoint.transform.position = new Vector3(Route[i].x + 0.5f, Route[i].y + 0.5f, 0f);
+            }
+
+            return path;
+        }
+
+        private static void BuildSpawner(EnemyPath path, MapWaveDataSO waves)
+        {
+            var go = new GameObject("Enemy Spawner");
+            go.transform.position = new Vector3(Route[0].x + 0.5f, Route[0].y + 0.5f, 0f);
+
+            var container = new GameObject("Spawned Enemies");
+
+            EnemySpawner spawner = go.AddComponent<EnemySpawner>();
+            Apply(spawner, so =>
+            {
+                so.FindProperty("defaultSpawnPoint").objectReferenceValue = go.transform;
+                so.FindProperty("enemyContainer").objectReferenceValue = container.transform;
+                so.FindProperty("activeMapId").stringValue = "Graybox";
+                so.FindProperty("activeMapConfigOverride").objectReferenceValue = waves;
+                so.FindProperty("autoStartFirstWave").boolValue = true;
+                so.FindProperty("requireEnemiesClearedBeforeNextWave").boolValue = false;
+            });
+
+            // Without this the spawner's living-enemy count never goes down.
+            go.AddComponent<EnemySpawnerBridge>();
+        }
+
+        private static void BuildTowers(
+            EnemyPath path,
+            GameObject bullet,
+            GameObject homing,
+            GameObject mortar,
+            GameObject ricochet,
+            Material lineMaterial,
+            Sprite square)
+        {
+            // Positions are all at least 2 units clear of the road so TowerPlacer would
+            // also consider them buildable.
+            MakeProjectileTower("Tower_Linear_First", new Vector2(-7f, 4.5f), square,
+                bullet, TargetingPriority.First, 3.6f, 0.6f, new Color(0.4f, 0.7f, 1f), lineMaterial);
+
+            MakeProjectileTower("Tower_Homing_Closest", new Vector2(-6f, 0.5f), square,
+                homing, TargetingPriority.Closest, 3.8f, 1.1f, new Color(0.4f, 1f, 0.6f), lineMaterial);
+
+            MakeProjectileTower("Tower_Mortar_First", new Vector2(-1.5f, 0f), square,
+                mortar, TargetingPriority.First, 4.2f, 2f, new Color(0.9f, 0.5f, 0.2f), lineMaterial);
+
+            MakeProjectileTower("Tower_Ricochet_Strongest", new Vector2(0f, -5f), square,
+                ricochet, TargetingPriority.Strongest, 3.8f, 1.3f, new Color(0.6f, 0.8f, 1f), lineMaterial);
+
+            GameObject chainTower = MakeProjectileTower("Tower_Chain_Weakest", new Vector2(5f, 1f), square,
+                null, TargetingPriority.Weakest, 3.8f, 1.5f, new Color(0.5f, 0.85f, 1f), lineMaterial);
+            AddChainLightning(chainTower, lineMaterial);
+
+            GameObject beamTower = MakeProjectileTower("Tower_Beam_Closest", new Vector2(6f, 5.5f), square,
+                null, TargetingPriority.Closest, 4f, 1f, new Color(1f, 0.5f, 0.3f), lineMaterial);
+            AddBeam(beamTower, lineMaterial);
+
+            GameObject orbitTower = MakeProjectileTower("Tower_Orbit", new Vector2(-1.5f, -5f), square,
+                null, TargetingPriority.Closest, 2.5f, 1f, new Color(0.7f, 0.6f, 1f), lineMaterial);
+            orbitTower.AddComponent<OrbitingDamageField>();
+        }
+
+        private static GameObject MakeProjectileTower(
+            string name,
+            Vector2 position,
+            Sprite sprite,
+            GameObject projectile,
+            TargetingPriority priority,
+            float range,
+            float fireInterval,
+            Color color,
+            Material lineMaterial)
+        {
+            var go = new GameObject(name);
+            go.transform.position = position;
+            AddSprite(go, sprite, color, 0.8f, sortingOrder: 1);
+
+            Tower tower = go.AddComponent<Tower>();
+            Apply(tower, so =>
+            {
+                so.FindProperty("_range").floatValue = range;
+                so.FindProperty("_fireInterval").floatValue = fireInterval;
+                so.FindProperty("_priority").enumValueIndex = (int)priority;
+
+                if (projectile != null)
+                {
+                    so.FindProperty("_projectilePrefab").objectReferenceValue = projectile.GetComponent<Projectile>();
+                }
+            });
+
+            return go;
+        }
+
+        private static void AddChainLightning(GameObject tower, Material lineMaterial)
+        {
+            ChainLightning chain = tower.AddComponent<ChainLightning>();
+            ConfigureLine(tower.GetComponent<LineRenderer>(), lineMaterial, new Color(0.6f, 0.9f, 1f), 0.08f);
+
+            Apply(chain, so =>
+            {
+                so.FindProperty("_maxTargets").intValue = 4;
+                so.FindProperty("_jumpRange").floatValue = 3.5f;
+                so.FindProperty("_damage").floatValue = 10f;
+            });
+
+            // The tower still needs a firing cadence even with no projectile prefab.
+            Apply(tower.GetComponent<Tower>(), so => so.FindProperty("_chainLightning").objectReferenceValue = chain);
+        }
+
+        private static void AddBeam(GameObject tower, Material lineMaterial)
+        {
+            ContinuousBeam beam = tower.AddComponent<ContinuousBeam>();
+            ConfigureLine(tower.GetComponent<LineRenderer>(), lineMaterial, new Color(1f, 0.55f, 0.25f), 0.15f);
+
+            Apply(beam, so =>
+            {
+                so.FindProperty("_range").floatValue = 4f;
+                so.FindProperty("_baseDamagePerSecond").floatValue = 5f;
+                so.FindProperty("_rampPerSecond").floatValue = 5f;
+                so.FindProperty("_maxDamagePerSecond").floatValue = 25f;
+            });
+
+            Apply(tower.GetComponent<Tower>(), so => so.FindProperty("_continuousBeam").objectReferenceValue = beam);
+        }
+
+        private static void ConfigureLine(LineRenderer line, Material material, Color color, float width)
+        {
+            if (line == null)
+            {
+                return;
+            }
+
+            line.material = material;
+            line.startColor = color;
+            line.endColor = color;
+            line.startWidth = width;
+            line.endWidth = width;
+            line.numCapVertices = 2;
+            line.sortingOrder = 4;
+        }
+
+        private static void BuildReadmeLabel()
+        {
+            // A plain marker object, so whoever opens the scene knows it is generated.
+            var go = new GameObject("--- GENERATED BY Tools > Hold the Hill > Build Graybox Combat Test ---");
+            go.transform.position = Vector3.zero;
+            go.SetActive(false);
+        }
+
+        // ---------- helpers ----------
+
+        private static Material CreateLineMaterial()
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<Material>(LineMaterialPath);
+            if (existing != null)
+            {
+                return existing;
+            }
+
+            Shader shader = Shader.Find("Sprites/Default")
+                            ?? Shader.Find("Universal Render Pipeline/Unlit")
+                            ?? Shader.Find("Unlit/Color");
+
+            var material = new Material(shader) { name = "GrayboxLine" };
+            AssetDatabase.CreateAsset(material, LineMaterialPath);
+            return material;
+        }
+
+        private static void AddSprite(GameObject go, Sprite sprite, Color color, float size, int sortingOrder)
+        {
+            var renderer = go.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            renderer.color = color;
+            renderer.sortingOrder = sortingOrder;
+            renderer.drawMode = SpriteDrawMode.Sliced;
+            renderer.size = new Vector2(size, size);
+        }
+
+        private static GameObject SavePrefab(GameObject instance, string fileName)
+        {
+            string path = $"{PrefabRoot}/{fileName}.prefab";
+            GameObject asset = PrefabUtility.SaveAsPrefabAsset(instance, path);
+            Object.DestroyImmediate(instance);
+            return asset;
+        }
+
+        private static void Apply(Object target, System.Action<SerializedObject> edit)
+        {
+            var so = new SerializedObject(target);
+            edit(so);
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+    }
+}
