@@ -1,0 +1,22 @@
+{
+    "name": "HoldTheHill.Sandbox.Graybox.Tests",
+    "rootNamespace": "HoldTheHill.Sandbox.Graybox.Tests",
+    "references": [
+        "HoldTheHill.Runtime",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
