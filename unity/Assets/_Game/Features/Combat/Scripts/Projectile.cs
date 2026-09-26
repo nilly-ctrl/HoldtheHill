@@ -465,7 +465,7 @@ namespace HoldTheHill.Features.Combat
         /// <summary>True if the target still exists and has health left.</summary>
         protected static bool IsTargetAlive(IDamageable target)
         {
-            return target != null && !target.IsDead && target.Transform != null;
+            return CombatUtil.IsAlive(target);
         }
 
         /// <summary>Current direction of travel.</summary>

@@ -72,7 +72,7 @@ namespace HoldTheHill.Features.Combat
         /// </summary>
         public void Fire(IDamageable first)
         {
-            if (first == null || first.IsDead || first.Transform == null)
+            if (!CombatUtil.IsAlive(first))
             {
                 return;
             }

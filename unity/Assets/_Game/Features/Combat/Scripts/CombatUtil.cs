@@ -44,6 +44,24 @@ namespace HoldTheHill.Features.Combat
             }
         }
 
+        /// <summary>
+        /// True if a target still exists and has health left. Use this rather than a
+        /// plain null check anywhere an <see cref="IDamageable"/> is held across frames.
+        /// </summary>
+        /// <remarks>
+        /// The cast is the whole point. Unity overloads <c>==</c> on
+        /// <see cref="UnityEngine.Object"/> so a destroyed component reports as null,
+        /// but that overload does not apply through an interface reference: a plain
+        /// <c>target != null</c> on an <see cref="IDamageable"/> is an ordinary C#
+        /// reference comparison, so a destroyed enemy sails through it and the next
+        /// member access throws MissingReferenceException. Casting back to Object
+        /// restores the real check.
+        /// </remarks>
+        public static bool IsAlive(IDamageable target)
+        {
+            return target is Object obj && obj != null && !target.IsDead && target.Transform != null;
+        }
+
         /// <summary>Finds the live <see cref="IDamageable"/> owning a collider, if any.</summary>
         public static bool TryGetDamageable(Collider2D collider, out IDamageable damageable)
         {
@@ -55,7 +73,7 @@ namespace HoldTheHill.Features.Combat
 
             // Colliders often sit on a child of the object holding the health component.
             damageable = collider.GetComponentInParent<IDamageable>();
-            return damageable != null && !damageable.IsDead;
+            return IsAlive(damageable);
         }
 
         /// <summary>

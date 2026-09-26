@@ -44,7 +44,7 @@ namespace HoldTheHill.Features.Combat
         private float _tickTimer;
 
         /// <summary>True while the beam is actively burning something.</summary>
-        public bool IsFiring => _target != null;
+        public bool IsFiring => CombatUtil.IsAlive(_target);
 
         /// <summary>Current damage per second, including the ramp.</summary>
         public float CurrentDamagePerSecond =>
@@ -69,7 +69,7 @@ namespace HoldTheHill.Features.Combat
         /// </summary>
         public void Fire(IDamageable target)
         {
-            if (target == null || target.IsDead || target.Transform == null)
+            if (!CombatUtil.IsAlive(target))
             {
                 StopFiring();
                 return;
@@ -103,7 +103,7 @@ namespace HoldTheHill.Features.Combat
                 return;
             }
 
-            if (_target.IsDead || _target.Transform == null)
+            if (!CombatUtil.IsAlive(_target))
             {
                 StopFiring();
                 return;
