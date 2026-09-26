@@ -72,11 +72,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // Fast and fragile, the baseline, and a slow wall. The spread is what makes
             // Strongest and Weakest targeting visibly different from Closest.
             GameObject runner = BuildEnemyPrefab(
-                "GrayboxRunner", circle, health: 70f, speed: 2.4f, new Color(0.95f, 0.75f, 0.2f), 0.45f);
+                "GrayboxRunner", circle, health: 90f, speed: 2.4f, new Color(0.95f, 0.75f, 0.2f), 0.45f);
             GameObject grunt = BuildEnemyPrefab(
-                "GrayboxGrunt", circle, health: 160f, speed: 1.4f, new Color(0.85f, 0.25f, 0.25f), 0.6f);
+                "GrayboxGrunt", circle, health: 240f, speed: 1.4f, new Color(0.85f, 0.25f, 0.25f), 0.6f);
             GameObject brute = BuildEnemyPrefab(
-                "GrayboxBrute", circle, health: 380f, speed: 0.85f, new Color(0.5f, 0.1f, 0.35f), 0.95f);
+                "GrayboxBrute", circle, health: 900f, speed: 0.85f, new Color(0.5f, 0.1f, 0.35f), 0.95f);
 
             MapWaveDataSO waves = BuildWaveAsset(runner, grunt, brute);
 
@@ -287,7 +287,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // 1.5s apart rather than 0.8s. The seven towers put out roughly 50 damage a
             // second between them once they are all engaged, so a faster trickle than this
             // outruns the defence regardless of how much health anything has.
-            const float Gap = 1.5f;
+            const float Gap = 1.1f;
 
             // Wave 1 eases in, wave 2 mixes archetypes so the targeting priorities have
             // something to disagree about, wave 3 leans on the brutes.
@@ -311,7 +311,24 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             AssetDatabase.DeleteAsset(WaveAssetPath);
             AssetDatabase.CreateAsset(asset, WaveAssetPath);
-            return asset;
+
+            // Flush, force the import, then re-load. Assigning a freshly created
+            // instance straight into a scene field serialized as {fileID: 0}: the
+            // asset had no GUID registered yet, the reference came out null, and the
+            // spawner silently found no waves. Nothing errored — the scene just did
+            // nothing when you pressed Play.
+            AssetDatabase.SaveAssets();
+            AssetDatabase.ImportAsset(WaveAssetPath, ImportAssetOptions.ForceSynchronousImport);
+
+            var loaded = AssetDatabase.LoadAssetAtPath<MapWaveDataSO>(WaveAssetPath);
+            if (loaded == null)
+            {
+                throw new System.InvalidOperationException(
+                    $"[Graybox] Could not load the wave asset back from {WaveAssetPath}. " +
+                    "Refusing to build a scene whose spawner would be silently empty.");
+            }
+
+            return loaded;
         }
 
         // ---------- scene ----------
@@ -320,11 +337,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             var go = new GameObject("Main Camera");
             go.tag = "MainCamera";
-            go.transform.position = new Vector3(0f, 0f, -10f);
+
+            // Framed on the path rather than the world origin. The route spans y -2.5
+            // to 3.5, so its centre is 0.5; at size 8 more than half the view was empty
+            // background and the projectiles were too small to follow.
+            go.transform.position = new Vector3(0f, 0.5f, -10f);
 
             Camera camera = go.AddComponent<Camera>();
             camera.orthographic = true;
-            camera.orthographicSize = 8f;
+            camera.orthographicSize = 5.5f;
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = new Color(0.16f, 0.17f, 0.19f);
         }
@@ -346,6 +367,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private static void BuildSpawner(EnemyPath path, MapWaveDataSO waves)
         {
+            // Re-load rather than trusting the reference passed in. The asset is created
+            // before EditorSceneManager.NewScene, and opening a new scene unloads assets
+            // nothing is holding onto - which quietly turns that reference into null.
+            waves = AssetDatabase.LoadAssetAtPath<MapWaveDataSO>(WaveAssetPath);
+            if (waves == null)
+            {
+                throw new System.InvalidOperationException(
+                    $"[Graybox] Wave asset missing at {WaveAssetPath} when wiring the spawner.");
+            }
+
             var go = new GameObject("Enemy Spawner");
             go.transform.position = new Vector3(Route[0].x + 0.5f, Route[0].y + 0.5f, 0f);
 
@@ -361,6 +392,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 so.FindProperty("autoStartFirstWave").boolValue = true;
                 so.FindProperty("requireEnemiesClearedBeforeNextWave").boolValue = false;
             });
+
+            // Read it straight back. An object reference that fails to resolve writes
+            // {fileID: 0} without complaining, which produces a scene that loads fine
+            // and then does absolutely nothing.
+            var check = new SerializedObject(spawner);
+            if (check.FindProperty("activeMapConfigOverride").objectReferenceValue == null)
+            {
+                throw new System.InvalidOperationException(
+                    "[Graybox] The wave asset did not survive assignment to the spawner. " +
+                    "The scene would spawn no enemies.");
+            }
 
             // Without this the spawner's living-enemy count never goes down.
             go.AddComponent<EnemySpawnerBridge>();
@@ -381,20 +423,24 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             // Positions are all at least 2 units clear of the road so TowerPlacer would
             // also consider them buildable.
+            // Fire intervals are tighter than a shipping game would want. In the first
+            // build nothing died for the opening six seconds, which reads as "the towers
+            // are broken" even though they were working. Enemy health goes up to
+            // compensate, so the defence is not made easier overall.
             MakeProjectileTower("Tower_Linear_First", new Vector2(-7f, 4.5f), square,
-                bullet, TargetingPriority.First, 3.6f, 0.6f, new Color(0.4f, 0.7f, 1f), lineMaterial);
+                bullet, TargetingPriority.First, 3.6f, 0.45f, new Color(0.4f, 0.7f, 1f), lineMaterial);
 
             MakeProjectileTower("Tower_Homing_Closest", new Vector2(-6f, 0.5f), square,
-                homing, TargetingPriority.Closest, 3.8f, 1.1f, new Color(0.4f, 1f, 0.6f), lineMaterial);
+                homing, TargetingPriority.Closest, 3.8f, 0.9f, new Color(0.4f, 1f, 0.6f), lineMaterial);
 
             MakeProjectileTower("Tower_Mortar_First", new Vector2(-1.5f, 0f), square,
-                mortar, TargetingPriority.First, 4.2f, 2f, new Color(0.9f, 0.5f, 0.2f), lineMaterial);
+                mortar, TargetingPriority.First, 4.2f, 1.6f, new Color(0.9f, 0.5f, 0.2f), lineMaterial);
 
             MakeProjectileTower("Tower_Ricochet_Strongest", new Vector2(-1.5f, -5f), square,
-                ricochet, TargetingPriority.Strongest, 3.8f, 1.3f, new Color(0.6f, 0.8f, 1f), lineMaterial);
+                ricochet, TargetingPriority.Strongest, 3.8f, 1f, new Color(0.6f, 0.8f, 1f), lineMaterial);
 
             GameObject chainTower = MakeProjectileTower("Tower_Chain_Weakest", new Vector2(5f, 1f), square,
-                null, TargetingPriority.Weakest, 3.8f, 1.5f, new Color(0.5f, 0.85f, 1f), lineMaterial);
+                null, TargetingPriority.Weakest, 3.8f, 1.2f, new Color(0.5f, 0.85f, 1f), lineMaterial);
             AddChainLightning(chainTower, lineMaterial);
 
             GameObject beamTower = MakeProjectileTower("Tower_Beam_Closest", new Vector2(6f, 5.5f), square,
