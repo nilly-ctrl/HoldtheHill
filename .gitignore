@@ -1,9 +1,9 @@
 # Repo-root ignores.
 #
-# The Unity project is NOT here — it is the "Hold the Hill/" subfolder, which has
+# The Unity project is NOT here — it is the "unity/" subfolder, which has
 # its own .gitignore. This file guards the repo root instead.
 #
-# Why it exists: pointing Unity Hub at this folder instead of "Hold the Hill/"
+# Why it exists: pointing Unity Hub at this folder instead of "unity/"
 # does not raise an error. Unity quietly creates a brand new, empty project right
 # here — Assets/, Library/, ProjectSettings/ and the rest — and you end up staring
 # at an empty editor wondering where the game went. It happened on 2026-09-25.

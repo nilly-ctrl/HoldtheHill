@@ -14,7 +14,7 @@ A single-player 2D hybrid tower defense by **Turbulent Towers Studio**: control 
    - Mac: `brew install git-lfs`, then `git lfs install`
    - Windows: included with [Git for Windows](https://git-scm.com/download/win); run `git lfs install`
    - GitHub Desktop already includes it.
-3. **Clone the repo**, then open the `Hold the Hill` folder in Unity Hub (not the repo root).
+3. **Clone the repo**, then open the `unity` folder in Unity Hub (not the repo root).
 4. **Set up Unity scene merging** (recommended). Run this inside the repo, using your Unity path:
    - Mac:
      ```
@@ -35,7 +35,7 @@ A single-player 2D hybrid tower defense by **Turbulent Towers Studio**: control 
 We organize **by feature**: everything for one system (scripts, prefabs, sprites, data) lives together, so it's obvious who's working on what and merges stay small.
 
 ```
-Hold the Hill/Assets/
+unity/Assets/
   _Game/                  all of our game
     Core/                 shared systems every feature can use
       Audio/  Bootstrap/  Events/  GameFeel/  Pooling/  Save/  Utilities/
@@ -130,9 +130,9 @@ Our scripts compile into these assemblies (the `.asmdef` files), which keeps rec
 Aseprite (`.aseprite`/`.ase`), Photoshop, Krita, Affinity, and Blender files can't be merged. If two people edit the same one, someone's work is lost. So these files are **read-only until you lock them**:
 
 ```
-git lfs lock "Hold the Hill/Assets/_Game/Features/Player/Art/Player.aseprite"     # claim it
+git lfs lock "unity/Assets/_Game/Features/Player/Art/Player.aseprite"     # claim it
 git lfs locks                                                                      # see who has what
-git lfs unlock "Hold the Hill/Assets/_Game/Features/Player/Art/Player.aseprite"   # release it after you push
+git lfs unlock "unity/Assets/_Game/Features/Player/Art/Player.aseprite"   # release it after you push
 ```
 
 Only lock what you're actively editing, and unlock as soon as your change is pushed.
