@@ -43,6 +43,7 @@ ExportedObj/
 *.csproj
 *.unityproj
 *.sln
+*.slnx
 *.suo
 *.tmp
 *.user
@@ -102,19 +103,4 @@ InitTestScene*.unity*
 .vscode/
 /Assets/Unity.VisualScripting.Generated/
 Assets/Unity.VisualScripting.Generated.meta
-<<<<<<< Updated upstream:.gitignore
 *.DS_Store
-=======
-*.DS_Store
-
-# Unity project lives in "Hold the Hill/" - anchored rules above only match the repo root
-#*.slnx
-#/Hold the Hill/[Mm]emoryCaptures/
-#/Hold the Hill/[Rr]ecordings/
-#/Hold the Hill/[Aa]ssets/Plugins/Editor/JetBrains*
-#/Hold the Hill/[Aa]ssets/StreamingAssets/aa*
-#/Hold the Hill/[Aa]ssets/AddressableAssetsData/*/*.bin*
-#/Hold the Hill/[Aa]ssets/Addressables_Temp*
-#/Hold the Hill/[Aa]ssets/Unity.VisualScripting.Generated/
-#/Hold the Hill/[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
->>>>>>> Stashed changes:Hold the Hill/.gitignore
