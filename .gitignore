@@ -1,0 +1,40 @@
+# Repo-root ignores.
+#
+# The Unity project is NOT here — it is the "Hold the Hill/" subfolder, which has
+# its own .gitignore. This file guards the repo root instead.
+#
+# Why it exists: pointing Unity Hub at this folder instead of "Hold the Hill/"
+# does not raise an error. Unity quietly creates a brand new, empty project right
+# here — Assets/, Library/, ProjectSettings/ and the rest — and you end up staring
+# at an empty editor wondering where the game went. It happened on 2026-09-25.
+# Every pattern below is anchored with a leading slash so it applies only to the
+# repo root and never to the real project's files.
+
+# A stray Unity project accidentally created at the repo root
+/Assets/
+/Library/
+/Logs/
+/Temp/
+/Obj/
+/Packages/
+/ProjectSettings/
+/UserSettings/
+/MemoryCaptures/
+/Recordings/
+/Build/
+/Builds/
+
+# IDE and solution files generated beside a stray project
+/.vsconfig
+/.vs/
+/*.sln
+/*.slnx
+/*.csproj
+/*.unityproj
+/*.user
+/*.suo
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
