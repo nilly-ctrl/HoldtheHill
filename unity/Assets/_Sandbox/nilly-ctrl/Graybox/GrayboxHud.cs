@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,6 +36,16 @@ public class GrayboxHud : MonoBehaviour
     [SerializeField] private Key _speedKey = Key.T;
 
     private readonly float[] _speeds = { 1f, 2f, 4f };
+
+    // Rebuilt each OnGUI, held as a field so the readout does not allocate a new
+    // list every frame.
+    private readonly List<string> _lines = new List<string>();
+
+    // GUILayout adds its own spacing between labels; LineGap accounts for it when
+    // measuring so the panel is not a few pixels short by the last line.
+    private const float LineGap = 3f;
+    private const float PadX = 12f;
+    private const float PadY = 10f;
 
     private int _spawned;
     private int _killed;
@@ -134,34 +145,80 @@ public class GrayboxHud : MonoBehaviour
 
     private void OnGUI()
     {
-        _style ??= new GUIStyle(GUI.skin.label) { fontSize = 15, richText = true };
+        _style ??= new GUIStyle(GUI.skin.label) { fontSize = 15, richText = true, wordWrap = false };
 
-        GUILayout.BeginArea(new Rect(12f, 12f, 340f, 250f), GUI.skin.box);
-        GUILayout.Label("<b>GRAYBOX COMBAT TEST</b>", _style);
+        _lines.Clear();
+        _lines.Add("<b>GRAYBOX COMBAT TEST</b>");
 
         if (_spawner == null)
         {
-            GUILayout.Label("<color=red>No EnemySpawner in the scene.</color>", _style);
-            GUILayout.EndArea();
-            return;
+            _lines.Add("<color=#ff8080>No EnemySpawner in the scene.</color>");
+        }
+        else
+        {
+            int living = _spawner.LivingEnemyCount;
+
+            // Anything spawned that is neither alive nor killed walked off the path.
+            int leaked = Mathf.Max(0, _spawned - _killed - living);
+
+            _lines.Add($"Wave      {_spawner.CurrentWaveNumber} / {_spawner.TotalWaves}");
+            _lines.Add($"State     {_spawner.CurrentState}");
+            _lines.Add(string.Empty);
+            _lines.Add($"Spawned   {_spawned}");
+            _lines.Add($"Killed    <color=#7fdd7f>{_killed}</color>");
+            _lines.Add($"Leaked    <color=#ff8080>{leaked}</color>");
+            _lines.Add($"Alive     {living}");
+            _lines.Add(string.Empty);
+            _lines.Add($"Time      {_elapsed:0.0}s  (x{_speeds[_speedIndex]:0})");
+            _lines.Add(string.Empty);
+            // One control per line. Putting all three on one row is what overflowed
+            // the box, and a single long line is the first thing to clip on a
+            // high-DPI display where IMGUI renders wider than you expect.
+            _lines.Add($"<b>{_nextWaveKey}</b>  next wave");
+            _lines.Add($"<b>{_speedKey}</b>  cycle speed");
+            _lines.Add($"<b>{_restartKey}</b>  restart");
         }
 
-        int living = _spawner.LivingEnemyCount;
+        // Measure rather than hardcode. CalcSize gives the real rendered box for each
+        // line, including descenders — using style.lineHeight instead cropped the tails
+        // off "Spawning" and "cycle speed", and under-counted the total so the last
+        // line fell outside the panel entirely.
+        float widest = 0f;
+        float height = 0f;
+        float blankHeight = _style.lineHeight * 0.45f;
 
-        // Anything spawned that is neither alive nor killed walked off the end of the path.
-        int leaked = Mathf.Max(0, _spawned - _killed - living);
+        foreach (string line in _lines)
+        {
+            if (line.Length == 0)
+            {
+                height += blankHeight;
+                continue;
+            }
 
-        GUILayout.Label($"Wave     {_spawner.CurrentWaveNumber} / {_spawner.TotalWaves}", _style);
-        GUILayout.Label($"State    {_spawner.CurrentState}", _style);
-        GUILayout.Space(6f);
-        GUILayout.Label($"Spawned  {_spawned}", _style);
-        GUILayout.Label($"Killed   <color=#7fdd7f>{_killed}</color>", _style);
-        GUILayout.Label($"Leaked   <color=#ff8080>{leaked}</color>", _style);
-        GUILayout.Label($"Alive    {living}", _style);
-        GUILayout.Space(6f);
-        GUILayout.Label($"Time     {_elapsed:0.0}s   (x{_speeds[_speedIndex]:0})", _style);
-        GUILayout.Space(8f);
-        GUILayout.Label($"<b>{_nextWaveKey}</b> next wave    <b>{_speedKey}</b> speed    <b>{_restartKey}</b> restart", _style);
+            Vector2 size = _style.CalcSize(new GUIContent(line));
+            widest = Mathf.Max(widest, size.x);
+            height += size.y + LineGap;
+        }
+
+        var box = new Rect(12f, 12f, widest + PadX * 2f, height + PadY * 2f);
+
+        GUI.Box(box, GUIContent.none);
+        GUILayout.BeginArea(new Rect(box.x + PadX, box.y + PadY, box.width, box.height));
+
+        foreach (string line in _lines)
+        {
+            // Labels are left unconstrained on purpose: any explicit height clips
+            // glyphs that hang below the baseline.
+            if (line.Length == 0)
+            {
+                GUILayout.Space(blankHeight);
+            }
+            else
+            {
+                GUILayout.Label(line, _style);
+            }
+        }
+
         GUILayout.EndArea();
     }
 }
