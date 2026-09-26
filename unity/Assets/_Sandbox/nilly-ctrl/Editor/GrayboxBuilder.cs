@@ -39,6 +39,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             new Vector2Int(2, -3), new Vector2Int(2, 3), new Vector2Int(9, 3),
         };
 
+        /// <summary>Opens the gray-box scene, building it first if it is not there yet.</summary>
+        [MenuItem("Tools/Hold the Hill/Open Graybox Combat Test")]
+        public static void Open()
+        {
+            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) == null)
+            {
+                Build();
+                return;
+            }
+
+            EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+        }
+
         [MenuItem("Tools/Hold the Hill/Build Graybox Combat Test")]
         public static void Build()
         {
@@ -55,9 +68,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GameObject homing = BuildHomingPrefab(circle);
             GameObject mortar = BuildMortarPrefab(circle, fragment, hazard);
             GameObject ricochet = BuildRicochetPrefab(circle);
-            GameObject enemy = BuildEnemyPrefab(circle);
 
-            MapWaveDataSO waves = BuildWaveAsset(enemy);
+            // Fast and fragile, the baseline, and a slow wall. The spread is what makes
+            // Strongest and Weakest targeting visibly different from Closest.
+            GameObject runner = BuildEnemyPrefab(
+                "GrayboxRunner", circle, health: 70f, speed: 2.4f, new Color(0.95f, 0.75f, 0.2f), 0.45f);
+            GameObject grunt = BuildEnemyPrefab(
+                "GrayboxGrunt", circle, health: 160f, speed: 1.4f, new Color(0.85f, 0.25f, 0.25f), 0.6f);
+            GameObject brute = BuildEnemyPrefab(
+                "GrayboxBrute", circle, health: 380f, speed: 0.85f, new Color(0.5f, 0.1f, 0.35f), 0.95f);
+
+            MapWaveDataSO waves = BuildWaveAsset(runner, grunt, brute);
 
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             BuildCamera();
@@ -90,13 +111,25 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         // ---------- prefabs ----------
 
-        private static GameObject BuildEnemyPrefab(Sprite sprite)
+        /// <summary>
+        /// Builds one enemy archetype.
+        /// </summary>
+        /// <remarks>
+        /// Three of these exist rather than one, for two reasons. Towers set to Strongest
+        /// or Weakest cannot be told apart from Closest when every enemy has identical
+        /// health, so a single archetype leaves two of the seven towers untestable. And a
+        /// full pass of the path is worth roughly 290 single-target damage, so a 40 HP
+        /// enemy dies about 14% along it — at the first tower, with the other six never
+        /// firing a shot.
+        /// </remarks>
+        private static GameObject BuildEnemyPrefab(
+            string name, Sprite sprite, float health, float speed, Color color, float size)
         {
-            var go = new GameObject("GrayboxEnemy");
-            AddSprite(go, sprite, new Color(0.85f, 0.25f, 0.25f), 0.6f, sortingOrder: 2);
+            var go = new GameObject(name);
+            AddSprite(go, sprite, color, size, sortingOrder: 2);
 
             var collider = go.AddComponent<CircleCollider2D>();
-            collider.radius = 0.3f;
+            collider.radius = size * 0.5f;
 
             // Kinematic body so Unity treats these as moving colliders rather than
             // rebuilding the static collider tree every frame.
@@ -104,21 +137,21 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             body.bodyType = RigidbodyType2D.Kinematic;
             body.gravityScale = 0f;
 
-            EnemyHealth health = go.AddComponent<EnemyHealth>();
-            Apply(health, so =>
+            EnemyHealth enemyHealth = go.AddComponent<EnemyHealth>();
+            Apply(enemyHealth, so =>
             {
-                so.FindProperty("_maxHealth").floatValue = 40f;
+                so.FindProperty("_maxHealth").floatValue = health;
                 so.FindProperty("_despawnDelay").floatValue = 0f;
             });
 
             EnemyMover mover = go.AddComponent<EnemyMover>();
             Apply(mover, so =>
             {
-                so.FindProperty("_speed").floatValue = 1.4f;
+                so.FindProperty("_speed").floatValue = speed;
                 so.FindProperty("_onReachEnd").enumValueIndex = (int)EnemyMover.EndBehaviour.Despawn;
             });
 
-            return SavePrefab(go, "GrayboxEnemy");
+            return SavePrefab(go, name);
         }
 
         private static GameObject BuildBulletPrefab(Sprite sprite)
@@ -245,21 +278,32 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return SavePrefab(go, "GrayboxHazard");
         }
 
-        private static MapWaveDataSO BuildWaveAsset(GameObject enemy)
+        private static MapWaveDataSO BuildWaveAsset(GameObject runner, GameObject grunt, GameObject brute)
         {
             var asset = ScriptableObject.CreateInstance<MapWaveDataSO>();
             asset.mapId = "Graybox";
             asset.waves = new List<Wave>();
 
-            // Three waves of increasing size, so the pool and the targeting priorities
-            // both get something to chew on.
-            int[] counts = { 5, 8, 12 };
-            for (int w = 0; w < counts.Length; w++)
+            // 1.5s apart rather than 0.8s. The seven towers put out roughly 50 damage a
+            // second between them once they are all engaged, so a faster trickle than this
+            // outruns the defence regardless of how much health anything has.
+            const float Gap = 1.5f;
+
+            // Wave 1 eases in, wave 2 mixes archetypes so the targeting priorities have
+            // something to disagree about, wave 3 leans on the brutes.
+            var compositions = new[]
+            {
+                new[] { runner, runner, grunt, runner, grunt, grunt },
+                new[] { grunt, runner, brute, grunt, runner, grunt, brute, runner },
+                new[] { brute, grunt, runner, brute, grunt, grunt, brute, runner, brute, grunt },
+            };
+
+            for (int w = 0; w < compositions.Length; w++)
             {
                 var wave = new Wave { waveName = $"Graybox Wave {w + 1}", enemies = new List<EnemySpawnEntry>() };
-                for (int i = 0; i < counts[w]; i++)
+                foreach (GameObject prefab in compositions[w])
                 {
-                    wave.enemies.Add(new EnemySpawnEntry { enemyPrefab = enemy, delayBeforeNext = 0.8f });
+                    wave.enemies.Add(new EnemySpawnEntry { enemyPrefab = prefab, delayBeforeNext = Gap });
                 }
 
                 asset.waves.Add(wave);
@@ -320,6 +364,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             // Without this the spawner's living-enemy count never goes down.
             go.AddComponent<EnemySpawnerBridge>();
+
+            // The spawner waits to be prompted between waves, so the scene needs something
+            // that can prompt it. The HUD also reports kills and leaks while tuning.
+            go.AddComponent<GrayboxHud>();
         }
 
         private static void BuildTowers(
@@ -342,7 +390,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             MakeProjectileTower("Tower_Mortar_First", new Vector2(-1.5f, 0f), square,
                 mortar, TargetingPriority.First, 4.2f, 2f, new Color(0.9f, 0.5f, 0.2f), lineMaterial);
 
-            MakeProjectileTower("Tower_Ricochet_Strongest", new Vector2(0f, -5f), square,
+            MakeProjectileTower("Tower_Ricochet_Strongest", new Vector2(-1.5f, -5f), square,
                 ricochet, TargetingPriority.Strongest, 3.8f, 1.3f, new Color(0.6f, 0.8f, 1f), lineMaterial);
 
             GameObject chainTower = MakeProjectileTower("Tower_Chain_Weakest", new Vector2(5f, 1f), square,
@@ -353,9 +401,24 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 null, TargetingPriority.Closest, 4f, 1f, new Color(1f, 0.5f, 0.3f), lineMaterial);
             AddBeam(beamTower, lineMaterial);
 
-            GameObject orbitTower = MakeProjectileTower("Tower_Orbit", new Vector2(-1.5f, -5f), square,
+            // The orbiting field hurts things by touching them, so what matters is whether
+            // the wisps physically overlap the road — the tower's own range is irrelevant.
+            // At the old spot (-1.5,-5) the path was 2.5 away and the wisps orbited at 1.5,
+            // so they fell a full unit short and this tower could never hit anything.
+            // 1.5 out from the road, with a 1.6 orbit, puts them just over it.
+            GameObject orbitTower = MakeProjectileTower("Tower_Orbit", new Vector2(0f, -4f), square,
                 null, TargetingPriority.Closest, 2.5f, 1f, new Color(0.7f, 0.6f, 1f), lineMaterial);
-            orbitTower.AddComponent<OrbitingDamageField>();
+
+            OrbitingDamageField field = orbitTower.AddComponent<OrbitingDamageField>();
+            Apply(field, so =>
+            {
+                so.FindProperty("_radius").floatValue = 1.6f;
+                so.FindProperty("_orbiterCount").intValue = 3;
+                so.FindProperty("_angularSpeed").floatValue = 150f;
+                so.FindProperty("_contactDamage").floatValue = 6f;
+                so.FindProperty("_hitCooldown").floatValue = 0.4f;
+                so.FindProperty("_orbiterRadius").floatValue = 0.35f;
+            });
         }
 
         private static GameObject MakeProjectileTower(
