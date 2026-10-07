@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
+using HoldTheHill.Features.Progression;
 using UnityEngine;
 
 namespace HoldTheHill.Features.Towers
@@ -73,6 +74,74 @@ namespace HoldTheHill.Features.Towers
         /// <summary>The enemy currently being shot at, or null.</summary>
         public IDamageable CurrentTarget { get; private set; }
 
+        /// <summary>Total shots/attacks launched by this tower.</summary>
+        public int ShotsFired { get; private set; }
+
+        /// <summary>Total damage inflicted on enemies by this tower.</summary>
+        public float TotalDamageDealt { get; private set; }
+
+        /// <summary>Total enemy kills delivered by this tower.</summary>
+        public int TotalKills { get; private set; }
+
+        /// <summary>Current upgrade level of this tower (1 to 3).</summary>
+        // Serialized so a tower copied with Instantiate (the run checkpoint does this) keeps its level.
+        [field: SerializeField, HideInInspector]
+        public int Level { get; private set; } = 1;
+
+        /// <summary>Maximum upgrade level allowed.</summary>
+        public int MaxLevel => 3;
+
+        /// <summary>True if this tower can be upgraded further.</summary>
+        public bool CanUpgrade => Level < MaxLevel;
+
+        /// <summary>Total Gold spent to build and upgrade this tower.</summary>
+        [field: SerializeField, HideInInspector]
+        public int TotalGoldInvested { get; set; } = 100;
+
+        /// <summary>Gold returned when dismantling this tower (75% to 90% return value based on Skill Tree).</summary>
+        public int RefundValue
+        {
+            get
+            {
+                float pct = UpgradeModifiers.Current.RefundPercentage;
+                return Mathf.RoundToInt(TotalGoldInvested * pct);
+            }
+        }
+
+        /// <summary>Seconds between shots.</summary>
+        public float FireInterval => _fireInterval;
+
+        public void RecordDamage(float amount)
+        {
+            if (amount > 0f)
+            {
+                TotalDamageDealt += amount;
+            }
+        }
+
+        public void RecordKill()
+        {
+            TotalKills++;
+        }
+
+        /// <summary>Upgrades the tower to the next level, boosting stats and visual scale.</summary>
+        public bool Upgrade()
+        {
+            if (!CanUpgrade)
+            {
+                return false;
+            }
+
+            Level++;
+            _range *= 1.18f;
+            _fireInterval = Mathf.Max(0.1f, _fireInterval * 0.85f);
+
+            transform.localScale *= 1.12f;
+
+            SendMessage("OnTowerUpgraded", Level, SendMessageOptions.DontRequireReceiver);
+            return true;
+        }
+
         private void Awake()
         {
             if (_muzzle == null)
@@ -93,6 +162,21 @@ namespace HoldTheHill.Features.Towers
             }
         }
 
+        /// <summary>
+        /// Fire-rate multiplier set by things done to this tower (a web halves it). 1 is normal.
+        /// </summary>
+        public float FireRateScale { get; set; } = 1f;
+
+        /// <summary>Seconds between shots, accounting for Skill Tree bonuses and <see cref="FireRateScale"/>.</summary>
+        public float EffectiveFireInterval
+        {
+            get
+            {
+                float mult = UpgradeModifiers.Current.FireRateMultiplier * Mathf.Max(0.05f, FireRateScale);
+                return Mathf.Max(0.05f, _fireInterval / mult);
+            }
+        }
+
         private void Update()
         {
             CurrentTarget = AcquireTarget();
@@ -105,7 +189,7 @@ namespace HoldTheHill.Features.Towers
                 return;
             }
 
-            _cooldown = _fireInterval;
+            _cooldown = EffectiveFireInterval;
             FireAt(CurrentTarget);
         }
 
@@ -230,6 +314,8 @@ namespace HoldTheHill.Features.Towers
 
         private void FireAt(IDamageable target)
         {
+            ShotsFired++;
+
             if (_chainLightning != null)
             {
                 _chainLightning.Fire(target);
@@ -250,6 +336,7 @@ namespace HoldTheHill.Features.Towers
             Vector2 direction = ((Vector2)target.Transform.position - origin).normalized;
 
             shot.TargetMask = _targetMask;
+            shot.Owner = gameObject;
             shot.Launch(origin, target, direction);
         }
 

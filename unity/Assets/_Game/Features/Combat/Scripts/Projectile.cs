@@ -124,12 +124,24 @@ namespace HoldTheHill.Features.Combat
         private Vector2 _loiterOrigin;
         private bool _isDiving;
 
+        /// <summary>
+        /// Raised each time any shot is launched, after it has been aimed and before it moves.
+        /// A ricochet raises it again on every hop. For effects that follow a shot (trails).
+        /// </summary>
+        public static event System.Action<Projectile> Launched;
+
         /// <summary>The damage this shot deals on a direct hit.</summary>
         public float Damage
         {
             get => _damage;
             set => _damage = Mathf.Max(0f, value);
         }
+
+        /// <summary>
+        /// Who fired this shot, usually the tower. Damage still names the projectile as its
+        /// source (so effects can tell what hit); this is who gets the credit for it.
+        /// </summary>
+        public GameObject Owner { get; set; }
 
         /// <summary>Which layers this shot can hit.</summary>
         public LayerMask TargetMask
@@ -169,6 +181,7 @@ namespace HoldTheHill.Features.Combat
 
             _direction = toTarget.sqrMagnitude > 0.0001f ? toTarget.normalized : Vector2.right;
             FaceDirection(_direction);
+            Launched?.Invoke(this);
 
             switch (_flightMode)
             {
@@ -397,6 +410,7 @@ namespace HoldTheHill.Features.Combat
             }
 
             GroundHazard hazard = Instantiate(_groundHazardPrefab, point, Quaternion.identity);
+            hazard.Owner = Owner;
             hazard.Configure(
                 _groundHazardRadius > 0f ? _groundHazardRadius : hazard.Radius,
                 _groundHazardDamagePerTick,

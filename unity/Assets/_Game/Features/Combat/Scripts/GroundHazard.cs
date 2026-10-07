@@ -40,6 +40,9 @@ namespace HoldTheHill.Features.Combat
         private float _tickTimer;
         private float _remaining;
 
+        /// <summary>Who gets credit for this hazard's damage: whoever fired the shot that left it.</summary>
+        public GameObject Owner { get; set; }
+
         /// <summary>Radius of the damaging patch, in world units.</summary>
         public float Radius => _radius;
 

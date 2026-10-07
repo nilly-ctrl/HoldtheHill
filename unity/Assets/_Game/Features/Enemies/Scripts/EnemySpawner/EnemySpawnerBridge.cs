@@ -2,8 +2,8 @@ using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
 /// <summary>
-/// Forwards enemy deaths to <see cref="EnemySpawner"/> so its living-enemy count stays
-/// accurate. Put this on the same GameObject as the spawner.
+/// Forwards enemy deaths, and enemies leaving by the end of the path, to
+/// <see cref="EnemySpawner"/> so its living-enemy count stays accurate. Put this on the same GameObject as the spawner.
 /// </summary>
 /// <remarks>
 /// This exists because of an assembly boundary, not because the indirection is desirable.
@@ -30,11 +30,30 @@ public class EnemySpawnerBridge : MonoBehaviour
     private void OnEnable()
     {
         EnemyHealth.Defeated += OnEnemyDefeated;
+        EnemyMover.ReachedEnd += OnEnemyReachedEnd;
     }
 
     private void OnDisable()
     {
         EnemyHealth.Defeated -= OnEnemyDefeated;
+        EnemyMover.ReachedEnd -= OnEnemyReachedEnd;
+    }
+
+    // An enemy that walks off the end of the path is gone just as surely as a dead one. Without
+    // this the spawner counted every leak as alive forever, so "all enemies cleared" never came
+    // true after the first leak.
+    private void OnEnemyReachedEnd(GameObject enemy)
+    {
+        if (_spawner == null || enemy == null)
+        {
+            return;
+        }
+
+        var mover = enemy.GetComponent<EnemyMover>();
+        if (mover == null || mover.DespawnsAtEnd)
+        {
+            _spawner.NotifyEnemyDefeated(enemy);
+        }
     }
 
     private void OnEnemyDefeated(GameObject enemy)

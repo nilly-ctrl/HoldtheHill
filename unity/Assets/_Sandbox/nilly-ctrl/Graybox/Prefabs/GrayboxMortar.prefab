@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4916093053237596572}
   - component: {fileID: 7565179877340728465}
+  - component: {fileID: 7875613872221329203}
   - component: {fileID: 4441085307151676247}
   m_Layer: 0
   m_Name: GrayboxMortar
@@ -82,17 +83,33 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 3
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.9, g: 0.4, b: 0.1, a: 1}
+  m_Sprite: {fileID: -1022703345931227201, guid: 5f4d677a8177cc543b3057b1ac410ba9, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 1
+  m_DrawMode: 0
   m_Size: {x: 0.3, y: 0.3}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &7875613872221329203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8334037917845415749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c04b451619a564598c31d1f4877ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.SpriteClipPlayer
+  _library: {fileID: 11400000, guid: af6c200ebfff50f49b1c83f8f95ad8df, type: 2}
+  _key: ProjMortar
+  _defaultClip: Fly
+  _destroyWhenDone: 0
 --- !u!114 &4441085307151676247
 MonoBehaviour:
   m_ObjectHideFlags: 0

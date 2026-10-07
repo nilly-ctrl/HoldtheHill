@@ -1,0 +1,34 @@
+{ "frames": [
+    { "filename": "UiCursorPirate Point 0", "frame": { "x": 0, "y": 0, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 500 },
+    { "filename": "UiCursorPirate Point 1", "frame": { "x": 16, "y": 0, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 500 },
+    { "filename": "UiCursorPirate Click 0", "frame": { "x": 0, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 50 },
+    { "filename": "UiCursorPirate Click 1", "frame": { "x": 16, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 50 },
+    { "filename": "UiCursorPirate Click 2", "frame": { "x": 32, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 50 },
+    { "filename": "UiCursorPirate Build 0", "frame": { "x": 0, "y": 32, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 200 },
+    { "filename": "UiCursorPirate Build 1", "frame": { "x": 16, "y": 32, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 200 },
+    { "filename": "UiCursorPirate Build 2", "frame": { "x": 32, "y": 32, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 200 },
+    { "filename": "UiCursorPirate Build 3", "frame": { "x": 48, "y": 32, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 200 },
+    { "filename": "UiCursorPirate Sell 0", "frame": { "x": 0, "y": 48, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 130 },
+    { "filename": "UiCursorPirate Sell 1", "frame": { "x": 16, "y": 48, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 130 },
+    { "filename": "UiCursorPirate Sell 2", "frame": { "x": 32, "y": 48, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 130 },
+    { "filename": "UiCursorPirate Sell 3", "frame": { "x": 48, "y": 48, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 130 },
+    { "filename": "UiCursorPirate Deny 0", "frame": { "x": 0, "y": 64, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 300 },
+    { "filename": "UiCursorPirate Deny 1", "frame": { "x": 16, "y": 64, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 300 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Mouse cursors; the hot spot is the top-left pixel, pirate theme",
+  "image": "UiCursorPirate.png",
+  "format": "RGBA8888",
+  "size": { "w": 64, "h": 80 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Point", "from": 0, "to": 1, "direction": "forward" },
+    { "name": "Click", "from": 2, "to": 4, "direction": "forward", "repeat": "1" },
+    { "name": "Build", "from": 5, "to": 8, "direction": "forward" },
+    { "name": "Sell", "from": 9, "to": 12, "direction": "forward" },
+    { "name": "Deny", "from": 13, "to": 14, "direction": "forward" }
+  ],
+  "layers": [ { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

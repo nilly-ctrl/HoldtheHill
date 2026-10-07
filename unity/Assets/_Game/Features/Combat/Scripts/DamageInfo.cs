@@ -31,12 +31,16 @@ namespace HoldTheHill.Features.Combat
         /// <summary>Which resistance applies.</summary>
         public DamageType Type;
 
+        /// <summary>True for a critical hit. Purely cosmetic for now: damage popups show it as a crit.</summary>
+        public bool IsCritical;
+
         public DamageInfo(float amount, GameObject source, Vector2 hitPoint, DamageType type = DamageType.Physical)
         {
             Amount = amount;
             Source = source;
             HitPoint = hitPoint;
             Type = type;
+            IsCritical = false;
         }
     }
 }

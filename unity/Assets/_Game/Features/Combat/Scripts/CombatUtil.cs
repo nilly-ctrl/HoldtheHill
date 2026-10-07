@@ -115,6 +115,31 @@ namespace HoldTheHill.Features.Combat
         }
 
         /// <summary>Squared distance between two transforms, for cheap comparisons.</summary>
+        /// <summary>
+        /// Who should be credited for damage from <paramref name="source"/>. Shots and the
+        /// hazards they leave are loose objects, not children of the tower that fired them,
+        /// so they carry an Owner; anything else (a tower's own beam, aura or field) is its own owner.
+        /// </summary>
+        public static GameObject OwnerOf(GameObject source)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            if (source.TryGetComponent(out Projectile projectile) && projectile.Owner != null)
+            {
+                return projectile.Owner;
+            }
+
+            if (source.TryGetComponent(out GroundHazard hazard) && hazard.Owner != null)
+            {
+                return hazard.Owner;
+            }
+
+            return source;
+        }
+
         public static float SqrDistance(Transform a, Transform b)
         {
             return a == null || b == null

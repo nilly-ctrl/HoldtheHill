@@ -10,10 +10,14 @@ GameObject:
   m_Component:
   - component: {fileID: 6446273570777329825}
   - component: {fileID: 9032616662637965449}
+  - component: {fileID: 2171003367618105781}
+  - component: {fileID: 9138391637006167174}
+  - component: {fileID: 5397717663780956075}
   - component: {fileID: 527085788924924680}
   - component: {fileID: 5770331182668721168}
   - component: {fileID: 6389085649223127298}
   - component: {fileID: 7149015546149266201}
+  - component: {fileID: 3899895869552250548}
   m_Layer: 0
   m_Name: GrayboxRunner
   m_TagString: Untagged
@@ -85,17 +89,57 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.95, g: 0.75, b: 0.2, a: 1}
+  m_Sprite: {fileID: -8555713310919016463, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 1
+  m_DrawMode: 0
   m_Size: {x: 0.45, y: 0.45}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &2171003367618105781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5202294430404905958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c04b451619a564598c31d1f4877ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.SpriteClipPlayer
+  _library: {fileID: 11400000, guid: af6c200ebfff50f49b1c83f8f95ad8df, type: 2}
+  _key: EnemyRunner
+  _defaultClip: Walk
+  _destroyWhenDone: 0
+--- !u!114 &9138391637006167174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5202294430404905958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6aab4f8cdca1f428496400e56ba5c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.GrayboxStatusVisuals
+--- !u!114 &5397717663780956075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5202294430404905958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f296666e59e01645ac3a40373037c24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.GrayboxEnemyAnimator
 --- !u!58 &527085788924924680
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -130,7 +174,7 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.03125, y: 0}
   m_Radius: 0.225
 --- !u!50 &5770331182668721168
 Rigidbody2D:
@@ -172,6 +216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: HoldTheHill.Runtime::HoldTheHill.Features.Enemies.EnemyHealth
   _maxHealth: 90
+  _bountyValue: 8
   _despawnDelay: 0
   _deactivateInsteadOfDestroy: 0
 --- !u!114 &7149015546149266201
@@ -191,3 +236,18 @@ MonoBehaviour:
   _arriveDistance: 0.05
   _faceTravelDirection: 0
   _onReachEnd: 0
+--- !u!114 &3899895869552250548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5202294430404905958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8e4f10b0459f744eaf4f3847fbcc580, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.EnemyHealthBar
+  _offset: {x: 0, y: 0.55, z: 0}
+  _size: {x: 38, y: 5}
+  _showOnlyWhenDamaged: 0

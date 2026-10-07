@@ -1,0 +1,18 @@
+{ "frames": [
+    { "filename": "DecorTwigRobot A 0", "frame": { "x": 0, "y": 0, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 1000 },
+    { "filename": "DecorTwigRobot B 0", "frame": { "x": 0, "y": 24, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 1000 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Twigs, robot theme",
+  "image": "DecorTwigRobot.png",
+  "format": "RGBA8888",
+  "size": { "w": 24, "h": 48 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "A", "from": 0, "to": 0, "direction": "forward" },
+    { "name": "B", "from": 1, "to": 1, "direction": "forward" }
+  ],
+  "layers": [ { "name": "Shadow", "opacity": 255, "blendMode": "normal" }, { "name": "Body", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

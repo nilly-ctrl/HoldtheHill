@@ -114,6 +114,7 @@ namespace HoldTheHill.Features.Combat
                 }
 
                 fragment.TargetMask = TargetMask;
+                fragment.Owner = Owner;
                 fragment.Launch(point + dir * _fragmentSpawnOffset, null, dir);
             }
         }

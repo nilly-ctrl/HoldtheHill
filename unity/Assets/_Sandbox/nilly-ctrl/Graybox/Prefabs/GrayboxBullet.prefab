@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2054568426820067987}
   - component: {fileID: 3340414091590680157}
+  - component: {fileID: 7841369429054028554}
   - component: {fileID: 406985019385892837}
   m_Layer: 0
   m_Name: GrayboxBullet
@@ -82,17 +83,33 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 3
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0.9, b: 0.3, a: 1}
+  m_Sprite: {fileID: 2834634518969468871, guid: 5875c3508b1d7d4459339ab4ac9b2cdb, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 1
+  m_DrawMode: 0
   m_Size: {x: 0.22, y: 0.22}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &7841369429054028554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7394594351988649296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c04b451619a564598c31d1f4877ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.SpriteClipPlayer
+  _library: {fileID: 11400000, guid: af6c200ebfff50f49b1c83f8f95ad8df, type: 2}
+  _key: ProjLinear
+  _defaultClip: Fly
+  _destroyWhenDone: 0
 --- !u!114 &406985019385892837
 MonoBehaviour:
   m_ObjectHideFlags: 0

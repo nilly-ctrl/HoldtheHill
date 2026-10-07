@@ -1,0 +1,1283 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fb0f99f1c2f4d546a584cc5ea5f55c0, type: 3}
+  m_Name: GrayboxAnimLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::HoldTheHill.Sandbox.NillyCtrl.SpriteAnimLibrary
+  Sets:
+  - Key: EnemyBrute
+    Clips:
+    - Name: Death
+      Frames:
+      - {fileID: 6453592372629885292, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: -795641449840723805, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: 5789188094223485451, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: -8769643049256352982, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: 8964004349833503919, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: -6573863056024582214, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: -7043012459289751658, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      Durations:
+      - 0.07999992
+      - 0.08000004
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.07999992
+      - 0.07999998
+      Loop: 0
+    - Name: Hurt
+      Frames:
+      - {fileID: 8574928317817474765, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: 1770537438011757094, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      Durations:
+      - 0.060000002
+      - 0.060000002
+      Loop: 0
+    - Name: Walk
+      Frames:
+      - {fileID: 1898096606076462184, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: -659443764689949170, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: -6723394357662557533, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: 907248495275309203, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: 8805439460540259696, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: -5581760366873468165, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: 3708021131648383543, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      - {fileID: 3351237522239561772, guid: f4ba664f02166394d853dd143ad050fa, type: 3}
+      Durations:
+      - 0.12
+      - 0.12
+      - 0.12000002
+      - 0.119999975
+      - 0.120000035
+      - 0.120000005
+      - 0.119999945
+      - 0.120000005
+      Loop: 1
+  - Key: EnemyGrunt
+    Clips:
+    - Name: Death
+      Frames:
+      - {fileID: -5071209257076329421, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      - {fileID: 2717168921081576929, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      - {fileID: -8827485201935924335, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      - {fileID: -8971554638491615616, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      - {fileID: -803717318339275744, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      - {fileID: -3047799605329505253, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      - {fileID: 855541352872847912, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      Durations:
+      - 0.07999998
+      - 0.07999998
+      - 0.07999998
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.07999998
+      Loop: 0
+    - Name: Hurt
+      Frames:
+      - {fileID: 5768041212656099367, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      - {fileID: 3443567626947213692, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      Durations:
+      - 0.060000002
+      - 0.060000002
+      Loop: 0
+    - Name: Walk
+      Frames:
+      - {fileID: 8286306896561965420, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      - {fileID: -3978477651796559858, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      - {fileID: -3254984202097344508, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      - {fileID: 1978783064645357393, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      - {fileID: 4743166198935682766, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      - {fileID: -3359898203279436224, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
+      Durations:
+      - 0.09
+      - 0.09
+      - 0.09
+      - 0.09
+      - 0.089999974
+      - 0.089999974
+      Loop: 1
+  - Key: EnemyHealer
+    Clips:
+    - Name: Death
+      Frames:
+      - {fileID: -7171144645858329031, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: -8057006040744227001, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: -3666377994800596314, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: 7080571927769479600, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: -3849677024848863292, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: -1119054375544372418, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: -2617431126177953226, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      Durations:
+      - 0.07999992
+      - 0.08000004
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.07999992
+      - 0.07999998
+      Loop: 0
+    - Name: Heal
+      Frames:
+      - {fileID: -5545063473648384565, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: -4488272505854001941, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: -1458905036000095883, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: -4506779079948979302, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: 1745859723076141562, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: -231049096560425435, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      Durations:
+      - 0.07999998
+      - 0.07999998
+      - 0.07999998
+      - 0.08000004
+      - 0.07999998
+      - 0.07999998
+      Loop: 0
+    - Name: Hurt
+      Frames:
+      - {fileID: -6725574095429850433, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: -404341550682556197, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      Durations:
+      - 0.059999943
+      - 0.060000002
+      Loop: 0
+    - Name: Walk
+      Frames:
+      - {fileID: 287456898773604828, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: -4411689780810761861, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: -320362613804979266, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: 2218860125834228554, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: 2020758524625157725, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      - {fileID: 7310269632655233856, guid: ff2528f7c44cd2d45bbc091933db61b2, type: 3}
+      Durations:
+      - 0.1
+      - 0.1
+      - 0.10000001
+      - 0.099999994
+      - 0.099999994
+      - 0.100000024
+      Loop: 1
+  - Key: EnemyRunner
+    Clips:
+    - Name: Death
+      Frames:
+      - {fileID: 4160344130230160513, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      - {fileID: -8458588909797899843, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      - {fileID: -2510629436944102308, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      - {fileID: 105161197320452512, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      - {fileID: -1581430673836525196, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      - {fileID: -3265147804493524490, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      - {fileID: -5236970686897506324, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      Durations:
+      - 0.08000001
+      - 0.07999998
+      - 0.08000004
+      - 0.07999998
+      - 0.07999998
+      - 0.07999998
+      - 0.08000001
+      Loop: 0
+    - Name: Hurt
+      Frames:
+      - {fileID: 8378499591683624684, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      - {fileID: -8254685225173885185, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      Durations:
+      - 0.059999973
+      - 0.060000002
+      Loop: 0
+    - Name: Walk
+      Frames:
+      - {fileID: -8555713310919016463, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      - {fileID: -5193208428115541473, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      - {fileID: -6490949643529122727, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      - {fileID: -4348679087437634827, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      - {fileID: -8058886085218724285, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      - {fileID: 3129255299282253224, guid: 4e62c4b066e763540b41bd15e6266d94, type: 3}
+      Durations:
+      - 0.06
+      - 0.06
+      - 0.06000001
+      - 0.059999987
+      - 0.060000017
+      - 0.060000002
+      Loop: 1
+  - Key: EnemyShielded
+    Clips:
+    - Name: Death
+      Frames:
+      - {fileID: 7864421023912024569, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: -9138731730176251378, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 3478507536996323748, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: -60191337187831537, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: -8919735218400009164, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 8247849349921468803, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 4272878086658451819, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      Durations:
+      - 0.08000004
+      - 0.07999992
+      - 0.08000016
+      - 0.07999992
+      - 0.07999992
+      - 0.08000016
+      - 0.07999998
+      Loop: 0
+    - Name: Hurt
+      Frames:
+      - {fileID: -119417797808562005, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: -7830452552128773930, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      Durations:
+      - 0.060000062
+      - 0.060000002
+      Loop: 0
+    - Name: ShieldBreak
+      Frames:
+      - {fileID: 5944477052895251663, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 229388195380124587, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: -3918065743123498521, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 8306855821282284721, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: -5680163571045638776, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 5173187643526300090, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      Durations:
+      - 0.07000005
+      - 0.06999999
+      - 0.06999999
+      - 0.06999993
+      - 0.07000005
+      - 0.06999999
+      Loop: 0
+    - Name: ShieldHit
+      Frames:
+      - {fileID: -4366485485653317996, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: -30544920247900144, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 5280270992948024438, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      Durations:
+      - 0.060000002
+      - 0.060000002
+      - 0.060000002
+      Loop: 0
+    - Name: Walk
+      Frames:
+      - {fileID: -3990257102372640205, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 2882952460541704113, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 87225256522815132, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 2516305381523842872, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: -3794020881978058116, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: -7992674198646160833, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      Durations:
+      - 0.1
+      - 0.1
+      - 0.10000001
+      - 0.099999994
+      - 0.099999994
+      - 0.100000024
+      Loop: 1
+    - Name: WalkBare
+      Frames:
+      - {fileID: -269034568979711844, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 5142036613167709531, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 5458035067807290202, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 7487060786314266238, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: 8929718856455178417, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      - {fileID: -8408240351939864502, guid: ed6f1f2b7f6c81c49900feeec3923477, type: 3}
+      Durations:
+      - 0.099999905
+      - 0.100000024
+      - 0.100000024
+      - 0.100000024
+      - 0.100000024
+      - 0.100000024
+      Loop: 1
+  - Key: EnemySplitter
+    Clips:
+    - Name: Death
+      Frames:
+      - {fileID: -6267832911201695813, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      - {fileID: 7642909479271551448, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      - {fileID: -5986005130785176446, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      - {fileID: -253093940695598053, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      - {fileID: 430242602874291822, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      - {fileID: -4788435753965870874, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      - {fileID: 4697899414525090592, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      Durations:
+      - 0.07999998
+      - 0.07999998
+      - 0.07999998
+      - 0.08000004
+      - 0.07999998
+      - 0.08000004
+      - 0.07999998
+      Loop: 0
+    - Name: Hurt
+      Frames:
+      - {fileID: 4961962096537960711, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      - {fileID: 5569757699356874093, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      Durations:
+      - 0.060000032
+      - 0.060000002
+      Loop: 0
+    - Name: Walk
+      Frames:
+      - {fileID: -3545408055144341958, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      - {fileID: -991582968105466871, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      - {fileID: 3350097025452721862, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      - {fileID: -6326912404435172285, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      - {fileID: 3900220971286689348, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      - {fileID: -4468555448001490771, guid: 2b291412e29de4f4ab0ca76f158cb4ae, type: 3}
+      Durations:
+      - 0.08
+      - 0.08
+      - 0.08
+      - 0.08
+      - 0.08000001
+      - 0.08000001
+      Loop: 1
+  - Key: EnemySwarm
+    Clips:
+    - Name: Death
+      Frames:
+      - {fileID: -3516058333806478281, guid: 5382f4de3419073409182b442c76a996, type: 3}
+      - {fileID: 3375713640770422616, guid: 5382f4de3419073409182b442c76a996, type: 3}
+      - {fileID: -365601917033123441, guid: 5382f4de3419073409182b442c76a996, type: 3}
+      - {fileID: 5835103277874076116, guid: 5382f4de3419073409182b442c76a996, type: 3}
+      - {fileID: -295438764655841965, guid: 5382f4de3419073409182b442c76a996, type: 3}
+      Durations:
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      Loop: 0
+    - Name: Hurt
+      Frames:
+      - {fileID: -4420675876132803747, guid: 5382f4de3419073409182b442c76a996, type: 3}
+      - {fileID: -2550212656357975039, guid: 5382f4de3419073409182b442c76a996, type: 3}
+      Durations:
+      - 0.060000017
+      - 0.060000002
+      Loop: 0
+    - Name: Walk
+      Frames:
+      - {fileID: -6559859145771845502, guid: 5382f4de3419073409182b442c76a996, type: 3}
+      - {fileID: -4864446447672833837, guid: 5382f4de3419073409182b442c76a996, type: 3}
+      - {fileID: -4936025737696278922, guid: 5382f4de3419073409182b442c76a996, type: 3}
+      - {fileID: 2850103829021789447, guid: 5382f4de3419073409182b442c76a996, type: 3}
+      Durations:
+      - 0.06
+      - 0.06
+      - 0.06000001
+      - 0.060000002
+      Loop: 1
+  - Key: FxBlast
+    Clips:
+    - Name: Blast
+      Frames:
+      - {fileID: 3329386702661514258, guid: e0e406fa81fc4004388eb73b81d0882c, type: 3}
+      - {fileID: 7465759084264256812, guid: e0e406fa81fc4004388eb73b81d0882c, type: 3}
+      - {fileID: 2286818033175657946, guid: e0e406fa81fc4004388eb73b81d0882c, type: 3}
+      - {fileID: 8474421936306319683, guid: e0e406fa81fc4004388eb73b81d0882c, type: 3}
+      - {fileID: -8291160158358994702, guid: e0e406fa81fc4004388eb73b81d0882c, type: 3}
+      - {fileID: -6065715350965962486, guid: e0e406fa81fc4004388eb73b81d0882c, type: 3}
+      Durations:
+      - 0.065
+      - 0.065
+      - 0.065
+      - 0.065
+      - 0.065
+      - 0.065
+      Loop: 0
+  - Key: FxBuild
+    Clips:
+    - Name: Rise
+      Frames:
+      - {fileID: -3009715945779967500, guid: c85a7cb3c1d3ca1408976452cf02242f, type: 3}
+      - {fileID: -8733895669807827607, guid: c85a7cb3c1d3ca1408976452cf02242f, type: 3}
+      - {fileID: -3949777631666174346, guid: c85a7cb3c1d3ca1408976452cf02242f, type: 3}
+      - {fileID: 8574970673191827146, guid: c85a7cb3c1d3ca1408976452cf02242f, type: 3}
+      - {fileID: 2847322809417820782, guid: c85a7cb3c1d3ca1408976452cf02242f, type: 3}
+      - {fileID: 593174746964304670, guid: c85a7cb3c1d3ca1408976452cf02242f, type: 3}
+      Durations:
+      - 0.06
+      - 0.06
+      - 0.06000001
+      - 0.059999987
+      - 0.060000017
+      - 0.060000002
+      Loop: 0
+    - Name: Sell
+      Frames:
+      - {fileID: -358265317120691671, guid: c85a7cb3c1d3ca1408976452cf02242f, type: 3}
+      - {fileID: 6060281993247723356, guid: c85a7cb3c1d3ca1408976452cf02242f, type: 3}
+      - {fileID: -1286494140324413684, guid: c85a7cb3c1d3ca1408976452cf02242f, type: 3}
+      - {fileID: 3383332611706281685, guid: c85a7cb3c1d3ca1408976452cf02242f, type: 3}
+      - {fileID: 4636010174092722571, guid: c85a7cb3c1d3ca1408976452cf02242f, type: 3}
+      - {fileID: -1217778607470039968, guid: c85a7cb3c1d3ca1408976452cf02242f, type: 3}
+      Durations:
+      - 0.059999973
+      - 0.060000002
+      - 0.060000032
+      - 0.060000002
+      - 0.060000002
+      - 0.060000002
+      Loop: 0
+  - Key: FxFrostPulse
+    Clips:
+    - Name: Pulse
+      Frames:
+      - {fileID: 1705437464093605366, guid: 77235e0095e14694dad092254d4ef7f0, type: 3}
+      - {fileID: 2591000284841849055, guid: 77235e0095e14694dad092254d4ef7f0, type: 3}
+      - {fileID: -9061709286131543062, guid: 77235e0095e14694dad092254d4ef7f0, type: 3}
+      - {fileID: 2269775882834558288, guid: 77235e0095e14694dad092254d4ef7f0, type: 3}
+      - {fileID: -9135828342835635086, guid: 77235e0095e14694dad092254d4ef7f0, type: 3}
+      - {fileID: 3490885002123871329, guid: 77235e0095e14694dad092254d4ef7f0, type: 3}
+      - {fileID: -861086607722707592, guid: 77235e0095e14694dad092254d4ef7f0, type: 3}
+      - {fileID: 298457361890786737, guid: 77235e0095e14694dad092254d4ef7f0, type: 3}
+      Durations:
+      - 0.06
+      - 0.06
+      - 0.06000001
+      - 0.059999987
+      - 0.060000017
+      - 0.060000002
+      - 0.059999973
+      - 0.060000002
+      Loop: 0
+  - Key: FxHealPulse
+    Clips:
+    - Name: Pulse
+      Frames:
+      - {fileID: 4982143471209010821, guid: 255d68cff74a6104a95028095f4d4c01, type: 3}
+      - {fileID: -2101218737631976676, guid: 255d68cff74a6104a95028095f4d4c01, type: 3}
+      - {fileID: 7828197205542058864, guid: 255d68cff74a6104a95028095f4d4c01, type: 3}
+      - {fileID: 362421424367246633, guid: 255d68cff74a6104a95028095f4d4c01, type: 3}
+      - {fileID: 8063371838574819178, guid: 255d68cff74a6104a95028095f4d4c01, type: 3}
+      - {fileID: 5443942456940219631, guid: 255d68cff74a6104a95028095f4d4c01, type: 3}
+      - {fileID: -8020931335552053630, guid: 255d68cff74a6104a95028095f4d4c01, type: 3}
+      Durations:
+      - 0.07
+      - 0.07
+      - 0.06999999
+      - 0.07000001
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      Loop: 0
+  - Key: FxImpact
+    Clips:
+    - Name: Acid
+      Frames:
+      - {fileID: 4026464810947856950, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: -1111946783913741047, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: 8815422121713139238, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: 4346600500015437411, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: -7573660948166554912, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      Durations:
+      - 0.06
+      - 0.06
+      - 0.06000001
+      - 0.059999987
+      - 0.059999987
+      Loop: 0
+    - Name: Pop
+      Frames:
+      - {fileID: -4367152928252562897, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: -4516608916899878237, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: -883719642605855529, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: 5676773041723292718, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      Durations:
+      - 0.055000007
+      - 0.055000007
+      - 0.055000007
+      - 0.055000007
+      Loop: 0
+    - Name: Scratch
+      Frames:
+      - {fileID: -9100395934631426017, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: 5615771298588577010, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: -8843876443230428217, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      Durations:
+      - 0.059999943
+      - 0.060000062
+      - 0.060000002
+      Loop: 0
+    - Name: Sizzle
+      Frames:
+      - {fileID: 6484482050172060420, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: -7583090798936392119, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: 1366873656186126441, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      Durations:
+      - 0.060000002
+      - 0.060000002
+      - 0.060000002
+      Loop: 0
+    - Name: Spark
+      Frames:
+      - {fileID: -3461075275428518732, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: -4935053046912016424, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: -1969558218427267767, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: -4572236100133338180, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      Durations:
+      - 0.049999982
+      - 0.050000012
+      - 0.049999982
+      - 0.049999997
+      Loop: 0
+    - Name: Zap
+      Frames:
+      - {fileID: 7923490756373847506, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: 4595837004450455453, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: -1384088125551393103, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      - {fileID: -4794548297181883904, guid: 47203ef06085d5147bc0c8bbae87dfee, type: 3}
+      Durations:
+      - 0.044999957
+      - 0.045000017
+      - 0.045000017
+      - 0.045
+      Loop: 0
+  - Key: FxMine
+    Clips:
+    - Name: Armed
+      Frames:
+      - {fileID: 1914979861118717454, guid: c2a5ea17a3c377c46ab35694e7d8dac8, type: 3}
+      - {fileID: -3749980095562079406, guid: c2a5ea17a3c377c46ab35694e7d8dac8, type: 3}
+      Durations:
+      - 0.3
+      - 0.3
+      Loop: 1
+    - Name: Explode
+      Frames:
+      - {fileID: 2218092389193336517, guid: c2a5ea17a3c377c46ab35694e7d8dac8, type: 3}
+      - {fileID: -7334091149631894121, guid: c2a5ea17a3c377c46ab35694e7d8dac8, type: 3}
+      - {fileID: 5386289088251369223, guid: c2a5ea17a3c377c46ab35694e7d8dac8, type: 3}
+      - {fileID: 1170487671929571995, guid: c2a5ea17a3c377c46ab35694e7d8dac8, type: 3}
+      - {fileID: -6392091089272858477, guid: c2a5ea17a3c377c46ab35694e7d8dac8, type: 3}
+      - {fileID: 7600254312419725365, guid: c2a5ea17a3c377c46ab35694e7d8dac8, type: 3}
+      - {fileID: 7823053150950966067, guid: c2a5ea17a3c377c46ab35694e7d8dac8, type: 3}
+      Durations:
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      Loop: 0
+  - Key: FxOrbiter
+    Clips:
+    - Name: Fly
+      Frames:
+      - {fileID: -8142285105510145075, guid: a510218f57a3ffe4e9b31cc7e6c6b0f5, type: 3}
+      - {fileID: 7390233266043910910, guid: a510218f57a3ffe4e9b31cc7e6c6b0f5, type: 3}
+      - {fileID: -4599031045965704757, guid: a510218f57a3ffe4e9b31cc7e6c6b0f5, type: 3}
+      - {fileID: -1870338745639469388, guid: a510218f57a3ffe4e9b31cc7e6c6b0f5, type: 3}
+      Durations:
+      - 0.07
+      - 0.07
+      - 0.06999999
+      - 0.07000001
+      Loop: 1
+  - Key: FxShockwave
+    Clips:
+    - Name: Blast
+      Frames:
+      - {fileID: -8418261767447633695, guid: 7fe35afe6448fb7479c726e87e49e8da, type: 3}
+      - {fileID: 762603394855241649, guid: 7fe35afe6448fb7479c726e87e49e8da, type: 3}
+      - {fileID: -3177745237420373870, guid: 7fe35afe6448fb7479c726e87e49e8da, type: 3}
+      - {fileID: 7435441481712670425, guid: 7fe35afe6448fb7479c726e87e49e8da, type: 3}
+      - {fileID: -9169692564405579035, guid: 7fe35afe6448fb7479c726e87e49e8da, type: 3}
+      - {fileID: 9026274518350188223, guid: 7fe35afe6448fb7479c726e87e49e8da, type: 3}
+      - {fileID: 8926421165111042444, guid: 7fe35afe6448fb7479c726e87e49e8da, type: 3}
+      Durations:
+      - 0.06
+      - 0.06
+      - 0.06000001
+      - 0.059999987
+      - 0.060000017
+      - 0.060000002
+      - 0.060000002
+      Loop: 0
+  - Key: FxStatus
+    Clips:
+    - Name: Burn
+      Frames:
+      - {fileID: 3359958443006051628, guid: b0ccae4a08ae6974f9e40b693ec366d7, type: 3}
+      - {fileID: -6523147655252317697, guid: b0ccae4a08ae6974f9e40b693ec366d7, type: 3}
+      - {fileID: 2505362142721884484, guid: b0ccae4a08ae6974f9e40b693ec366d7, type: 3}
+      - {fileID: 7981991092034363442, guid: b0ccae4a08ae6974f9e40b693ec366d7, type: 3}
+      Durations:
+      - 0.120000035
+      - 0.120000005
+      - 0.119999945
+      - 0.120000005
+      Loop: 1
+    - Name: Poison
+      Frames:
+      - {fileID: 5217181436142039873, guid: b0ccae4a08ae6974f9e40b693ec366d7, type: 3}
+      - {fileID: -5139312026990855076, guid: b0ccae4a08ae6974f9e40b693ec366d7, type: 3}
+      - {fileID: 6588018673435356423, guid: b0ccae4a08ae6974f9e40b693ec366d7, type: 3}
+      - {fileID: 3605767459822833305, guid: b0ccae4a08ae6974f9e40b693ec366d7, type: 3}
+      Durations:
+      - 0.120000064
+      - 0.120000005
+      - 0.120000005
+      - 0.120000005
+      Loop: 1
+    - Name: Slow
+      Frames:
+      - {fileID: -2845220522118705572, guid: b0ccae4a08ae6974f9e40b693ec366d7, type: 3}
+      - {fileID: -6426704849349123693, guid: b0ccae4a08ae6974f9e40b693ec366d7, type: 3}
+      - {fileID: -9188930891461423808, guid: b0ccae4a08ae6974f9e40b693ec366d7, type: 3}
+      - {fileID: 8745606166762840254, guid: b0ccae4a08ae6974f9e40b693ec366d7, type: 3}
+      Durations:
+      - 0.12
+      - 0.12
+      - 0.12000002
+      - 0.120000005
+      Loop: 1
+  - Key: FxTier
+    Clips:
+    - Name: Tier2
+      Frames:
+      - {fileID: -3676686569923757684, guid: 689ec1cf9d015ee428d2da1bb7880259, type: 3}
+      - {fileID: -8612082788785049379, guid: 689ec1cf9d015ee428d2da1bb7880259, type: 3}
+      - {fileID: -1735883309062500145, guid: 689ec1cf9d015ee428d2da1bb7880259, type: 3}
+      - {fileID: 3938507821240887185, guid: 689ec1cf9d015ee428d2da1bb7880259, type: 3}
+      Durations:
+      - 0.16
+      - 0.16
+      - 0.16
+      - 0.16
+      Loop: 1
+    - Name: Tier3
+      Frames:
+      - {fileID: -1998652533625098489, guid: 689ec1cf9d015ee428d2da1bb7880259, type: 3}
+      - {fileID: -786945841594096703, guid: 689ec1cf9d015ee428d2da1bb7880259, type: 3}
+      - {fileID: -4829133274334448701, guid: 689ec1cf9d015ee428d2da1bb7880259, type: 3}
+      - {fileID: -8401042918085005742, guid: 689ec1cf9d015ee428d2da1bb7880259, type: 3}
+      Durations:
+      - 0.16000003
+      - 0.15999997
+      - 0.16000003
+      - 0.15999997
+      Loop: 1
+  - Key: FxHazard
+    Clips:
+    - Name: Burn
+      Frames:
+      - {fileID: 8861509510238125237, guid: eaccf4d1069783f43aa35eac0fb6b239, type: 3}
+      - {fileID: -7700542900755965086, guid: eaccf4d1069783f43aa35eac0fb6b239, type: 3}
+      - {fileID: -4141208291217090561, guid: eaccf4d1069783f43aa35eac0fb6b239, type: 3}
+      - {fileID: 3601870726026562544, guid: eaccf4d1069783f43aa35eac0fb6b239, type: 3}
+      Durations:
+      - 0.1
+      - 0.1
+      - 0.10000001
+      - 0.099999994
+      Loop: 1
+  - Key: ProjFragment
+    Clips:
+    - Name: Fly
+      Frames:
+      - {fileID: 5745435749299732232, guid: 34cc2035fd9a7c94f9cc89b825288c40, type: 3}
+      - {fileID: -4112155803192217103, guid: 34cc2035fd9a7c94f9cc89b825288c40, type: 3}
+      Durations:
+      - 0.05
+      - 0.05
+      Loop: 1
+  - Key: ProjHoming
+    Clips:
+    - Name: Fly
+      Frames:
+      - {fileID: 5759516389802393337, guid: e081805cde9693a4699fdd536dd9212b, type: 3}
+      - {fileID: 1878822661087627315, guid: e081805cde9693a4699fdd536dd9212b, type: 3}
+      Durations:
+      - 0.05
+      - 0.05
+      Loop: 1
+  - Key: ProjLinear
+    Clips:
+    - Name: Fly
+      Frames:
+      - {fileID: 2834634518969468871, guid: 5875c3508b1d7d4459339ab4ac9b2cdb, type: 3}
+      - {fileID: -2930827430183675461, guid: 5875c3508b1d7d4459339ab4ac9b2cdb, type: 3}
+      - {fileID: 2062213521983577836, guid: 5875c3508b1d7d4459339ab4ac9b2cdb, type: 3}
+      - {fileID: -1747826740349001624, guid: 5875c3508b1d7d4459339ab4ac9b2cdb, type: 3}
+      Durations:
+      - 0.06
+      - 0.06
+      - 0.06000001
+      - 0.060000002
+      Loop: 1
+  - Key: ProjMortar
+    Clips:
+    - Name: Fly
+      Frames:
+      - {fileID: -1022703345931227201, guid: 5f4d677a8177cc543b3057b1ac410ba9, type: 3}
+      - {fileID: 2507201436964470404, guid: 5f4d677a8177cc543b3057b1ac410ba9, type: 3}
+      - {fileID: 1621420132295375048, guid: 5f4d677a8177cc543b3057b1ac410ba9, type: 3}
+      - {fileID: -3374817736607957085, guid: 5f4d677a8177cc543b3057b1ac410ba9, type: 3}
+      Durations:
+      - 0.08
+      - 0.08
+      - 0.08
+      - 0.08
+      Loop: 1
+  - Key: ProjRicochet
+    Clips:
+    - Name: Fly
+      Frames:
+      - {fileID: -478109768684132076, guid: 93597c0d4b2fb5548b096cc7499b9f01, type: 3}
+      - {fileID: -8058064786556218914, guid: 93597c0d4b2fb5548b096cc7499b9f01, type: 3}
+      - {fileID: -4608612425357778072, guid: 93597c0d4b2fb5548b096cc7499b9f01, type: 3}
+      - {fileID: -675246146054833900, guid: 93597c0d4b2fb5548b096cc7499b9f01, type: 3}
+      Durations:
+      - 0.05
+      - 0.05
+      - 0.050000004
+      - 0.049999997
+      Loop: 1
+  - Key: PropBurrow
+    Clips:
+    - Name: Idle
+      Frames:
+      - {fileID: -4715366075523079043, guid: 3138599362c7b8f46957ee0419d787e9, type: 3}
+      - {fileID: 8242074275840658159, guid: 3138599362c7b8f46957ee0419d787e9, type: 3}
+      Durations:
+      - 0.9
+      - 0.9
+      Loop: 1
+    - Name: Spawn
+      Frames:
+      - {fileID: 8972774329596458924, guid: 3138599362c7b8f46957ee0419d787e9, type: 3}
+      - {fileID: 5032263641933725889, guid: 3138599362c7b8f46957ee0419d787e9, type: 3}
+      - {fileID: 5370497645029909803, guid: 3138599362c7b8f46957ee0419d787e9, type: 3}
+      - {fileID: 3244712269503577910, guid: 3138599362c7b8f46957ee0419d787e9, type: 3}
+      - {fileID: 1778766117728534943, guid: 3138599362c7b8f46957ee0419d787e9, type: 3}
+      Durations:
+      - 0.060000062
+      - 0.059999943
+      - 0.060000062
+      - 0.059999943
+      - 0.060000002
+      Loop: 0
+  - Key: PropHill
+    Clips:
+    - Name: Critical
+      Frames:
+      - {fileID: 8280164858741718950, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      - {fileID: -9192652324914951452, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      - {fileID: 2216267837090027745, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      - {fileID: 4358138708615781332, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      Durations:
+      - 0.17999995
+      - 0.17999995
+      - 0.18000007
+      - 0.18
+      Loop: 1
+    - Name: Damaged
+      Frames:
+      - {fileID: -903686501174099022, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      - {fileID: -867483006702301599, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      - {fileID: 8183195123964210371, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      - {fileID: -8197227435984652671, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      Durations:
+      - 0.17999995
+      - 0.18000007
+      - 0.17999995
+      - 0.18
+      Loop: 1
+    - Name: Destroyed
+      Frames:
+      - {fileID: -3653734175712668818, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      - {fileID: -5062957907345576734, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      - {fileID: -5994941926553795164, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      - {fileID: -975422835031455193, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      Durations:
+      - 0.17999983
+      - 0.18000007
+      - 0.18000007
+      - 0.18
+      Loop: 1
+    - Name: Healthy
+      Frames:
+      - {fileID: 1282424801822854371, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      - {fileID: 2747260884475213853, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      - {fileID: 240290816451073611, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      - {fileID: -8735592164624505309, guid: 7ccd2c99875417b4bb4fb8ba6418ead6, type: 3}
+      Durations:
+      - 0.18
+      - 0.18
+      - 0.18
+      - 0.18
+      Loop: 1
+  - Key: TowerBeam
+    Clips:
+    - Name: Attack
+      Frames:
+      - {fileID: -8112976330935083424, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: 9192181828076527310, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: -4431443550020563500, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: -3765762009980011986, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: -4064546961762415748, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: 2661691454356866694, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      Durations:
+      - 0.06999999
+      - 0.06999999
+      - 0.07000005
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      Loop: 0
+    - Name: Idle
+      Frames:
+      - {fileID: -4963062806528188638, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: -3982296732590218718, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: 3559356961686110669, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: -92165426077432375, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      Durations:
+      - 0.16
+      - 0.16
+      - 0.16
+      - 0.16
+      Loop: 1
+    - Name: Upgrade
+      Frames:
+      - {fileID: 8500115513662802304, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: 7450673792631725368, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: 2310944532114283015, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: -7224647013376430532, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: -6533610289196085016, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      - {fileID: -3982964560367432729, guid: bcca47013a8a1854dbf31a53455145f9, type: 3}
+      Durations:
+      - 0.08000004
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.08000004
+      - 0.07999998
+      Loop: 0
+  - Key: TowerChain
+    Clips:
+    - Name: Attack
+      Frames:
+      - {fileID: 3717178664243066878, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: 4761895300259599407, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: -8761154098530341714, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: 2603149280898540430, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: -4511561337916339615, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: -2530199153121947198, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      Durations:
+      - 0.060000002
+      - 0.060000002
+      - 0.060000002
+      - 0.060000002
+      - 0.060000002
+      - 0.060000002
+      Loop: 0
+    - Name: Idle
+      Frames:
+      - {fileID: 7149903230063754657, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: -8626965375517463294, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: 762381006174501779, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: 4558855352845510365, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      Durations:
+      - 0.16
+      - 0.16
+      - 0.16
+      - 0.16
+      Loop: 1
+    - Name: Upgrade
+      Frames:
+      - {fileID: -2640767528826160261, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: 8379464176455803219, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: 4379312481643623375, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: 4851149579349140202, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: 1354727833188213985, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      - {fileID: 3633019926303470026, guid: e8e5f47b3de4db543ace669939c95fc3, type: 3}
+      Durations:
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.08000004
+      - 0.07999992
+      - 0.07999998
+      Loop: 0
+  - Key: TowerFrostAura
+    Clips:
+    - Name: Attack
+      Frames:
+      - {fileID: 5077918364668094791, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: -1463257019877114611, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: 4926949591920676705, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: 6541794626329837165, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: -4160750209051652474, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: -6163635387659732607, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      Durations:
+      - 0.060000002
+      - 0.060000002
+      - 0.060000002
+      - 0.060000002
+      - 0.060000002
+      - 0.060000002
+      Loop: 0
+    - Name: Idle
+      Frames:
+      - {fileID: -79867283808635212, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: -5716134485116350475, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: -683320304982624398, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: 5497206297848069303, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      Durations:
+      - 0.16
+      - 0.16
+      - 0.16
+      - 0.16
+      Loop: 1
+    - Name: Upgrade
+      Frames:
+      - {fileID: 2497094917445134862, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: 876153972545810357, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: 2773445809449448886, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: 4318083058037647650, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: -2536273097352112572, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      - {fileID: -344755572808231671, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+      Durations:
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.08000004
+      - 0.07999992
+      - 0.07999998
+      Loop: 0
+  - Key: TowerHoming
+    Clips:
+    - Name: Attack
+      Frames:
+      - {fileID: -442801284287123017, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: -3538735402354208189, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: -7608373885561105553, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: 3964675662249253841, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: 4749201914805285886, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: -8285523362800326496, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      Durations:
+      - 0.06999999
+      - 0.06999999
+      - 0.07000005
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      Loop: 0
+    - Name: Idle
+      Frames:
+      - {fileID: 752120283423511140, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: 3936747404177317712, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: -6998923418484482572, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: 1152903001278184808, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      Durations:
+      - 0.16
+      - 0.16
+      - 0.16
+      - 0.16
+      Loop: 1
+    - Name: Upgrade
+      Frames:
+      - {fileID: 873583112170228510, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: -8612862799585444144, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: 4505732265188470813, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: 5555208757185542451, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: 2580380468999250729, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      - {fileID: 2547617900151180827, guid: 268f46a3c3c1ce84f993256a15076bf7, type: 3}
+      Durations:
+      - 0.08000004
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.08000004
+      - 0.07999998
+      Loop: 0
+  - Key: TowerKnockback
+    Clips:
+    - Name: Attack
+      Frames:
+      - {fileID: 5199938192301211927, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: -8645900027923129997, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: 4351903650226035691, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: 7041695607493578711, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: -3044748828997273597, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: -3445762049963498177, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      Durations:
+      - 0.07499999
+      - 0.07500005
+      - 0.07499999
+      - 0.07499999
+      - 0.07499999
+      - 0.07499999
+      Loop: 0
+    - Name: Idle
+      Frames:
+      - {fileID: 8912490691317298039, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: -6722497096989397877, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: -5319131978439454822, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: 3997846934947169056, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      Durations:
+      - 0.16
+      - 0.16
+      - 0.16
+      - 0.16
+      Loop: 1
+    - Name: Upgrade
+      Frames:
+      - {fileID: -1082520322051476442, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: 9216470186073581039, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: 4567849587457000023, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: -1262521129722967630, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: 8851549394922022762, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      - {fileID: -6461686195646054172, guid: 36f347dcbd9d28c4d9ebddfd24c90e4f, type: 3}
+      Durations:
+      - 0.07999992
+      - 0.08000004
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.07999998
+      Loop: 0
+  - Key: TowerLinear
+    Clips:
+    - Name: Attack
+      Frames:
+      - {fileID: -3798949292038726173, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: -5430737811616365630, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: -7877943021461630569, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: -1526137376212314092, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: -5400775847875256246, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: 8378700565160729423, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      Durations:
+      - 0.06999999
+      - 0.06999999
+      - 0.07000005
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      Loop: 0
+    - Name: Idle
+      Frames:
+      - {fileID: -2201081107249362804, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: 746598520446508080, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: -4460536505739340850, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: 6453084917561457725, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      Durations:
+      - 0.16
+      - 0.16
+      - 0.16
+      - 0.16
+      Loop: 1
+    - Name: Upgrade
+      Frames:
+      - {fileID: 2536886043717432021, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: -1023218515831435308, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: -4297655953679617060, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: -2592470237589055439, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: -8974973375130897025, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      - {fileID: -7617372709527575466, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+      Durations:
+      - 0.08000004
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.08000004
+      - 0.07999998
+      Loop: 0
+  - Key: TowerMineLayer
+    Clips:
+    - Name: Attack
+      Frames:
+      - {fileID: -1621503248652162448, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: -3115407462684427814, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: 6280010894057235393, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: 5558760439101193257, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: -7357989576712339477, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: 6073360062979991605, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      Durations:
+      - 0.09000003
+      - 0.089999974
+      - 0.09000003
+      - 0.089999974
+      - 0.09000003
+      - 0.09000003
+      Loop: 0
+    - Name: Idle
+      Frames:
+      - {fileID: -8620799051685055193, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: 998979829968042371, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: 344474985488228075, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: -216559969579838869, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      Durations:
+      - 0.16
+      - 0.16
+      - 0.16
+      - 0.16
+      Loop: 1
+    - Name: Upgrade
+      Frames:
+      - {fileID: -5434551886666375378, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: 5778824604923444011, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: 1595717518062468489, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: -6567219957504476299, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: 6547082615190585579, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      - {fileID: -2502409127606259383, guid: 23213c593275ddf489b7f809d384355d, type: 3}
+      Durations:
+      - 0.08000004
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.08000004
+      - 0.07999998
+      Loop: 0
+  - Key: TowerMortar
+    Clips:
+    - Name: Attack
+      Frames:
+      - {fileID: -6373941348734214589, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: 1195526836545335784, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: 2557872808757078014, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: -9071115077769547906, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: 8121222293319828998, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: 8508145867292217653, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      Durations:
+      - 0.08000004
+      - 0.07999998
+      - 0.07999998
+      - 0.07999998
+      - 0.07999998
+      - 0.07999998
+      Loop: 0
+    - Name: Idle
+      Frames:
+      - {fileID: -4992072493167364785, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: -152254783881405212, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: -7122747479167198883, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: 8690947921021102228, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      Durations:
+      - 0.16
+      - 0.16
+      - 0.16
+      - 0.16
+      Loop: 1
+    - Name: Upgrade
+      Frames:
+      - {fileID: 7453436262115889640, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: 4942916034957233973, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: 3081851120332185452, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: 5279460669370557821, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: -3396586995778400216, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      - {fileID: 1824008641808574708, guid: 0c3977cffe9cdb946ab61734a2d2f84c, type: 3}
+      Durations:
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.08000004
+      - 0.07999992
+      - 0.07999998
+      Loop: 0
+  - Key: TowerOrbit
+    Clips:
+    - Name: Attack
+      Frames:
+      - {fileID: 3936581930289809306, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: -6985154510122811178, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: -9076977045232459540, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: -8049814746103753309, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: -4468731322397042931, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: 856401780812464767, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      Durations:
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      Loop: 0
+    - Name: Idle
+      Frames:
+      - {fileID: 4912632185840619315, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: 6664240328091648350, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: 472614597115382416, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: 659165814594911306, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: -3233289594245888118, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: 7042789329879037194, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      Durations:
+      - 0.11
+      - 0.11
+      - 0.110000014
+      - 0.109999985
+      - 0.110000014
+      - 0.110000014
+      Loop: 1
+    - Name: Upgrade
+      Frames:
+      - {fileID: -5072534720313406850, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: 2069816351501107102, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: -8902809981352674553, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: -8934131483601052954, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: -6937505418653622315, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      - {fileID: 8841388208774494804, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+      Durations:
+      - 0.07999992
+      - 0.08000004
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.07999998
+      Loop: 0
+  - Key: TowerRicochet
+    Clips:
+    - Name: Attack
+      Frames:
+      - {fileID: 3852949017544796682, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: 1648571726499705244, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: 1418447211987828425, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: 433711324925295338, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: -5878021315691381347, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: 2450544925012946875, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      Durations:
+      - 0.06999999
+      - 0.06999999
+      - 0.07000005
+      - 0.06999999
+      - 0.06999999
+      - 0.06999999
+      Loop: 0
+    - Name: Idle
+      Frames:
+      - {fileID: -5522297544077736621, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: -6928258289025568244, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: -5379422991834458310, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: -7204759635626730684, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      Durations:
+      - 0.16
+      - 0.16
+      - 0.16
+      - 0.16
+      Loop: 1
+    - Name: Upgrade
+      Frames:
+      - {fileID: 6377533121755630587, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: -2607987896750451775, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: -5357652347671315673, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: 6682338981055402860, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: 4060095109166066236, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      - {fileID: 4316833372860830261, guid: 89fa22ed5c810954cbb12066453e36d3, type: 3}
+      Durations:
+      - 0.08000004
+      - 0.08000004
+      - 0.07999992
+      - 0.08000004
+      - 0.08000004
+      - 0.07999998
+      Loop: 0

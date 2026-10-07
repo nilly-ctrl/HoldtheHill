@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
+using HoldTheHill.Features.Progression;
 using UnityEngine;
 
 namespace HoldTheHill.Features.Enemies
@@ -25,8 +26,21 @@ namespace HoldTheHill.Features.Enemies
         /// </summary>
         public static event Action<GameObject> Defeated;
 
+        /// <summary>
+        /// Raised after any enemy takes a hit, with the enemy, the hit (after shields) and the
+        /// health actually removed. Damage-over-time ticks arrive with the enemy itself as Source.
+        /// </summary>
+        public static event Action<EnemyHealth, DamageInfo, float> Damaged;
+
+        /// <summary>Raised after any enemy is healed, with the health actually restored.</summary>
+        public static event Action<EnemyHealth, float> Healed;
+
+        /// <summary>Raised when a status effect starts or restarts on any enemy. For visuals.</summary>
+        public static event Action<EnemyHealth, StatusEffectData> StatusApplied;
+
         [Header("Health")]
         [SerializeField, Min(1f)] private float _maxHealth = 30f;
+        [SerializeField, Min(0)] private int _bountyValue = 10;
 
         [Header("Death")]
         [Tooltip("Seconds to wait before the body disappears, leaving room for a death animation.")]
@@ -38,6 +52,7 @@ namespace HoldTheHill.Features.Enemies
         // One running coroutine per effect name, so re-applying refreshes rather than stacks.
         private readonly Dictionary<string, Coroutine> _activeEffects = new Dictionary<string, Coroutine>();
         private readonly Dictionary<string, float> _activeSlows = new Dictionary<string, float>();
+        private readonly List<IIncomingDamageModifier> _damageModifiers = new List<IIncomingDamageModifier>();
 
         private float _currentHealth;
 
@@ -46,6 +61,9 @@ namespace HoldTheHill.Features.Enemies
 
         /// <summary>Health when at full.</summary>
         public float MaxHealth => _maxHealth;
+
+        /// <summary>Gold awarded upon defeat.</summary>
+        public int BountyValue { get => _bountyValue; set => _bountyValue = value; }
 
         /// <summary>True once health has run out.</summary>
         public bool IsDead { get; private set; }
@@ -87,7 +105,53 @@ namespace HoldTheHill.Features.Enemies
                 return;
             }
 
+            IUpgradeModifiers upgrades = UpgradeModifiers.Current;
+            info.Amount *= upgrades.DamageMultiplier;
+            if (SpeedMultiplier < 1.0f)
+            {
+                info.Amount *= upgrades.FrostDebuffDamageMultiplier;
+            }
+
+            // Armour, wards and immunities on this enemy get their say before any shield does.
+            GetComponents(_damageModifiers);
+            for (int i = 0; i < _damageModifiers.Count; i++)
+            {
+                info.Amount = _damageModifiers[i].ModifyIncomingDamage(this, info);
+                if (info.Amount <= 0f)
+                {
+                    return;
+                }
+            }
+
+            var shield = GetComponent<EnemyShield>();
+            if (shield != null && shield.CurrentShield > 0f)
+            {
+                info.Amount = shield.AbsorbDamage(info.Amount);
+                if (info.Amount <= 0f)
+                {
+                    return;
+                }
+            }
+
+            float applied = Mathf.Min(info.Amount, _currentHealth);
             _currentHealth -= info.Amount;
+            Damaged?.Invoke(this, info, applied);
+
+            // Credit goes to the owner: a projectile is the source of its damage but is not a
+            // child of the tower that fired it, so looking only at the source credited nobody.
+            GameObject owner = CombatUtil.OwnerOf(info.Source);
+            if (owner != null)
+            {
+                var tower = owner.GetComponentInParent<HoldTheHill.Features.Towers.Tower>();
+                if (tower != null)
+                {
+                    tower.RecordDamage(applied);
+                    if (_currentHealth <= 0f)
+                    {
+                        tower.RecordKill();
+                    }
+                }
+            }
 
             if (_currentHealth <= 0f)
             {
@@ -115,6 +179,7 @@ namespace HoldTheHill.Features.Enemies
             }
 
             _activeEffects[key] = StartCoroutine(RunStatusEffect(key, status));
+            StatusApplied?.Invoke(this, status);
         }
 
         /// <summary>Heals the enemy, never above its maximum. Does nothing once dead.</summary>
@@ -125,7 +190,12 @@ namespace HoldTheHill.Features.Enemies
                 return;
             }
 
+            float before = _currentHealth;
             _currentHealth = Mathf.Min(_currentHealth + amount, _maxHealth);
+            if (_currentHealth > before)
+            {
+                Healed?.Invoke(this, _currentHealth - before);
+            }
         }
 
         private IEnumerator RunStatusEffect(string key, StatusEffectData status)

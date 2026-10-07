@@ -1,0 +1,27 @@
+{ "frames": [
+    { "filename": "ObjClutterSteampunk Acorn 0", "frame": { "x": 0, "y": 0, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 1000 },
+    { "filename": "ObjClutterSteampunk SeedSack 0", "frame": { "x": 0, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 1000 },
+    { "filename": "ObjClutterSteampunk Shell 0", "frame": { "x": 0, "y": 32, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 1000 },
+    { "filename": "ObjClutterSteampunk Cairn 0", "frame": { "x": 0, "y": 48, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 1000 },
+    { "filename": "ObjClutterSteampunk Dewdrop 0", "frame": { "x": 0, "y": 64, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 260 },
+    { "filename": "ObjClutterSteampunk Dewdrop 1", "frame": { "x": 16, "y": 64, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 260 },
+    { "filename": "ObjClutterSteampunk Dewdrop 2", "frame": { "x": 32, "y": 64, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 260 },
+    { "filename": "ObjClutterSteampunk Dewdrop 3", "frame": { "x": 48, "y": 64, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 260 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Small objects, steampunk theme",
+  "image": "ObjClutterSteampunk.png",
+  "format": "RGBA8888",
+  "size": { "w": 64, "h": 80 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Acorn", "from": 0, "to": 0, "direction": "forward" },
+    { "name": "SeedSack", "from": 1, "to": 1, "direction": "forward" },
+    { "name": "Shell", "from": 2, "to": 2, "direction": "forward" },
+    { "name": "Cairn", "from": 3, "to": 3, "direction": "forward" },
+    { "name": "Dewdrop", "from": 4, "to": 7, "direction": "forward" }
+  ],
+  "layers": [ { "name": "Shadow", "opacity": 255, "blendMode": "normal" }, { "name": "Body", "opacity": 255, "blendMode": "normal" }, { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}
