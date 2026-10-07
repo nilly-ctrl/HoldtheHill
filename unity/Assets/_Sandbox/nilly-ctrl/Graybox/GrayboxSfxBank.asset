@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a480ecf352c4f234ebf24dfce28162b2, type: 3}
+  m_Name: GrayboxSfxBank
+  m_EditorClassIdentifier: Assembly-CSharp::HoldTheHill.Sandbox.NillyCtrl.GrayboxSfxBank
+  Cues:
+  - Id: Fire_TowerLinear
+    Clips: []
+    Volume: 0.55
+    Cooldown: 0.05
+  - Id: Fire_TowerHoming
+    Clips: []
+    Volume: 0.55
+    Cooldown: 0.05
+  - Id: Fire_TowerMortar
+    Clips: []
+    Volume: 0.7
+    Cooldown: 0.05
+  - Id: Fire_TowerRicochet
+    Clips: []
+    Volume: 0.55
+    Cooldown: 0.05
+  - Id: Fire_TowerChain
+    Clips: []
+    Volume: 0.6
+    Cooldown: 0.05
+  - Id: Fire_TowerFrostAura
+    Clips: []
+    Volume: 0.6
+    Cooldown: 0.05
+  - Id: Fire_TowerKnockback
+    Clips: []
+    Volume: 0.7
+    Cooldown: 0.05
+  - Id: Fire_TowerMineLayer
+    Clips: []
+    Volume: 0.5
+    Cooldown: 0.05
+  - Id: Upgrade
+    Clips: []
+    Volume: 0.9
+    Cooldown: 0
+  - Id: Place
+    Clips: []
+    Volume: 0.9
+    Cooldown: 0
+  - Id: Sell
+    Clips: []
+    Volume: 0.9
+    Cooldown: 0
+  - Id: Hit
+    Clips: []
+    Volume: 0.35
+    Cooldown: 0.06
+  - Id: Death_EnemyRunner
+    Clips: []
+    Volume: 0.7
+    Cooldown: 0.04
+  - Id: Death_EnemyGrunt
+    Clips: []
+    Volume: 0.7
+    Cooldown: 0.04
+  - Id: Death_EnemyBrute
+    Clips: []
+    Volume: 0.9
+    Cooldown: 0.04
+  - Id: Death_EnemyShielded
+    Clips: []
+    Volume: 0.7
+    Cooldown: 0.04
+  - Id: Death_EnemySplitter
+    Clips: []
+    Volume: 0.8
+    Cooldown: 0.04
+  - Id: Death_EnemySwarm
+    Clips: []
+    Volume: 0.5
+    Cooldown: 0.06
+  - Id: Death_EnemyHealer
+    Clips: []
+    Volume: 0.7
+    Cooldown: 0.04
+  - Id: ShieldBreak
+    Clips: []
+    Volume: 0.8
+    Cooldown: 0.05
+  - Id: Heal
+    Clips: []
+    Volume: 0.35
+    Cooldown: 0.3
+  - Id: MineExplode
+    Clips: []
+    Volume: 0.9
+    Cooldown: 0.05
+  - Id: Burn
+    Clips: []
+    Volume: 0.35
+    Cooldown: 0.3
+  - Id: Poison
+    Clips: []
+    Volume: 0.35
+    Cooldown: 0.4
+  - Id: WaveStart
+    Clips: []
+    Volume: 1
+    Cooldown: 0
+  - Id: WaveClear
+    Clips: []
+    Volume: 1
+    Cooldown: 0
+  - Id: Victory
+    Clips: []
+    Volume: 1
+    Cooldown: 0
+  - Id: BeamLoop
+    Clips: []
+    Volume: 0.35
+    Cooldown: 0
+  - Id: OrbitLoop
+    Clips: []
+    Volume: 0.2
+    Cooldown: 0
+  - Id: HazardLoop
+    Clips: []
+    Volume: 0.3
+    Cooldown: 0

@@ -1,0 +1,158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8334037917845415749
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4916093053237596572}
+  - component: {fileID: 7565179877340728465}
+  - component: {fileID: 7875613872221329203}
+  - component: {fileID: 4441085307151676247}
+  m_Layer: 0
+  m_Name: GrayboxMortar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4916093053237596572
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8334037917845415749}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &7565179877340728465
+SpriteRenderer:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8334037917845415749}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 3
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: -1022703345931227201, guid: 5f4d677a8177cc543b3057b1ac410ba9, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 0.3, y: 0.3}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
+--- !u!114 &7875613872221329203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8334037917845415749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c04b451619a564598c31d1f4877ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.SpriteClipPlayer
+  _library: {fileID: 11400000, guid: af6c200ebfff50f49b1c83f8f95ad8df, type: 2}
+  _key: ProjMortar
+  _defaultClip: Fly
+  _destroyWhenDone: 0
+--- !u!114 &4441085307151676247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8334037917845415749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2441349ef9d3bf84387ca2d32464515a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Runtime::HoldTheHill.Features.Combat.ClusterProjectile
+  _flightMode: 2
+  _speed: 4.5
+  _turnRate: 180
+  _lifetime: 6
+  _arcHeight: 2.5
+  _loiterDuration: 1
+  _diveSpeedMultiplier: 2.5
+  _loiterBobAmplitude: 0.25
+  _damage: 6
+  _damageType: 0
+  _splashRadius: 1.2
+  _splashDamage: 5
+  _status:
+    EffectName: 
+    DamagePerTick: 0
+    TickInterval: 0
+    Duration: 0
+    SlowMultiplier: 0
+  _targetMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _hitRadius: 0.3
+  _isPiercing: 0
+  _maxPierceHits: 3
+  _pierceHitCooldown: 0.25
+  _groundHazardPrefab: {fileID: 2058439979756516823, guid: 3bd7b7198bae39b49bb28e44e5bc3936, type: 3}
+  _groundHazardRadius: 1.1
+  _groundHazardDuration: 4
+  _groundHazardDamagePerTick: 2
+  _fragmentPrefab: {fileID: 8558008811199913828, guid: e0e52cd243e8c5142b418b891e556c97, type: 3}
+  _fragmentCount: 8
+  _spreadAngle: 360
+  _splitOn: 0
+  _fragmentSpawnOffset: 0.2

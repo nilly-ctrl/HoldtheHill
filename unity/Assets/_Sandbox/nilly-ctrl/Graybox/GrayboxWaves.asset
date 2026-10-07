@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8e72427ccb6015419f699ec1ae52799, type: 3}
+  m_Name: GrayboxWaves
+  m_EditorClassIdentifier: HoldTheHill.Runtime::MapWaveDataSO
+  mapId: Graybox
+  waves:
+  - waveName: Graybox Wave 1
+    enemies:
+    - enemyPrefab: {fileID: 5202294430404905958, guid: 290011c56fb5df547b0f556d26010e23, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5202294430404905958, guid: 290011c56fb5df547b0f556d26010e23, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 1576824322384361314, guid: 893d9804806ac5849b8060b0fe640bbf, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5404224814361943415, guid: 906b77563e99cbd45af71aba7a64a5bf, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5202294430404905958, guid: 290011c56fb5df547b0f556d26010e23, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 1576824322384361314, guid: 893d9804806ac5849b8060b0fe640bbf, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5404224814361943415, guid: 906b77563e99cbd45af71aba7a64a5bf, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+  - waveName: Graybox Wave 2
+    enemies:
+    - enemyPrefab: {fileID: 1576824322384361314, guid: 893d9804806ac5849b8060b0fe640bbf, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5202294430404905958, guid: 290011c56fb5df547b0f556d26010e23, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 3590512541361763140, guid: f029c2827483e964ea383d49634d202a, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 1576824322384361314, guid: 893d9804806ac5849b8060b0fe640bbf, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 3590512541361763140, guid: f029c2827483e964ea383d49634d202a, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5202294430404905958, guid: 290011c56fb5df547b0f556d26010e23, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 1576824322384361314, guid: 893d9804806ac5849b8060b0fe640bbf, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 3590512541361763140, guid: f029c2827483e964ea383d49634d202a, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+  - waveName: Graybox Wave 3
+    enemies:
+    - enemyPrefab: {fileID: 2957307385601101619, guid: 0c34422f49524884c9e51c3cc180fb43, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5821302871823939921, guid: b06ebbfa653ced04eb99d82feab54778, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5404224814361943415, guid: 906b77563e99cbd45af71aba7a64a5bf, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 2957307385601101619, guid: 0c34422f49524884c9e51c3cc180fb43, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5821302871823939921, guid: b06ebbfa653ced04eb99d82feab54778, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 1576824322384361314, guid: 893d9804806ac5849b8060b0fe640bbf, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5404224814361943415, guid: 906b77563e99cbd45af71aba7a64a5bf, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 2957307385601101619, guid: 0c34422f49524884c9e51c3cc180fb43, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+  - waveName: Graybox Wave 4
+    enemies:
+    - enemyPrefab: {fileID: 2957307385601101619, guid: 0c34422f49524884c9e51c3cc180fb43, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 3590512541361763140, guid: f029c2827483e964ea383d49634d202a, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5821302871823939921, guid: b06ebbfa653ced04eb99d82feab54778, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5404224814361943415, guid: 906b77563e99cbd45af71aba7a64a5bf, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 2957307385601101619, guid: 0c34422f49524884c9e51c3cc180fb43, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 3590512541361763140, guid: f029c2827483e964ea383d49634d202a, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5821302871823939921, guid: b06ebbfa653ced04eb99d82feab54778, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5202294430404905958, guid: 290011c56fb5df547b0f556d26010e23, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 2957307385601101619, guid: 0c34422f49524884c9e51c3cc180fb43, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
+    - enemyPrefab: {fileID: 5404224814361943415, guid: 906b77563e99cbd45af71aba7a64a5bf, type: 3}
+      delayBeforeNext: 1.1
+      spawnPointOverride: {fileID: 0}
