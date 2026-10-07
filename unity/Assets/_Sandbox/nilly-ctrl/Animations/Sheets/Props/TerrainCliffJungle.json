@@ -1,0 +1,20 @@
+{ "frames": [
+    { "filename": "TerrainCliffJungle Edge 0", "frame": { "x": 0, "y": 0, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 1000 },
+    { "filename": "TerrainCliffJungle CornerLeft 0", "frame": { "x": 0, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 1000 },
+    { "filename": "TerrainCliffJungle CornerRight 0", "frame": { "x": 0, "y": 64, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 1000 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Ledge pieces; the drop is toward the bottom, jungle theme",
+  "image": "TerrainCliffJungle.png",
+  "format": "RGBA8888",
+  "size": { "w": 32, "h": 96 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Edge", "from": 0, "to": 0, "direction": "forward" },
+    { "name": "CornerLeft", "from": 1, "to": 1, "direction": "forward" },
+    { "name": "CornerRight", "from": 2, "to": 2, "direction": "forward" }
+  ],
+  "layers": [ { "name": "Shadow", "opacity": 255, "blendMode": "normal" }, { "name": "Body", "opacity": 255, "blendMode": "normal" }, { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

@@ -1,0 +1,19 @@
+{ "frames": [
+    { "filename": "AntPairJungle Talk 0", "frame": { "x": 0, "y": 0, "w": 40, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 16 }, "sourceSize": { "w": 40, "h": 16 }, "duration": 200 },
+    { "filename": "AntPairJungle Talk 1", "frame": { "x": 40, "y": 0, "w": 40, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 16 }, "sourceSize": { "w": 40, "h": 16 }, "duration": 200 },
+    { "filename": "AntPairJungle Talk 2", "frame": { "x": 80, "y": 0, "w": 40, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 16 }, "sourceSize": { "w": 40, "h": 16 }, "duration": 200 },
+    { "filename": "AntPairJungle Talk 3", "frame": { "x": 120, "y": 0, "w": 40, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 16 }, "sourceSize": { "w": 40, "h": 16 }, "duration": 200 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Two workers meeting, jungle theme",
+  "image": "AntPairJungle.png",
+  "format": "RGBA8888",
+  "size": { "w": 160, "h": 16 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Talk", "from": 0, "to": 3, "direction": "forward" }
+  ],
+  "layers": [ { "name": "Shadow", "opacity": 255, "blendMode": "normal" }, { "name": "Body", "opacity": 255, "blendMode": "normal" }, { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

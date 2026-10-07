@@ -1,0 +1,33 @@
+{ "frames": [
+    { "filename": "FxQuickZone Appear 0", "frame": { "x": 0, "y": 0, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 70 },
+    { "filename": "FxQuickZone Appear 1", "frame": { "x": 64, "y": 0, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 70 },
+    { "filename": "FxQuickZone Appear 2", "frame": { "x": 128, "y": 0, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 70 },
+    { "filename": "FxQuickZone Appear 3", "frame": { "x": 192, "y": 0, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 70 },
+    { "filename": "FxQuickZone Appear 4", "frame": { "x": 256, "y": 0, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 70 },
+    { "filename": "FxQuickZone Loop 0", "frame": { "x": 0, "y": 64, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 80 },
+    { "filename": "FxQuickZone Loop 1", "frame": { "x": 64, "y": 64, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 80 },
+    { "filename": "FxQuickZone Loop 2", "frame": { "x": 128, "y": 64, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 80 },
+    { "filename": "FxQuickZone Loop 3", "frame": { "x": 192, "y": 64, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 80 },
+    { "filename": "FxQuickZone Loop 4", "frame": { "x": 256, "y": 64, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 80 },
+    { "filename": "FxQuickZone Loop 5", "frame": { "x": 320, "y": 64, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 80 },
+    { "filename": "FxQuickZone Fade 0", "frame": { "x": 0, "y": 128, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 90 },
+    { "filename": "FxQuickZone Fade 1", "frame": { "x": 64, "y": 128, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 90 },
+    { "filename": "FxQuickZone Fade 2", "frame": { "x": 128, "y": 128, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 90 },
+    { "filename": "FxQuickZone Fade 3", "frame": { "x": 192, "y": 128, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 90 },
+    { "filename": "FxQuickZone Fade 4", "frame": { "x": 256, "y": 128, "w": 64, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 }, "sourceSize": { "w": 64, "h": 64 }, "duration": 90 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Quick zone: enemies inside move faster (chevrons run toward +x)",
+  "image": "FxQuickZone.png",
+  "format": "RGBA8888",
+  "size": { "w": 384, "h": 192 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Appear", "from": 0, "to": 4, "direction": "forward", "repeat": "1" },
+    { "name": "Loop", "from": 5, "to": 10, "direction": "forward" },
+    { "name": "Fade", "from": 11, "to": 15, "direction": "forward", "repeat": "1" }
+  ],
+  "layers": [ { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

@@ -1,0 +1,22 @@
+{ "frames": [
+    { "filename": "ObjSignpostNeon Idle 0", "frame": { "x": 0, "y": 0, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 1000 },
+    { "filename": "ObjSignpostNeon Wobble 0", "frame": { "x": 0, "y": 24, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 70 },
+    { "filename": "ObjSignpostNeon Wobble 1", "frame": { "x": 24, "y": 24, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 70 },
+    { "filename": "ObjSignpostNeon Wobble 2", "frame": { "x": 48, "y": 24, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 70 },
+    { "filename": "ObjSignpostNeon Wobble 3", "frame": { "x": 72, "y": 24, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 70 },
+    { "filename": "ObjSignpostNeon Wobble 4", "frame": { "x": 96, "y": 24, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 70 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Twig signpost, neon theme",
+  "image": "ObjSignpostNeon.png",
+  "format": "RGBA8888",
+  "size": { "w": 120, "h": 48 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Idle", "from": 0, "to": 0, "direction": "forward" },
+    { "name": "Wobble", "from": 1, "to": 5, "direction": "forward", "repeat": "1" }
+  ],
+  "layers": [ { "name": "Shadow", "opacity": 255, "blendMode": "normal" }, { "name": "Body", "opacity": 255, "blendMode": "normal" }, { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

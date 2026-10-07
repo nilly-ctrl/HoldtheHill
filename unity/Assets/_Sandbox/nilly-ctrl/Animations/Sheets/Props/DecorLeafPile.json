@@ -1,0 +1,22 @@
+{ "frames": [
+    { "filename": "DecorLeafPile A 0", "frame": { "x": 0, "y": 0, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 1000 },
+    { "filename": "DecorLeafPile B 0", "frame": { "x": 0, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 120 },
+    { "filename": "DecorLeafPile B 1", "frame": { "x": 32, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 120 },
+    { "filename": "DecorLeafPile B 2", "frame": { "x": 64, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 120 },
+    { "filename": "DecorLeafPile B 3", "frame": { "x": 96, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 120 },
+    { "filename": "DecorLeafPile B 4", "frame": { "x": 128, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 120 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Raked autumn leaves",
+  "image": "DecorLeafPile.png",
+  "format": "RGBA8888",
+  "size": { "w": 160, "h": 64 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "A", "from": 0, "to": 0, "direction": "forward" },
+    { "name": "B", "from": 1, "to": 5, "direction": "forward" }
+  ],
+  "layers": [ { "name": "Shadow", "opacity": 255, "blendMode": "normal" }, { "name": "Body", "opacity": 255, "blendMode": "normal" }, { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

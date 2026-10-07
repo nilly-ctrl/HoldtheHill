@@ -1,0 +1,28 @@
+{ "frames": [
+    { "filename": "UiButtonJungle Normal 0", "frame": { "x": 0, "y": 0, "w": 48, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 16 }, "sourceSize": { "w": 48, "h": 16 }, "duration": 1000 },
+    { "filename": "UiButtonJungle Hover 0", "frame": { "x": 0, "y": 16, "w": 48, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 16 }, "sourceSize": { "w": 48, "h": 16 }, "duration": 70 },
+    { "filename": "UiButtonJungle Hover 1", "frame": { "x": 48, "y": 16, "w": 48, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 16 }, "sourceSize": { "w": 48, "h": 16 }, "duration": 70 },
+    { "filename": "UiButtonJungle Hover 2", "frame": { "x": 96, "y": 16, "w": 48, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 16 }, "sourceSize": { "w": 48, "h": 16 }, "duration": 70 },
+    { "filename": "UiButtonJungle Hover 3", "frame": { "x": 144, "y": 16, "w": 48, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 16 }, "sourceSize": { "w": 48, "h": 16 }, "duration": 70 },
+    { "filename": "UiButtonJungle Hover 4", "frame": { "x": 192, "y": 16, "w": 48, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 16 }, "sourceSize": { "w": 48, "h": 16 }, "duration": 70 },
+    { "filename": "UiButtonJungle Press 0", "frame": { "x": 0, "y": 32, "w": 48, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 16 }, "sourceSize": { "w": 48, "h": 16 }, "duration": 60 },
+    { "filename": "UiButtonJungle Press 1", "frame": { "x": 48, "y": 32, "w": 48, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 16 }, "sourceSize": { "w": 48, "h": 16 }, "duration": 60 },
+    { "filename": "UiButtonJungle Press 2", "frame": { "x": 96, "y": 32, "w": 48, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 16 }, "sourceSize": { "w": 48, "h": 16 }, "duration": 60 },
+    { "filename": "UiButtonJungle Disabled 0", "frame": { "x": 0, "y": 48, "w": 48, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 16 }, "sourceSize": { "w": 48, "h": 16 }, "duration": 1000 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Button (no lettering), jungle theme",
+  "image": "UiButtonJungle.png",
+  "format": "RGBA8888",
+  "size": { "w": 240, "h": 64 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Normal", "from": 0, "to": 0, "direction": "forward" },
+    { "name": "Hover", "from": 1, "to": 5, "direction": "forward" },
+    { "name": "Press", "from": 6, "to": 8, "direction": "forward", "repeat": "1" },
+    { "name": "Disabled", "from": 9, "to": 9, "direction": "forward" }
+  ],
+  "layers": [ { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

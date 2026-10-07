@@ -1,0 +1,33 @@
+{ "frames": [
+    { "filename": "UiSkillNodePirate Locked 0", "frame": { "x": 0, "y": 0, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 1000 },
+    { "filename": "UiSkillNodePirate Available 0", "frame": { "x": 0, "y": 24, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 160 },
+    { "filename": "UiSkillNodePirate Available 1", "frame": { "x": 24, "y": 24, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 160 },
+    { "filename": "UiSkillNodePirate Available 2", "frame": { "x": 48, "y": 24, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 160 },
+    { "filename": "UiSkillNodePirate Available 3", "frame": { "x": 72, "y": 24, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 160 },
+    { "filename": "UiSkillNodePirate Unlock 0", "frame": { "x": 0, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 70 },
+    { "filename": "UiSkillNodePirate Unlock 1", "frame": { "x": 24, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 70 },
+    { "filename": "UiSkillNodePirate Unlock 2", "frame": { "x": 48, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 70 },
+    { "filename": "UiSkillNodePirate Unlock 3", "frame": { "x": 72, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 70 },
+    { "filename": "UiSkillNodePirate Unlock 4", "frame": { "x": 96, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 70 },
+    { "filename": "UiSkillNodePirate Unlock 5", "frame": { "x": 120, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 70 },
+    { "filename": "UiSkillNodePirate Owned 0", "frame": { "x": 0, "y": 72, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 260 },
+    { "filename": "UiSkillNodePirate Owned 1", "frame": { "x": 24, "y": 72, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 260 },
+    { "filename": "UiSkillNodePirate Owned 2", "frame": { "x": 48, "y": 72, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 260 },
+    { "filename": "UiSkillNodePirate Owned 3", "frame": { "x": 72, "y": 72, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 260 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Skill tree node, pirate theme",
+  "image": "UiSkillNodePirate.png",
+  "format": "RGBA8888",
+  "size": { "w": 144, "h": 96 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Locked", "from": 0, "to": 0, "direction": "forward" },
+    { "name": "Available", "from": 1, "to": 4, "direction": "forward" },
+    { "name": "Unlock", "from": 5, "to": 10, "direction": "forward", "repeat": "1" },
+    { "name": "Owned", "from": 11, "to": 14, "direction": "forward" }
+  ],
+  "layers": [ { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

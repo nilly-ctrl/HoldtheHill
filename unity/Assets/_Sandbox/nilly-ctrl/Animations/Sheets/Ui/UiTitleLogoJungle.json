@@ -1,0 +1,30 @@
+{ "frames": [
+    { "filename": "UiTitleLogoJungle Intro 0", "frame": { "x": 0, "y": 0, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 110 },
+    { "filename": "UiTitleLogoJungle Intro 1", "frame": { "x": 160, "y": 0, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 110 },
+    { "filename": "UiTitleLogoJungle Intro 2", "frame": { "x": 320, "y": 0, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 110 },
+    { "filename": "UiTitleLogoJungle Intro 3", "frame": { "x": 480, "y": 0, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 110 },
+    { "filename": "UiTitleLogoJungle Intro 4", "frame": { "x": 640, "y": 0, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 110 },
+    { "filename": "UiTitleLogoJungle Intro 5", "frame": { "x": 800, "y": 0, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 110 },
+    { "filename": "UiTitleLogoJungle Loop 0", "frame": { "x": 0, "y": 64, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 140 },
+    { "filename": "UiTitleLogoJungle Loop 1", "frame": { "x": 160, "y": 64, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 140 },
+    { "filename": "UiTitleLogoJungle Loop 2", "frame": { "x": 320, "y": 64, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 140 },
+    { "filename": "UiTitleLogoJungle Loop 3", "frame": { "x": 480, "y": 64, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 140 },
+    { "filename": "UiTitleLogoJungle Loop 4", "frame": { "x": 640, "y": 64, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 140 },
+    { "filename": "UiTitleLogoJungle Loop 5", "frame": { "x": 800, "y": 64, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 140 },
+    { "filename": "UiTitleLogoJungle Loop 6", "frame": { "x": 960, "y": 64, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 140 },
+    { "filename": "UiTitleLogoJungle Loop 7", "frame": { "x": 1120, "y": 64, "w": 160, "h": 64 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 64 }, "sourceSize": { "w": 160, "h": 64 }, "duration": 140 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Title logo, jungle theme",
+  "image": "UiTitleLogoJungle.png",
+  "format": "RGBA8888",
+  "size": { "w": 1280, "h": 128 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Intro", "from": 0, "to": 5, "direction": "forward", "repeat": "1" },
+    { "name": "Loop", "from": 6, "to": 13, "direction": "forward" }
+  ],
+  "layers": [ { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

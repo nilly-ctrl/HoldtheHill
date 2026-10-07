@@ -1,0 +1,32 @@
+{ "frames": [
+    { "filename": "EnemyGrunt Walk 0", "frame": { "x": 0, "y": 0, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 90 },
+    { "filename": "EnemyGrunt Walk 1", "frame": { "x": 24, "y": 0, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 90 },
+    { "filename": "EnemyGrunt Walk 2", "frame": { "x": 48, "y": 0, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 90 },
+    { "filename": "EnemyGrunt Walk 3", "frame": { "x": 72, "y": 0, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 90 },
+    { "filename": "EnemyGrunt Walk 4", "frame": { "x": 96, "y": 0, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 90 },
+    { "filename": "EnemyGrunt Walk 5", "frame": { "x": 120, "y": 0, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 90 },
+    { "filename": "EnemyGrunt Hurt 0", "frame": { "x": 0, "y": 24, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 60 },
+    { "filename": "EnemyGrunt Hurt 1", "frame": { "x": 24, "y": 24, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 60 },
+    { "filename": "EnemyGrunt Death 0", "frame": { "x": 0, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 80 },
+    { "filename": "EnemyGrunt Death 1", "frame": { "x": 24, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 80 },
+    { "filename": "EnemyGrunt Death 2", "frame": { "x": 48, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 80 },
+    { "filename": "EnemyGrunt Death 3", "frame": { "x": 72, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 80 },
+    { "filename": "EnemyGrunt Death 4", "frame": { "x": 96, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 80 },
+    { "filename": "EnemyGrunt Death 5", "frame": { "x": 120, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 80 },
+    { "filename": "EnemyGrunt Death 6", "frame": { "x": 144, "y": 48, "w": 24, "h": 24 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }, "sourceSize": { "w": 24, "h": 24 }, "duration": 80 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Beetle",
+  "image": "EnemyGrunt.png",
+  "format": "RGBA8888",
+  "size": { "w": 168, "h": 72 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Walk", "from": 0, "to": 5, "direction": "forward" },
+    { "name": "Hurt", "from": 6, "to": 7, "direction": "forward", "repeat": "1" },
+    { "name": "Death", "from": 8, "to": 14, "direction": "forward", "repeat": "1" }
+  ],
+  "layers": [ { "name": "Shadow", "opacity": 255, "blendMode": "normal" }, { "name": "Body", "opacity": 255, "blendMode": "normal" }, { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

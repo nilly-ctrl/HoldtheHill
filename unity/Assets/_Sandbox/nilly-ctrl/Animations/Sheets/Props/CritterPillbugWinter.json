@@ -1,0 +1,25 @@
+{ "frames": [
+    { "filename": "CritterPillbugWinter Walk 0", "frame": { "x": 0, "y": 0, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 110 },
+    { "filename": "CritterPillbugWinter Walk 1", "frame": { "x": 16, "y": 0, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 110 },
+    { "filename": "CritterPillbugWinter Walk 2", "frame": { "x": 32, "y": 0, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 110 },
+    { "filename": "CritterPillbugWinter Walk 3", "frame": { "x": 48, "y": 0, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 110 },
+    { "filename": "CritterPillbugWinter Roll 0", "frame": { "x": 0, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 80 },
+    { "filename": "CritterPillbugWinter Roll 1", "frame": { "x": 16, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 80 },
+    { "filename": "CritterPillbugWinter Roll 2", "frame": { "x": 32, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 80 },
+    { "filename": "CritterPillbugWinter Roll 3", "frame": { "x": 48, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 80 },
+    { "filename": "CritterPillbugWinter Roll 4", "frame": { "x": 64, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 80 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Pill bug (faces right), winter",
+  "image": "CritterPillbugWinter.png",
+  "format": "RGBA8888",
+  "size": { "w": 80, "h": 32 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Walk", "from": 0, "to": 3, "direction": "forward" },
+    { "name": "Roll", "from": 4, "to": 8, "direction": "forward", "repeat": "1" }
+  ],
+  "layers": [ { "name": "Shadow", "opacity": 255, "blendMode": "normal" }, { "name": "Body", "opacity": 255, "blendMode": "normal" }, { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

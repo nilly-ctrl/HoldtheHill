@@ -1,0 +1,25 @@
+{ "frames": [
+    { "filename": "UiTooltipNeon Open 0", "frame": { "x": 0, "y": 0, "w": 64, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 32 }, "sourceSize": { "w": 64, "h": 32 }, "duration": 50 },
+    { "filename": "UiTooltipNeon Open 1", "frame": { "x": 64, "y": 0, "w": 64, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 32 }, "sourceSize": { "w": 64, "h": 32 }, "duration": 50 },
+    { "filename": "UiTooltipNeon Open 2", "frame": { "x": 128, "y": 0, "w": 64, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 32 }, "sourceSize": { "w": 64, "h": 32 }, "duration": 50 },
+    { "filename": "UiTooltipNeon Open 3", "frame": { "x": 192, "y": 0, "w": 64, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 32 }, "sourceSize": { "w": 64, "h": 32 }, "duration": 50 },
+    { "filename": "UiTooltipNeon Idle 0", "frame": { "x": 0, "y": 32, "w": 64, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 32 }, "sourceSize": { "w": 64, "h": 32 }, "duration": 1000 },
+    { "filename": "UiTooltipNeon Close 0", "frame": { "x": 0, "y": 64, "w": 64, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 32 }, "sourceSize": { "w": 64, "h": 32 }, "duration": 50 },
+    { "filename": "UiTooltipNeon Close 1", "frame": { "x": 64, "y": 64, "w": 64, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 32 }, "sourceSize": { "w": 64, "h": 32 }, "duration": 50 },
+    { "filename": "UiTooltipNeon Close 2", "frame": { "x": 128, "y": 64, "w": 64, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 32 }, "sourceSize": { "w": 64, "h": 32 }, "duration": 50 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Tooltip panel (no lettering), neon theme",
+  "image": "UiTooltipNeon.png",
+  "format": "RGBA8888",
+  "size": { "w": 256, "h": 96 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Open", "from": 0, "to": 3, "direction": "forward", "repeat": "1" },
+    { "name": "Idle", "from": 4, "to": 4, "direction": "forward" },
+    { "name": "Close", "from": 5, "to": 7, "direction": "forward", "repeat": "1" }
+  ],
+  "layers": [ { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

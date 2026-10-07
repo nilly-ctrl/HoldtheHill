@@ -1,0 +1,23 @@
+{ "frames": [
+    { "filename": "DecorSnow A 0", "frame": { "x": 0, "y": 0, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 900 },
+    { "filename": "DecorSnow A 1", "frame": { "x": 32, "y": 0, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 900 },
+    { "filename": "DecorSnow B 0", "frame": { "x": 0, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 900 },
+    { "filename": "DecorSnow B 1", "frame": { "x": 32, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 900 },
+    { "filename": "DecorSnow C 0", "frame": { "x": 0, "y": 64, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 900 },
+    { "filename": "DecorSnow C 1", "frame": { "x": 32, "y": 64, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 900 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Snow drifts",
+  "image": "DecorSnow.png",
+  "format": "RGBA8888",
+  "size": { "w": 64, "h": 96 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "A", "from": 0, "to": 1, "direction": "forward" },
+    { "name": "B", "from": 2, "to": 3, "direction": "forward" },
+    { "name": "C", "from": 4, "to": 5, "direction": "forward" }
+  ],
+  "layers": [ { "name": "Shadow", "opacity": 255, "blendMode": "normal" }, { "name": "Body", "opacity": 255, "blendMode": "normal" }, { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

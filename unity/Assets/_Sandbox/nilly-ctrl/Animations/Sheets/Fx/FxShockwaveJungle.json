@@ -1,0 +1,22 @@
+{ "frames": [
+    { "filename": "FxShockwaveJungle Blast 0", "frame": { "x": 0, "y": 0, "w": 208, "h": 208 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 208, "h": 208 }, "sourceSize": { "w": 208, "h": 208 }, "duration": 60 },
+    { "filename": "FxShockwaveJungle Blast 1", "frame": { "x": 208, "y": 0, "w": 208, "h": 208 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 208, "h": 208 }, "sourceSize": { "w": 208, "h": 208 }, "duration": 60 },
+    { "filename": "FxShockwaveJungle Blast 2", "frame": { "x": 416, "y": 0, "w": 208, "h": 208 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 208, "h": 208 }, "sourceSize": { "w": 208, "h": 208 }, "duration": 60 },
+    { "filename": "FxShockwaveJungle Blast 3", "frame": { "x": 624, "y": 0, "w": 208, "h": 208 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 208, "h": 208 }, "sourceSize": { "w": 208, "h": 208 }, "duration": 60 },
+    { "filename": "FxShockwaveJungle Blast 4", "frame": { "x": 832, "y": 0, "w": 208, "h": 208 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 208, "h": 208 }, "sourceSize": { "w": 208, "h": 208 }, "duration": 60 },
+    { "filename": "FxShockwaveJungle Blast 5", "frame": { "x": 1040, "y": 0, "w": 208, "h": 208 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 208, "h": 208 }, "sourceSize": { "w": 208, "h": 208 }, "duration": 60 },
+    { "filename": "FxShockwaveJungle Blast 6", "frame": { "x": 1248, "y": 0, "w": 208, "h": 208 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 208, "h": 208 }, "sourceSize": { "w": 208, "h": 208 }, "duration": 60 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Kicker stomp, jungle theme",
+  "image": "FxShockwaveJungle.png",
+  "format": "RGBA8888",
+  "size": { "w": 1456, "h": 208 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Blast", "from": 0, "to": 6, "direction": "forward", "repeat": "1" }
+  ],
+  "layers": [ { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

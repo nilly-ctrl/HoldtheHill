@@ -1,0 +1,27 @@
+{ "frames": [
+    { "filename": "DecorRiverWinter Feather 0", "frame": { "x": 0, "y": 0, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 1000 },
+    { "filename": "DecorRiverWinter Weed 0", "frame": { "x": 0, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 260 },
+    { "filename": "DecorRiverWinter Weed 1", "frame": { "x": 16, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 260 },
+    { "filename": "DecorRiverWinter Weed 2", "frame": { "x": 32, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 260 },
+    { "filename": "DecorRiverWinter Weed 3", "frame": { "x": 48, "y": 16, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 260 },
+    { "filename": "DecorRiverWinter Tracks 0", "frame": { "x": 0, "y": 32, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 1000 },
+    { "filename": "DecorRiverWinter Ripple 0", "frame": { "x": 0, "y": 48, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 1000 },
+    { "filename": "DecorRiverWinter Pebbles 0", "frame": { "x": 0, "y": 64, "w": 16, "h": 16 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }, "sourceSize": { "w": 16, "h": 16 }, "duration": 1000 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Things washed up, winter",
+  "image": "DecorRiverWinter.png",
+  "format": "RGBA8888",
+  "size": { "w": 64, "h": 80 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Feather", "from": 0, "to": 0, "direction": "forward" },
+    { "name": "Weed", "from": 1, "to": 4, "direction": "forward" },
+    { "name": "Tracks", "from": 5, "to": 5, "direction": "forward" },
+    { "name": "Ripple", "from": 6, "to": 6, "direction": "forward" },
+    { "name": "Pebbles", "from": 7, "to": 7, "direction": "forward" }
+  ],
+  "layers": [ { "name": "Shadow", "opacity": 255, "blendMode": "normal" }, { "name": "Body", "opacity": 255, "blendMode": "normal" }, { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

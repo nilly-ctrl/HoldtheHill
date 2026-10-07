@@ -1,0 +1,28 @@
+{ "frames": [
+    { "filename": "EnemyBruteMoves Attack 0", "frame": { "x": 0, "y": 0, "w": 40, "h": 40 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 40 }, "sourceSize": { "w": 40, "h": 40 }, "duration": 90 },
+    { "filename": "EnemyBruteMoves Attack 1", "frame": { "x": 40, "y": 0, "w": 40, "h": 40 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 40 }, "sourceSize": { "w": 40, "h": 40 }, "duration": 90 },
+    { "filename": "EnemyBruteMoves Attack 2", "frame": { "x": 80, "y": 0, "w": 40, "h": 40 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 40 }, "sourceSize": { "w": 40, "h": 40 }, "duration": 90 },
+    { "filename": "EnemyBruteMoves Attack 3", "frame": { "x": 120, "y": 0, "w": 40, "h": 40 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 40 }, "sourceSize": { "w": 40, "h": 40 }, "duration": 90 },
+    { "filename": "EnemyBruteMoves Attack 4", "frame": { "x": 160, "y": 0, "w": 40, "h": 40 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 40 }, "sourceSize": { "w": 40, "h": 40 }, "duration": 90 },
+    { "filename": "EnemyBruteMoves Attack 5", "frame": { "x": 200, "y": 0, "w": 40, "h": 40 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 40 }, "sourceSize": { "w": 40, "h": 40 }, "duration": 90 },
+    { "filename": "EnemyBruteMoves Spawn 0", "frame": { "x": 0, "y": 40, "w": 40, "h": 40 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 40 }, "sourceSize": { "w": 40, "h": 40 }, "duration": 80 },
+    { "filename": "EnemyBruteMoves Spawn 1", "frame": { "x": 40, "y": 40, "w": 40, "h": 40 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 40 }, "sourceSize": { "w": 40, "h": 40 }, "duration": 80 },
+    { "filename": "EnemyBruteMoves Spawn 2", "frame": { "x": 80, "y": 40, "w": 40, "h": 40 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 40 }, "sourceSize": { "w": 40, "h": 40 }, "duration": 80 },
+    { "filename": "EnemyBruteMoves Spawn 3", "frame": { "x": 120, "y": 40, "w": 40, "h": 40 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 40 }, "sourceSize": { "w": 40, "h": 40 }, "duration": 80 },
+    { "filename": "EnemyBruteMoves Spawn 4", "frame": { "x": 160, "y": 40, "w": 40, "h": 40 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 40 }, "sourceSize": { "w": 40, "h": 40 }, "duration": 80 },
+    { "filename": "EnemyBruteMoves Spawn 5", "frame": { "x": 200, "y": 40, "w": 40, "h": 40 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 40 }, "sourceSize": { "w": 40, "h": 40 }, "duration": 80 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Stag Beetle attack and spawn",
+  "image": "EnemyBruteMoves.png",
+  "format": "RGBA8888",
+  "size": { "w": 240, "h": 80 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Attack", "from": 0, "to": 5, "direction": "forward", "repeat": "1" },
+    { "name": "Spawn", "from": 6, "to": 11, "direction": "forward", "repeat": "1" }
+  ],
+  "layers": [ { "name": "Shadow", "opacity": 255, "blendMode": "normal" }, { "name": "Body", "opacity": 255, "blendMode": "normal" }, { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}

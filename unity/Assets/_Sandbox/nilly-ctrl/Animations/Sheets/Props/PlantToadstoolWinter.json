@@ -1,0 +1,25 @@
+{ "frames": [
+    { "filename": "PlantToadstoolWinter Idle 0", "frame": { "x": 0, "y": 0, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 260 },
+    { "filename": "PlantToadstoolWinter Idle 1", "frame": { "x": 32, "y": 0, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 260 },
+    { "filename": "PlantToadstoolWinter Idle 2", "frame": { "x": 64, "y": 0, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 260 },
+    { "filename": "PlantToadstoolWinter Idle 3", "frame": { "x": 96, "y": 0, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 260 },
+    { "filename": "PlantToadstoolWinter Puff 0", "frame": { "x": 0, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 90 },
+    { "filename": "PlantToadstoolWinter Puff 1", "frame": { "x": 32, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 90 },
+    { "filename": "PlantToadstoolWinter Puff 2", "frame": { "x": 64, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 90 },
+    { "filename": "PlantToadstoolWinter Puff 3", "frame": { "x": 96, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 90 },
+    { "filename": "PlantToadstoolWinter Puff 4", "frame": { "x": 128, "y": 32, "w": 32, "h": 32 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }, "sourceSize": { "w": 32, "h": 32 }, "duration": 90 }
+ ],
+ "meta": {
+  "app": "Hold the Hill build_anim_sheets.py",
+  "description": "Toadstools, winter",
+  "image": "PlantToadstoolWinter.png",
+  "format": "RGBA8888",
+  "size": { "w": 160, "h": 64 },
+  "scale": "1",
+  "frameTags": [
+    { "name": "Idle", "from": 0, "to": 3, "direction": "forward" },
+    { "name": "Puff", "from": 4, "to": 8, "direction": "forward", "repeat": "1" }
+  ],
+  "layers": [ { "name": "Shadow", "opacity": 255, "blendMode": "normal" }, { "name": "Body", "opacity": 255, "blendMode": "normal" }, { "name": "FX", "opacity": 255, "blendMode": "normal" } ]
+ }
+}
