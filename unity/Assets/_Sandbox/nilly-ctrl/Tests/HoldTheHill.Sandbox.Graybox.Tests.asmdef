@@ -1,0 +1,28 @@
+{
+    "name": "HoldTheHill.Sandbox.Graybox.Tests",
+    "rootNamespace": "HoldTheHill.Sandbox.Graybox.Tests",
+    "references": [
+        "HoldTheHill.Runtime",
+        "HoldTheHill.Sandbox.Graybox",
+        "HoldTheHill.Sandbox.Animation",
+        "HoldTheHill.Sandbox.UiKit",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
