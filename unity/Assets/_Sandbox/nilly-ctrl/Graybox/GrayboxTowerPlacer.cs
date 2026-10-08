@@ -135,7 +135,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             {
                 for (int i = 0; i < TowerCatalog.Length; i++)
                 {
-                    if (keyboard[TowerCatalog[i].Hotkey].wasPressedThisFrame)
+                    if (GrayboxControls.Pressed(GrayboxControls.BuildId(i)))
                     {
                         if (_activePlacementTypeIndex == i)
                         {
@@ -150,7 +150,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     }
                 }
 
-                if (keyboard.escapeKey.wasPressedThisFrame)
+                if (GrayboxControls.Pressed(GrayboxControls.Pause))
                 {
                     _selectedTower = null;
                     _showBuildMenu = false;
@@ -530,7 +530,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
                 var keyRect = new Rect(cx + 2f, cy - 4f, 12f, 13f);
                 GrayboxIcons.DrawSliced(keyRect, "Keycap", 4, 4, 4, 5);
-                GUI.Label(new Rect(keyRect.x, keyRect.y, 12f, 10f), info.ShortcutLabel, _inkStyle);
+                GUI.Label(new Rect(keyRect.x, keyRect.y, 12f, 10f), GrayboxControls.Name(GrayboxControls.BuildId(i)), _inkStyle);
 
                 var tagRect = new Rect(cx + 5f, cy + slot + 3f, 40f, 12f);
                 GrayboxIcons.DrawSliced(tagRect, canAfford ? "CostTag" : "CostTagCant", 8, 3, 3, 3);
@@ -592,8 +592,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
                 Texture2D icon = LoadIcon(info.IconName);
                 GUIContent btnContent = icon != null
-                    ? new GUIContent($"[{info.ShortcutLabel}]\n${cost}", icon, info.Name)
-                    : new GUIContent($"[{info.ShortcutLabel}]\n${cost}", info.Name);
+                    ? new GUIContent($"[{GrayboxControls.Name(GrayboxControls.BuildId(i))}]\n${cost}", icon, info.Name)
+                    : new GUIContent($"[{GrayboxControls.Name(GrayboxControls.BuildId(i))}]\n${cost}", info.Name);
 
                 if (GUILayout.Button(btnContent, _barBtnStyle, GUILayout.Width(cardWidth), GUILayout.Height(cardHeight)))
                 {

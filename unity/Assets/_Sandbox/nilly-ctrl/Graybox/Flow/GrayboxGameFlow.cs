@@ -1,6 +1,7 @@
 using System;
 using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
+using HoldTheHill.Sandbox.UiKit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +15,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         Playing,
         Paused,
         RunEnd,
+    }
+
+    /// <summary>What kind of run is being played.</summary>
+    public enum GrayboxRunMode
+    {
+        /// <summary>The map's own waves, in order, ending in victory.</summary>
+        Campaign,
+
+        /// <summary>Procedural waves until the hill falls (<see cref="GrayboxEndlessMode"/>).</summary>
+        Endless,
     }
 
     /// <summary>
@@ -51,11 +62,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [Tooltip("State on Play. Playing drops straight into the graybox; Title goes through the menus.")]
         [SerializeField] private GameFlowState _initialState = GameFlowState.Playing;
 
-        [Tooltip("Pauses and resumes. Cancels tower placement or selection first if there is any.")]
-        [SerializeField] private Key _pauseKey = Key.Escape;
+        // Pause is GrayboxControls.Pause (Esc, or Start on a gamepad). The key first cancels a tower
+        // placement or selection if there is any.
+
+        [Tooltip("With auto-start on, seconds between a cleared wave and the next one starting.")]
+        [SerializeField, Min(0f)] private float _autoStartDelay = 3f;
 
         private EnemySpawner _spawner;
         private GrayboxTowerPlacer _placer;
+        private GrayboxCustomSpawner _custom;
+        private float _autoStartTimer;
+
+        // Honeydew this run has already been paid, so a retried run is not paid twice.
+        private int _honeydewPaid;
         private GrayboxRunCheckpoint _runStart;
         private GrayboxRunCheckpoint _waveStart;
 
@@ -65,6 +84,21 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public GameFlowState State { get; private set; }
         public GrayboxRunStats Stats { get; private set; } = new GrayboxRunStats();
         public bool LastRunWasVictory { get; private set; }
+
+        /// <summary>Campaign or endless. Set by <see cref="StartNewRun(GrayboxRunMode)"/>.</summary>
+        public GrayboxRunMode Mode { get; private set; }
+
+        /// <summary>Honeydew the run that just ended has earned in total (see <see cref="GrayboxUpgrades"/>).</summary>
+        public int LastRunHoneydew { get; private set; }
+
+        /// <summary>The id records are kept under: the map, and "-Endless" for an endless run.</summary>
+        public string LevelId => LevelIdFor(Mode);
+
+        public string LevelIdFor(GrayboxRunMode mode)
+        {
+            string map = _spawner != null ? _spawner.ActiveMapId : "Unknown";
+            return mode == GrayboxRunMode.Endless ? map + "-Endless" : map;
+        }
 
         /// <summary>What the last finished run changed in the records ("new best" and so on).</summary>
         public RunRecordResult LastRunResult { get; private set; }
@@ -91,6 +125,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Instance = this;
             _spawner = FindAnyObjectByType<EnemySpawner>();
             _placer = FindAnyObjectByType<GrayboxTowerPlacer>();
+            _custom = FindAnyObjectByType<GrayboxCustomSpawner>();
             State = _initialState;
             ApplyTimeScale();
         }
@@ -116,6 +151,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // The scene as built, before anything has been bought or lost. Every new run starts here.
             _runStart = GrayboxRunCheckpoint.Capture(0, new GrayboxRunStats(), transform);
             Stats = NewStats();
+
+            GrayboxSettings.Apply();
+            // A scene that starts in play has no "new run" moment to hand out the upgrades at.
+            if (State == GameFlowState.Playing) ApplyRunStartBonuses();
+        }
+
+        private void OnApplicationFocus(bool focused)
+        {
+            if (!focused && GrayboxSettings.PauseOnFocusLoss && !Application.isEditor) Pause();
         }
 
         private void OnDestroy()
@@ -129,36 +173,52 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Update()
         {
-            Keyboard keyboard = Keyboard.current;
-            if (keyboard != null && keyboard[_pauseKey].wasPressedThisFrame)
+            bool pausePressed = GrayboxControls.Pressed(GrayboxControls.Pause);
+            bool startPressed = pausePressed && GrayboxControls.Find(GrayboxControls.Pause).activeControl?.device is Gamepad;
+            bool keyPressed = pausePressed && !startPressed;
+
+            if (State == GameFlowState.Playing)
             {
-                if (State == GameFlowState.Paused)
-                {
-                    Resume();
-                }
-                else if (State == GameFlowState.Playing && (_placer == null || !_placer.IsBusy))
-                {
-                    Pause();
-                }
+                // The key first cancels a tower placement or selection; Start always pauses.
+                if (startPressed || (keyPressed && (_placer == null || !_placer.IsBusy))) Pause();
+            }
+            else if (State == GameFlowState.Paused)
+            {
+                // With a menu up, the key is that menu's "back" (it may be closing a dialog), so
+                // the menu decides. Start resumes from the pause menu itself but not from a dialog.
+                int menus = UiScreen.OpenCount;
+                if ((keyPressed && menus == 0) || (startPressed && menus <= 1)) Resume();
             }
 
             if (State != GameFlowState.Playing) return;
 
             Stats.TimeSeconds += Time.deltaTime;
+            AutoStartNextWave();
             CheckForVictory();
         }
 
         // ---------- Commands ----------
 
-        /// <summary>Starts a fresh run from wave 1. Also what "restart" does.</summary>
+        /// <summary>Starts a fresh run of the given kind from wave 1.</summary>
+        public void StartNewRun(GrayboxRunMode mode)
+        {
+            Mode = mode;
+            StartNewRun();
+        }
+
+        /// <summary>Starts a fresh run from wave 1 in the current mode. Also what "restart" does.</summary>
         public void StartNewRun()
         {
             DiscardWaveCheckpoint();
+            if (_custom != null) _custom.StopCustomSpawning();
             if (_runStart != null) _runStart.Restore(_spawner);
             if (_placer != null) _placer.CancelInteraction();
+            ApplyRunStartBonuses();
 
             Stats = NewStats();
             _counted = null;
+            _honeydewPaid = 0;
+            _autoStartTimer = 0f;
             SpeedIndex = 0;
             FieldReset?.Invoke();
             Enter(GameFlowState.Playing);
@@ -217,6 +277,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public void CycleSpeed() => SetSpeedIndex((SpeedIndex + 1) % Speeds.Length);
 
+        /// <summary>Called by <see cref="GrayboxEndlessMode"/> as each endless wave starts.</summary>
+        public void ReportEndlessWave(int waveNumber)
+        {
+            Stats.WaveReached = Mathf.Max(Stats.WaveReached, waveNumber);
+            Stats.TotalWaves = 0; // no last wave to count towards
+        }
+
         public float SpeedAt(int index) => Speeds[Mathf.Clamp(index, 0, Speeds.Length - 1)];
 
         // ---------- Internals ----------
@@ -244,6 +311,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             DiscardWaveCheckpoint();
             _counted = null;
+            _honeydewPaid = 0;
+            if (_custom != null) _custom.StopCustomSpawning();
             if (_spawner != null) _spawner.RestartFromWave(0);
             GrayboxRunCheckpoint.ClearField();
             if (_placer != null) _placer.CancelInteraction();
@@ -259,11 +328,44 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private GrayboxRunStats NewStats()
         {
-            return new GrayboxRunStats { TotalWaves = _spawner != null ? _spawner.TotalWaves : 0 };
+            bool counted = Mode == GrayboxRunMode.Campaign && _spawner != null;
+            return new GrayboxRunStats { TotalWaves = counted ? _spawner.TotalWaves : 0 };
+        }
+
+        // The permanent upgrades bought at Home, handed out on top of the scene's own numbers.
+        private static void ApplyRunStartBonuses()
+        {
+            if (GrayboxBaseHealth.Instance != null) GrayboxBaseHealth.Instance.SetBonusHealth(GrayboxUpgrades.HillHealthBonus);
+
+            GrayboxEconomy economy = GrayboxEconomy.Instance;
+            int food = GrayboxUpgrades.StartingFoodBonus;
+            if (economy != null && food > 0) economy.ResetGold(economy.CurrentGold + food);
+        }
+
+        // The "auto-start waves" setting: campaign waves follow each other without the next-wave key.
+        private void AutoStartNextWave()
+        {
+            if (!GrayboxSettings.AutoStartWaves || Mode != GrayboxRunMode.Campaign || _spawner == null) return;
+
+            bool waiting = _spawner.CurrentState == EnemySpawner.SpawnerState.WaitingForNextWave
+                || _spawner.CurrentState == EnemySpawner.SpawnerState.Idle;
+            if (!waiting || _spawner.LivingEnemyCount > 0)
+            {
+                _autoStartTimer = 0f;
+                return;
+            }
+
+            _autoStartTimer += Time.deltaTime;
+            if (_autoStartTimer < _autoStartDelay) return;
+
+            _autoStartTimer = 0f;
+            _spawner.StartNextWave();
         }
 
         private void OnWaveStarted(int waveNumber, int totalWaves)
         {
+            if (Mode != GrayboxRunMode.Campaign) return; // endless waves report themselves
+
             Stats.WaveReached = Mathf.Max(Stats.WaveReached, waveNumber);
             Stats.TotalWaves = totalWaves;
 
@@ -284,6 +386,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         // Nothing else declares victory: the spawner only knows when it has finished spawning.
         private void CheckForVictory()
         {
+            if (Mode != GrayboxRunMode.Campaign) return; // an endless run ends only in defeat
             if (_spawner == null || _spawner.CurrentState != EnemySpawner.SpawnerState.Completed) return;
             if (_spawner.LivingEnemyCount > 0) return;
 
@@ -303,9 +406,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             LastRunWasVictory = victory;
             Stats.TowersStanding = FindObjectsByType<Tower>().Length;
 
-            string levelId = _spawner != null ? _spawner.ActiveMapId : "Unknown";
-            LastRunResult = GrayboxRecords.Submit(levelId, Stats, victory, _counted);
+            LastRunResult = GrayboxRecords.Submit(LevelId, Stats, victory, _counted);
             _counted = Stats.Clone();
+
+            // Only what this ending adds: a run retried after a defeat has been paid for its earlier waves.
+            int earned = GrayboxUpgrades.HoneydewFor(Stats.WaveReached, victory);
+            GrayboxMetaProgress.AddCurrency(earned - _honeydewPaid);
+            _honeydewPaid = Mathf.Max(_honeydewPaid, earned);
+            LastRunHoneydew = _honeydewPaid;
 
             Enter(GameFlowState.RunEnd);
         }

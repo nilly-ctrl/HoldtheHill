@@ -30,7 +30,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private List<Entry> _entries = new List<Entry>();
         [SerializeField] private Transform _spawnPoint;
         [SerializeField] private Transform _enemyContainer;
-        [SerializeField] private Key _panelKey = Key.B;
 
         private EnemySpawner _spawner;
         private bool _panelOpen;
@@ -141,8 +140,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Update()
         {
-            Keyboard keyboard = Keyboard.current;
-            if (keyboard != null && GrayboxGameFlow.GameplayActive && keyboard[_panelKey].wasPressedThisFrame)
+            if (GrayboxGameFlow.GameplayActive && GrayboxControls.Pressed(GrayboxControls.SpecialsPanel))
             {
                 _panelOpen = !_panelOpen;
             }
@@ -164,7 +162,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             const float Width = 210f;
             float height = 60f + _entries.Count * 26f;
             GUILayout.BeginArea(new Rect(Screen.width - Width - 12f, 120f, Width, height), GUI.skin.box);
-            GUILayout.Label($"Spawn a special ({_panelKey} closes)", _label);
+            GUILayout.Label($"Spawn a special ({GrayboxControls.Name(GrayboxControls.SpecialsPanel)} closes)", _label);
             bool lastBoss = true;
             foreach (Entry entry in _entries)
             {

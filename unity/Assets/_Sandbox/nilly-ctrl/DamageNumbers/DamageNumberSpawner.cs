@@ -90,10 +90,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         // ------------------------------------------------------------ static API
 
+        /// <summary>Off hides every popup. The "damage numbers" setting.</summary>
+        public static bool Enabled { get; set; } = true;
+
         /// <summary>Shows a number, e.g. Show(42, DamageNumberKind.Fire, enemy.position).</summary>
         public static void Show(float amount, DamageNumberKind kind, Vector3 worldPosition)
         {
-            if (Instance != null)
+            if (Instance != null && Enabled)
             {
                 Instance.Spawn(Instance.FormatAmount(amount, kind), kind, worldPosition, Instance.MotionFor(kind, false));
             }

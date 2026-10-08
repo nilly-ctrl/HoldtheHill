@@ -197,8 +197,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Update()
         {
-            Keyboard keyboard = Keyboard.current;
-            if (GrayboxGameFlow.GameplayActive && keyboard != null && keyboard.aKey.wasPressedThisFrame)
+            if (GrayboxGameFlow.GameplayActive && GrayboxControls.Pressed(GrayboxControls.Achievements))
             {
                 ShowAchievementsWindow = !ShowAchievementsWindow;
             }

@@ -46,6 +46,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 if (health != null)
                 {
                     float mult = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.BountyMultiplier : 1.0f;
+                    mult *= GrayboxUpgrades.BountyMultiplier; // permanent upgrade bought at Home
                     int bounty = Mathf.RoundToInt(health.BountyValue * mult);
                     EarnGold(bounty);
                     if (bounty > 0) OnBountyPaid?.Invoke(bounty);

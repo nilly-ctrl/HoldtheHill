@@ -10,8 +10,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// </summary>
     public class GrayboxSkillTreeUI : MonoBehaviour
     {
-        [SerializeField] private Key _toggleKey = Key.K;
-
         private bool _showWindow = false;
         private GUIStyle _headerStyle;
         private GUIStyle _cardStyle;
@@ -19,8 +17,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Update()
         {
-            Keyboard keyboard = Keyboard.current;
-            if (GrayboxGameFlow.GameplayActive && keyboard != null && keyboard[_toggleKey].wasPressedThisFrame)
+            if (GrayboxGameFlow.GameplayActive && GrayboxControls.Pressed(GrayboxControls.SkillTree))
             {
                 _showWindow = !_showWindow;
             }

@@ -12,7 +12,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Font Theme Key")]
     public class GrayboxFontThemeKey : MonoBehaviour
     {
-        [SerializeField] private Key _key = Key.F6;
         [SerializeField, Min(0.2f)] private float _nameSeconds = 1.4f;
 
         private PixelFontTheme _theme;
@@ -21,7 +20,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private void Update()
         {
             Keyboard keyboard = Keyboard.current;
-            if (keyboard == null || !keyboard[_key].wasPressedThisFrame)
+            if (keyboard == null || !GrayboxControls.Pressed(GrayboxControls.FontTheme))
             {
                 return;
             }

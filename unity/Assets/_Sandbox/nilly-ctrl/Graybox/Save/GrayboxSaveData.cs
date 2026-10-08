@@ -48,6 +48,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public bool showDamageNumbers = true;
         public bool showHealthBars = true;
         public bool showRangeRings = true;
+
+        // Display. Width and height 0 mean "the monitor's own resolution".
+        public bool fullscreen = true;
+        public int resolutionWidth;
+        public int resolutionHeight;
+        public bool vsync = true;
+
+        // Accessibility
+        /// <summary>Added to the automatic whole-number UI scale: -1 smaller, +1 larger.</summary>
+        public int uiScaleOffset;
+        public bool pauseOnFocusLoss = true;
     }
 
     [Serializable]

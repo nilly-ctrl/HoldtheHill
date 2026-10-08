@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
@@ -13,9 +14,20 @@ namespace HoldTheHill.Sandbox.UiKit
     /// </remarks>
     public static class UiInput
     {
+        /// <summary>
+        /// While true, back and tab switching are ignored. Set while a key is being captured for a
+        /// rebind, when Esc, Q and E are answers, not commands.
+        /// </summary>
+        public static bool Suspended { get; set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Suspended = false;
+
         /// <summary>True on the frame back/cancel was pressed (Esc, gamepad B/Circle by default).</summary>
         public static bool BackPressed()
         {
+            if (Suspended) return false;
+
             var module = EventSystem.current != null ? EventSystem.current.currentInputModule as InputSystemUIInputModule : null;
             InputAction cancel = module != null && module.cancel != null ? module.cancel.action : null;
             if (cancel != null)
@@ -30,6 +42,8 @@ namespace HoldTheHill.Sandbox.UiKit
         /// <summary>-1 for previous tab, +1 for next tab, 0 for neither, on the frame it was pressed.</summary>
         public static int TabStep()
         {
+            if (Suspended) return 0;
+
             Gamepad pad = Gamepad.current;
             Keyboard keys = Keyboard.current;
 

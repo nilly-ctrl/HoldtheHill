@@ -23,10 +23,24 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public bool IsFinished { get; private set; }
         public bool IsVictory { get; private set; }
 
+        private float _builtMaxHealth;
+
         private void Awake()
         {
             Instance = this;
+            _builtMaxHealth = _maxHealth;
             CurrentHealth = _maxHealth;
+        }
+
+        /// <summary>
+        /// Raises the hill's full health above what the scene was built with and refills it. Called
+        /// at the start of a run with the permanent "tougher hill" upgrade; 0 puts it back.
+        /// </summary>
+        public void SetBonusHealth(float bonus)
+        {
+            _maxHealth = _builtMaxHealth + Mathf.Max(0f, bonus);
+            CurrentHealth = _maxHealth;
+            OnBaseHealthChanged?.Invoke(CurrentHealth, _maxHealth);
         }
 
         private void OnEnable()

@@ -134,8 +134,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             var go = new GameObject("GrayboxGameFlow");
             go.AddComponent<GrayboxSaveHost>(); // attaches the save file; without it nothing is persisted
-            go.AddComponent<GrayboxGameFlow>();
-            go.AddComponent<GrayboxFlowPlaceholderUi>();
+            var flow = go.AddComponent<GrayboxGameFlow>();
+            go.AddComponent<GrayboxEndlessMode>();
+
+            // The game opens on the title screen. Change "Initial State" on this object to Playing
+            // to drop straight into the field while tuning.
+            Apply(flow, so => so.FindProperty("_initialState").enumValueIndex = (int)GameFlowState.Title);
+
+            // Every menu screen (uGUI), rebuilt with the scene so they match the code.
+            GrayboxMenusBuilder.BuildPrefab();
+            GrayboxMenusBuilder.AddToScene();
         }
 
         private static void BuildEconomy()
@@ -929,7 +937,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // The spawner waits to be prompted between waves, so the scene needs something
             // that can prompt it. The HUD also reports kills and leaks while tuning.
             go.AddComponent<GrayboxHud>();
-            go.AddComponent<GrayboxMenuManager>();
             go.AddComponent<GrayboxAchievements>();
         }
 

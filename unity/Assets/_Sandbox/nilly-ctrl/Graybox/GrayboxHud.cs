@@ -26,20 +26,8 @@ public class GrayboxHud : MonoBehaviour
     [Tooltip("The spawner to read and drive. Found automatically if left empty.")]
     [SerializeField] private EnemySpawner _spawner;
 
-    [Tooltip("Starts the next wave.")]
-    [SerializeField] private Key _nextWaveKey = Key.N;
-
-    [Tooltip("Clears the field and restarts from wave 1.")]
-    [SerializeField] private Key _restartKey = Key.R;
-
-    [Tooltip("Cycles 1x, 2x, 4x time, for watching long waves quickly.")]
-    [SerializeField] private Key _speedKey = Key.T;
-
-    [Tooltip("Toggles tower range rings, target lines, and priority labels.")]
-    [SerializeField] private Key _visualsKey = Key.V;
-
-    [Tooltip("Toggles enemy health bars.")]
-    [SerializeField] private Key _healthBarKey = Key.H;
+    // Keys come from GrayboxControls (next wave, restart, speed, range rings, health bars), so
+    // the controls screen can rebind them.
 
     private readonly float[] _speeds = { 1f, 2f, 4f };
 
@@ -132,19 +120,13 @@ public class GrayboxHud : MonoBehaviour
 
         _elapsed += Time.unscaledDeltaTime;
 
-        Keyboard keyboard = Keyboard.current;
-        if (keyboard == null)
-        {
-            return;
-        }
-
-        if (keyboard[_nextWaveKey].wasPressedThisFrame && _spawner != null)
+        if (HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.Pressed(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.NextWave) && _spawner != null)
         {
             _spawner.StartNextWave();
             HoldTheHill.Sandbox.NillyCtrl.GrayboxSfx.PlayCue("WaveStart", Vector3.zero);
         }
 
-        if (keyboard[_speedKey].wasPressedThisFrame)
+        if (HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.Pressed(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.Speed))
         {
             if (HoldTheHill.Sandbox.NillyCtrl.GrayboxGameFlow.Instance != null)
             {
@@ -157,24 +139,30 @@ public class GrayboxHud : MonoBehaviour
             }
         }
 
-        if (keyboard[_restartKey].wasPressedThisFrame)
+        if (HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.Pressed(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.Restart))
         {
             Restart();
         }
 
-        if (keyboard[_visualsKey].wasPressedThisFrame)
+        if (HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.Pressed(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.ToggleRings))
         {
             bool toggle = !HoldTheHill.Sandbox.NillyCtrl.TowerTargetVisualizer.ShowRangeRings;
             HoldTheHill.Sandbox.NillyCtrl.TowerTargetVisualizer.ShowRangeRings = toggle;
             HoldTheHill.Sandbox.NillyCtrl.TowerTargetVisualizer.ShowTargetLines = toggle;
             HoldTheHill.Sandbox.NillyCtrl.TowerTargetVisualizer.ShowTowerLabels = toggle;
+            HoldTheHill.Sandbox.NillyCtrl.GrayboxSave.Data.settings.showRangeRings = toggle; // keeps the settings screen in step
+            HoldTheHill.Sandbox.NillyCtrl.GrayboxSave.MarkDirty();
         }
 
-        if (keyboard[_healthBarKey].wasPressedThisFrame)
+        if (HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.Pressed(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.ToggleHealthBars))
         {
             HoldTheHill.Sandbox.NillyCtrl.EnemyHealthBar.ShowHealthBars = !HoldTheHill.Sandbox.NillyCtrl.EnemyHealthBar.ShowHealthBars;
+            HoldTheHill.Sandbox.NillyCtrl.GrayboxSave.Data.settings.showHealthBars = HoldTheHill.Sandbox.NillyCtrl.EnemyHealthBar.ShowHealthBars;
+            HoldTheHill.Sandbox.NillyCtrl.GrayboxSave.MarkDirty();
         }
     }
+
+    private static string KeyName(string action) => HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.Name(action);
 
     /// <summary>
     /// Clears the field and rewinds to wave 1.
@@ -341,16 +329,14 @@ public class GrayboxHud : MonoBehaviour
             _lines.Add(pixelHud ? $"Speed     x{speed:0}" : $"Time      {_elapsed:0.0}s  (x{speed:0})");
             keysStart = _lines.Count; // the blank line before the key list
             _lines.Add(string.Empty);
-            _lines.Add($"<b>{_nextWaveKey}</b>  next wave");
-            _lines.Add($"<b>M</b>  start menu");
-            _lines.Add($"<b>O</b>  settings & audio");
-            _lines.Add($"<b>A</b>  achievements");
-            _lines.Add($"<b>K</b>  skill tree");
-            _lines.Add($"<b>{_speedKey}</b>  cycle speed");
-            _lines.Add($"<b>{_visualsKey}</b>  toggle tower visuals");
-            _lines.Add($"<b>{_healthBarKey}</b>  toggle health bars");
-            _lines.Add($"<b>{_restartKey}</b>  restart");
-            if (HoldTheHill.Sandbox.NillyCtrl.GrayboxGameFlow.Instance != null) _lines.Add("<b>Esc</b>  pause");
+            _lines.Add($"<b>{KeyName(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.NextWave)}</b>  next wave");
+            _lines.Add($"<b>{KeyName(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.Achievements)}</b>  achievements");
+            _lines.Add($"<b>{KeyName(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.SkillTree)}</b>  skill tree");
+            _lines.Add($"<b>{KeyName(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.Speed)}</b>  cycle speed");
+            _lines.Add($"<b>{KeyName(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.ToggleRings)}</b>  toggle tower visuals");
+            _lines.Add($"<b>{KeyName(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.ToggleHealthBars)}</b>  toggle health bars");
+            _lines.Add($"<b>{KeyName(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.Restart)}</b>  restart");
+            if (HoldTheHill.Sandbox.NillyCtrl.GrayboxGameFlow.Instance != null) _lines.Add($"<b>{KeyName(HoldTheHill.Sandbox.NillyCtrl.GrayboxControls.Pause)}</b>  pause, settings, controls");
         }
 
         // Measure rather than hardcode. CalcSize gives the real rendered box for each
