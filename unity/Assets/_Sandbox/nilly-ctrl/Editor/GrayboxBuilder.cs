@@ -166,6 +166,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // Food, wave and time in the pixel font, and a combo counter for quick kills.
             go.AddComponent<GrayboxPixelHud>();
             go.AddComponent<GrayboxKillCombo>();
+            // A word and icon when a status lands, and a name banner and label for bosses.
+            go.AddComponent<GrayboxStatusPopups>();
+            go.AddComponent<GrayboxBossBanner>();
             go.AddComponent<GrayboxStatusCombos>();
             go.AddComponent<GrayboxBaseHealth>();
             go.AddComponent<GrayboxBaseHealthUI>();

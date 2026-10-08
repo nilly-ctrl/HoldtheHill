@@ -16,8 +16,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private readonly List<int> _triangles = new List<int>();
 
         private DamageNumberSpawner _owner;
+        private static readonly int MainTex = Shader.PropertyToID("_MainTex");
+
         private Mesh _mesh;
         private MeshRenderer _renderer;
+        private MaterialPropertyBlock _block;
+        private PixelFontStyle _style;
+        private int _shownFrame;
 
         private DamageNumberMotion _motion;
         private Vector3 _origin;
@@ -62,6 +67,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _renderer.sortingOrder = sortingOrder;
 
             BuildMesh(text, style);
+            _style = style;
+            ShowFrame(0);
             IsPlaying = true;
             PlayId++;
             Apply();
@@ -74,6 +81,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         internal void Retext(string text, PixelFontStyle style)
         {
             BuildMesh(text, style);
+            _style = style;
             _age = 0f;
             _alpha = 255;
             _velocity = new Vector2(0f, _motion.RiseSpeed * 0.35f);
@@ -100,9 +108,32 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 return;
             }
 
+            if (_style != null && _style.FrameCount > 1)
+            {
+                ShowFrame((int)(_age * _style.FramesPerSecond) % _style.FrameCount);
+            }
+
             _velocity.y -= _motion.Gravity * dt;
             _offset += _velocity * dt;
             Apply();
+        }
+
+        // An animated style (a pulsing crit, a sparkling heal) swaps its atlas frame by frame.
+        private void ShowFrame(int frame)
+        {
+            if (_style == null || (frame == _shownFrame && _block != null))
+            {
+                return;
+            }
+
+            _shownFrame = frame;
+            if (_block == null)
+            {
+                _block = new MaterialPropertyBlock();
+            }
+
+            _block.SetTexture(MainTex, _style.Frame(frame));
+            _renderer.SetPropertyBlock(_block);
         }
 
         private void Apply()

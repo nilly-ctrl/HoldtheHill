@@ -41,6 +41,27 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public const string IconSword = "\uE089";
         public const string IconCrown = "\uE08A";
         public const string IconAnt = "\uE08B";
+        public const string IconTowerBeam = "\uE08C";
+        public const string IconTowerChain = "\uE08D";
+        public const string IconTowerFrostAura = "\uE08E";
+        public const string IconTowerHoming = "\uE08F";
+        public const string IconTowerKnockback = "\uE090";
+        public const string IconTowerLinear = "\uE091";
+        public const string IconTowerMajor = "\uE092";
+        public const string IconTowerMineLayer = "\uE093";
+        public const string IconTowerMortar = "\uE094";
+        public const string IconTowerNurse = "\uE095";
+        public const string IconTowerOrbit = "\uE096";
+        public const string IconTowerRicochet = "\uE097";
+        public const string IconTowerSoldier = "\uE098";
+        public const string IconTowerWorker = "\uE099";
+        public const string IconCoin = "\uE09A";
+        public const string IconGem = "\uE09B";
+        public const string IconGear = "\uE09C";
+        public const string IconSpeaker = "\uE09D";
+        public const string IconPause = "\uE09E";
+        public const string IconPlay = "\uE09F";
+        public const string IconFastForward = "\uE0A0";
 
         public const string KeyEsc = "\uE000";
         public const string KeyTab = "\uE001";
