@@ -1,5 +1,13 @@
 # Animations (pixel art, v1)
 
+> **Most of this library now lives in the team Google Drive, not in the repo (2026-10-07).**
+> Only the 109 sprites the graybox and weapon picker use are kept here. The other 2,725, the review
+> GIFs and gallery pages, and the screenshots are in `Turbulent Towers/Art/Animation Library/`
+> (`Aseprite/`, `Sheets/`, `Review/`) and `Art/Screenshots/`, with their `.meta` files. To use one in
+> the game, copy its `.aseprite`, sheet `.png` and `.json` and their `.meta` files back into the matching
+> folder here. The build scripts in `Source~/` still write the whole library, so move new output
+> to Drive instead of committing it. `Source~/ArtCatalogue.csv` still lists every sprite.
+
 Animation sheets for every tower, every graybox enemy, and the effects the new towers and enemies need. They use the same palette and 1 px ink outline as `Icons/`, and they're generated from code.
 
 | Folder | What's in it |
