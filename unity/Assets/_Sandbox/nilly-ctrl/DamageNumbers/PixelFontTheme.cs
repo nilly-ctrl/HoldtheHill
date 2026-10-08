@@ -44,6 +44,24 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Apply();
         }
 
+        /// <summary>
+        /// Steps to the next theme in the library (or back, with -1), going round through the base
+        /// set, and applies it. Returns the new theme's name; the base set is "Meadow".
+        /// </summary>
+        public string StepTheme(int direction = 1)
+        {
+            var names = new System.Collections.Generic.List<string> { string.Empty };
+            if (_library != null)
+            {
+                names.AddRange(_library.Themes);
+            }
+
+            int current = Mathf.Max(0, names.IndexOf(_theme ?? string.Empty));
+            int next = ((current + direction) % names.Count + names.Count) % names.Count;
+            SetTheme(names[next]);
+            return string.IsNullOrEmpty(_theme) ? "Meadow" : _theme;
+        }
+
         /// <summary>Applies the current theme again, for example after new text has been created.</summary>
         [ContextMenu("Apply Theme")]
         public void Apply()

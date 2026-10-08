@@ -161,6 +161,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             PixelFontBuilder.ConfigureTheme(go.AddComponent<PixelFontTheme>());
             // WAVE 3, WAVE CLEAR, VICTORY and DEFEAT in the theme's banner styles.
             go.AddComponent<GrayboxWaveBanner>();
+            // F6 steps through the font themes while playing.
+            go.AddComponent<GrayboxFontThemeKey>();
             go.AddComponent<GrayboxStatusCombos>();
             go.AddComponent<GrayboxBaseHealth>();
             go.AddComponent<GrayboxBaseHealthUI>();
