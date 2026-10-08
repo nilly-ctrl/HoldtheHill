@@ -37,9 +37,20 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private const string TtfPath = "Assets/_Sandbox/nilly-ctrl/Fonts/TTF/HoldTheHillPixel-Regular.ttf";
         private const string InputActionsPath = "Assets/Settings/InputSystem_Actions.inputactions";
 
-        // Every character the pixel font has.
-        private const string Glyphs =
-            " !\"#$%&'()*+,-./0123456789:<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]_abcdefghijklmnopqrstuvwxyz|×→●";
+        // Every character the pixel font has, as inclusive ranges (the TTF's character map; see
+        // Fonts/Source~/build_pixel_fonts.py). E000 and up are the inline icons and the key, mouse
+        // and gamepad prompts named in PixelGlyphs.cs.
+        private static readonly int[] GlyphRanges =
+        {
+            0x0020, 0x007E, 0x00A1, 0x00A1, 0x00B0, 0x00B1, 0x00B7, 0x00B7, 0x00BF, 0x00C4,
+            0x00C7, 0x00CF, 0x00D1, 0x00D7, 0x00D9, 0x00DD, 0x00DF, 0x00E4, 0x00E7, 0x00EF,
+            0x00F1, 0x00F6, 0x00F9, 0x00FD, 0x00FF, 0x00FF, 0x2013, 0x2014, 0x2018, 0x2019,
+            0x201C, 0x201D, 0x2022, 0x2022, 0x2026, 0x2026, 0x2190, 0x2193, 0x221E, 0x221E,
+            0x24B6, 0x24B7, 0x24C1, 0x24C1, 0x24C7, 0x24C7, 0x24CD, 0x24CE, 0x25B2, 0x25B2,
+            0x25B6, 0x25B6, 0x25BC, 0x25BC, 0x25C0, 0x25C0, 0x25CF, 0x25CF, 0x2605, 0x2606,
+            0x2665, 0x2665, 0x2713, 0x2713, 0x2715, 0x2715, 0xE000, 0xE00B, 0xE010, 0xE019,
+            0xE020, 0xE039, 0xE040, 0xE04B, 0xE050, 0xE053, 0xE060, 0xE06F, 0xE080, 0xE0A0,
+        };
 
         private const float LabelSplit = 0.42f; // where a row's label ends and its control begins
 
@@ -107,6 +118,35 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 return existing;
             }
 
+            return CreateFont();
+        }
+
+        /// <summary>
+        /// Samples the TTF again into the font asset, after the TTF or its character list changed.
+        /// The asset, its material and its atlas keep their ids, so prefabs and scenes keep their links.
+        /// </summary>
+        [MenuItem("Tools/Hold the Hill/Rebuild UI Kit Font")]
+        public static void RebuildFont()
+        {
+            var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
+            if (font == null)
+            {
+                EnsureFolder(Root, "Fonts");
+                s_font = CreateFont();
+                return;
+            }
+
+            AssetDatabase.ImportAsset(TtfPath, ImportAssetOptions.ForceUpdate);
+            font.atlasPopulationMode = AtlasPopulationMode.Dynamic; // brings the TTF back as the source
+            font.ClearFontAssetData(false);
+            Populate(font);
+            s_font = font;
+            Debug.Log($"[UiKit] Rebuilt {FontPath}: {font.characterTable.Count} characters.");
+        }
+
+        private static TMP_FontAsset CreateFont()
+        {
+
             var ttf = AssetDatabase.LoadAssetAtPath<Font>(TtfPath);
             if (ttf == null)
             {
@@ -124,9 +164,22 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             font.atlasTexture.name = "HoldTheHillPixel Atlas";
             AssetDatabase.AddObjectToAsset(font.atlasTexture, font);
 
-            if (!font.TryAddCharacters(Glyphs, out string missing) && !string.IsNullOrEmpty(missing))
+            Populate(font);
+            return font;
+        }
+
+        private static void Populate(TMP_FontAsset font)
+        {
+            var glyphs = new System.Text.StringBuilder();
+            for (int i = 0; i < GlyphRanges.Length; i += 2)
             {
-                Debug.LogWarning($"[UiKit] The pixel font has no glyph for: {missing}");
+                for (int code = GlyphRanges[i]; code <= GlyphRanges[i + 1]; code++) glyphs.Append((char)code);
+            }
+
+            if (!font.TryAddCharacters(glyphs.ToString(), out string missing) && !string.IsNullOrEmpty(missing))
+            {
+                string codes = string.Join(" ", missing.Select(c => ((int)c).ToString("X4")));
+                Debug.LogError($"[UiKit] The pixel font could not take {missing.Length} characters: {codes}");
             }
 
             font.atlasTexture.filterMode = FilterMode.Point;
@@ -136,7 +189,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             EditorUtility.SetDirty(font);
             EditorUtility.SetDirty(font.atlasTexture);
             AssetDatabase.SaveAssets();
-            return font;
         }
 
         // ---------- widgets ----------
@@ -524,6 +576,84 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         // ---------- for screen builders ----------
+
+        /// <summary>
+        /// A full-screen <see cref="UiScreen"/> under a canvas, saved closed. The dim layer darkens
+        /// whatever is behind it and swallows clicks aimed there.
+        /// </summary>
+        public static RectTransform AddScreen(Transform canvas, string name, bool dim = true)
+        {
+            RectTransform screen = NewRect(name, canvas);
+            Stretch(screen);
+            screen.gameObject.AddComponent<CanvasGroup>();
+            screen.gameObject.AddComponent<UiScreen>();
+
+            if (dim)
+            {
+                RectTransform layer = NewRect("Dim", screen);
+                Stretch(layer);
+                layer.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.6f);
+            }
+
+            screen.gameObject.SetActive(false);
+            return screen;
+        }
+
+        /// <summary>A "label ........ value" line for stats. Returns the value text.</summary>
+        public static TextMeshProUGUI AddValueRow(Transform parent, string label, string value)
+        {
+            RectTransform row = NewRect(Tidy(label) + "Row", parent);
+            var element = row.gameObject.AddComponent<LayoutElement>();
+            element.minHeight = element.preferredHeight = 12f;
+
+            TextMeshProUGUI left = AddText(row, "Label", label, UiKitStyle.BodySize, TextAlignmentOptions.Left);
+            Stretch(left.rectTransform, 2f, 0f, 2f, 0f);
+            left.color = UiKitStyle.Dim;
+
+            TextMeshProUGUI right = AddText(row, "Value", value, UiKitStyle.BodySize, TextAlignmentOptions.Right);
+            Stretch(right.rectTransform, 2f, 0f, 2f, 0f);
+            return right;
+        }
+
+        /// <summary>A row with a label on the left and a kit button on the right, e.g. a key binding.</summary>
+        public static UiButton AddButtonRow(Transform parent, string label, string buttonText, out TextMeshProUGUI labelText)
+        {
+            RectTransform row = NewRow(Tidy(label) + "Row");
+            row.SetParent(parent, false);
+
+            labelText = AddText(row, "Label", label, UiKitStyle.BodySize, TextAlignmentOptions.Left);
+            Anchor(labelText.rectTransform, new Vector2(0f, 0f), new Vector2(0.6f, 1f), new Vector2(2f, 0f), Vector2.zero);
+
+            var button = InstantiatePrefab("Button", row).GetComponent<UiButton>();
+            button.name = "Button";
+            SetLabel(button.gameObject, buttonText);
+            Anchor((RectTransform)button.transform, new Vector2(0.6f, 0f), new Vector2(1f, 1f), Vector2.zero, new Vector2(-2f, 0f));
+            return button;
+        }
+
+        /// <summary>A bare column that stacks rows, with no panel art. Position it with its anchors.</summary>
+        public static RectTransform AddColumn(Transform parent, string name, float width)
+        {
+            RectTransform column = AddPage(parent, name);
+            column.sizeDelta = new Vector2(width, 0f);
+            var fitter = column.gameObject.AddComponent<ContentSizeFitter>();
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            return column;
+        }
+
+        /// <summary>A picture drawn whole at the given size, in canvas units. Does not take clicks.</summary>
+        public static Image AddPicture(Transform parent, string name, Sprite sprite, Vector2 size)
+        {
+            RectTransform rect = NewRect(name, parent);
+            rect.sizeDelta = size;
+            var image = rect.gameObject.AddComponent<Image>();
+            image.sprite = sprite;
+            image.raycastTarget = false;
+            return image;
+        }
+
+        /// <summary>Sets a serialized field on a component by name, for wiring generated objects.</summary>
+        public static void Wire(Object target, string property, Object value) => Set(target, property, value);
 
         /// <summary>A kit panel centred in its parent, as tall as its contents.</summary>
         public static RectTransform AddPanel(Transform parent, float width)

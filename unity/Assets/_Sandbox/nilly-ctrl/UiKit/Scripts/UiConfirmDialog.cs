@@ -39,6 +39,15 @@ namespace HoldTheHill.Sandbox.UiKit
             _screen.Show();
         }
 
+        /// <summary>Closes the dialog without running either callback.</summary>
+        public void Dismiss()
+        {
+            _onConfirm = null;
+            _onCancel = null;
+            if (_screen != null) _screen.Hide();
+            else gameObject.SetActive(false);
+        }
+
         private void Hook()
         {
             if (_hooked) return;

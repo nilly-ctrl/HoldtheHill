@@ -22,6 +22,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxGameFlow flow = GrayboxGameFlow.Instance;
             if (flow == null || flow.State == GameFlowState.Playing) return;
 
+            // The real screens (GrayboxMenus) take over when the scene has them. These cards
+            // remain as a way out in a test scene without the menus.
+            if (HoldTheHill.Sandbox.UiKit.UiScreen.OpenCount > 0) return;
+
             GrayboxUi.Apply(); // pixel skin; a no-op without a GrayboxUi in the scene
             _title ??= new GUIStyle(GUI.skin.label) { fontSize = 20, alignment = TextAnchor.MiddleCenter, richText = true };
             _body ??= new GUIStyle(GUI.skin.label) { fontSize = 10, alignment = TextAnchor.MiddleCenter, richText = true };
