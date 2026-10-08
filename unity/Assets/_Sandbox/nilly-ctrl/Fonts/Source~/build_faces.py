@@ -9,6 +9,8 @@ Run through build_pixel_fonts.py, which calls run(). Writes:
   ./FaceSheet.png        every face style with sample text
   ./SpecimenFaces.png    every glyph of the seven TTFs
   ./ThemeTitles.png      each theme's title and label
+  ./PairingSheet.png     the pairings named in PAIRINGS
+  ./CheatSheet.png       one page for teammates: which font to use where
 """
 import os
 import unicodedata
@@ -86,6 +88,22 @@ GLOWING = ("Neon", "NeonSpace", "Vaporwave")
 # "italic", for example ("Neon", "Banner", "slab", "Gold bold"). It bakes <Style><Alphabet>... beside
 # that theme's other atlases ("Meadow" is the base set). The artifact writes the rows for you.
 PAIRINGS = [
+    # a starter set, one or two per theme, to judge in the game
+    ("Spooky", "Banner", "gothic"),
+    ("Spooky", "BannerDefeat", "gothic"),
+    ("Spooky", "DamageCrit", "gothic"),
+    ("Neon", "Banner", "tech"),
+    ("Neon", "DamageNormal", "tech"),
+    ("Neon", "Hud", "tech"),
+    ("Medieval", "Banner", "serif"),
+    ("Pirate", "Banner", "slab"),
+    ("Steampunk", "Banner", "deco", "Gold"),
+    ("Candy", "Banner", "bubble"),
+    ("Candy", "Combo", "bubble"),
+    ("Military", "Banner", "stencil"),
+    ("Samurai", "Banner", "chisel"),
+    ("Vaporwave", "Banner", "wide"),
+    ("Meadow", "Heading", "script"),
 ]
 
 # ---------------------------------------------------------------- accents, symbols and prompts
@@ -337,7 +355,105 @@ def title_sheet(by_theme, backdrops, path, label_font):
     sheet.save(path)
 
 
-def run(base_baked, label_font, themes, body_regular, check):
+def pairing_sheet(made, backdrops, path, label_font):
+    """Each baked pairing on its theme's backdrop, beside its theme and file name."""
+    strips = []
+    for theme_name, baked in made:
+        label = b.zoomed(label_font.render(f"{theme_name} / {baked.st['name']}".upper()), 2)
+        sample = baked.render(spell(baked.st["face"], "Wave Clear 128!"))
+        z = 3 if baked.cell_h < 16 else 2 if baked.cell_h < 30 else 1
+        sample = b.zoomed(sample, z)
+        h = max(label.size[1], sample.size[1]) + 18
+        strip = Image.new("RGBA", (420 + sample.size[0] + 24, h), b.hexc(backdrops[theme_name]))
+        strip.alpha_composite(label, (12, (h - label.size[1]) // 2))
+        strip.alpha_composite(sample, (420, (h - sample.size[1]) // 2))
+        strips.append(strip)
+    if not strips:
+        return
+    sheet = Image.new("RGBA", (max(s.size[0] for s in strips), sum(s.size[1] for s in strips)), (0, 0, 0, 255))
+    y = 0
+    for s in strips:
+        sheet.alpha_composite(Image.new("RGBA", (sheet.size[0], s.size[1]), s.getpixel((0, 0))), (0, y))
+        sheet.alpha_composite(s, (0, y))
+        y += s.size[1]
+    sheet.save(path)
+
+
+def cheat_sheet(base, by_theme, plain, path):
+    """One page for teammates: the job, what to reach for, and what it looks like."""
+    regular, _, heading, small = plain
+    bg, fg, dim, gold = b.hexc("#4a3a2e"), b.hexc("#fff1d6"), b.hexc("#c9a777"), b.hexc("#ecc477")
+
+    def text(font, words, colour, z):
+        return ink(font.render(words), colour, z)
+
+    def styled(name, words, z=2, source=None):
+        return b.zoomed((source or base)[name].render(words), z)
+
+    def row_of(*images):
+        w = sum(i.size[0] + 18 for i in images)
+        out = Image.new("RGBA", (w, max(i.size[1] for i in images)), (0, 0, 0, 0))
+        x = 0
+        for i in images:
+            out.alpha_composite(i, (x, out.size[1] - i.size[1]))
+            x += i.size[0] + 18
+        return out
+
+    rows = [
+        ("HUD and menu text", "TTF: HoldTheHillPixel-Regular or -Bold, size 10, 20 or 30",
+         text(regular, "Wave 3 of 10   Food 1,250   Start", fg, 3)),
+        ("Headings", "TTF: HoldTheHillDisplay-Regular, size 20 or 40 (capitals only)",
+         text(heading, "PAUSED", fg, 2)),
+        ("Very small labels", "TTF: HoldTheHillTiny-Regular, size 10 (capitals only)",
+         text(small, "COST 125   LV 3   HP 120/200", fg, 3)),
+        ("Damage numbers", "Automatic. DamageNumberSpawner listens to EnemyHealth",
+         row_of(styled("DamageNormal", "128"), styled("DamageCrit", "CRIT!", 1), styled("DamageFire", "37"),
+                styled("DamagePoison", "18"), styled("DamageMagic", "33"), styled("Heal", "+25"), styled("Resource", "+40"))),
+        ("Wave banners", "Automatic in the graybox: GrayboxWaveBanner. Styles Banner, BannerVictory, BannerDefeat",
+         row_of(styled("Banner", "WAVE 3", 1), styled("BannerVictory", "VICTORY!", 1), styled("BannerDefeat", "DEFEAT", 1))),
+        ("Any other coloured text", "Add Component > Pixel Text, pick a style from Fonts/Generated, keep the tint white",
+         row_of(styled("Heading", "BOSS INCOMING", 1), styled("Combo", "x12", 1), styled("TinyCost", "125", 3))),
+        ("Key and gamepad prompts", "In a body-font string: PixelGlyphs.KeySpace, PixelGlyphs.Key('e'), PixelGlyphs.PadA",
+         text(regular, "\ue002 Start wave   \ue024 Build   \ue060 Confirm   \ue050 Place", fg, 3)),
+        ("An art theme's look", "One setting: type the theme name into the scene's Pixel Font Theme",
+         row_of(*[b.zoomed(by_theme[n]["Title"].render(spell(THEME_FACE[n], n)), 1)
+                  for n in ("Neon", "Spooky", "Candy", "Military") if n in by_theme])),
+        ("Another alphabet", "13 more TTFs (Serif, Round, Tech, Gothic ...). Try pairings in the font artifact, then add a row to PAIRINGS",
+         row_of(*[b.zoomed(base[n].render(spell(f, w)), 1) for n, f, w in (
+             ("SerifGold", "serif", "Serif"), ("TechNeon", "tech", "Tech"), ("GothicBlood", "gothic", "Gothic"),
+             ("SlabWood", "slab", "Slab")) if n in base])),
+    ]
+    title = text(heading, "WHICH FONT WHERE", gold, 2)
+    foot = [text(regular, line, dim, 2) for line in (
+        "Scale by whole numbers only, and keep TTFs to the sizes listed, or the pixels blur.",
+        "The damage, HUD, banner and tiny styles hold capitals, digits and + - . , % ! ? / : x ( ) only.",
+        "Not yet seen in Unity. Full details: unity/Assets/_Sandbox/nilly-ctrl/Fonts/README.md")]
+    blocks = []
+    for job, how, sample in rows:
+        blocks.append((text(regular, job, gold, 3), text(regular, how, dim, 2), sample))
+    width = max([title.size[0]] + [max(a.size[0], c.size[0], d.size[0]) for a, c, d in blocks] + [f.size[0] for f in foot]) + 48
+    height = title.size[1] + 40 + sum(a.size[1] + c.size[1] + d.size[1] + 44 for a, c, d in blocks) + sum(
+        f.size[1] + 8 for f in foot) + 30
+    sheet = Image.new("RGBA", (width, height), bg)
+    y = 20
+    sheet.alpha_composite(title, (24, y))
+    y += title.size[1] + 24
+    for job, how, sample in blocks:
+        sheet.alpha_composite(job, (24, y))
+        y += job.size[1] + 8
+        sheet.alpha_composite(how, (24, y))
+        y += how.size[1] + 12
+        sheet.alpha_composite(sample, (24, y))
+        y += sample.size[1] + 24
+    y += 6
+    for f in foot:
+        sheet.alpha_composite(f, (24, y))
+        y += f.size[1] + 8
+    sheet.save(path)
+
+
+def run(base_baked, label_font, themes, plain_fonts, check):
+    body_regular = plain_fonts[0]
     # ---- TTFs
     fonts = {key: plain_font(key) for key in faces.FACES}
     variants = [plain_font(key, weight) for key in faces.FACES for weight in ("Bold", "Italic")]
@@ -369,11 +485,16 @@ def run(base_baked, label_font, themes, body_regular, check):
             by_theme[name] = {st["name"]: b.build_style(st, out_dir, theme=name) for st in extras}
             backdrops[name] = theme["cell"]
     title_sheet(by_theme, backdrops, os.path.join(b.HERE, "ThemeTitles.png"), label_font)
+    made = []
     for theme_name, style_name, face, *extras in PAIRINGS:
         st = pairing_style(defs[theme_name][style_name], face, " ".join(extras))
         out_dir = b.ATLAS_DIR if theme_name == "Meadow" else os.path.join(b.ATLAS_DIR, "Themes", theme_name)
-        b.build_style(st, out_dir, theme=theme_name)
-        print(f"  pairing: {theme_name} {st['name']}")
+        made.append((theme_name, b.build_style(st, out_dir, theme=theme_name)))
+    pairing_sheet(made, backdrops, os.path.join(b.HERE, "PairingSheet.png"), label_font)
+    all_base = dict(base_baked)
+    all_base.update(baked)
+    cheat_sheet(all_base, by_theme, plain_fonts, os.path.join(b.HERE, "CheatSheet.png"))
+    print(f"wrote {len(made)} named pairings")
     print(f"wrote {len(variants)} bold and italic TTFs")
     print(f"wrote {len(fonts)} more TTFs, {len(styles)} face styles, a Title and a Label for {len(by_theme)} themes")
 

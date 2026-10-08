@@ -8,7 +8,7 @@ Sixteen hand-drawn alphabets for Hold the Hill, made to sit beside the 32x32 ico
 | Display | 8x12, two-pixel strokes | Capitals, digits, basic punctuation | Headings, wave banners, combo counter |
 | Tiny | 3x5 | Capitals, digits, basic punctuation | Costs, bar values, tooltips |
 
-Look at `Source~/Specimen.png` for every glyph, `Source~/FontSheet.png` for the styles and `Source~/ThemeCompare.png` for the themed sets.
+**New here? Start with `Source~/CheatSheet.png`**: one page on which font to use where. Then look at `Source~/Specimen.png` for every glyph, `Source~/FontSheet.png` for the styles and `Source~/ThemeCompare.png` for the themed sets.
 
 ## Plain fonts (`TTF/`)
 
@@ -54,12 +54,12 @@ Added 2026-10-06, drawn in `Source~/glyphs_faces.py` and built by `Source~/build
 | Serif | `HoldTheHillSerif-Regular.ttf` | Capitals, lowercase | Foot serifs; lore, menus, storybook titles |
 | Round | `HoldTheHillRound-Regular.ttf` | Capitals, lowercase | Two-pixel strokes, soft corners; friendly menus |
 | Tech | `HoldTheHillTech-Regular.ttf` | Capitals, lowercase | Squared-off; readouts |
-| Gothic | `HoldTheHillGothic-Regular.ttf` | Capitals, lowercase (from Round, squared off) | Heavy stems, pointed feet; bosses |
+| Gothic | `HoldTheHillGothic-Regular.ttf` | Capitals, lowercase | Heavy stems, pointed feet; bosses |
 | Condensed | `HoldTheHillCondensed-Regular.ttf` | Capitals, lowercase | Three pixels wide, nine tall; tight spaces |
 | Chisel | `HoldTheHillChisel-Regular.ttf` | Capitals, lowercase | Straight cuts and diamonds |
 | Stencil | `HoldTheHillStencil-Regular.ttf` | Capitals | The display alphabet with breaks cut by hand into every letter (`STENCIL_CUTS`) |
-| Slab | `HoldTheHillSlab-Regular.ttf` | Capitals, lowercase (from Serif, thickened) | Two-pixel stems between slab serifs; signs and posters |
-| Bubble | `HoldTheHillBubble-Regular.ttf` | Capitals, lowercase (from Round, thickened) | Three-pixel strokes; loud, soft titles |
+| Slab | `HoldTheHillSlab-Regular.ttf` | Capitals, lowercase | Two-pixel stems between slab serifs; signs and posters |
+| Bubble | `HoldTheHillBubble-Regular.ttf` | Capitals, lowercase | Three-pixel strokes; loud, soft titles |
 | Wide | `HoldTheHillWide-Regular.ttf` | Capitals, small capitals for lowercase | Five pixels tall and stretched; arcade readouts |
 | Deco | `HoldTheHillDeco-Regular.ttf` | Capitals | Tall and thin with a high waist; marquees and posters |
 | Runic | `HoldTheHillRunic-Regular.ttf` | Capitals | Straight cuts with slanted bars; carved stones |
@@ -71,7 +71,7 @@ Each of the thirteen also has a `-Bold.ttf` and an `-Italic.ttf`, made from the 
 
 **A Title and a Label per theme:** every theme folder (and the base set) also has `Title` (large, in the theme's banner colours) and `Label` (small and plain), set in the alphabet that suits the theme (`THEME_FACE` in `build_faces.py`): Round for Meadow and Candy; Tech for Neon, Space and NeonSpace; Gothic for Spooky; Serif for Steampunk, Medieval and Pirate; Chisel for Samurai and Jungle; Stencil for Robot and Military; Condensed for Vaporwave. `Label` works for damage numbers in a theme's own alphabet.
 
-**Baking a pairing from the artifact:** the font artifact previews any alphabet in any theme's colours. To make one real, add its row to `PAIRINGS` in `build_faces.py` (the artifact writes the rows, for one style or for a whole sample screen) and run the build. A row is `("Neon", "Banner", "slab"),` or, with a colour treatment, bold or italic, `("Neon", "Banner", "slab", "Gold bold"),`. It writes `<Style><Alphabet>...png` and `.json` beside that theme's other atlases.
+**Baking a pairing from the artifact:** the font artifact previews any alphabet in any theme's colours. To make one real, add its row to `PAIRINGS` in `build_faces.py` (the artifact writes the rows, for one style or for a whole sample screen) and run the build. A row is `("Neon", "Banner", "slab"),` or, with a colour treatment, bold or italic, `("Neon", "Banner", "slab", "Gold bold"),`. It writes `<Style><Alphabet>...png` and `.json` beside that theme's other atlases. Fifteen starter pairings are baked now (for example Spooky `BannerGothic`, Neon `HudTech`, Candy `BannerBubble`); see `Source~/PairingSheet.png`. A custom colour treatment designed in the artifact needs its line added to `PAINTS` first.
 
 ## In Unity
 
@@ -80,12 +80,23 @@ Each of the thirteen also has a `-Bold.ttf` and an `-Italic.ttf`, made from the 
 3. **`PixelText`** (Add Component > Hold the Hill > Sandbox > Pixel Text) draws a line of text in any baked style: banners, titles, labels, counters. It updates in the editor as you type and has a fixed-width digits option.
 4. **`PixelFontTheme`** is the one setting for which art theme's fonts a scene uses. It switches the damage numbers and every `PixelText` whose Theme Style field names a style (Title, Label, Banner, Hud...). Leave the theme empty for the base set. The graybox scene gets one when it is rebuilt; **Hold the Hill > Sandbox > Add Pixel Font Theme Switch To Scene** adds one anywhere else. It reads `Generated/PixelFontThemes.asset`, which Build Pixel Fonts fills in.
 5. **`GrayboxWaveBanner`** (in `Graybox/`) shows WAVE 3, WAVE CLEAR, VICTORY! and DEFEAT in the theme's banner styles, with a punch-in and a fade. The graybox scene gets one when it is rebuilt. It needs a `PixelFontTheme` in the scene.
-6. **Tools > Hold the Hill > Build Font Demo** makes `Fonts/FontDemo.unity`: every baked style drawn with `PixelText` beside its name. Type a theme into its Pixel Font Theme object to restyle the sheet.
-7. For HUD or menu text use a TTF. Keep to the pixel-exact sizes above and scale by whole numbers.
+6. **`GrayboxFontThemeKey`** steps the font theme while playing: F6 for the next theme, Shift+F6 for the one before. The graybox scene gets one when it is rebuilt.
+7. **Tools > Hold the Hill > Build Font Demo** makes `Fonts/FontDemo.unity`: every baked style drawn with `PixelText` beside its name. Type a theme into its Pixel Font Theme object to restyle the sheet.
+8. For HUD or menu text use a TTF. Keep to the pixel-exact sizes above and scale by whole numbers.
 
 `Editor/PixelIconImporter.cs` imports the atlases with point filtering and no compression. `Editor/PixelFontImporter.cs` imports the TTFs with hinted raster rendering so the edges stay hard.
 
 The Unity scripts compile but have never been run, the graybox scene has not been rebuilt since they were added, and the demo scene has not been built.
+
+## The showcase page
+
+The font artifact's page lives in `Source~/Showcase/`, so it can be opened without a Claude account:
+
+```
+python serve.py
+```
+
+Run that from `Source~/Showcase/`, then open http://127.0.0.1:8760/. It rebuilds the page from the current fonts each time. The page tries any alphabet with any theme and colour treatment, shows them on a stand-in game screen, keeps a shortlist, and writes the rows for `PAIRINGS`.
 
 ## Changing things
 

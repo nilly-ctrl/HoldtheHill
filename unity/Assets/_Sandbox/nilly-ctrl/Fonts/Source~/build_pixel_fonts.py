@@ -622,6 +622,8 @@ def build_ttf(f):
     names = {code: "uni%04X" % code for code in f.glyphs}
     cmap = dict(names)
     cmap.update({code: names[target] for code, target in f.aliases.items()})
+    # A fixed date in the file, so a rebuild that changes no glyph leaves the TTF byte-for-byte the same.
+    os.environ["SOURCE_DATE_EPOCH"] = "1791331200"
     fb = FontBuilder(1000, isTTF=True)
     fb.setupGlyphOrder([".notdef"] + [names[c] for c in f.glyphs])
     fb.setupCharacterMap(cmap)
@@ -880,7 +882,7 @@ def main():
 
     themes = None if "--no-themes" in args else load_themes()
     import build_faces
-    build_faces.run(baked, label_font, themes, fonts[0], "--check" in args)
+    build_faces.run(baked, label_font, themes, fonts, "--check" in args)
 
     if themes:
         base_pal, all_themes = themes

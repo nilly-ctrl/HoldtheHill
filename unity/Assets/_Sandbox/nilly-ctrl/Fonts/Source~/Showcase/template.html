@@ -1,0 +1,390 @@
+<title>Hold the Hill Fonts</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: one dark column, the tester on top as the working surface, reference sheets below it. */
+@font-face { font-family: "HTH Pixel"; src: url(data:font/ttf;base64,%%PIXEL%%) format("truetype"); font-weight: 400; }
+@font-face { font-family: "HTH Pixel"; src: url(data:font/ttf;base64,%%BOLD%%) format("truetype"); font-weight: 700; }
+@font-face { font-family: "HTH Display"; src: url(data:font/ttf;base64,%%DISPLAY%%) format("truetype"); }
+@font-face { font-family: "HTH Tiny"; src: url(data:font/ttf;base64,%%TINY%%) format("truetype"); }
+@font-face { font-family: "HTH Serif"; src: url(data:font/ttf;base64,%%SERIF%%) format("truetype"); }
+@font-face { font-family: "HTH Round"; src: url(data:font/ttf;base64,%%ROUND%%) format("truetype"); }
+@font-face { font-family: "HTH Tech"; src: url(data:font/ttf;base64,%%TECH%%) format("truetype"); }
+@font-face { font-family: "HTH Gothic"; src: url(data:font/ttf;base64,%%GOTHIC%%) format("truetype"); }
+@font-face { font-family: "HTH Condensed"; src: url(data:font/ttf;base64,%%CONDENSED%%) format("truetype"); }
+@font-face { font-family: "HTH Chisel"; src: url(data:font/ttf;base64,%%CHISEL%%) format("truetype"); }
+@font-face { font-family: "HTH Stencil"; src: url(data:font/ttf;base64,%%STENCIL%%) format("truetype"); }
+@font-face { font-family: "HTH Slab"; src: url(data:font/ttf;base64,%%SLAB%%) format("truetype"); }
+@font-face { font-family: "HTH Bubble"; src: url(data:font/ttf;base64,%%BUBBLE%%) format("truetype"); }
+@font-face { font-family: "HTH Wide"; src: url(data:font/ttf;base64,%%WIDE%%) format("truetype"); }
+@font-face { font-family: "HTH Deco"; src: url(data:font/ttf;base64,%%DECO%%) format("truetype"); }
+@font-face { font-family: "HTH Runic"; src: url(data:font/ttf;base64,%%RUNIC%%) format("truetype"); }
+@font-face { font-family: "HTH Script"; src: url(data:font/ttf;base64,%%SCRIPT%%) format("truetype"); }
+:root {
+  color-scheme: dark;
+  --soil: #2b2019;        /* page ground */
+  --loam: #3a2c22;        /* raised surfaces */
+  --bark: #5b4534;        /* borders, quiet rules */
+  --cream: #fff1d6;       /* text, the HUD cream */
+  --sand: #c9a777;        /* secondary text */
+  --gold: #ecc477;        /* accent, the food colour */
+  --ember: #ff8a3d;       /* focus and the active state */
+  --pixel: "HTH Pixel", ui-monospace, Consolas, monospace;
+  --display: "HTH Display", "HTH Pixel", ui-monospace, monospace;
+  --tiny: "HTH Tiny", ui-monospace, monospace;
+  --text: "Atkinson Hyperlegible", system-ui, "Segoe UI", sans-serif;
+}
+body { background: var(--soil); color: var(--cream); font-family: var(--text); font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 64px; display: flex; flex-direction: column; gap: 44px; }
+h1 { font-family: var(--display); font-size: 40px; line-height: 1; font-weight: 400; margin: 0; color: var(--gold); text-wrap: balance; }
+h2 { font-family: var(--display); font-size: 20px; line-height: 1.2; font-weight: 400; margin: 0; color: var(--cream); }
+p { margin: 0; max-width: 65ch; color: var(--sand); }
+p strong, li strong { color: var(--cream); font-weight: 700; }
+header { display: flex; flex-direction: column; gap: 12px; }
+section { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.label { font-family: var(--pixel); font-size: 20px; line-height: 1; color: var(--sand); }
+.stage { border: 2px solid var(--bark); padding: 20px; overflow-x: auto; min-height: 96px; display: flex; align-items: center; }
+canvas { image-rendering: pixelated; image-rendering: crisp-edges; display: block; flex: none; }
+.controls { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: end; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field.grow { flex: 1 1 260px; }
+input[type=text], select { font: inherit; color: var(--cream); background: var(--loam); border: 2px solid var(--bark); padding: 8px 10px; border-radius: 0; min-width: 0; width: 100%; }
+input[type=text] { font-family: var(--pixel); font-size: 20px; line-height: 1.2; }
+:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+.check { display: flex; gap: 8px; align-items: center; color: var(--sand); padding-bottom: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips button { font-family: var(--pixel); font-size: 20px; line-height: 1; color: var(--sand); background: none; border: 2px solid var(--bark); padding: 6px 8px 4px; cursor: pointer; border-radius: 0; }
+.chips button:hover { color: var(--cream); border-color: var(--sand); }
+.chips button[aria-pressed=true] { color: var(--soil); background: var(--gold); border-color: var(--gold); }
+.styles { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 2px; background: var(--bark); border: 2px solid var(--bark); }
+.styles button { all: unset; box-sizing: border-box; cursor: pointer; padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 92px; justify-content: space-between; overflow: hidden; }
+.styles button[aria-pressed=true] { box-shadow: inset 0 0 0 2px var(--ember); }
+.styles button:focus-visible { outline: 2px solid var(--ember); outline-offset: -4px; }
+.styles .name { font-family: var(--pixel); font-size: 10px; line-height: 1; color: var(--cream); opacity: .8; transform: scale(1); }
+.styles .use { font-size: 13px; line-height: 1.3; color: var(--cream); opacity: .75; }
+.plain { display: flex; flex-direction: column; gap: 22px; }
+.face { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.face .sample { color: var(--cream); overflow-wrap: anywhere; outline: none; border-left: 2px solid var(--bark); padding-left: 12px; }
+.face .sample:focus-visible { border-left-color: var(--ember); }
+.meta { font-size: 14px; color: var(--sand); }
+.prompts { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px 16px; }
+.prompt { display: flex; gap: 12px; align-items: center; min-width: 0; }
+.prompt .g { font-family: var(--pixel); font-size: 30px; line-height: 1; color: var(--cream); flex: none; }
+.prompt .n { font-size: 13px; color: var(--sand); overflow-wrap: anywhere; }
+.prompt code { color: var(--gold); font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+ul { margin: 0; padding-left: 20px; color: var(--sand); max-width: 65ch; display: flex; flex-direction: column; gap: 6px; }
+.status { color: var(--sand); font-size: 14px; }
+.bake { display: flex; flex-direction: column; gap: 6px; border-left: 2px solid var(--gold); padding-left: 12px; min-width: 0; }
+.bake-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; min-width: 0; }
+.bake code { font-family: ui-monospace, Consolas, monospace; font-size: 14px; color: var(--cream); background: var(--loam); padding: 6px 10px; overflow-wrap: anywhere; min-width: 0; }
+.bake button { font-family: var(--pixel); font-size: 20px; line-height: 1; color: var(--soil); background: var(--gold); border: 0; padding: 7px 10px 5px; cursor: pointer; border-radius: 0; }
+.mock-wrap { border: 2px solid var(--bark); overflow-x: auto; }
+#mock { cursor: pointer; }
+.bake pre { margin: 0; font-family: ui-monospace, Consolas, monospace; font-size: 13px; line-height: 1.5; color: var(--cream); background: var(--loam); padding: 8px 10px; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; max-height: 220px; overflow-y: auto; flex: 1 1 320px; }
+#parts .field { flex: 1 1 150px; }
+#custom .field label { font-size: 13px; color: var(--sand); }
+#custom input[type=color] { width: 56px; height: 36px; padding: 2px; background: var(--loam); border: 2px solid var(--bark); border-radius: 0; cursor: pointer; }
+#custom input[type=text] { font-size: 20px; width: 160px; }
+.shortlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2px; }
+.short { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 2px solid var(--bark); min-width: 0; }
+.short-scroll { overflow-x: auto; min-height: 40px; display: flex; align-items: center; }
+.short button { align-self: flex-start; font: inherit; font-size: 13px; color: var(--cream); background: none; border: 1px solid var(--cream); padding: 2px 8px; cursor: pointer; border-radius: 0; opacity: .8; }
+.short button:hover { opacity: 1; }
+#mock { width: 100%; max-width: 960px; height: auto; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>HOLD THE HILL FONTS</h1>
+    <p>Sixteen hand-drawn pixel alphabets, 48 baked colour styles, and a full set repainted for each of 13 art themes. Type below, pick a theme, an alphabet and a colour treatment, and combine them freely. Built 2026-10-06; none of it has been looked at inside Unity yet.</p>
+  </header>
+
+  <section aria-labelledby="t-h">
+    <h2 id="t-h">BAKED STYLES</h2>
+    <div class="controls">
+      <div class="field grow">
+        <label class="label" for="text">Text</label>
+        <input type="text" id="text" value="Wave Clear! +120" maxlength="60" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field">
+        <label class="label" for="zoom">Zoom</label>
+        <select id="zoom"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>6</option></select>
+      </div>
+      <label class="check"><input type="checkbox" id="kern" checked> Kerning</label>
+      <label class="check"><input type="checkbox" id="bold"> Bold</label>
+      <label class="check"><input type="checkbox" id="italic"> Italic</label>
+    </div>
+    <div class="stage" id="stage"><canvas id="out" width="1" height="1" role="img" aria-label="Sample text in the chosen style"></canvas></div>
+    <p class="status" id="status">Loading the fonts…</p>
+    <div class="bake">
+      <span class="label">Bake this</span>
+      <div class="bake-row"><code id="bake-line"></code><button type="button" id="bake-copy" hidden>Copy</button><button type="button" id="short-add">Add to shortlist</button></div>
+      <p class="status" id="bake-note"></p>
+      <p class="status" id="bake-custom" hidden>This row uses your custom colours, so add their definition (in the Custom colours box below) to PAINTS first.</p>
+    </div>
+    <div class="field">
+      <span class="label" id="theme-l">Theme</span>
+      <div class="chips" id="themes" role="group" aria-labelledby="theme-l"></div>
+    </div>
+    <div class="field">
+      <span class="label" id="alpha-l">Alphabet</span>
+      <div class="chips" id="alphabets" role="group" aria-labelledby="alpha-l"></div>
+    </div>
+    <div class="field">
+      <span class="label" id="paint-l">Colours</span>
+      <div class="chips" id="paints" role="group" aria-labelledby="paint-l"></div>
+    </div>
+    <div class="bake" id="custom" hidden>
+      <span class="label">Custom colours</span>
+      <div class="controls">
+        <div class="field"><label for="c-top">Top</label><input type="color" id="c-top" value="#fff6c8"></div>
+        <div class="field"><label for="c-bottom">Bottom</label><input type="color" id="c-bottom" value="#ff6a2a"></div>
+        <div class="field"><label for="c-outline">Outline</label><input type="color" id="c-outline" value="#2a0a24"></div>
+        <div class="field"><label for="c-shadow">Shadow</label><input type="color" id="c-shadow" value="#1b110b"></div>
+        <div class="field"><label for="c-hi">Top edge</label><input type="color" id="c-hi" value="#ffffff"></div>
+        <label class="check"><input type="checkbox" id="c-hi-on" checked> Light the top edge</label>
+        <div class="field"><label for="c-name">Name</label><input type="text" id="c-name" value="Sunset" maxlength="20" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="bake-row"><code id="c-line"></code><button type="button" id="c-copy">Copy</button></div>
+      <p class="status">To keep this treatment, add that line to PAINTS in Fonts/Source~/build_faces.py. The name becomes part of the baked file's name.</p>
+    </div>
+    <div class="styles" id="styles"></div>
+    <p><strong>Style's own</strong> and <strong>Theme's own</strong> show each style as it is baked for the game. Picking an alphabet, a colour treatment, bold or italic repaints every style that way, which previews a pairing that is not baked yet. Most baked styles hold capitals, digits and <strong>+ - . , % ! ? / : x ( )</strong> only, so lowercase shows as capitals; the Serif and Round styles have real lowercase. Banners, the combo counter and neutral text change most between themes. Damage colours shift only where a theme has its own fire, acid or arcane colours.</p>
+  </section>
+
+  <section aria-labelledby="s-h">
+    <h2 id="s-h">SHORTLIST</h2>
+    <p id="short-empty">Nothing here yet. Set up a pairing in the tester and press Add to shortlist; entries are shown side by side in the tester's text and kept in this browser.</p>
+    <div class="shortlist" id="shortlist"></div>
+    <div class="bake" id="short-bake" hidden>
+      <span class="label">Bake the shortlist</span>
+      <div class="bake-row"><pre id="short-rows"></pre><button type="button" id="short-copy" hidden>Copy</button></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="m-h">
+    <h2 id="m-h">ON A GAME SCREEN</h2>
+    <p>A stand-in screen, not the real game: the HUD, a wave banner, damage numbers, the build bar and menu buttons, drawn with the theme, alphabet and colours chosen above.</p>
+    <div class="mock-wrap"><canvas id="mock" width="960" height="540" role="img" aria-label="Sample game screen in the chosen theme and alphabet"></canvas></div>
+    <p>Give each part of the screen its own alphabet. Click a part of the screen to jump to its chooser.</p>
+    <div class="controls" id="parts"></div>
+    <div class="bake">
+      <span class="label">Bake this screen</span>
+      <div class="bake-row"><pre id="screen-rows"></pre><button type="button" id="screen-copy" hidden>Copy</button></div>
+      <p class="status">Add these rows to PAIRINGS in Fonts/Source~/build_faces.py and run build_pixel_fonts.py. Only parts that differ from their baked style are listed.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="p-h">
+    <h2 id="p-h">PLAIN FONTS</h2>
+    <p>These are the TTF files themselves. Click a sample to edit it. A browser smooths the edges slightly; Unity imports them with hard edges.</p>
+    <div class="plain">
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:var(--pixel);font-size:30px;line-height:1.2">The quick brown fox jumps over the lazy dog. Wave 3 of 10: 1,250 food, 85% HP.</div>
+        <div class="meta"><strong>Body Regular</strong>, 5x7 with real lowercase, accents and symbols. Pixel-exact at size 10, 20, 30.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:var(--pixel);font-weight:700;font-size:30px;line-height:1.2">Pack my box with five dozen liquor jugs! ÀÉÎÕÜ àéîõü ç ñ ß ¿? ← → ↑ ↓ ♥ ★ ✓ ✕ ∞</div>
+        <div class="meta"><strong>Body Bold</strong>. M, W, m and w are redrawn by hand so they stay open.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:var(--display);font-size:40px;line-height:1.15">BOSS INCOMING. HOLD THE HILL! 0123456789</div>
+        <div class="meta"><strong>Display</strong>, 8x12 with two-pixel strokes. Capitals only; lowercase types as capitals. Pixel-exact at size 20 and 40.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:var(--tiny);font-size:30px;line-height:1.3">HP 120/200  LV 3  COST 125  X2  +40%</div>
+        <div class="meta"><strong>Tiny</strong>, 3x5. Capitals only. Pixel-exact at size 10 and 20.</div>
+      </div>
+      <div class="face">
+        <div class="sample" style="font-family:var(--pixel);font-size:40px;line-height:1.2">To Ty LT P. r, fa<br><span style="font-feature-settings:'kern' 0;font-kerning:none;color:var(--sand)">To Ty LT P. r, fa</span><br>111,111<br>000,000</div>
+        <div class="meta"><strong>Kerning</strong> on, then off, and digits that share one width so counters do not shift.</div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="f-h">
+    <h2 id="f-h">THIRTEEN MORE ALPHABETS</h2>
+    <p>Each is its own TTF. Pick one under Alphabet in the tester above to see it in any theme's colours. Every art theme has a <strong>Title</strong> and a <strong>Label</strong> style set in the alphabet that suits it; pick a theme above to see them.</p>
+    <div class="plain">
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Serif',var(--pixel);font-size:30px;line-height:1.3">Hold the Hill! The Queen sleeps beneath the roots, 1,250 strong.</div>
+        <div class="meta"><strong>Serif</strong>. 8 tall with foot serifs, capitals and lowercase. Lore, menus, storybook titles.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Round',var(--pixel);font-size:30px;line-height:1.3">Hold the Hill! Start, Options, Quit. Wave 3 of 10.</div>
+        <div class="meta"><strong>Round</strong>. Two-pixel strokes and soft corners, capitals and lowercase. Friendly menus.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Tech',var(--pixel);font-size:30px;line-height:1.3">Shield 85%. Reactor online, 02:45 to launch.</div>
+        <div class="meta"><strong>Tech</strong>. Squared-off 5x7, capitals and lowercase. Readouts and sci-fi HUD text.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Gothic',var(--pixel);font-size:30px;line-height:1.3">The Hornet Queen Wakes</div>
+        <div class="meta"><strong>Gothic</strong>. Heavy stems with pointed feet; lowercase taken from Round and squared off. Bosses and spooky titles.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Condensed',var(--pixel);font-size:30px;line-height:1.3">Fire rate +15%, range +2, cost 125 food</div>
+        <div class="meta"><strong>Condensed</strong>. Three pixels wide and nine tall, capitals and lowercase. For when width is short.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Chisel',var(--pixel);font-size:30px;line-height:1.3">Honour the Hill. Wave 3 of 10</div>
+        <div class="meta"><strong>Chisel</strong>. Straight cuts and diamonds, capitals and lowercase. Carved labels.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Stencil',var(--pixel);font-size:40px;line-height:1.3">SUPPLY DEPOT 04 HOLD THE LINE</div>
+        <div class="meta"><strong>Stencil</strong>. The display alphabet with breaks cut by hand into every letter, capitals only. Pixel-exact at size 20 and 40.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Slab',var(--pixel);font-size:30px;line-height:1.3">Wanted: The Hornet Queen. Reward 500 food</div>
+        <div class="meta"><strong>Slab</strong>. Two-pixel stems between slab serifs; lowercase taken from Serif and thickened. Signs, wanted posters, saloon titles.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Bubble',var(--pixel);font-size:30px;line-height:1.3">Sugar Rush! Combo x12</div>
+        <div class="meta"><strong>Bubble</strong>. Three-pixel strokes; lowercase taken from Round and thickened. Loud, soft titles.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Wide',var(--pixel);font-size:30px;line-height:1.3">Player 1 Ready. Hi Score 128,500</div>
+        <div class="meta"><strong>Wide</strong>. Low and stretched, five pixels tall; small capitals for lowercase. Arcade and racing readouts.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Deco',var(--pixel);font-size:30px;line-height:1.3">GRAND OPENING TONIGHT: THE ANT HILL REVUE</div>
+        <div class="meta"><strong>Deco</strong>. Tall and thin with a high waist, capitals only. Marquees and posters.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Runic',var(--pixel);font-size:30px;line-height:1.3">HERE STOOD THE FIRST HILL</div>
+        <div class="meta"><strong>Runic</strong>. Straight cuts with slanted bars, capitals only. Carved stones and relics.</div>
+      </div>
+      <div class="face">
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Script',var(--pixel);font-size:30px;line-height:1.3">Dear Queen, the larder is full. Yours, the Foragers</div>
+        <div class="meta"><strong>Script</strong>. A leaning casual hand, capitals and lowercase. Notes, letters and signatures.</div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="k-h">
+    <h2 id="k-h">KEY AND GAMEPAD PROMPTS</h2>
+    <p>In every alphabet's TTF, with names in <strong>PixelGlyphs.cs</strong>. Write <strong>PixelGlyphs.KeySpace</strong> in a string, or <strong>PixelGlyphs.Key('e')</strong> for a letter or digit.</p>
+    <div class="prompts" id="prompts"></div>
+  </section>
+
+  <section aria-labelledby="n-h">
+    <h2 id="n-h">BEFORE YOU RELY ON IT</h2>
+    <ul>
+      <li><strong>Not yet seen in Unity.</strong> The TTF files were compared pixel for pixel with the drawings outside Unity, and the C# compiles.</li>
+      <li><strong>Body line height is 10 pixels, up from 9,</strong> and mixed-case strings now show as written instead of as capitals.</li>
+      <li><strong>The UI kit still shows the old font</strong> until its TextMeshPro font asset is rebuilt.</li>
+      <li><strong>Kerning in Unity is unconfirmed.</strong> Legacy Text and IMGUI ignore it; TextMeshPro is untested.</li>
+      <li><strong>Nothing in the game uses</strong> the Display or Tiny alphabets, the extra alphabets, the banner and combo styles, or the themed sets yet.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+(function () {
+  var data = null, images = {}, theme = "Meadow", style = "Banner";
+  var $ = function (id) { return document.getElementById(id); };
+  var out = $("out"), ctx = out.getContext("2d");
+
+  function atlas(t, s, done) {
+    var key = t + "/" + s;
+    if (images[key]) { if (images[key].complete) done(images[key]); else images[key].addEventListener("load", function () { done(images[key]); }); return; }
+    var im = new Image();
+    images[key] = im;
+    im.addEventListener("load", function () { done(im); });
+    im.src = "data:image/png;base64," + data.themes[t].styles[s].png;
+  }
+
+  // Lays the text out in font pixels and draws it at a whole-number zoom.
+  function draw(canvas, t, s, text, zoom, kern, fit) {
+    var st = data.themes[t].styles[s], g = st.glyphs, k = st.kern;
+    var pen = 0, prev = null, runs = [], extra = 0;
+    for (var i = 0; i < text.length; i++) {
+      var ch = text[i], q = g[ch];
+      if (!q) { ch = ch.toUpperCase(); q = g[ch]; }   // capitals-only alphabets
+      if (!q) continue;
+      if (kern && prev !== null && k[prev + ch]) pen += k[prev + ch];
+      runs.push([q, pen]);
+      pen += q[4];
+      extra = q[2] - q[4];
+      prev = ch;
+    }
+    var w = Math.max(1, pen + Math.max(0, extra)), h = st.lineHeight;
+    if (fit && w * zoom > fit) zoom = Math.max(1, Math.floor(fit / w));   // keep a card sample inside its card
+    atlas(t, s, function (im) {
+      canvas.width = w * zoom; canvas.height = h * zoom;
+      canvas.style.width = w * zoom + "px"; canvas.style.height = h * zoom + "px";
+      var c = canvas.getContext("2d");
+      c.imageSmoothingEnabled = false;
+      runs.forEach(function (r) {
+        var q = r[0];
+        c.drawImage(im, q[0], q[1], q[2], q[3], r[1] * zoom, (h - q[3]) * zoom, q[2] * zoom, q[3] * zoom);
+      });
+    });
+  }
+
+  function refresh() {
+    if (!data) return;
+    var text = $("text").value;
+    if (data.themes[theme].order.indexOf(style) < 0) style = "Title";
+    $("stage").style.background = data.themes[theme].backdrop;
+    draw(out, theme, style, text, +$("zoom").value, $("kern").checked);
+    $("status").textContent = style + " in " + theme + ": " + data.uses[style] + ".";
+  }
+
+  function buildThemes() {
+    var box = $("themes");
+    Object.keys(data.themes).forEach(function (t) {
+      var b = document.createElement("button");
+      b.type = "button"; b.textContent = t; b.setAttribute("aria-pressed", t === theme);
+      b.addEventListener("click", function () {
+        theme = t;
+        box.querySelectorAll("button").forEach(function (o) { o.setAttribute("aria-pressed", o === b); });
+        buildStyles(); refresh();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function buildStyles() {
+    var box = $("styles");
+    box.textContent = "";
+    data.themes[theme].order.forEach(function (s) {
+      var b = document.createElement("button");
+      b.type = "button"; b.setAttribute("aria-pressed", s === style);
+      b.style.background = data.themes[theme].backdrop;
+      b.setAttribute("aria-label", s + ": " + data.uses[s]);
+      var c = document.createElement("canvas");
+      var big = data.themes[theme].styles[s].lineHeight > 22;
+      draw(c, theme, s, data.samples[s] || "Hold the Hill", big ? 1 : 2, true, 200);
+      var n = document.createElement("span");
+      n.className = "use"; n.textContent = s;
+      b.appendChild(c); b.appendChild(n);
+      b.addEventListener("click", function () {
+        style = s;
+        box.querySelectorAll("button").forEach(function (o) { o.setAttribute("aria-pressed", o === b); });
+        refresh();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function buildPrompts() {
+    var box = $("prompts");
+    data.buttons.forEach(function (p) {
+      var d = document.createElement("div"); d.className = "prompt";
+      var g = document.createElement("span"); g.className = "g"; g.textContent = String.fromCharCode(p[0]);
+      var n = document.createElement("span"); n.className = "n";
+      var code = document.createElement("code"); code.textContent = p[0].toString(16).toUpperCase();
+      n.appendChild(document.createTextNode(p[1] + " ")); n.appendChild(code);
+      d.appendChild(g); d.appendChild(n); box.appendChild(d);
+    });
+  }
+
+  ["text", "zoom", "kern"].forEach(function (id) { $(id).addEventListener("input", refresh); });
+
+  fetch("fonts.json").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (d) {
+    data = d; buildThemes(); buildStyles(); buildPrompts(); refresh();
+  }).catch(function () {
+    $("status").textContent = "The atlas data did not load. Reload the page to try again.";
+  });
+})();
+</script>
