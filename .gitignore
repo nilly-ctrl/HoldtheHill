@@ -38,3 +38,9 @@
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Unity upgrade reports and local build/test output
+UpgradeLog*.htm
+unity-build-log*.txt
+/unity/test-log*.txt
+/unity/test-results*.xml
