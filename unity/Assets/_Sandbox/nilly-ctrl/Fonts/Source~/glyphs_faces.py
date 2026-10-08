@@ -939,6 +939,87 @@ _script.update(_SCRIPT_LOWER)
 SCRIPT = {ch: _lean(rows, 8) for ch, rows in _script.items()}
 
 
+# ================================================================ lowercase for Deco, Runic and Stencil
+def _d(*rows):
+    """A Deco lowercase letter with no ascender: four empty rows, then the six given."""
+    return ["." * len(rows[0])] * 4 + list(rows)
+
+
+DECO_LOWER = {
+    "a": _d(".###.", "....#", ".####", "#...#", "#...#", ".####"),
+    "b": ["#...."] * 4 + ["####.", "#...#", "#...#", "#...#", "#...#", "####."],
+    "c": _d(".###.", "#...#", "#....", "#....", "#...#", ".###."),
+    "d": ["....#"] * 4 + [".####", "#...#", "#...#", "#...#", "#...#", ".####"],
+    "e": _d(".###.", "#...#", "#####", "#....", "#...#", ".###."),
+    "f": ["..##", ".#..", ".#..", ".#..", "###.", ".#..", ".#..", ".#..", ".#..", ".#.."],
+    "g": _d(".####", "#...#", "#...#", "#...#", "#...#", ".####") + ["....#", ".###."],
+    "h": ["#...."] * 4 + ["####.", "#...#", "#...#", "#...#", "#...#", "#...#"],
+    "i": [".", ".", "#", "."] + ["#"] * 6,
+    "j": ["...", "...", "..#", "..."] + ["..#"] * 6 + ["..#", "##."],
+    "k": ["#..."] * 4 + ["#..#", "#.#.", "##..", "##..", "#.#.", "#..#"],
+    "l": ["#"] * 10,
+    "m": _d("######.", "#..#..#", "#..#..#", "#..#..#", "#..#..#", "#..#..#"),
+    "n": _d("####.", "#...#", "#...#", "#...#", "#...#", "#...#"),
+    "o": _d(".###.", "#...#", "#...#", "#...#", "#...#", ".###."),
+    "p": _d("####.", "#...#", "#...#", "#...#", "#...#", "####.") + ["#....", "#...."],
+    "q": _d(".####", "#...#", "#...#", "#...#", "#...#", ".####") + ["....#", "....#"],
+    "r": _d("#.##", "##..", "#...", "#...", "#...", "#..."),
+    "s": _d(".####", "#....", ".###.", "....#", "....#", "####."),
+    "t": [".#..", ".#..", ".#..", ".#..", "###.", ".#..", ".#..", ".#..", ".#..", "..##"],
+    "u": _d("#...#", "#...#", "#...#", "#...#", "#...#", ".####"),
+    "v": _d("#...#", "#...#", "#...#", ".#.#.", ".#.#.", "..#.."),
+    "w": _d("#..#..#", "#..#..#", "#..#..#", "#..#..#", "#..#..#", ".##.##."),
+    "x": _d("#...#", ".#.#.", "..#..", "..#..", ".#.#.", "#...#"),
+    "y": _d("#...#", "#...#", "#...#", "#...#", "#...#", ".####") + ["....#", ".###."],
+    "z": _d("#####", "...#.", "..#..", ".#...", "#....", "#####"),
+}
+DECO["×"] = DECO["x"]
+DECO.update(DECO_LOWER)
+
+# Carved stones have no lowercase: Runic's is small capitals, five rows on the baseline.
+_RUNIC_SMALL = {
+    "a": ["..#..", ".#.#.", "#...#", "##.##", "#...#"],
+    "b": ["##..", "#.#.", "##..", "#.#.", "##.."],
+    "c": ["..##", ".#..", "#...", ".#..", "..##"],
+    "d": ["##..", "#.#.", "#..#", "#.#.", "##.."],
+    "e": ["#.##", "##..", "#.##", "##..", "#.##"],
+    "f": ["#.##", "##..", "#.##", "##..", "#..."],
+    "g": ["..##", ".#..", "#.##", ".#.#", "..#."],
+    "h": ["#...#", "#...#", "#####", "#...#", "#...#"],
+    "i": ["#"] * 5,
+    "j": ["...#", "...#", "...#", "#..#", ".##."],
+    "k": ["#..#", "#.#.", "##..", "#.#.", "#..#"],
+    "l": ["#...", "#...", "#...", "#..#", "###."],
+    "m": ["#...#", "##.##", "#.#.#", "#...#", "#...#"],
+    "n": ["#...#", "##..#", "#.#.#", "#..##", "#...#"],
+    "o": ["..#..", ".#.#.", "#...#", ".#.#.", "..#.."],
+    "p": ["##..", "#.#.", "##..", "#...", "#..."],
+    "q": ["..#..", ".#.#.", "#.#.#", ".#.#.", "..#.#"],
+    "r": ["##..", "#.#.", "##..", "#.#.", "#..#"],
+    "s": [".###", "#...", ".##.", "...#", "###."],
+    "t": ["#####", "#.#.#", "..#..", "..#..", "..#.."],
+    "u": ["#...#", "#...#", "#...#", ".#.#.", "..#.."],
+    "v": ["#...#", "#...#", ".#.#.", ".#.#.", "..#.."],
+    "w": ["#...#", "#...#", "#.#.#", "##.##", "#...#"],
+    "x": ["#...#", ".#.#.", "..#..", ".#.#.", "#...#"],
+    "y": ["#.#.#", ".###.", "..#..", "..#..", "..#.."],
+    "z": ["#####", "...#.", "..#..", ".#...", "#####"],
+}
+RUNIC.update({ch: _pad_top(rows, 3) for ch, rows in _RUNIC_SMALL.items()})
+
+# Stencil follows the display alphabet, so its lowercase is the display lowercase with these cuts.
+_LSTEM, _RSTEM = (2, 2, 4, 11), (5, 5, 4, 11)
+_LTOP, _LFOOT = (3, 4, 4, 5), (3, 4, 10, 11)
+STENCIL_CUTS.update({
+    "b": [_LSTEM], "h": [_LSTEM], "k": [_LSTEM], "n": [_LSTEM], "p": [_LSTEM], "r": [_LSTEM],
+    "a": [_RSTEM], "d": [_RSTEM], "g": [_RSTEM], "q": [_RSTEM], "u": [_RSTEM], "y": [_RSTEM],
+    "c": [_LTOP, _LFOOT], "e": [_LTOP, _LFOOT], "o": [_LTOP, _LFOOT], "s": [_LTOP, _LFOOT],
+    "m": [(2, 2, 4, 11), (9, 9, 4, 11)],
+    "v": [(3, 4, 10, 10)],
+})
+STENCIL = _stencil()
+
+
 # key -> glyphs, capital height in rows, descender rows, the gap between letters, and its names
 FACES = {
     "serif": dict(glyphs=SERIF, cap=8, desc=2, gap=1, kern_cap=1, name="Serif", lower=True,
@@ -953,7 +1034,7 @@ FACES = {
                       file="HoldTheHillCondensed-Regular", family="Hold the Hill Condensed"),
     "chisel": dict(glyphs=CHISEL, cap=8, desc=2, gap=1, kern_cap=1, name="Chisel", lower=True,
                    file="HoldTheHillChisel-Regular", family="Hold the Hill Chisel"),
-    "stencil": dict(glyphs=STENCIL, cap=12, desc=0, gap=2, kern_cap=2, name="Stencil", lower=False,
+    "stencil": dict(glyphs=STENCIL, cap=12, desc=3, gap=2, kern_cap=2, name="Stencil", lower=True,
                     file="HoldTheHillStencil-Regular", family="Hold the Hill Stencil"),
     "slab": dict(glyphs=SLAB, cap=9, desc=2, gap=1, kern_cap=1, name="Slab", lower=True,
                  file="HoldTheHillSlab-Regular", family="Hold the Hill Slab"),
@@ -961,9 +1042,9 @@ FACES = {
                    file="HoldTheHillBubble-Regular", family="Hold the Hill Bubble"),
     "wide": dict(glyphs=WIDE, cap=5, desc=0, gap=1, kern_cap=1, name="Wide", lower=True,
                  file="HoldTheHillWide-Regular", family="Hold the Hill Wide"),
-    "deco": dict(glyphs=DECO, cap=10, desc=0, gap=1, kern_cap=1, name="Deco", lower=False,
+    "deco": dict(glyphs=DECO, cap=10, desc=2, gap=1, kern_cap=1, name="Deco", lower=True,
                  file="HoldTheHillDeco-Regular", family="Hold the Hill Deco"),
-    "runic": dict(glyphs=RUNIC, cap=8, desc=0, gap=1, kern_cap=1, name="Runic", lower=False,
+    "runic": dict(glyphs=RUNIC, cap=8, desc=0, gap=1, kern_cap=1, name="Runic", lower=True,
                   file="HoldTheHillRunic-Regular", family="Hold the Hill Runic"),
     # the lean widens every glyph by the same amount, so the gap takes it back out
     "script": dict(glyphs=SCRIPT, cap=8, desc=2, gap=1 - _SCRIPT_EXTRA, kern_cap=0, name="Script", lower=True,

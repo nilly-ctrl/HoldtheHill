@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Hold the Hill Fonts</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
@@ -95,7 +96,7 @@ ul { margin: 0; padding-left: 20px; color: var(--sand); max-width: 65ch; display
 <div class="wrap">
   <header>
     <h1>HOLD THE HILL FONTS</h1>
-    <p>Sixteen hand-drawn pixel alphabets, 48 baked colour styles, and a full set repainted for each of 13 art themes. Type below, pick a theme, an alphabet and a colour treatment, and combine them freely. Built 2026-10-06; none of it has been looked at inside Unity yet.</p>
+    <p>Sixteen hand-drawn pixel alphabets with inline game icons, 48 baked colour styles (eleven of them animated), and a full set repainted for each of 13 art themes. Type below, pick a theme, an alphabet and a colour treatment, and combine them freely. Built 2026-10-06; none of it has been looked at inside Unity yet.</p>
   </header>
 
   <section aria-labelledby="t-h">
@@ -103,7 +104,7 @@ ul { margin: 0; padding-left: 20px; color: var(--sand); max-width: 65ch; display
     <div class="controls">
       <div class="field grow">
         <label class="label" for="text">Text</label>
-        <input type="text" id="text" value="Wave Clear! +120" maxlength="60" autocomplete="off" spellcheck="false">
+        <input type="text" id="text" value="Wave Clear! +120 " maxlength="60" autocomplete="off" spellcheck="false">
       </div>
       <div class="field">
         <label class="label" for="zoom">Zoom</label>
@@ -112,9 +113,11 @@ ul { margin: 0; padding-left: 20px; color: var(--sand); max-width: 65ch; display
       <label class="check"><input type="checkbox" id="kern" checked> Kerning</label>
       <label class="check"><input type="checkbox" id="bold"> Bold</label>
       <label class="check"><input type="checkbox" id="italic"> Italic</label>
+      <label class="check"><input type="checkbox" id="animate" checked> Animate</label>
     </div>
     <div class="stage" id="stage"><canvas id="out" width="1" height="1" role="img" aria-label="Sample text in the chosen style"></canvas></div>
     <p class="status" id="status">Loading the fonts…</p>
+    <p class="status" id="anim-note" hidden>This style is animated: it has six frames, played here eight a second. Untick Animate to hold it still.</p>
     <div class="bake">
       <span class="label">Bake this</span>
       <div class="bake-row"><code id="bake-line"></code><button type="button" id="bake-copy" hidden>Copy</button><button type="button" id="short-add">Add to shortlist</button></div>
@@ -183,12 +186,12 @@ ul { margin: 0; padding-left: 20px; color: var(--sand); max-width: 65ch; display
         <div class="meta"><strong>Body Regular</strong>, 5x7 with real lowercase, accents and symbols. Pixel-exact at size 10, 20, 30.</div>
       </div>
       <div class="face">
-        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:var(--pixel);font-weight:700;font-size:30px;line-height:1.2">Pack my box with five dozen liquor jugs! ÀÉÎÕÜ àéîõü ç ñ ß ¿? ← → ↑ ↓ ♥ ★ ✓ ✕ ∞</div>
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:var(--pixel);font-weight:700;font-size:30px;line-height:1.2">Pack my box with five dozen liquor jugs! ÀÉÎÕÜ àéîõü ç ñ ß ¿? ← → ↑ ↓ ♥ ★ ✓ ✕ ∞      </div>
         <div class="meta"><strong>Body Bold</strong>. M, W, m and w are redrawn by hand so they stay open.</div>
       </div>
       <div class="face">
-        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:var(--display);font-size:40px;line-height:1.15">BOSS INCOMING. HOLD THE HILL! 0123456789</div>
-        <div class="meta"><strong>Display</strong>, 8x12 with two-pixel strokes. Capitals only; lowercase types as capitals. Pixel-exact at size 20 and 40.</div>
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:var(--display);font-size:40px;line-height:1.15">Boss Incoming. Hold the Hill! 0123456789</div>
+        <div class="meta"><strong>Display</strong>, 8x12 with two-pixel strokes, capitals and lowercase. Pixel-exact at size 20 and 40.</div>
       </div>
       <div class="face">
         <div class="sample" contenteditable="true" spellcheck="false" style="font-family:var(--tiny);font-size:30px;line-height:1.3">HP 120/200  LV 3  COST 125  X2  +40%</div>
@@ -230,8 +233,8 @@ ul { margin: 0; padding-left: 20px; color: var(--sand); max-width: 65ch; display
         <div class="meta"><strong>Chisel</strong>. Straight cuts and diamonds, capitals and lowercase. Carved labels.</div>
       </div>
       <div class="face">
-        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Stencil',var(--pixel);font-size:40px;line-height:1.3">SUPPLY DEPOT 04 HOLD THE LINE</div>
-        <div class="meta"><strong>Stencil</strong>. The display alphabet with breaks cut by hand into every letter, capitals only. Pixel-exact at size 20 and 40.</div>
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Stencil',var(--pixel);font-size:40px;line-height:1.3">Supply Depot 04. Hold the Line</div>
+        <div class="meta"><strong>Stencil</strong>. The display alphabet with breaks cut by hand into its letters, capitals and lowercase. Pixel-exact at size 20 and 40.</div>
       </div>
       <div class="face">
         <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Slab',var(--pixel);font-size:30px;line-height:1.3">Wanted: The Hornet Queen. Reward 500 food</div>
@@ -246,12 +249,12 @@ ul { margin: 0; padding-left: 20px; color: var(--sand); max-width: 65ch; display
         <div class="meta"><strong>Wide</strong>. Low and stretched, five pixels tall; small capitals for lowercase. Arcade and racing readouts.</div>
       </div>
       <div class="face">
-        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Deco',var(--pixel);font-size:30px;line-height:1.3">GRAND OPENING TONIGHT: THE ANT HILL REVUE</div>
-        <div class="meta"><strong>Deco</strong>. Tall and thin with a high waist, capitals only. Marquees and posters.</div>
+        <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Deco',var(--pixel);font-size:30px;line-height:1.3">Grand Opening Tonight: The Ant Hill Revue</div>
+        <div class="meta"><strong>Deco</strong>. Tall and thin with a high waist, capitals and lowercase. Marquees and posters.</div>
       </div>
       <div class="face">
         <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Runic',var(--pixel);font-size:30px;line-height:1.3">HERE STOOD THE FIRST HILL</div>
-        <div class="meta"><strong>Runic</strong>. Straight cuts with slanted bars, capitals only. Carved stones and relics.</div>
+        <div class="meta"><strong>Runic</strong>. Straight cuts with slanted bars; small capitals for lowercase. Carved stones and relics.</div>
       </div>
       <div class="face">
         <div class="sample" contenteditable="true" spellcheck="false" style="font-family:'HTH Script',var(--pixel);font-size:30px;line-height:1.3">Dear Queen, the larder is full. Yours, the Foragers</div>

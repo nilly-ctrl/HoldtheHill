@@ -44,7 +44,8 @@ GLYPHS_CS = os.path.normpath(os.path.join(HERE, "..", "..", "DamageNumbers", "Pi
 # gap: empty columns between letters in the plain fonts. kern_cap: the most a pair may close up.
 FACES = {
     "body": dict(glyphs=body.CAPS, chars=list(body.CAPS), bold=body.BOLD, gap=1, kern_cap=1),
-    "display": dict(glyphs=display.GLYPHS, chars=display.CHARS, bold={}, gap=2, kern_cap=2),
+    "display": dict(glyphs=display.GLYPHS, chars=display.CHARS, bold={}, gap=2, kern_cap=2,
+                    cap=display.CAP, desc=display.DESC),
     "tiny": dict(glyphs=tiny.GLYPHS, chars=tiny.CHARS, bold={}, gap=1, kern_cap=1),
 }
 # Kerning only ever applies between these; digits keep their columns and symbols their air.
@@ -80,7 +81,7 @@ STYLES = [
          fill=["#ffffff", "#f1e9da", "#d9cdb8"], outline="#1b110b", shadow=(0, 1, "#1b110b")),
     dict(name="DamageCrit", use="Critical hits (spawn at 1x, punch to 2x)", bold=True, scale=2, slant=4,
          fill=["#fffbd0", "#ffe14a", "#ffb03a", "#ff7a2e", "#e2412f"],
-         outline="#2a0808", thick=2, shadow=(2, 2, "#2a0808")),
+         outline="#2a0808", thick=2, shadow=(2, 2, "#2a0808"), anim="pulse"),
     dict(name="DamageFire", use="Fire and burn ticks", bold=True, scale=1,
          fill=["#fff2a0", "#ffb03a", "#ff6a2a", "#d6361c"], hi="#fff8d0", outline="#3a0c0f", shadow=(0, 1, "#3a0c0f")),
     dict(name="DamagePoison", use="Poison and acid ticks", bold=True, scale=1,
@@ -92,7 +93,8 @@ STYLES = [
     dict(name="DamageTrue", use="True (armour-piercing) damage", bold=False, scale=1,
          fill=["#ffffff", "#d8f6ff", "#9fe7ff", "#5aa9d8"], hi="#ffffff", outline="#0b2236", shadow=(1, 1, "#0b2236")),
     dict(name="Heal", use="Healing on ants and the Queen (+N)", bold=True, scale=1,
-         fill=["#fff0f4", "#ffc2d0", "#ff8fa2", "#f0607a"], hi="#ffffff", outline="#4a1020", shadow=(0, 1, "#4a1020")),
+         fill=["#fff0f4", "#ffc2d0", "#ff8fa2", "#f0607a"], hi="#ffffff", outline="#4a1020", shadow=(0, 1, "#4a1020"),
+         anim="sparkle"),
     dict(name="Resource", use="Food gained / spent, costs, rewards", bold=True, scale=1,
          fill=["#fff6c8", "#f6d88a", "#ecc477", "#c9963f"], hi="#fffbe6", lo="#8a5f24", outline="#3a2416", shadow=(0, 1, "#3a2416")),
     dict(name="Hud", use="HUD counters: wave, timer, Queen HP, stats", bold=False, scale=1,
@@ -102,13 +104,13 @@ STYLES = [
          fill=["#ffffff", "#fff1d6", "#fff1d6", "#ecd9b4"], outline="#1b110b", shadow=(0, 2, "#1b110b")),
     dict(name="Combo", face="display", use="Combo counter and its label (x12, 12 HITS)", bold=False, scale=1,
          slant=4, gap=2, fill=["#fff6c8", "#ffd23a", "#ff8a3d", "#f0447a", "#b0308a"], hi="#ffffff",
-         outline="#2a0a24", thick=2, shadow=(2, 2, "#2a0a24")),
+         outline="#2a0a24", thick=2, shadow=(2, 2, "#2a0a24"), anim="heat"),
     dict(name="Banner", face="display", use="Wave banners (WAVE 3, WAVE CLEAR)", bold=False, scale=2, gap=2,
          fill=["#fffbe6", "#fff1d6", "#f6d88a", "#ecc477", "#c9963f"], hi="#ffffff", lo="#8a5f24", bevel=2,
          outline="#2a1708", thick=2, shadow=(0, 3, "#1b110b")),
     dict(name="BannerVictory", face="display", use="VICTORY and other good news", bold=False, scale=2, gap=2,
          fill=["#ffffff", "#fff6a0", "#ffd23a", "#ffb03a", "#e08a1a"], hi="#ffffff", lo="#a85a10", bevel=2,
-         outline="#3a1a06", thick=2, shadow=(0, 3, "#3a1a06")),
+         outline="#3a1a06", thick=2, shadow=(0, 3, "#3a1a06"), anim="shimmer"),
     dict(name="BannerDefeat", face="display", use="DEFEAT and other bad news", bold=False, scale=2, gap=2,
          fill=["#ffb0a0", "#f0604a", "#e2412f", "#b02a26", "#8e2124"], hi="#ffd0c0", lo="#5a1014", bevel=2,
          outline="#200808", thick=2, shadow=(0, 3, "#200808")),
@@ -269,6 +271,7 @@ FRAMES = 6                               # frames in an animated style; frame 0 
 FLICKER = [1.0, 0.9, 1.0, 0.55, 1.0, 0.8]    # brightness of each frame of a flickering style
 SHIMMER_PERIOD, SHIMMER_STEP = 14, 3     # how far apart the bright bands are, and how far one moves per frame
 DRIP_ROWS = 3                            # rows kept under a dripping style for its drops
+PULSE = [0.0, 0.2, 0.45, 0.2, 0.0, 0.0]  # how far each frame of a pulsing style goes towards white
 
 
 def bake(ch, st, frame=0):
@@ -345,6 +348,12 @@ def bake(ch, st, frame=0):
                 c = hexc(st["hi"])
             elif st.get("lo") and any(not on(x, y + d) for d in range(1, bevel + 1)):
                 c = hexc(st["lo"])
+            if anim == "pulse" and PULSE[frame % len(PULSE)]:
+                c = hexc(mix("#%02x%02x%02x" % c[:3], "#ffffff", PULSE[frame % len(PULSE)]))
+            elif anim == "heat" and frame and (y + (frame - 1) * 2 * scale) % (6 * scale) < scale:
+                c = hexc(mix("#%02x%02x%02x" % c[:3], "#ffffff", 0.55))     # bright rows that climb the letter
+            elif anim == "sparkle" and frame and (ord(ch) * 31 + (x // scale) * 17 + (y // scale) * 29 + frame * 7) % 11 == 0:
+                c = (255, 255, 255, 255)
             if anim == "shimmer" and frame and (x + y - (frame - 1) * SHIMMER_STEP * scale) % (SHIMMER_PERIOD * scale) < 2 * scale:
                 c = (255, 255, 255, 255)            # a bright band that crosses the letter; frame 0 is plain
             p[x + pad_l, y + pad_t] = c
@@ -642,14 +651,16 @@ def body_font(bold):
 def caps_font(file, family, glyphs, px, ascent, descent, gap, kern_cap):
     f = Plain(file, family, "Regular", px=px, ascent=ascent, descent=descent, gap=gap)
     height = len(glyphs["A"])
+    lower = "a" in glyphs
     for ch, rows in glyphs.items():
-        if ch not in "^v":
+        if lower or ch not in "^v":
             f.add(ch, rows_to_mask(rows), height)
-    # Capitals only: lowercase types as capitals (the small cross stays on the multiplication sign).
-    f.aliases = {c: c - 32 for c in range(ord("a"), ord("z") + 1)}
-    f.aliases.update({ord(k): ord(v) for k, v in body.ALIASES.items() if ord(v) in f.glyphs})
-    del f.glyphs[ord("x")]
-    f.finish(kern_cap, kern_chars([c for c in glyphs if c not in "x×^v"]))
+    f.aliases = {ord(k): ord(v) for k, v in body.ALIASES.items() if ord(v) in f.glyphs}
+    if not lower:
+        # Capitals only: lowercase types as capitals (the small cross stays on the multiplication sign).
+        f.aliases.update({c: c - 32 for c in range(ord("a"), ord("z") + 1)})
+        del f.glyphs[ord("x")]
+    f.finish(kern_cap, kern_chars([c for c in glyphs if lower or c not in "x×^v"]))
     return f
 
 
@@ -915,7 +926,7 @@ def main():
     style_specimen(baked, os.path.join(HERE, "SpecimenStyles.png"), label_font)
 
     fonts = [body_font(False), body_font(True),
-             caps_font("HoldTheHillDisplay-Regular", "Hold the Hill Display", display.GLYPHS, 50, 13, 2, 2, 2),
+             caps_font("HoldTheHillDisplay-Regular", "Hold the Hill Display", display.GLYPHS, 50, 13, 3, 2, 2),
              caps_font("HoldTheHillTiny-Regular", "Hold the Hill Tiny", tiny.GLYPHS, 100, 6, 1, 1, 1)]
     for f in fonts:
         build_ttf(f)

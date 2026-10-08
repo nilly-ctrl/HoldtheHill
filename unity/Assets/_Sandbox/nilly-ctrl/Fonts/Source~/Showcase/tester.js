@@ -44,12 +44,22 @@
   }
 
   // One glyph painted in a style: outline, shadow, glow, fill bands, bevel, stripes, hollow.
-  function bake(ch, st, face, faceKey) {
+  // Animated styles: six frames, the same rules as build_pixel_fonts.py.
+  var FRAMES = 6, FLICKER = [1, 0.9, 1, 0.55, 1, 0.8], PULSE = [0, 0.2, 0.45, 0.2, 0, 0];
+  var SHIMMER_PERIOD = 14, SHIMMER_STEP = 3, DRIP_ROWS = 3;
+  function toward(c, target, t) {
+    return [c[0] + (target[0] - c[0]) * t, c[1] + (target[1] - c[1]) * t, c[2] + (target[2] - c[2]) * t, c[3]];
+  }
+
+  function bake(ch, st, face, faceKey, frame) {
+    frame = frame || 0;
+    var anim = st.anim, WHITE = [255, 255, 255, 255];
     var scale = st.scale, thick = st.thick === undefined ? 1 : st.thick;
     var g = maskOf(face, ch, st.bold, scale, st.slant), m = g.m, w = g.w, h = g.h;
     var sdx = st.shadow[0], sdy = st.shadow[1], scol = st.shadow[2];
     var pad = thick + (st.glow ? 2 : 0);
-    var W = w + pad * 2 + sdx, H = h + pad * 2 + sdy;
+    var drip = anim === "drip" ? DRIP_ROWS * scale : 0, dim = anim === "flicker" ? FLICKER[frame % FLICKER.length] : 1;
+    var W = w + pad * 2 + sdx, H = h + pad * 2 + sdy + drip;
     var px = new Uint8ClampedArray(W * H * 4), x, y, dx, dy;
     function put(xx, yy, c) { var i = (yy * W + xx) * 4; px[i] = c[0]; px[i + 1] = c[1]; px[i + 2] = c[2]; px[i + 3] = c[3]; }
     function on(xx, yy) { return yy >= 0 && yy < h && xx >= 0 && xx < w && m[yy][xx]; }
@@ -61,7 +71,7 @@
       }
     }
     if (st.glow) {
-      var reach = thick + 2, gc = st.glow[0], ga = st.glow[1];
+      var reach = thick + 2, gc = st.glow[0], ga = Math.floor(st.glow[1] * dim);
       for (y = 0; y < h; y++) for (x = 0; x < w; x++) if (m[y][x]) {
         for (dy = -reach; dy <= reach; dy++) for (dx = -reach; dx <= reach; dx++) {
           var far = Math.abs(dx) + Math.abs(dy);
@@ -87,7 +97,30 @@
                      : bands[Math.min(bands.length - 1, Math.floor(y * bands.length / h))];
       if (st.hi) { edge = false; for (d = 1; d <= bevel; d++) if (!on(x, y - d)) edge = true; if (edge) c = st.hi; }
       if (c !== st.hi && st.lo) { edge = false; for (d = 1; d <= bevel; d++) if (!on(x, y + d)) edge = true; if (edge) c = st.lo; }
-      put(x + pad, y + pad, rgba(c));
+      var col = rgba(c), xs = Math.floor(x / scale), ys = Math.floor(y / scale);
+      if (dim < 1) col = toward(col, rgba(st.outline), (1 - dim) * 0.6);
+      if (anim === "pulse" && PULSE[frame % PULSE.length]) col = toward(col, WHITE, PULSE[frame % PULSE.length]);
+      else if (anim === "heat" && frame && (y + (frame - 1) * 2 * scale) % (6 * scale) < scale) col = toward(col, WHITE, 0.55);
+      else if (anim === "sparkle" && frame && (ch.charCodeAt(0) * 31 + xs * 17 + ys * 29 + frame * 7) % 11 === 0) col = WHITE;
+      if (anim === "shimmer" && frame) {
+        var band = (x + y - (frame - 1) * SHIMMER_STEP * scale) % (SHIMMER_PERIOD * scale);
+        if (band < 0) band += SHIMMER_PERIOD * scale;
+        if (band < 2 * scale) col = WHITE;
+      }
+      put(x + pad, y + pad, col);
+    }
+    if (drip) {
+      var dc = rgba(st.lo || bands[bands.length - 1]);
+      for (x = 0; x < w; x += scale) {
+        var last = -1;
+        for (y = 0; y < h; y++) if (m[y][x]) last = y;
+        var seed = ch.charCodeAt(0) * 31 + Math.floor(x / scale) * 7;
+        if (last < 0 || seed % 3) continue;
+        var len = (frame + seed) % (DRIP_ROWS + 1) * scale;
+        for (dy = 1; dy <= len; dy++) for (dx = 0; dx < scale; dx++) {
+          if (x + dx < w && last + pad + dy < H) put(x + dx + pad, last + pad + dy, dc);
+        }
+      }
     }
     var gap = st.gap === undefined ? (scale === 1 ? 1 : 2) : st.gap;
     var advance = ch !== " " ? w + thick + gap : (faceKey === "body" ? w + 1 : w + thick + gap);
@@ -113,6 +146,7 @@
         Object.keys(pt).forEach(function (k) { if (k !== "shadow") st[k] = pt[k]; });
         st.shadow = [base.shadow[0], base.shadow[1], pt.shadow[2]];      // the style's offset, the treatment's colour
       }
+      delete st.anim;
       if (p.bold) st.bold = true;
       if (p.italic) {
         // lean one pixel every three rows whatever the scale, and take the lean back out of the letter gap
@@ -126,21 +160,21 @@
              changed: faceKey !== own || !!p.paint || p.bold || p.italic };
   }
 
-  function glyph(r, ch) {
-    var key = r.key + "|" + ch;
-    if (!cache[key]) cache[key] = bake(ch, r.st, r.face, r.faceKey);
+  function glyph(r, ch, frame) {
+    var key = r.key + "|" + ch + "|" + (frame || 0);
+    if (!cache[key]) cache[key] = bake(ch, r.st, r.face, r.faceKey, frame);
     return cache[key];
   }
 
   // The text at one screen pixel per font pixel, on its own small canvas.
-  function layout(t, s, text, kern, p) {
+  function layout(t, s, text, kern, p, frame) {
     var r = resolve(t, s, p || pick()), face = r.face, kerns = r.st.bold ? face.kernBold : face.kern;
     var pen = 0, prev = null, runs = [], extra = 0, h = 1, i;
     for (i = 0; i < text.length; i++) {
       var ch = text[i];
       if (!face.glyphs[ch]) ch = ch.toUpperCase();          // capitals-only alphabets
       if (!face.glyphs[ch]) continue;
-      var g = glyph(r, ch);
+      var g = glyph(r, ch, frame);
       if (kern && prev !== null && kerns[prev + ch]) pen += kerns[prev + ch] * r.st.scale;
       runs.push([g, pen]);
       pen += g.advance; extra = g.w - g.advance; h = g.h; prev = ch;
@@ -163,8 +197,8 @@
     return small;
   }
 
-  function draw(canvas, t, s, text, zoom, kern, fit) {
-    var small = layout(t, s, text, kern), w = small.width, h = small.height;
+  function draw(canvas, t, s, text, zoom, kern, fit, frame) {
+    var small = layout(t, s, text, kern, undefined, frame), w = small.width, h = small.height;
     if (fit && w * zoom > fit) zoom = Math.max(1, Math.floor(fit / w));
     canvas.width = w * zoom; canvas.height = h * zoom;
     canvas.style.width = w * zoom + "px"; canvas.style.height = h * zoom + "px";
@@ -439,6 +473,18 @@
   });
 
   ["text", "zoom", "kern"].forEach(function (id) { $(id).addEventListener("input", refresh); });
+
+  // Play the chosen style's frames in the big preview, eight a second.
+  var playing = 0;
+  try { $("animate").checked = !window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { /* keep the default */ }
+  setInterval(function () {
+    if (!data || !$("animate").checked) { playing = 0; return; }
+    var r = resolve(theme, style, pick());
+    $("anim-note").hidden = !r.st.anim;
+    if (!r.st.anim) { playing = 0; return; }
+    playing = (playing + 1) % FRAMES;
+    draw($("out"), theme, style, $("text").value, +$("zoom").value, $("kern").checked, 0, playing);
+  }, 125);
   ["bold", "italic"].forEach(function (id) { $(id).addEventListener("input", function () { buildStyles(); refresh(); }); });
 
   fetch("fonts.json").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (d) {
