@@ -14,7 +14,7 @@ What exists, where it lives, how to use it in Unity and how to change it. Everyt
 |---|---|---|---|
 | Icons | `Icons/PNG/` | 95 icons at 32x32, plus `TitleLogo.png` (168x98) | `Icons/Source~/build_pixel_icons.py`, `build_logo.py` |
 | App icon | `Icons/AppIcon/` | `AppIcon_<size>.png` for every platform size, `AppIcon.ico` | Same script as the icons |
-| Fonts | `Fonts/Atlases/`, `Fonts/TTF/` | Ten alphabets (body 5x7 with lowercase, display 8x12, tiny 3x5, plus Serif, Round, Tech, Gothic, Condensed, Chisel and Stencil) as eleven plain TTFs and 36 baked colour styles (damage types, crit, heal, resource, HUD, headings, combo, banners, tiny labels); the same styles for each of the 13 art themes in `Fonts/Atlases/Themes/` | `Fonts/Source~/build_pixel_fonts.py` |
+| Fonts | `Fonts/Atlases/`, `Fonts/TTF/` | Sixteen alphabets (body 5x7, display 8x12, tiny 3x5, plus thirteen more from Serif to Script; see `Fonts/README.md`) as 43 plain TTFs including bold and italic, and 48 baked colour styles (damage types, crit, heal, resource, HUD, headings, combo, banners, tiny labels); the same styles for each of the 13 art themes in `Fonts/Atlases/Themes/` | `Fonts/Source~/build_pixel_fonts.py` |
 | Damage numbers | `DamageNumbers/` | Scripts for floating popups. No art of its own; it uses the font atlases. | See its README |
 | HUD pieces | `Ui/Hud/` | Bar frame and fills, wave track and markers, tooltip, cost tag, keycap, icon slots, pips | `Ui/Hud/Source~/build_hud_sprites.py` |
 | Cursors and markers | `Ui/Markers/` | Four cursors, tile brackets (valid, invalid, selected, hover), range dash, path chevron | `Ui/Markers/Source~/build_marker_sprites.py` |
