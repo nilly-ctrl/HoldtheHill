@@ -46,8 +46,8 @@ Written 2026-10-05 by Nilly with Claude. **Local working note, not committed.**
 
 ## Open questions
 
-- **Permanent currency:** name, how it is earned, what the upgrades do. Needed by theme 7
-  (earlier if the death screen should show the real number).
+- ~~Permanent currency~~ Decided 2026-10-07: Honeydew; 1 per wave cleared plus 5 for a win;
+  first upgrades are more starting food, tougher hill, bigger bounties. Numbers are first guesses.
 - **Wave retry and records:** free retries inflate "furthest wave". Proposal: count retries used
   and show them beside the record.
 - **In-run skill tree panel and HUD:** stay IMGUI for now; rebuilding them in uGUI is a separate
@@ -101,7 +101,28 @@ Written 2026-10-05 by Nilly with Claude. **Local working note, not committed.**
 | 1 Flow controller and run snapshot | built 2026-10-05, awaiting review | `Graybox/Flow/`. 41/41 PlayMode tests. Placeholder IMGUI cards stand in for the screens. Live scene needs a rebuild (Tools > Hold the Hill > Build Graybox Combat Test). |
 | 2 Save service | built 2026-10-05, awaiting review | `Graybox/Save/`. 58/58 PlayMode tests. File: `%USERPROFILE%\AppData\LocalLow\Turbulent Towers Studio\Hold the Hill\save.json`. |
 | 3 UI kit | built 2026-10-05, awaiting review | `_Sandbox/nilly-ctrl/UiKit/`. 86/86 PlayMode tests. Look at it: Tools > Hold the Hill > Open UI Kit Gallery, then Play. |
-| 4 Pause and run-end screens | built in the scratch copy only, NOT in this project yet (2026-10-05) | Another session held the Unity lock, so nothing was written here. Source: `%TEMP%\claude\B--\0749962f-3877-4acf-84b3-22fa77a31b96\scratchpad\theme4\` (`apply.py <path to _Sandbox/nilly-ctrl>` copies the new files and makes the edits). Working copy: `B:\Scratch\Sandbox\hth-verify-0749962f`. 93/94 tests; the failure is the test clicking a button without focusing it first. Open defects: the dim layer behind the screens does not show, and "!" renders as a small tick in the TMP font. |
-| 5 Settings | not started | |
-| 6 Controls | not started | |
-| 7 Title and Home hub | not started | |
+| 4 Pause and run-end screens | in the project 2026-10-07, awaiting review | `Graybox/Screens/`. Brought over from the scratch copy. |
+| 5 Settings | built 2026-10-07, awaiting review | `GrayboxSettingsScreen`, `Save/GrayboxSettings.cs`. Tabs: Audio, Display, Gameplay, Access. |
+| 6 Controls | built 2026-10-07, awaiting review | `Graybox/Input/GrayboxControls.cs` (one action map made in code), `GrayboxControlsScreen`. |
+| 7 Title and Home hub | built 2026-10-07, awaiting review | `GrayboxTitleScreen`, `GrayboxHomeScreen`, `Save/GrayboxUpgrades.cs`, `Flow/GrayboxEndlessMode.cs`. |
+
+## Notes from themes 5 to 7
+
+- All screens are one generated prefab, `Graybox/Prefabs/GrayboxMenus.prefab`
+  (Tools > Hold the Hill > Build Graybox Menus). The scene now opens on the title screen; set
+  "Initial State" on the `GrayboxGameFlow` object to Playing to skip the menus while tuning.
+- The old IMGUI pop-ups (`GrayboxMenuManager`, M and O) and the placeholder cards are no longer
+  in the built scene. Their files remain for the tests that use them.
+- Settings apply at once and are written when the screen closes. Music and effects volume are
+  stored and exposed (`GrayboxSettings.MusicVolume`, `SfxVolume`) but nothing reads them while
+  audio is parked. Display settings do nothing in the editor, only in a build.
+- The Access tab has menu size and pause-on-focus-loss only: there is no screen shake or flash
+  in the game yet to switch off.
+- Controls: the map is made in code because `Settings/InputSystem_Actions.inputactions` is the
+  team's file. Menu move, press, back and tab switching still come from that file and are not
+  rebindable. Two actions on one key is allowed and shown in orange.
+- Gamepad: only Pause (Start) has a binding. No gamepad was connected when this was built.
+- Endless mode sends `GrayboxCustomSpawner.SpawnProceduralWave` waves 4 seconds after the field
+  clears. It has no wave retry, and its records are kept under "<map>-Endless".
+- Honeydew is paid at run end. A run retried after a defeat is paid only for waves beyond what
+  it was already paid for.
