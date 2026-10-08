@@ -236,6 +236,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private bool IsPositionClearOfPath(Vector3 point, float minDistance)
         {
+            // Hand-drawn levels mark cabinets, spills and the like as unbuildable.
+            if (GrayboxBuildMask.Blocks(point))
+            {
+                return false;
+            }
+
             if (_path == null)
             {
                 _path = FindAnyObjectByType<EnemyPath>();
