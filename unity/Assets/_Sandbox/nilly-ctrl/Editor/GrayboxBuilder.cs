@@ -163,6 +163,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             go.AddComponent<GrayboxWaveBanner>();
             // F6 steps through the font themes while playing.
             go.AddComponent<GrayboxFontThemeKey>();
+            // Food, wave and time in the pixel font, and a combo counter for quick kills.
+            go.AddComponent<GrayboxPixelHud>();
+            go.AddComponent<GrayboxKillCombo>();
             go.AddComponent<GrayboxStatusCombos>();
             go.AddComponent<GrayboxBaseHealth>();
             go.AddComponent<GrayboxBaseHealthUI>();

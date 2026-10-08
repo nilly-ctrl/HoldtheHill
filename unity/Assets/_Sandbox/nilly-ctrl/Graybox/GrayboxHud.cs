@@ -61,6 +61,9 @@ public class GrayboxHud : MonoBehaviour
     private int _killed;
     private int _speedIndex;
     private float _elapsed;
+
+    /// <summary>Seconds since the run started, for other HUD pieces to show.</summary>
+    public float ElapsedSeconds => _elapsed;
     private GUIStyle _style;
     private GUIStyle _bigStyle;
 
@@ -323,7 +326,9 @@ public class GrayboxHud : MonoBehaviour
 
             int gold = HoldTheHill.Sandbox.NillyCtrl.GrayboxEconomy.Instance != null ? HoldTheHill.Sandbox.NillyCtrl.GrayboxEconomy.Instance.CurrentGold : 500;
             int sp = HoldTheHill.Sandbox.NillyCtrl.GrayboxSkillTree.Instance != null ? HoldTheHill.Sandbox.NillyCtrl.GrayboxSkillTree.Instance.SkillPoints : 0;
-            _lines.Add($"{IconRow}ResFoodIcon|<color=#ffd700>${gold}</color>{IconSep}ResWaveIcon|{_spawner.CurrentWaveNumber}/{_spawner.TotalWaves}");
+            // The pixel HUD, when the scene has one, shows food, wave and time itself.
+            bool pixelHud = HoldTheHill.Sandbox.NillyCtrl.GrayboxPixelHud.Showing;
+            if (!pixelHud) _lines.Add($"{IconRow}ResFoodIcon|<color=#ffd700>${gold}</color>{IconSep}ResWaveIcon|{_spawner.CurrentWaveNumber}/{_spawner.TotalWaves}");
             _lines.Add($"Skills    <color=#80ff80>{sp} SP</color>");
             _lines.Add($"State     {_spawner.CurrentState}");
             _lines.Add(string.Empty);
@@ -333,7 +338,7 @@ public class GrayboxHud : MonoBehaviour
             _lines.Add($"Alive     {living}");
             _lines.Add(string.Empty);
             float speed = HoldTheHill.Sandbox.NillyCtrl.GrayboxGameFlow.Instance != null ? HoldTheHill.Sandbox.NillyCtrl.GrayboxGameFlow.Instance.Speed : _speeds[_speedIndex];
-            _lines.Add($"Time      {_elapsed:0.0}s  (x{speed:0})");
+            _lines.Add(pixelHud ? $"Speed     x{speed:0}" : $"Time      {_elapsed:0.0}s  (x{speed:0})");
             keysStart = _lines.Count; // the blank line before the key list
             _lines.Add(string.Empty);
             _lines.Add($"<b>{_nextWaveKey}</b>  next wave");

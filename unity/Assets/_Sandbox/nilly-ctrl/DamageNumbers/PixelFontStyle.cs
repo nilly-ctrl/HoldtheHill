@@ -13,6 +13,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     {
         [SerializeField] private Texture2D _atlas;
         [SerializeField] private TextAsset _glyphData;
+        [Tooltip("Further frames of an animated style, laid out exactly like the atlas. Empty for a still style.")]
+        [SerializeField] private Texture2D[] _frames = new Texture2D[0];
+        [SerializeField, Min(1f)] private float _framesPerSecond = 8f;
 
         /// <summary>A glyph's place in the atlas and its size in font pixels.</summary>
         public struct Glyph
@@ -64,6 +67,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private int _digitAdvance;
 
         public Texture2D Atlas => _atlas;
+
+        /// <summary>How many frames the style has: 1 for a still style, more for one that shimmers, flickers or drips.</summary>
+        public int FrameCount => 1 + (_frames != null ? _frames.Length : 0);
+
+        public float FramesPerSecond => _framesPerSecond;
+
+        /// <summary>The atlas for a frame; frame 0 is the still atlas. Frames wrap round.</summary>
+        public Texture2D Frame(int index)
+        {
+            int count = FrameCount;
+            index = ((index % count) + count) % count;
+            return index == 0 || _frames[index - 1] == null ? _atlas : _frames[index - 1];
+        }
 
         /// <summary>Height of every glyph image, in font pixels.</summary>
         public int LineHeight

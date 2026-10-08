@@ -15,6 +15,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [Tooltip("Neon, Space, Spooky, Steampunk, Medieval, Samurai, Candy, Jungle, Pirate, Robot, NeonSpace, " +
                  "Vaporwave or Military. Empty for the base set.")]
         [SerializeField] private string _theme;
+        [Tooltip("Use a theme's baked pairings where it has them (Spooky's banner in Gothic) instead of the plain themed style.")]
+        [SerializeField] private bool _preferPairings = true;
 
         public string Theme => _theme;
 
@@ -34,7 +36,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>The named style in the current theme (the base set's if the theme has none), or null.</summary>
         public PixelFontStyle Find(string style)
         {
-            return _library != null ? _library.Find(_theme, style) : null;
+            return _library != null ? _library.Find(_theme, style, _preferPairings) : null;
         }
 
         /// <summary>Switches the scene's fonts to another theme. Empty or "Meadow" is the base set.</summary>
@@ -73,7 +75,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             foreach (DamageNumberSpawner spawner in FindObjectsByType<DamageNumberSpawner>())
             {
-                spawner.ApplyTheme(_library, _theme);
+                spawner.ApplyTheme(_library, _theme, _preferPairings);
             }
 
             foreach (PixelText text in FindObjectsByType<PixelText>())
@@ -83,7 +85,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     continue;
                 }
 
-                PixelFontStyle style = _library.Find(_theme, text.ThemeStyle);
+                PixelFontStyle style = _library.Find(_theme, text.ThemeStyle, _preferPairings);
                 if (style != null)
                 {
                     text.Style = style;

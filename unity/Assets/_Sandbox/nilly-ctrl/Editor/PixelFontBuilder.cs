@@ -24,6 +24,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private class FontData
         {
             public string style;
+            public string pairingOf;
+            public int frames;
+            public float framesPerSecond;
         }
 #pragma warning restore 0649
 
@@ -56,6 +59,20 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 var styleSerialized = new SerializedObject(style);
                 styleSerialized.FindProperty("_atlas").objectReferenceValue = texture;
                 styleSerialized.FindProperty("_glyphData").objectReferenceValue = AssetDatabase.LoadAssetAtPath<TextAsset>(jsonPath);
+                // An animated style has Name.f1.png, Name.f2.png... beside its atlas.
+                SerializedProperty frames = styleSerialized.FindProperty("_frames");
+                frames.arraySize = Mathf.Max(0, data.frames - 1);
+                for (int f = 1; f < data.frames; f++)
+                {
+                    frames.GetArrayElementAtIndex(f - 1).objectReferenceValue =
+                        AssetDatabase.LoadAssetAtPath<Texture2D>(Path.ChangeExtension(jsonPath, $".f{f}.png"));
+                }
+
+                if (data.framesPerSecond > 0f)
+                {
+                    styleSerialized.FindProperty("_framesPerSecond").floatValue = data.framesPerSecond;
+                }
+
                 styleSerialized.ApplyModifiedPropertiesWithoutUndo();
                 EditorUtility.SetDirty(style);
                 built++;
@@ -66,6 +83,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 {
                     Theme = folder.StartsWith(themesPrefix) ? folder.Substring(themesPrefix.Length) : string.Empty,
                     Style = data.style,
+                    PairingOf = data.pairingOf ?? string.Empty,
                     Font = style,
                 });
             }

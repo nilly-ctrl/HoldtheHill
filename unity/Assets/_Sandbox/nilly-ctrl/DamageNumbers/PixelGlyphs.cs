@@ -29,6 +29,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public const string Infinity = "\u221E";
         public const string Times = "\u00D7";
 
+        public const string IconFood = "\uE080";
+        public const string IconWave = "\uE081";
+        public const string IconClock = "\uE082";
+        public const string IconShield = "\uE083";
+        public const string IconPoison = "\uE084";
+        public const string IconFire = "\uE085";
+        public const string IconBolt = "\uE086";
+        public const string IconFrost = "\uE087";
+        public const string IconSkull = "\uE088";
+        public const string IconSword = "\uE089";
+        public const string IconCrown = "\uE08A";
+        public const string IconAnt = "\uE08B";
+
         public const string KeyEsc = "\uE000";
         public const string KeyTab = "\uE001";
         public const string KeySpace = "\uE002";

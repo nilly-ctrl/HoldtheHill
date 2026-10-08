@@ -28,6 +28,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [Tooltip("Give every digit the same width, so a counter does not shift as it changes.")]
         [SerializeField] private bool _fixedWidthDigits;
         [SerializeField] private Color _tint = Color.white;
+        [Tooltip("Play the frames of an animated style (gold that shimmers, neon that flickers, blood that drips).")]
+        [SerializeField] private bool _animate = true;
 
         [Header("Rendering")]
         [Tooltip("World pixels per unit. Match the game's sprites so a font pixel is the same size as an art pixel.")]
@@ -43,11 +45,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private static readonly Dictionary<(Texture2D, Shader), Material> Materials =
             new Dictionary<(Texture2D, Shader), Material>();
 
+        private static readonly int MainTex = Shader.PropertyToID("_MainTex");
+
         private readonly List<Vector3> _vertices = new List<Vector3>();
         private readonly List<Vector2> _uvs = new List<Vector2>();
         private readonly List<Color32> _colors = new List<Color32>();
         private readonly List<int> _triangles = new List<int>();
         private Mesh _mesh;
+        private MaterialPropertyBlock _block;
+        private int _shownFrame = -1;
 
         public string Text
         {
@@ -70,6 +76,33 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 if (_style != value)
                 {
                     _style = value;
+                    Rebuild();
+                }
+            }
+        }
+
+        public Anchor Alignment
+        {
+            get => _anchor;
+            set
+            {
+                if (_anchor != value)
+                {
+                    _anchor = value;
+                    Rebuild();
+                }
+            }
+        }
+
+        /// <summary>Give every digit the same width, so a counter does not shift as it changes.</summary>
+        public bool FixedWidthDigits
+        {
+            get => _fixedWidthDigits;
+            set
+            {
+                if (_fixedWidthDigits != value)
+                {
+                    _fixedWidthDigits = value;
                     Rebuild();
                 }
             }
@@ -115,6 +148,34 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Rebuild();
         }
 
+        // An animated style swaps its atlas for the next frame; the mesh and material stay as they are.
+        private void Update()
+        {
+            if (_style == null || _style.FrameCount < 2)
+            {
+                return;
+            }
+
+            int frame = _animate && Application.isPlaying
+                ? (int)(Time.unscaledTime * _style.FramesPerSecond) % _style.FrameCount
+                : 0;
+            if (frame == _shownFrame)
+            {
+                return;
+            }
+
+            _shownFrame = frame;
+            if (_block == null)
+            {
+                _block = new MaterialPropertyBlock();
+            }
+
+            var meshRenderer = GetComponent<MeshRenderer>();
+            meshRenderer.GetPropertyBlock(_block);
+            _block.SetTexture(MainTex, _style.Frame(frame));
+            meshRenderer.SetPropertyBlock(_block);
+        }
+
         private void OnValidate()
         {
             if (isActiveAndEnabled)
@@ -157,6 +218,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             meshRenderer.sharedMaterial = MaterialFor(_style.Atlas);
+            meshRenderer.SetPropertyBlock(null);        // back to frame 0; Update picks the frame up again
+            _shownFrame = -1;
 
             // Mesh space is in world units: the baseline sits at y = 0.
             float unit = (float)_pixelScale / _pixelsPerUnit;
