@@ -265,15 +265,26 @@ def face_kerning(face_name, bold):
 
 
 # ---------------------------------------------------------------- glyph baking
-def bake(ch, st):
+FRAMES = 6                               # frames in an animated style; frame 0 is also the still atlas
+FLICKER = [1.0, 0.9, 1.0, 0.55, 1.0, 0.8]    # brightness of each frame of a flickering style
+SHIMMER_PERIOD, SHIMMER_STEP = 14, 3     # how far apart the bright bands are, and how far one moves per frame
+DRIP_ROWS = 3                            # rows kept under a dripping style for its drops
+
+
+def bake(ch, st, frame=0):
     face = FACES[st.get("face", "body")]
     scale, thick = st["scale"], st.get("thick", 1)
     m, w, h = mask_of(face, ch, st["bold"], scale, st.get("slant"))
     sdx, sdy, scol = st["shadow"]
     glow = st.get("glow")              # (colour, alpha 0-255): a soft ring two pixels past the outline
+    anim = st.get("anim")              # "shimmer", "flicker" or "drip": what changes from frame to frame
+    drip = DRIP_ROWS * scale if anim == "drip" else 0
+    dim = FLICKER[frame % len(FLICKER)] if anim == "flicker" else 1.0
+    if glow and dim < 1.0:
+        glow = (glow[0], int(glow[1] * dim))
     pad = thick + (2 if glow else 0)
     pad_l, pad_t = pad, pad
-    W, H = w + pad * 2 + sdx, h + pad * 2 + sdy
+    W, H = w + pad * 2 + sdx, h + pad * 2 + sdy + drip
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     p = im.load()
 
@@ -328,11 +339,28 @@ def bake(ch, st):
             if not m[y][x] or st.get("hollow"):
                 continue
             c = hexc(bands[((x + y) // stripes) % len(bands)]) if stripes else band
+            if dim < 1.0:
+                c = hexc(mix("#%02x%02x%02x" % c[:3], st["outline"], (1 - dim) * 0.6))
             if st.get("hi") and any(not on(x, y - d) for d in range(1, bevel + 1)):
                 c = hexc(st["hi"])
             elif st.get("lo") and any(not on(x, y + d) for d in range(1, bevel + 1)):
                 c = hexc(st["lo"])
+            if anim == "shimmer" and frame and (x + y - (frame - 1) * SHIMMER_STEP * scale) % (SHIMMER_PERIOD * scale) < 2 * scale:
+                c = (255, 255, 255, 255)            # a bright band that crosses the letter; frame 0 is plain
             p[x + pad_l, y + pad_t] = c
+    if drip:
+        # drops hang from the foot of some columns and lengthen frame by frame, then fall away
+        colour = hexc(st.get("lo") or bands[-1])
+        for x in range(0, w, scale):
+            inked = [y for y in range(h) if m[y][x]]
+            seed = ord(ch) * 31 + (x // scale) * 7
+            if not inked or seed % 3:
+                continue
+            length = (frame + seed) % (DRIP_ROWS + 1) * scale
+            for dy in range(1, length + 1):
+                for dx in range(scale):
+                    if x + dx < w and inked[-1] + pad_t + dy < H:
+                        p[x + dx + pad_l, inked[-1] + pad_t + dy] = colour
     gap = st.get("gap", 1 if scale == 1 else 2)
     if ch != " ":
         advance = w + thick + gap
@@ -380,13 +408,18 @@ def build_style(st, out_dir, theme=None, write=True):
     atlas_h = 1 << (len(rows) * (cell_h + 1) + 1 - 1).bit_length()
     atlas = Image.new("RGBA", (atlas_w, atlas_h), (0, 0, 0, 0))
     meta = {"style": st["name"], "use": st["use"], "lineHeight": cell_h, "baseline": cell_h - st.get("thick", 1)
-            - (2 if st.get("glow") else 0) - st["shadow"][1] - FACES[face_name].get("desc", 0) * st["scale"], "atlasWidth": atlas_w, "atlasHeight": atlas_h, "glyphs": []}
+            - (2 if st.get("glow") else 0) - st["shadow"][1] - FACES[face_name].get("desc", 0) * st["scale"]
+            - (DRIP_ROWS * st["scale"] if st.get("anim") == "drip" else 0), "atlasWidth": atlas_w, "atlasHeight": atlas_h, "glyphs": []}
+    # An animated style has one more atlas per frame, laid out exactly like the first.
+    frames = [Image.new("RGBA", (atlas_w, atlas_h), (0, 0, 0, 0)) for _ in range(FRAMES - 1)] if st.get("anim") else []
     y = 1
     for r in rows:
         x = 1
         for ch in r:
             im, adv = glyphs[ch]
             atlas.alpha_composite(im, (x, y))
+            for f, sheet in enumerate(frames, start=1):
+                sheet.alpha_composite(bake(ch, st, f)[0], (x, y))
             meta["glyphs"].append({"char": ch, "code": ord(ch), "x": x, "y": y, "w": im.size[0], "h": im.size[1],
                                    "advance": adv})
             x += im.size[0] + 1
@@ -397,7 +430,15 @@ def build_style(st, out_dir, theme=None, write=True):
         meta["theme"] = theme
     meta["digitAdvance"] = max(glyphs[d][1] for d in "0123456789")
     meta["kerning"] = [{"first": ord(a), "second": ord(b), "amount": k} for (a, b), k in sorted(kern.items())]
+    if st.get("pairing_of"):
+        meta["pairingOf"] = st["pairing_of"]
+    if frames:
+        meta["frames"] = FRAMES
+        meta["framesPerSecond"] = 8
+        baked.frames = [atlas] + frames
     os.makedirs(out_dir, exist_ok=True)
+    for f, sheet in enumerate(frames, start=1):
+        sheet.save(os.path.join(out_dir, f"{st['name']}.f{f}.png"))
     atlas.save(os.path.join(out_dir, st["name"] + ".png"))
     with open(os.path.join(out_dir, st["name"] + ".json"), "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=1, ensure_ascii=False)
@@ -830,6 +871,9 @@ def write_glyph_constants(regular):
     for ch, name in symbol_names.items():
         assert ord(ch) in regular.glyphs, ch
         out.append(f"        public const string {name} = \"\\u{ord(ch):04X}\";")
+    out.append("")
+    for code, name, _ in body.ICONS:
+        out.append(f"        public const string {name} = \"\\u{code:04X}\";")
     out.append("")
     for code, name, _ in buttons.BUTTONS:
         out.append(f"        public const string {name} = \"\\u{code:04X}\";")

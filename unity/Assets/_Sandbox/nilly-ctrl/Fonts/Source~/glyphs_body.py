@@ -144,6 +144,29 @@ SYMBOLS = {
     "¿": ["..#..", ".....", "..#..", ".#...", "#....", "#...#", ".###."],
 }
 
+# Game icons, one colour and seven rows tall so they sit inline with text. They live in the
+# Private Use Area after the key prompts and are baked into the body atlases as well, so a
+# coloured style can show them: "\ue080 1,250" is the food icon and an amount.
+ICONS = [
+    (0xE080, "IconFood", ["...##..", "..####.", ".#####.", "######.", "#####..", ".###...", "#......"]),
+    (0xE081, "IconWave", ["####.", "#####", "####.", "#....", "#....", "#....", "#...."]),
+    (0xE082, "IconClock", [".###.", "#.#.#", "#.#.#", "#.###", "#...#", "#...#", ".###."]),
+    (0xE083, "IconShield", ["#####", "#####", "#####", "#####", ".###.", ".###.", "..#.."]),
+    (0xE084, "IconPoison", ["..#..", "..#..", ".###.", ".###.", "#####", "#####", ".###."]),
+    (0xE085, "IconFire", ["..#..", "..#..", ".##.#", ".####", "#####", "##.##", ".###."]),
+    (0xE086, "IconBolt", ["...##", "..##.", ".##..", "#####", "..##.", ".##..", "##..."]),
+    (0xE087, "IconFrost", ["..#..", "#.#.#", ".###.", "#####", ".###.", "#.#.#", "..#.."]),
+    (0xE088, "IconSkull", [".###.", "#####", "#.#.#", "#####", ".###.", ".#.#.", "....."]),
+    (0xE089, "IconSword", ["....#", "...#.", "..#..", "#.#..", ".#...", "#.#..", "....."]),
+    (0xE08A, "IconCrown", [".....", "#.#.#", "#.#.#", "#####", "#####", "#####", "....."]),
+    (0xE08B, "IconAnt", [".#.#.", "..#..", ".###.", "#.#.#", ".###.", "#.#.#", ".###."]),
+]
+SYMBOLS.update({chr(code): rows for code, _, rows in ICONS})
+# The baked atlases hold the icons, the heart and the star after everything else.
+CAPS.update({chr(code): rows for code, _, rows in ICONS})
+CAPS["♥"] = SYMBOLS["♥"]
+CAPS["★"] = SYMBOLS["★"]
+
 # Bold is a one-pixel smear to the right, which closes these up; they are drawn by hand instead.
 BOLD = {
     "M": ["##....##", "###..###", "########", "##.##.##", "##....##", "##....##", "##....##"],

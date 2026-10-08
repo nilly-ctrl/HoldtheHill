@@ -10,6 +10,7 @@ Run through build_pixel_fonts.py, which calls run(). Writes:
   ./SpecimenFaces.png    every glyph of the seven TTFs
   ./ThemeTitles.png      each theme's title and label
   ./PairingSheet.png     the pairings named in PAIRINGS
+  ./AnimSheet.png and Anim<Style>.gif   the animated styles, as a strip of frames and as a loop
   ./CheatSheet.png       one page for teammates: which font to use where
 """
 import os
@@ -180,10 +181,17 @@ def add_extras(font, key):
     font.aliases.update({ord(c): v for c, v in b.buttons.ALIASES.items()})
 
 
+# Styles that move: a bright band crossing gold, neon that flickers, blood that drips.
+ANIMATED = {"SerifGold": "shimmer", "DecoGold": "shimmer", "ScriptGold": "shimmer", "TechNeon": "flicker",
+            "DisplayNeon": "flicker", "WideNeon": "flicker", "GothicBlood": "drip"}
+
+
 def face_style(name, face, paint, scale, use):
     st = dict(name=name, face=face, use=use, bold=False, scale=scale, gap=b.FACES[face]["gap"],
               thick=1 if scale == 1 else 2)
     st.update(PAINTS[paint])
+    if name in ANIMATED:
+        st["anim"] = ANIMATED[name]
     if scale > 1:
         st["bevel"] = 2
         sdx, sdy, scol = st["shadow"]
@@ -245,6 +253,8 @@ def pairing_style(st, face, extras=""):
         else:
             raise ValueError(f"pairing option {word!r} is not a paint, bold or italic")
     new["name"] = name
+    new["pairing_of"] = st["name"]
+    new.pop("anim", None)
     new["use"] = f"{st['use']} (pairing of {st['name']})"
     return new
 
@@ -490,6 +500,30 @@ def run(base_baked, label_font, themes, plain_fonts, check):
         st = pairing_style(defs[theme_name][style_name], face, " ".join(extras))
         out_dir = b.ATLAS_DIR if theme_name == "Meadow" else os.path.join(b.ATLAS_DIR, "Themes", theme_name)
         made.append((theme_name, b.build_style(st, out_dir, theme=theme_name)))
+    strips = []
+    for name in ANIMATED:
+        frames = [b.Baked(baked[name].st, {ch: (b.bake(ch, baked[name].st, f)[0], baked[name].glyphs[ch][1])
+                                           for ch in baked[name].glyphs}, baked[name].cell_h, baked[name].kern)
+                  for f in range(b.FRAMES)]
+        text = spell(baked[name].st["face"], "Hold 128")
+        shots = [fr.render(text) for fr in frames]
+        size = (max(s.size[0] for s in shots), max(s.size[1] for s in shots))
+        cells = []
+        for shot in shots:
+            cell = Image.new("RGBA", size, b.hexc("#4a3a2e"))
+            cell.alpha_composite(shot, (0, size[1] - shot.size[1]))
+            cells.append(b.zoomed(cell, 2))
+        cells[0].save(os.path.join(b.HERE, f"Anim{name}.gif"), save_all=True, append_images=cells[1:], duration=125, loop=0)
+        strip = Image.new("RGBA", (sum(c.size[0] + 12 for c in cells), cells[0].size[1]), b.hexc("#4a3a2e"))
+        for i, cell in enumerate(cells):
+            strip.alpha_composite(cell, (i * (cells[0].size[0] + 12), 0))
+        strips.append(strip)
+    sheet = Image.new("RGBA", (max(s.size[0] for s in strips) + 24, sum(s.size[1] + 14 for s in strips) + 14), b.hexc("#4a3a2e"))
+    y = 14
+    for s in strips:
+        sheet.alpha_composite(s, (12, y))
+        y += s.size[1] + 14
+    sheet.save(os.path.join(b.HERE, "AnimSheet.png"))
     pairing_sheet(made, backdrops, os.path.join(b.HERE, "PairingSheet.png"), label_font)
     all_base = dict(base_baked)
     all_base.update(baked)
