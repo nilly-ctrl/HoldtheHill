@@ -240,7 +240,7 @@ def kerning_pairs(masks, chars, gap, cap):
                     if yy in edge[b]:
                         d = right + gap + edge[b][yy][0]
                         best = d if best is None else min(best, d)
-            if best is not None and best > gap:
+            if cap and best is not None and best > gap:
                 pairs[(a, b)] = -min(cap, best - gap)
     return pairs
 
@@ -540,6 +540,7 @@ class Plain:
         self.glyphs = {}        # code point -> (mask, top)
         self.aliases = {}       # code point -> code point that draws it
         self.kern = {}          # (code point, code point) -> pixels
+        self.widths = {}        # code point -> width to advance by, where the drawing overhangs it (italics)
         self.digit_w = 0
 
     def add(self, ch, mask, top):
@@ -553,7 +554,7 @@ class Plain:
 
     def metrics(self, code):
         """(left bearing, advance) in pixels. Digits share one width so counters do not jitter."""
-        w = len(self.glyphs[code][0][0])
+        w = self.widths.get(code, len(self.glyphs[code][0][0]))
         if chr(code).isdigit():
             return (self.digit_w - w) // 2, self.digit_w + self.gap
         return 0, w + self.gap
@@ -710,9 +711,9 @@ def check_ttf(f, size, lines):
             print(f"  MISMATCH {f.file}: {ascii(text)} want bbox {want.getbbox()} got {got.getbbox()}")
     tt = TTFont(os.path.join(TTF_DIR, f.file + ".ttf"))
     want_pairs = {("uni%04X" % a, "uni%04X" % b): k * f.px for (a, b), k in f.kern.items()}
-    old = dict(tt["kern"].kernTables[0].kernTable)
+    old = dict(tt["kern"].kernTables[0].kernTable) if "kern" in tt else {}
     gpos = {}
-    for lookup in tt["GPOS"].table.LookupList.Lookup:
+    for lookup in tt["GPOS"].table.LookupList.Lookup if "GPOS" in tt else []:
         for sub in lookup.SubTable:
             if sub.LookupType == 9:
                 sub = sub.ExtSubTable

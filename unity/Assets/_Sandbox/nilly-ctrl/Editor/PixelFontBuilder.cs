@@ -16,6 +16,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private const string FontsFolder = "Assets/_Sandbox/nilly-ctrl/Fonts";
         private const string AtlasFolder = FontsFolder + "/Atlases";
         private const string OutputFolder = FontsFolder + "/Generated";
+        private const string LibraryPath = OutputFolder + "/PixelFontThemes.asset";
 
         // Filled by JsonUtility, so the compiler never sees it assigned.
 #pragma warning disable 0649
@@ -35,6 +36,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             int built = 0;
+            var entries = new System.Collections.Generic.List<PixelFontThemeLibrary.Entry>();
             foreach (string file in Directory.GetFiles(AtlasFolder, "*.json", SearchOption.AllDirectories))
             {
                 string jsonPath = file.Replace('\\', '/');
@@ -57,8 +59,20 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 styleSerialized.ApplyModifiedPropertiesWithoutUndo();
                 EditorUtility.SetDirty(style);
                 built++;
+
+                // Generated/Themes/Neon -> "Neon"; the base set has no theme name.
+                string themesPrefix = OutputFolder + "/Themes/";
+                entries.Add(new PixelFontThemeLibrary.Entry
+                {
+                    Theme = folder.StartsWith(themesPrefix) ? folder.Substring(themesPrefix.Length) : string.Empty,
+                    Style = data.style,
+                    Font = style,
+                });
             }
 
+            PixelFontThemeLibrary library = LoadOrCreate(LibraryPath, ScriptableObject.CreateInstance<PixelFontThemeLibrary>);
+            library.Set(entries);
+            EditorUtility.SetDirty(library);
             AssetDatabase.SaveAssets();
             Debug.Log($"PixelFontBuilder: built {built} pixel font styles in {OutputFolder}");
         }
@@ -107,6 +121,39 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             serialized.FindProperty("_shader").objectReferenceValue = shader != null ? shader : Shader.Find("Sprites/Default");
             serialized.FindProperty("_pixelScale").intValue = Mathf.Max(1, pixelScale);
             serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>
+        /// Gives a font theme switch its library of styles and a starting theme (empty for the base set).
+        /// Call Build() first.
+        /// </summary>
+        public static void ConfigureTheme(PixelFontTheme switcher, string theme = null)
+        {
+            var serialized = new SerializedObject(switcher);
+            serialized.FindProperty("_library").objectReferenceValue =
+                AssetDatabase.LoadAssetAtPath<PixelFontThemeLibrary>(LibraryPath);
+            serialized.FindProperty("_theme").stringValue = theme ?? string.Empty;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        [MenuItem("Hold the Hill/Sandbox/Add Pixel Font Theme Switch To Scene")]
+        public static void AddThemeSwitchToScene()
+        {
+            Build();
+
+            var existing = Object.FindAnyObjectByType<PixelFontTheme>();
+            if (existing != null)
+            {
+                Selection.activeGameObject = existing.gameObject;
+                Debug.Log("PixelFontBuilder: the scene already has a PixelFontTheme; selected it.", existing);
+                return;
+            }
+
+            var go = new GameObject("Pixel Font Theme");
+            ConfigureTheme(go.AddComponent<PixelFontTheme>());
+            Undo.RegisterCreatedObjectUndo(go, "Add Pixel Font Theme");
+            EditorSceneManager.MarkSceneDirty(go.scene);
+            Selection.activeGameObject = go;
         }
 
         private static void EnsureFolder(string folder)

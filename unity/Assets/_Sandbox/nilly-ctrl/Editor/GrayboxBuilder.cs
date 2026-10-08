@@ -157,6 +157,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // Pixel-font popups (DamageNumbers/).
             PixelFontBuilder.Build();
             PixelFontBuilder.Configure(go.AddComponent<DamageNumberSpawner>(), DamageNumberPixelScale);
+            // One setting for which art theme's fonts the scene uses; empty is the base set.
+            PixelFontBuilder.ConfigureTheme(go.AddComponent<PixelFontTheme>());
+            // WAVE 3, WAVE CLEAR, VICTORY and DEFEAT in the theme's banner styles.
+            go.AddComponent<GrayboxWaveBanner>();
             go.AddComponent<GrayboxStatusCombos>();
             go.AddComponent<GrayboxBaseHealth>();
             go.AddComponent<GrayboxBaseHealthUI>();

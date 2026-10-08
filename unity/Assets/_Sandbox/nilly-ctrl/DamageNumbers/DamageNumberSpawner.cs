@@ -373,6 +373,28 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return style != null ? style : _physical;
         }
 
+        /// <summary>
+        /// Points every kind of number at an art theme's set. A style the theme does not have keeps
+        /// the one already assigned. <see cref="PixelFontTheme"/> calls this.
+        /// </summary>
+        public void ApplyTheme(PixelFontThemeLibrary library, string theme)
+        {
+            if (library == null)
+            {
+                return;
+            }
+
+            _physical = library.Find(theme, "DamageNormal") ?? _physical;
+            _magic = library.Find(theme, "DamageMagic") ?? _magic;
+            _true = library.Find(theme, "DamageTrue") ?? _true;
+            _fire = library.Find(theme, "DamageFire") ?? _fire;
+            _poison = library.Find(theme, "DamagePoison") ?? _poison;
+            _lightning = library.Find(theme, "DamageLightning") ?? _lightning;
+            _critical = library.Find(theme, "DamageCrit") ?? _critical;
+            _heal = library.Find(theme, "Heal") ?? _heal;
+            _resource = library.Find(theme, "Resource") ?? _resource;
+        }
+
         private Material MaterialFor(PixelFontStyle style)
         {
             if (_materials.TryGetValue(style, out Material material))

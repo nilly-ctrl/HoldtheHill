@@ -1,6 +1,6 @@
 # Pixel fonts
 
-Three hand-drawn alphabets for Hold the Hill, made to sit beside the 32x32 icons. Each comes as a plain TTF (tint it yourself) and as baked colour styles (colours, outline and shadow already drawn in).
+Sixteen hand-drawn alphabets for Hold the Hill, made to sit beside the 32x32 icons. The first three are below; the other thirteen have their own section. Each comes as a plain TTF (tint it yourself) and as baked colour styles (colours, outline and shadow already drawn in).
 
 | Alphabet | Size | Has | Use it for |
 |---|---|---|---|
@@ -45,7 +45,7 @@ Each style is `<Style>.png` plus `<Style>.json` (glyph rects, advances, kerning 
 
 **Themed sets:** `Atlases/Themes/<Theme>/` holds the same 17 styles painted from each of the 13 art themes' palettes (Neon, Space, Spooky, Steampunk, Medieval, Samurai, Candy, Jungle, Pirate, Robot, NeonSpace, Vaporwave, Military). Shapes and file names match the base set, so a theme swaps in by folder. Banners, the combo counter and neutral text change most; damage colours change only where a theme has its own fire, acid or arcane colours.
 
-## Seven more alphabets
+## Thirteen more alphabets
 
 Added 2026-10-06, drawn in `Source~/glyphs_faces.py` and built by `Source~/build_faces.py`. See `Source~/SpecimenFaces.png`, `FaceSheet.png` and `ThemeTitles.png`.
 
@@ -53,27 +53,39 @@ Added 2026-10-06, drawn in `Source~/glyphs_faces.py` and built by `Source~/build
 |---|---|---|---|
 | Serif | `HoldTheHillSerif-Regular.ttf` | Capitals, lowercase | Foot serifs; lore, menus, storybook titles |
 | Round | `HoldTheHillRound-Regular.ttf` | Capitals, lowercase | Two-pixel strokes, soft corners; friendly menus |
-| Tech | `HoldTheHillTech-Regular.ttf` | Capitals | Squared-off; readouts |
-| Gothic | `HoldTheHillGothic-Regular.ttf` | Capitals | Heavy stems, pointed feet; bosses |
-| Condensed | `HoldTheHillCondensed-Regular.ttf` | Capitals | Three pixels wide, nine tall; tight spaces |
-| Chisel | `HoldTheHillChisel-Regular.ttf` | Capitals | Straight cuts and diamonds |
-| Stencil | `HoldTheHillStencil-Regular.ttf` | Capitals | The display alphabet with stencil bridges |
+| Tech | `HoldTheHillTech-Regular.ttf` | Capitals, lowercase | Squared-off; readouts |
+| Gothic | `HoldTheHillGothic-Regular.ttf` | Capitals, lowercase (from Round, squared off) | Heavy stems, pointed feet; bosses |
+| Condensed | `HoldTheHillCondensed-Regular.ttf` | Capitals, lowercase | Three pixels wide, nine tall; tight spaces |
+| Chisel | `HoldTheHillChisel-Regular.ttf` | Capitals, lowercase | Straight cuts and diamonds |
+| Stencil | `HoldTheHillStencil-Regular.ttf` | Capitals | The display alphabet with breaks cut by hand into every letter (`STENCIL_CUTS`) |
+| Slab | `HoldTheHillSlab-Regular.ttf` | Capitals, lowercase (from Serif, thickened) | Two-pixel stems between slab serifs; signs and posters |
+| Bubble | `HoldTheHillBubble-Regular.ttf` | Capitals, lowercase (from Round, thickened) | Three-pixel strokes; loud, soft titles |
+| Wide | `HoldTheHillWide-Regular.ttf` | Capitals, small capitals for lowercase | Five pixels tall and stretched; arcade readouts |
+| Deco | `HoldTheHillDeco-Regular.ttf` | Capitals | Tall and thin with a high waist; marquees and posters |
+| Runic | `HoldTheHillRunic-Regular.ttf` | Capitals | Straight cuts with slanted bars; carved stones |
+| Script | `HoldTheHillScript-Regular.ttf` | Capitals, lowercase | A leaning casual hand; notes and signatures. No kerning. |
 
-All are pixel-exact at size 10, 20, 30 except Stencil (20, 40). They have letters, digits and `+ - . , % ! ? / : × ' ( )`; no accents, symbols or prompts.
+Each of the thirteen also has a `-Bold.ttf` and an `-Italic.ttf`, made from the regular by rule (thickened, or leant one pixel every three rows). All are pixel-exact at size 10, 20, 30 except Stencil (20, 40). The TTFs also carry accented letters, the body alphabet's symbols and spare punctuation, and the key and gamepad prompts (doubled in size for Stencil), so `PixelGlyphs` works in all of them. There is no ß outside the body font. The baked atlases hold letters, digits and `+ - . , % ! ? / : × ' ( )` only.
 
-**Colour treatments** (`PAINTS` in `build_faces.py`): Plain, Gold, Chrome, Neon (with a glow), Ice, Blood, Bone, Candy (striped), Jade, Hollow (outline only) and Stamp (flat, no outline). Any treatment can go on any alphabet; add a row to `FACE_STYLES` to bake another pairing. Baked now: `SerifPlain`, `SerifGold`, `RoundPlain`, `RoundCandy`, `TechPlain`, `TechNeon`, `TechChrome`, `GothicBone`, `GothicBlood`, `CondensedPlain`, `CondensedIce`, `ChiselPlain`, `ChiselJade`, `StencilStamp`, `StencilHollow`, `DisplayChrome`, `DisplayNeon`.
+**Colour treatments** (`PAINTS` in `build_faces.py`): Plain, Gold, Chrome, Neon (with a glow), Ice, Blood, Bone, Candy (striped), Jade, Wood, Hollow (outline only) and Stamp (flat, no outline). Any treatment can go on any alphabet; add a row to `FACE_STYLES` to bake another pairing. Baked now: `SerifPlain`, `SerifGold`, `RoundPlain`, `RoundCandy`, `TechPlain`, `TechNeon`, `TechChrome`, `GothicBone`, `GothicBlood`, `CondensedPlain`, `CondensedIce`, `ChiselPlain`, `ChiselJade`, `StencilStamp`, `StencilHollow`, `SlabPlain`, `SlabWood`, `BubblePlain`, `BubbleCandy`, `WidePlain`, `WideNeon`, `DecoPlain`, `DecoGold`, `RunicBone`, `RunicIce`, `ScriptPlain`, `ScriptGold`, `DisplayChrome`, `DisplayNeon`.
 
 **A Title and a Label per theme:** every theme folder (and the base set) also has `Title` (large, in the theme's banner colours) and `Label` (small and plain), set in the alphabet that suits the theme (`THEME_FACE` in `build_faces.py`): Round for Meadow and Candy; Tech for Neon, Space and NeonSpace; Gothic for Spooky; Serif for Steampunk, Medieval and Pirate; Chisel for Samurai and Jungle; Stencil for Robot and Military; Condensed for Vaporwave. `Label` works for damage numbers in a theme's own alphabet.
+
+**Baking a pairing from the artifact:** the font artifact previews any alphabet in any theme's colours. To make one real, add its row to `PAIRINGS` in `build_faces.py` (the artifact writes the rows, for one style or for a whole sample screen) and run the build. A row is `("Neon", "Banner", "slab"),` or, with a colour treatment, bold or italic, `("Neon", "Banner", "slab", "Gold bold"),`. It writes `<Style><Alphabet>...png` and `.json` beside that theme's other atlases.
 
 ## In Unity
 
 1. Run **Hold the Hill > Sandbox > Build Pixel Fonts** after the atlases change. It makes one `PixelFontStyle` asset per style in `Generated/`, and `Generated/Themes/<Theme>/` for the themed sets.
 2. The floating damage numbers use those assets (see `DamageNumbers/README.md`). `PixelFontBuilder.Configure(spawner, pixelScale, "Neon")` points a spawner at a theme's set.
-3. For HUD or menu text use a TTF. Keep to the pixel-exact sizes above and scale by whole numbers.
+3. **`PixelText`** (Add Component > Hold the Hill > Sandbox > Pixel Text) draws a line of text in any baked style: banners, titles, labels, counters. It updates in the editor as you type and has a fixed-width digits option.
+4. **`PixelFontTheme`** is the one setting for which art theme's fonts a scene uses. It switches the damage numbers and every `PixelText` whose Theme Style field names a style (Title, Label, Banner, Hud...). Leave the theme empty for the base set. The graybox scene gets one when it is rebuilt; **Hold the Hill > Sandbox > Add Pixel Font Theme Switch To Scene** adds one anywhere else. It reads `Generated/PixelFontThemes.asset`, which Build Pixel Fonts fills in.
+5. **`GrayboxWaveBanner`** (in `Graybox/`) shows WAVE 3, WAVE CLEAR, VICTORY! and DEFEAT in the theme's banner styles, with a punch-in and a fade. The graybox scene gets one when it is rebuilt. It needs a `PixelFontTheme` in the scene.
+6. **Tools > Hold the Hill > Build Font Demo** makes `Fonts/FontDemo.unity`: every baked style drawn with `PixelText` beside its name. Type a theme into its Pixel Font Theme object to restyle the sheet.
+7. For HUD or menu text use a TTF. Keep to the pixel-exact sizes above and scale by whole numbers.
 
 `Editor/PixelIconImporter.cs` imports the atlases with point filtering and no compression. `Editor/PixelFontImporter.cs` imports the TTFs with hinted raster rendering so the edges stay hard.
 
-Nothing in the game uses the Display or Tiny alphabets, the banner and combo styles, or the themed sets yet.
+The Unity scripts compile but have never been run, the graybox scene has not been rebuilt since they were added, and the demo scene has not been built.
 
 ## Changing things
 
