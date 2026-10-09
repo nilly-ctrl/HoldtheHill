@@ -132,6 +132,28 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Assert.IsNotNull(_placed.GetComponent<FrostAuraTower>());
             Assert.AreSame(_placed, placer.SelectedTower);
         }
+
+        [Test]
+        public void PlacerCommands_PickAndDropATower_AndPriceAnUpgrade()
+        {
+            _placerObject = new GameObject("Placer");
+            var placer = _placerObject.AddComponent<GrayboxTowerPlacer>();
+            placer.SetCatalog(Catalog);
+
+            placer.TogglePlacement(1);
+            Assert.AreEqual(1, placer.ActivePlacementIndex);
+            Assert.IsTrue(placer.IsBusy);
+            placer.TogglePlacement(1);
+            Assert.AreEqual(-1, placer.ActivePlacementIndex);
+
+            _placed = placer.Place(Catalog[0], Vector3.zero, 100);
+            Assert.AreEqual(150, placer.UpgradeCost(_placed), "level 1 to 2");
+            Assert.IsTrue(placer.TryUpgradeSelected());
+            Assert.AreEqual(2, _placed.Level);
+            Assert.AreEqual(300, placer.UpgradeCost(_placed), "level 2 to 3");
+            placer.Deselect();
+            Assert.IsNull(placer.SelectedTower);
+        }
     }
 }
 #endif

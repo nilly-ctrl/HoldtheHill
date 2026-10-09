@@ -78,7 +78,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 bool boss = IsBoss(i);
                 Image marker = _markers[i];
                 marker.sprite = boss ? _boss : (i < current ? _cleared : _upcoming);
-                marker.SetNativeSize();
+                marker.rectTransform.sizeDelta = marker.sprite.rect.size;
                 marker.color = boss && i < current ? new Color(1f, 1f, 1f, 0.5f) : Color.white;
             }
         }

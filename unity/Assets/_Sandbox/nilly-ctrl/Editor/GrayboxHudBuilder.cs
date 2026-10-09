@@ -183,7 +183,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             root.anchoredPosition = new Vector2(0f, -1f);
             Image image = AddImage(root, Hud("WaveMarker"));
             image.raycastTarget = false;
-            image.SetNativeSize();
+            FitToSprite(image);
             return SavePart<Image>(root.gameObject, "HudWaveMarker");
         }
 
@@ -231,7 +231,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             TextMeshProUGUI alive = Line(statsPanel, "Alive  0");
             UiKitBuilder.AddDivider(statsPanel);
             TextMeshProUGUI time = Line(statsPanel, "Time  0s  (x1)");
-            TextMeshProUGUI keys = Line(statsPanel, "Space next wave   Esc pause");
+            TextMeshProUGUI keys = Line(statsPanel, "N next wave");
             keys.color = UiKitStyle.Dim;
 
             var stats = statsPanel.gameObject.AddComponent<GrayboxStatsPanel>();
@@ -329,7 +329,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         // The selected tower's card, down the right edge below the pixel readouts.
         private static void BuildRightColumn(Transform canvas)
         {
-            RectTransform column = Column("RightColumn", canvas, new Vector2(1f, 1f), new Vector2(-Edge, -92f));
+            RectTransform column = Column("RightColumn", canvas, new Vector2(1f, 1f), new Vector2(-Edge, -112f));
 
             RectTransform panel = HudPanel(column, "TowerCard", 164f);
             TextMeshProUGUI title = Line(panel, "Tower");
@@ -538,7 +538,20 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             image.sprite = sprite;
             image.type = sprite != null && sprite.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
             image.raycastTarget = false;
+
+            // The HUD art is imported at 32 pixels per unit for the world; here one art pixel is one canvas unit.
+            if (sprite != null)
+            {
+                image.pixelsPerUnitMultiplier = 100f / sprite.pixelsPerUnit;
+            }
+
             return image;
+        }
+
+        // Draws the sprite at its own pixel size, one art pixel to a canvas unit.
+        private static void FitToSprite(Image image)
+        {
+            image.rectTransform.sizeDelta = image.sprite.rect.size;
         }
 
         private static TextMeshProUGUI AddText(Transform parent, string name, string text, TextAlignmentOptions alignment, Color colour)

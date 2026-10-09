@@ -107,7 +107,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (Time.unscaledTime >= _nextKeysRefresh)
             {
                 _nextKeysRefresh = Time.unscaledTime + 0.5f;
-                _keys.text = $"{GrayboxControls.Name(GrayboxControls.NextWave)} next wave   {GrayboxControls.Name(GrayboxControls.Pause)} pause";
+                _keys.text = $"{GrayboxControls.Name(GrayboxControls.NextWave)} next wave";
             }
         }
 
