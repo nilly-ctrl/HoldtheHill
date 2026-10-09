@@ -95,6 +95,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // Bosses and special enemies (Graybox/Specials): their prefabs, then a wave for each.
             GrayboxSpecialsBuilder.BuildPrefabs(circle, grunt, s_anim);
 
+            // One prefab variant, data asset and catalog entry per tower (GrayboxTowerBuilder).
+            GrayboxTowerBuilder.BuildPrefabs(square, bullet, homing, mortar, ricochet, mine, lineMaterial, s_anim);
+
             MapWaveDataSO waves = BuildWaveAsset(runner, grunt, brute, shielded, splitter, healer);
             GrayboxSpecialsBuilder.AppendWaves(WaveAssetPath, grunt);
 
@@ -116,8 +119,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             BuildImpactFx();
             BuildSpawner(path, waves, runner, grunt, brute, shielded, swarm, splitter, healer);
             GrayboxSpecialsBuilder.BuildSceneObject(s_anim);
-            BuildTowers(path, bullet, homing, mortar, ricochet, mine, lineMaterial, square);
-            BuildTowerPlacer(bullet, homing, mortar, ricochet, mine, lineMaterial, square);
+            GrayboxTowerBuilder.BuildSceneTowers();
+            BuildTowerPlacer(lineMaterial);
             BuildReadmeLabel();
             BuildFlow();
 
@@ -227,7 +230,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             CreateFolderIfMissing(GrayboxRoot, "Prefabs");
         }
 
-        private static void CreateFolderIfMissing(string parent, string child)
+        internal static void CreateFolderIfMissing(string parent, string child)
         {
             if (!AssetDatabase.IsValidFolder($"{parent}/{child}"))
             {
@@ -940,110 +943,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             go.AddComponent<GrayboxAchievements>();
         }
 
-        private static void BuildTowers(
-            EnemyPath path,
-            GameObject bullet,
-            GameObject homing,
-            GameObject mortar,
-            GameObject ricochet,
-            GameObject mine,
-            Material lineMaterial,
-            Sprite square)
-        {
-            // Positions are all at least 2 units clear of the road so TowerPlacer would
-            // also consider them buildable.
-            // Fire intervals are tighter than a shipping game would want. In the first
-            // build nothing died for the opening six seconds, which reads as "the towers
-            // are broken" even though they were working. Enemy health goes up to
-            // compensate, so the defence is not made easier overall.
-            MakeProjectileTower("Tower_Linear_First", new Vector2(-7f, 4.5f), square,
-                bullet, TargetingPriority.First, 3.6f, 0.45f, new Color(0.4f, 0.7f, 1f), lineMaterial);
-
-            MakeProjectileTower("Tower_Homing_Closest", new Vector2(-6f, 0.5f), square,
-                homing, TargetingPriority.Closest, 3.8f, 0.9f, new Color(0.4f, 1f, 0.6f), lineMaterial);
-
-            MakeProjectileTower("Tower_Mortar_First", new Vector2(-1.5f, 0f), square,
-                mortar, TargetingPriority.First, 4.2f, 1.6f, new Color(0.9f, 0.5f, 0.2f), lineMaterial);
-
-            MakeProjectileTower("Tower_Ricochet_Strongest", new Vector2(-1.5f, -5f), square,
-                ricochet, TargetingPriority.Strongest, 3.8f, 1f, new Color(0.6f, 0.8f, 1f), lineMaterial);
-
-            GameObject chainTower = MakeProjectileTower("Tower_Chain_Weakest", new Vector2(5f, 1f), square,
-                null, TargetingPriority.Weakest, 3.8f, 1.2f, new Color(0.5f, 0.85f, 1f), lineMaterial);
-            AddChainLightning(chainTower, lineMaterial);
-
-            GameObject beamTower = MakeProjectileTower("Tower_Beam_Closest", new Vector2(6f, 5.5f), square,
-                null, TargetingPriority.Closest, 4f, 1f, new Color(1f, 0.5f, 0.3f), lineMaterial);
-            AddBeam(beamTower, lineMaterial);
-
-            // The orbiting field hurts things by touching them, so what matters is whether
-            // the wisps physically overlap the road — the tower's own range is irrelevant.
-            // At the old spot (-1.5,-5) the path was 2.5 away and the wisps orbited at 1.5,
-            // so they fell a full unit short and this tower could never hit anything.
-            // 1.5 out from the road, with a 1.6 orbit, puts them just over it.
-            GameObject orbitTower = MakeProjectileTower("Tower_Orbit", new Vector2(0f, -4f), square,
-                null, TargetingPriority.Closest, 2.5f, 1f, new Color(0.7f, 0.6f, 1f), lineMaterial);
-
-            OrbitingDamageField field = orbitTower.AddComponent<OrbitingDamageField>();
-            Apply(field, so =>
-            {
-                so.FindProperty("_radius").floatValue = 1.6f;
-                so.FindProperty("_orbiterCount").intValue = 3;
-                so.FindProperty("_angularSpeed").floatValue = 150f;
-                so.FindProperty("_contactDamage").floatValue = 6f;
-                so.FindProperty("_hitCooldown").floatValue = 0.4f;
-                so.FindProperty("_orbiterRadius").floatValue = 0.35f;
-            });
-
-            GameObject frostTower = MakeProjectileTower("Tower_Frost_Closest", new Vector2(-4f, 4.5f), square,
-                null, TargetingPriority.Closest, 3.5f, 1.2f, new Color(0.4f, 0.85f, 1f), lineMaterial);
-            frostTower.AddComponent<FrostAuraTower>();
-
-            GameObject knockbackTower = MakeProjectileTower("Tower_Knockback_Closest", new Vector2(2f, -5.5f), square,
-                null, TargetingPriority.Closest, 3.0f, 2.0f, new Color(1f, 0.6f, 0.2f), lineMaterial);
-            knockbackTower.AddComponent<KnockbackTower>();
-
-            GameObject mineTower = MakeProjectileTower("Tower_MineLayer", new Vector2(0f, 5f), square,
-                null, TargetingPriority.Closest, 4.0f, 2.8f, new Color(0.9f, 0.9f, 0.3f), lineMaterial);
-            MineLayerTower mineLayer = mineTower.AddComponent<MineLayerTower>();
-            Apply(mineLayer, so => so.FindProperty("_minePrefab").objectReferenceValue = mine);
-        }
-
-        private static GameObject MakeProjectileTower(
-            string name,
-            Vector2 position,
-            Sprite sprite,
-            GameObject projectile,
-            TargetingPriority priority,
-            float range,
-            float fireInterval,
-            Color color,
-            Material lineMaterial)
-        {
-            var go = new GameObject(name);
-            go.transform.position = position;
-            AddSprite(go, sprite, color, 0.8f, sortingOrder: 1);
-            Animate(go);
-
-            Tower tower = go.AddComponent<Tower>();
-            Apply(tower, so =>
-            {
-                so.FindProperty("_range").floatValue = range;
-                so.FindProperty("_fireInterval").floatValue = fireInterval;
-                so.FindProperty("_priority").enumValueIndex = (int)priority;
-
-                if (projectile != null)
-                {
-                    so.FindProperty("_projectilePrefab").objectReferenceValue = projectile.GetComponent<Projectile>();
-                }
-            });
-
-            go.AddComponent<TowerTargetVisualizer>();
-
-            return go;
-        }
-
-        private static void AddChainLightning(GameObject tower, Material lineMaterial)
+        internal static void AddChainLightning(GameObject tower, Material lineMaterial)
         {
             ChainLightning chain = tower.AddComponent<ChainLightning>();
             ConfigureLine(tower.GetComponent<LineRenderer>(), lineMaterial, new Color(0.6f, 0.9f, 1f), 0.08f);
@@ -1060,7 +960,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Apply(tower.GetComponent<Tower>(), so => so.FindProperty("_chainLightning").objectReferenceValue = chain);
         }
 
-        private static void AddBeam(GameObject tower, Material lineMaterial)
+        internal static void AddBeam(GameObject tower, Material lineMaterial)
         {
             ContinuousBeam beam = tower.AddComponent<ContinuousBeam>();
             ConfigureLine(tower.GetComponent<LineRenderer>(), lineMaterial, new Color(1f, 0.55f, 0.25f), 0.15f);
@@ -1110,7 +1010,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 return;
             }
 
-            line.material = material;
+            line.sharedMaterial = material;
             line.startColor = color;
             line.endColor = color;
             line.startWidth = width;
@@ -1119,28 +1019,22 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             line.sortingOrder = 4;
         }
 
-        private static void BuildTowerPlacer(
-            GameObject bullet,
-            GameObject homing,
-            GameObject mortar,
-            GameObject ricochet,
-            GameObject mine,
-            Material lineMaterial,
-            Sprite square)
+        private static void BuildTowerPlacer(Material lineMaterial)
         {
+            // Loaded here, not passed in: assets made before NewScene can be unloaded by it.
+            var catalog = AssetDatabase.LoadAssetAtPath<GrayboxTowerCatalog>(GrayboxTowerBuilder.CatalogPath);
+            if (catalog == null || catalog.Count == 0)
+            {
+                throw new System.InvalidOperationException(
+                    $"[Graybox] Tower catalog missing or empty at {GrayboxTowerBuilder.CatalogPath}. Nothing could be built.");
+            }
+
             var go = new GameObject("Tower Placer & Inspector");
             GrayboxTowerPlacer placer = go.AddComponent<GrayboxTowerPlacer>();
             Apply(placer, so =>
             {
-                so.FindProperty("_bulletPrefab").objectReferenceValue = bullet;
-                so.FindProperty("_homingPrefab").objectReferenceValue = homing;
-                so.FindProperty("_mortarPrefab").objectReferenceValue = mortar;
-                so.FindProperty("_ricochetPrefab").objectReferenceValue = ricochet;
-                so.FindProperty("_minePrefab").objectReferenceValue = mine;
+                so.FindProperty("_catalog").objectReferenceValue = catalog;
                 so.FindProperty("_lineMaterial").objectReferenceValue = lineMaterial;
-                so.FindProperty("_boltMaterial").objectReferenceValue = LineMaterial("GrayboxBolt", "LineBolt");
-                so.FindProperty("_beamMaterial").objectReferenceValue = LineMaterial("GrayboxBeam", "LineBeam");
-                so.FindProperty("_squareSprite").objectReferenceValue = square;
                 so.FindProperty("_animLibrary").objectReferenceValue = s_anim;
             });
         }
@@ -1172,7 +1066,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return material;
         }
 
-        private static void AddSprite(GameObject go, Sprite sprite, Color color, float size, int sortingOrder)
+        internal static void AddSprite(GameObject go, Sprite sprite, Color color, float size, int sortingOrder)
         {
             var renderer = go.AddComponent<SpriteRenderer>();
             renderer.sprite = sprite;
@@ -1224,16 +1118,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             { "GrayboxSilverfish", "EnemySilverfish" },
             { "GrayboxThiefAnt", "EnemyThiefAnt" },
             { "GrayboxBombardier", "EnemyBombardier" },
-            { "Tower_Linear_First", "TowerLinear" },
-            { "Tower_Homing_Closest", "TowerHoming" },
-            { "Tower_Mortar_First", "TowerMortar" },
-            { "Tower_Ricochet_Strongest", "TowerRicochet" },
-            { "Tower_Chain_Weakest", "TowerChain" },
-            { "Tower_Beam_Closest", "TowerBeam" },
-            { "Tower_Orbit", "TowerOrbit" },
-            { "Tower_Frost_Closest", "TowerFrostAura" },
-            { "Tower_Knockback_Closest", "TowerKnockback" },
-            { "Tower_MineLayer", "TowerMineLayer" },
         };
 
         private static SpriteAnimLibrary s_anim;
@@ -1280,14 +1164,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 return;
             }
 
-            if (go.GetComponent<Tower>() != null || go.name.StartsWith("Tower_"))
-            {
-                GrayboxTowerAnimator.Attach(go, s_anim, key);
-            }
-            else
-            {
-                GrayboxEnemyAnimator.Attach(go, s_anim, key);
-            }
+            GrayboxEnemyAnimator.Attach(go, s_anim, key);
         }
 
         internal static void Apply(Object target, System.Action<SerializedObject> edit)

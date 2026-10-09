@@ -1,0 +1,141 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &5892616098686341552
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3128798406546315221, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: _range
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3128798406546315221, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: _priority
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3128798406546315221, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: _fireInterval
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4248968428799662019, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -79867283808635212, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}
+    - target: {fileID: 4248968428799662019, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_DrawMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_Name
+      value: TowerFrostAura
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 599481109185967305}
+    - targetCorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3542733065910169137}
+    - targetCorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 111412199830363210}
+  m_SourcePrefab: {fileID: 100100000, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+--- !u!1 &3567385721150050856 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+  m_PrefabInstance: {fileID: 5892616098686341552}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &599481109185967305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3567385721150050856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a7fa868eecb5184690f297a4464c61d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Runtime::HoldTheHill.Features.Combat.FrostAuraTower
+  _radius: 3.5
+  _pulseInterval: 1.2
+  _damagePerPulse: 4
+  _slowMultiplier: 0.45
+  _slowDuration: 2.5
+  _targetMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &3542733065910169137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3567385721150050856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c04b451619a564598c31d1f4877ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.SpriteClipPlayer
+  _library: {fileID: 11400000, guid: af6c200ebfff50f49b1c83f8f95ad8df, type: 2}
+  _key: TowerFrostAura
+  _defaultClip: Idle
+  _destroyWhenDone: 0
+--- !u!114 &111412199830363210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3567385721150050856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e26fd20848ccbe3448174e21bb429359, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.GrayboxTowerAnimator

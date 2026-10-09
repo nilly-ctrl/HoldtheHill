@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &652345778219606057
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3128798406546315221, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: _range
+      value: 3.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3128798406546315221, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: _fireInterval
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 3128798406546315221, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: _projectilePrefab
+      value: 
+      objectReference: {fileID: 406985019385892837, guid: 146dfb8e78445f7429a8e98ba7114fb6, type: 3}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4248968428799662019, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2201081107249362804, guid: e415cfb6210c6a14db87d2a7b7d9f23f, type: 3}
+    - target: {fileID: 4248968428799662019, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_DrawMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_Name
+      value: TowerLinear
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2083763184693213327}
+    - targetCorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5852450864798559416}
+  m_SourcePrefab: {fileID: 100100000, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+--- !u!1 &7587079322016474033 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+  m_PrefabInstance: {fileID: 652345778219606057}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2083763184693213327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7587079322016474033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c04b451619a564598c31d1f4877ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.SpriteClipPlayer
+  _library: {fileID: 11400000, guid: af6c200ebfff50f49b1c83f8f95ad8df, type: 2}
+  _key: TowerLinear
+  _defaultClip: Idle
+  _destroyWhenDone: 0
+--- !u!114 &5852450864798559416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7587079322016474033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e26fd20848ccbe3448174e21bb429359, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.GrayboxTowerAnimator

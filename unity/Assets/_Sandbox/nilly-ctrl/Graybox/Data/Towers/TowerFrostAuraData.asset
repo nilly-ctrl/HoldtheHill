@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ac850cb2145e4f49b0e323bead2fa52, type: 3}
+  m_Name: TowerFrostAuraData
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxTowerData
+  _displayName: Frost Aura
+  _iconName: TowerFrostAuraIcon
+  _baseCost: 225
+  _prefab: {fileID: 8839860791209543269, guid: 444f921cc847e8545bc481aca6269874, type: 3}
+  _ghostSprite: {fileID: -79867283808635212, guid: 2cf821b52ebe30d40a8463f888e282ec, type: 3}

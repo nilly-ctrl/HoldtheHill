@@ -1,0 +1,147 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1195316903891168243
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3128798406546315221, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: _priority
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965158773347225549, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4248968428799662019, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 4912632185840619315, guid: 5ba6cf744c4328a418855aa543b6b24f, type: 3}
+    - target: {fileID: 4248968428799662019, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_DrawMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      propertyPath: m_Name
+      value: TowerOrbit
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7762611240636148216}
+    - targetCorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6815173518039933069}
+    - targetCorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7549831116885006895}
+  m_SourcePrefab: {fileID: 100100000, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+--- !u!1 &8129488888699971691 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
+  m_PrefabInstance: {fileID: 1195316903891168243}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7762611240636148216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8129488888699971691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 359627e16ef40304ab7cc618b5acf995, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Runtime::HoldTheHill.Features.Combat.OrbitingDamageField
+  _orbiterCount: 3
+  _radius: 1.6
+  _angularSpeed: 150
+  _path: 0
+  _verticalRatio: 0.6
+  _minRadiusRatio: 0.5
+  _pulseSpeed: 0.5
+  _contactDamage: 6
+  _hitCooldown: 0.4
+  _damageType: 1
+  _status:
+    EffectName: 
+    DamagePerTick: 0
+    TickInterval: 0
+    Duration: 0
+    SlowMultiplier: 0
+  _orbiterRadius: 0.35
+  _targetMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _orbiterSprite: {fileID: 0}
+  _orbiterColor: {r: 0.6, g: 0.9, b: 1, a: 1}
+--- !u!114 &6815173518039933069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8129488888699971691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c04b451619a564598c31d1f4877ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.SpriteClipPlayer
+  _library: {fileID: 11400000, guid: af6c200ebfff50f49b1c83f8f95ad8df, type: 2}
+  _key: TowerOrbit
+  _defaultClip: Idle
+  _destroyWhenDone: 0
+--- !u!114 &7549831116885006895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8129488888699971691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e26fd20848ccbe3448174e21bb429359, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.GrayboxTowerAnimator

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
@@ -14,38 +13,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Tower Placer & Inspector")]
     public class GrayboxTowerPlacer : MonoBehaviour
     {
-        [Header("Templates / Prefabs")]
-        [SerializeField] private GameObject _bulletPrefab;
-        [SerializeField] private GameObject _homingPrefab;
-        [SerializeField] private GameObject _mortarPrefab;
-        [SerializeField] private GameObject _ricochetPrefab;
-        [SerializeField] private GameObject _minePrefab;
+        [Tooltip("The towers that can be built, in build bar order.")]
+        [SerializeField] private GrayboxTowerCatalog _catalog;
+        [Tooltip("Material for the placement ghost's range ring.")]
         [SerializeField] private Material _lineMaterial;
-        [Tooltip("Textured line materials for chain lightning and the beam. Empty keeps the flat lines.")]
-        [SerializeField] private Material _boltMaterial;
-        [SerializeField] private Material _beamMaterial;
-        [SerializeField] private Sprite _squareSprite;
-        [Tooltip("Animated tower sprites. Left empty, placed towers stay as coloured squares.")]
+        [Tooltip("Holds the build and sell effects. Left empty, towers appear without them.")]
         [SerializeField] private SpriteAnimLibrary _animLibrary;
-
-        // Build-menu type names -> .aseprite file the tower animates with.
-        private static readonly Dictionary<string, string> AnimKeys = new Dictionary<string, string>
-        {
-            { "Linear Bullet", "TowerLinear" },
-            { "Homing Missile", "TowerHoming" },
-            { "Mortar Shell", "TowerMortar" },
-            { "Ricochet Disc", "TowerRicochet" },
-            { "Frost_Aura", "TowerFrostAura" },
-            { "Knockback_Pulse", "TowerKnockback" },
-            { "MineLayer", "TowerMineLayer" },
-            { "Chain_Lightning", "TowerChain" },
-            { "Beam", "TowerBeam" },
-            { "Orbit", "TowerOrbit" },
-            { "Worker", "TowerWorker" },
-            { "Soldier", "TowerSoldier" },
-            { "Major", "TowerMajor" },
-            { "Nurse", "TowerNurse" },
-        };
 
         private Camera _mainCamera;
         private EnemyPath _path;
@@ -61,34 +34,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private GUIStyle _btnStyle;
         private GUIStyle _barBtnStyle;
 
-        private struct TowerBuildInfo
-        {
-            public string Name;
-            public string IconName;
-            public int BaseCost;
-            public Key Hotkey;
-            public string ShortcutLabel;
-            public float Range;
-        }
-
-        private static readonly TowerBuildInfo[] TowerCatalog = new TowerBuildInfo[]
-        {
-            new TowerBuildInfo { Name = "Bullet Tower", IconName = "TowerLinearIcon", BaseCost = 100, Hotkey = Key.Digit1, ShortcutLabel = "1", Range = 3.6f },
-            new TowerBuildInfo { Name = "Homing Tower", IconName = "TowerHomingIcon", BaseCost = 150, Hotkey = Key.Digit2, ShortcutLabel = "2", Range = 3.8f },
-            new TowerBuildInfo { Name = "Mortar Tower", IconName = "TowerMortarIcon", BaseCost = 200, Hotkey = Key.Digit3, ShortcutLabel = "3", Range = 4.2f },
-            new TowerBuildInfo { Name = "Ricochet Tower", IconName = "TowerRicochetIcon", BaseCost = 175, Hotkey = Key.Digit4, ShortcutLabel = "4", Range = 3.8f },
-            new TowerBuildInfo { Name = "Frost Aura", IconName = "TowerFrostAuraIcon", BaseCost = 225, Hotkey = Key.Digit5, ShortcutLabel = "5", Range = 3.5f },
-            new TowerBuildInfo { Name = "Knockback Pulse", IconName = "TowerKnockbackIcon", BaseCost = 200, Hotkey = Key.Digit6, ShortcutLabel = "6", Range = 3.0f },
-            new TowerBuildInfo { Name = "Mine Layer", IconName = "TowerMineLayerIcon", BaseCost = 250, Hotkey = Key.Digit7, ShortcutLabel = "7", Range = 4.0f },
-            new TowerBuildInfo { Name = "Chain Lightning", IconName = "TowerChainIcon", BaseCost = 200, Hotkey = Key.Digit8, ShortcutLabel = "8", Range = 3.8f },
-            new TowerBuildInfo { Name = "Beam Tower", IconName = "TowerBeamIcon", BaseCost = 225, Hotkey = Key.Digit9, ShortcutLabel = "9", Range = 4.0f },
-            new TowerBuildInfo { Name = "Swarm Nest", IconName = "TowerOrbitIcon", BaseCost = 175, Hotkey = Key.Digit0, ShortcutLabel = "0", Range = 2.5f },
-            // The close-range castes (GrayboxMeleeTower). Ranges match GrayboxMeleeTower.StatsFor.
-            new TowerBuildInfo { Name = "Worker", IconName = "TowerWorkerIcon", BaseCost = 75, Hotkey = Key.Q, ShortcutLabel = "Q", Range = 1.8f },
-            new TowerBuildInfo { Name = "Soldier", IconName = "TowerSoldierIcon", BaseCost = 125, Hotkey = Key.W, ShortcutLabel = "W", Range = 2.0f },
-            new TowerBuildInfo { Name = "Major", IconName = "TowerMajorIcon", BaseCost = 200, Hotkey = Key.E, ShortcutLabel = "E", Range = 2.0f },
-            new TowerBuildInfo { Name = "Nurse", IconName = "TowerNurseIcon", BaseCost = 150, Hotkey = Key.Y, ShortcutLabel = "Y", Range = 0.5f },
-        };
+        private int TowerCount => _catalog != null ? _catalog.Count : 0;
 
         public Tower SelectedTower => _selectedTower;
 
@@ -133,7 +79,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // Handle hotkey numbers 1-0 for selecting placement mode
             if (keyboard != null)
             {
-                for (int i = 0; i < TowerCatalog.Length; i++)
+                for (int i = 0; i < TowerCount; i++)
                 {
                     if (GrayboxControls.Pressed(GrayboxControls.BuildId(i)))
                     {
@@ -187,12 +133,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 worldPoint.z = 0f;
 
                 // If currently in active placement mode from the bottom build bar
-                if (_activePlacementTypeIndex >= 0 && _activePlacementTypeIndex < TowerCatalog.Length)
+                if (_activePlacementTypeIndex >= 0 && _activePlacementTypeIndex < TowerCount)
                 {
                     Vector3 buildPos = SnapToGrid(worldPoint);
                     if (IsPositionClearOfPath(buildPos, 1.2f) && FindTowerAt(buildPos, 0.8f) == null)
                     {
-                        ExecuteBuildByIndex(_activePlacementTypeIndex, buildPos);
+                        TryBuild(_catalog[_activePlacementTypeIndex], buildPos);
                     }
                     return;
                 }
@@ -440,7 +386,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             Vector3 screenPos = _mainCamera.WorldToScreenPoint(_buildWorldPos);
             float width = 230f;
-            float height = 560f; // 14 options
+            float height = 84f + TowerCount * 34f;
             float x = Mathf.Clamp(screenPos.x - width * 0.5f, 10f, Screen.width - width - 10f);
             float y = Mathf.Clamp(Screen.height - screenPos.y - height * 0.5f, 10f, Screen.height - height - 10f);
 
@@ -452,20 +398,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GUILayout.Label($"Grid: ({_buildWorldPos.x}, {_buildWorldPos.y})", _cardBodyStyle);
             GUILayout.Space(4);
 
-            DrawBuildOption("Bullet Tower", "TowerLinearIcon", 100, () => PlaceTower("Linear Bullet", _bulletPrefab, TargetingPriority.First, 3.6f, 0.45f, new Color(0.4f, 0.7f, 1f), GetDiscountedCost(100)));
-            DrawBuildOption("Homing Tower", "TowerHomingIcon", 150, () => PlaceTower("Homing Missile", _homingPrefab, TargetingPriority.Closest, 3.8f, 0.9f, new Color(0.4f, 1f, 0.6f), GetDiscountedCost(150)));
-            DrawBuildOption("Mortar Tower", "TowerMortarIcon", 200, () => PlaceTower("Mortar Shell", _mortarPrefab, TargetingPriority.First, 4.2f, 1.6f, new Color(0.9f, 0.5f, 0.2f), GetDiscountedCost(200)));
-            DrawBuildOption("Ricochet Tower", "TowerRicochetIcon", 175, () => PlaceTower("Ricochet Disc", _ricochetPrefab, TargetingPriority.Strongest, 3.8f, 1f, new Color(0.6f, 0.8f, 1f), GetDiscountedCost(175)));
-            DrawBuildOption("Frost Aura", "TowerFrostAuraIcon", 225, () => PlaceSpecialTower<FrostAuraTower>("Frost_Aura", 3.5f, new Color(0.4f, 0.85f, 1f), GetDiscountedCost(225)));
-            DrawBuildOption("Knockback Pulse", "TowerKnockbackIcon", 200, () => PlaceSpecialTower<KnockbackTower>("Knockback_Pulse", 3.0f, new Color(1f, 0.6f, 0.2f), GetDiscountedCost(200)));
-            DrawBuildOption("Mine Layer", "TowerMineLayerIcon", 250, () => PlaceMineLayerTower(GetDiscountedCost(250)));
-            DrawBuildOption("Chain Lightning", "TowerChainIcon", 200, () => PlaceChainTower(GetDiscountedCost(200)));
-            DrawBuildOption("Beam Tower", "TowerBeamIcon", 225, () => PlaceBeamTower(GetDiscountedCost(225)));
-            DrawBuildOption("Swarm Nest", "TowerOrbitIcon", 175, () => PlaceOrbitTower(GetDiscountedCost(175)));
-            DrawBuildOption("Worker", "TowerWorkerIcon", 75, () => PlaceMeleeTower(GrayboxMeleeTower.Caste.Worker, GetDiscountedCost(75)));
-            DrawBuildOption("Soldier", "TowerSoldierIcon", 125, () => PlaceMeleeTower(GrayboxMeleeTower.Caste.Soldier, GetDiscountedCost(125)));
-            DrawBuildOption("Major", "TowerMajorIcon", 200, () => PlaceMeleeTower(GrayboxMeleeTower.Caste.Major, GetDiscountedCost(200)));
-            DrawBuildOption("Nurse", "TowerNurseIcon", 150, () => PlaceMeleeTower(GrayboxMeleeTower.Caste.Nurse, GetDiscountedCost(150)));
+            for (int i = 0; i < TowerCount; i++)
+            {
+                DrawBuildOption(_catalog[i]);
+            }
 
             if (GUILayout.Button("Cancel", _btnStyle))
             {
@@ -498,7 +434,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             const float slot = 36f;
             const float cardWidth = 48f;
             const float cardHeight = 54f;
-            int count = TowerCatalog.Length;
+            int count = TowerCount;
             float totalWidth = count * cardWidth + 16f;
             float totalHeight = cardHeight + 16f;
             float startX = (Screen.width - totalWidth) * 0.5f;
@@ -508,7 +444,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             for (int i = 0; i < count; i++)
             {
-                TowerBuildInfo info = TowerCatalog[i];
+                GrayboxTowerData info = _catalog[i];
                 int cost = GetDiscountedCost(info.BaseCost);
                 bool canAfford = GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(cost);
                 bool isSelected = _activePlacementTypeIndex == i;
@@ -536,7 +472,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 GrayboxIcons.DrawSliced(tagRect, canAfford ? "CostTag" : "CostTagCant", 8, 3, 3, 3);
                 GUI.Label(new Rect(tagRect.x + 8f, tagRect.y, 30f, 12f), cost.ToString(), _inkStyle);
 
-                if (GUI.Button(new Rect(cx, cy - 4f, cardWidth, cardHeight + 4f), new GUIContent(string.Empty, info.Name), GUIStyle.none))
+                if (GUI.Button(new Rect(cx, cy - 4f, cardWidth, cardHeight + 4f), new GUIContent(string.Empty, info.DisplayName), GUIStyle.none))
                 {
                     if (_activePlacementTypeIndex == i)
                     {
@@ -557,7 +493,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             float cardWidth = 70f;
             float cardHeight = 62f;
             float gap = 5f;
-            int count = TowerCatalog.Length;
+            int count = TowerCount;
             float totalWidth = count * cardWidth + (count - 1) * gap + 16f;
             float totalHeight = cardHeight + 16f;
 
@@ -572,7 +508,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             for (int i = 0; i < count; i++)
             {
-                TowerBuildInfo info = TowerCatalog[i];
+                GrayboxTowerData info = _catalog[i];
                 int cost = GetDiscountedCost(info.BaseCost);
                 bool canAfford = GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(cost);
                 bool isSelected = _activePlacementTypeIndex == i;
@@ -592,8 +528,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
                 Texture2D icon = LoadIcon(info.IconName);
                 GUIContent btnContent = icon != null
-                    ? new GUIContent($"[{GrayboxControls.Name(GrayboxControls.BuildId(i))}]\n${cost}", icon, info.Name)
-                    : new GUIContent($"[{GrayboxControls.Name(GrayboxControls.BuildId(i))}]\n${cost}", info.Name);
+                    ? new GUIContent($"[{GrayboxControls.Name(GrayboxControls.BuildId(i))}]\n${cost}", icon, info.DisplayName)
+                    : new GUIContent($"[{GrayboxControls.Name(GrayboxControls.BuildId(i))}]\n${cost}", info.DisplayName);
 
                 if (GUILayout.Button(btnContent, _barBtnStyle, GUILayout.Width(cardWidth), GUILayout.Height(cardHeight)))
                 {
@@ -616,7 +552,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void DrawPlacementGhost()
         {
-            if (_activePlacementTypeIndex < 0 || _activePlacementTypeIndex >= TowerCatalog.Length || _mainCamera == null)
+            if (_activePlacementTypeIndex < 0 || _activePlacementTypeIndex >= TowerCount || _mainCamera == null)
             {
                 return;
             }
@@ -632,7 +568,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             worldPoint.z = 0f;
             Vector3 buildPos = SnapToGrid(worldPoint);
 
-            TowerBuildInfo info = TowerCatalog[_activePlacementTypeIndex];
+            GrayboxTowerData info = _catalog[_activePlacementTypeIndex];
             int cost = GetDiscountedCost(info.BaseCost);
             bool canAfford = GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(cost);
             bool isClear = IsPositionClearOfPath(buildPos, 1.2f) && FindTowerAt(buildPos, 0.8f) == null;
@@ -649,17 +585,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 normal = { textColor = labelColor }
             };
 
-            string statusMsg = !isClear ? "[BLOCKED]" : (!canAfford ? "[NEED GOLD]" : $"BUILD {info.Name.ToUpper()} (${cost})");
+            string statusMsg = !isClear ? "[BLOCKED]" : (!canAfford ? "[NEED GOLD]" : $"BUILD {info.DisplayName.ToUpper()} (${cost})");
             GUI.Label(new Rect(screenBuildPos.x - 120f, labelY, 240f, 24f), statusMsg, ghostStyle);
         }
-
-        // Sprite set for each TowerCatalog entry, in the same order, for the placement ghost.
-        private static readonly string[] GhostKeys =
-        {
-            "TowerLinear", "TowerHoming", "TowerMortar", "TowerRicochet", "TowerFrostAura",
-            "TowerKnockback", "TowerMineLayer", "TowerChain", "TowerBeam", "TowerOrbit",
-            "TowerWorker", "TowerSoldier", "TowerMajor", "TowerNurse",
-        };
 
         private const int GhostRingSegments = 48;
         private SpriteRenderer _ghost;
@@ -672,8 +600,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private void UpdateGhost(Mouse mouse)
         {
             int index = _activePlacementTypeIndex;
-            bool active = index >= 0 && index < TowerCatalog.Length && index < GhostKeys.Length
-                          && _animLibrary != null && mouse != null;
+            bool active = index >= 0 && index < TowerCount && mouse != null;
             if (active)
             {
                 Vector3 screen = mouse.position.ReadValue();
@@ -701,7 +628,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 _ghostRing.sortingOrder = 6;
             }
 
-            TowerBuildInfo info = TowerCatalog[index];
+            GrayboxTowerData info = _catalog[index];
             Vector3 world = _mainCamera.ScreenToWorldPoint(mouse.position.ReadValue());
             world.z = 0f;
             Vector3 buildPos = SnapToGrid(world);
@@ -710,52 +637,52 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             bool isClear = IsPositionClearOfPath(buildPos, 1.2f) && FindTowerAt(buildPos, 0.8f) == null;
             Color tint = canAfford && isClear ? new Color(0.6f, 1f, 0.6f, 0.75f) : new Color(1f, 0.4f, 0.4f, 0.65f);
 
-            SpriteAnimClip idle = _animLibrary.Find(GhostKeys[index])?.Find("Idle");
-            _ghost.sprite = idle != null && idle.Frames.Length > 0 ? idle.Frames[0] : null;
+            _ghost.sprite = info.GhostSprite;
             _ghost.color = tint;
             _ghost.transform.position = buildPos;
             _ghost.gameObject.SetActive(true);
 
+            // The Nurse has almost no reach; keep the ring big enough to see.
+            float ringRadius = Mathf.Max(info.Range, 0.5f);
             for (int i = 0; i < GhostRingSegments; i++)
             {
                 float angle = i * Mathf.PI * 2f / GhostRingSegments;
-                _ghostRing.SetPosition(i, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * info.Range);
+                _ghostRing.SetPosition(i, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * ringRadius);
             }
 
             _ghostRing.startColor = _ghostRing.endColor = tint;
         }
 
-        private void ExecuteBuildByIndex(int index, Vector3 position)
+        // Pays for a tower and places it. Does nothing if the gold isn't there.
+        private void TryBuild(GrayboxTowerData data, Vector3 position)
         {
-            if (index < 0 || index >= TowerCatalog.Length) return;
+            if (data == null || data.Prefab == null)
+            {
+                return;
+            }
 
-            TowerBuildInfo info = TowerCatalog[index];
-            int cost = GetDiscountedCost(info.BaseCost);
-
+            int cost = GetDiscountedCost(data.BaseCost);
             if (GrayboxEconomy.Instance != null && !GrayboxEconomy.Instance.TrySpendGold(cost))
             {
                 return;
             }
 
-            _buildWorldPos = position;
+            Place(data, position, cost);
+        }
 
-            switch (index)
-            {
-                case 0: PlaceTower("Linear Bullet", _bulletPrefab, TargetingPriority.First, 3.6f, 0.45f, new Color(0.4f, 0.7f, 1f), cost); break;
-                case 1: PlaceTower("Homing Missile", _homingPrefab, TargetingPriority.Closest, 3.8f, 0.9f, new Color(0.4f, 1f, 0.6f), cost); break;
-                case 2: PlaceTower("Mortar Shell", _mortarPrefab, TargetingPriority.First, 4.2f, 1.6f, new Color(0.9f, 0.5f, 0.2f), cost); break;
-                case 3: PlaceTower("Ricochet Disc", _ricochetPrefab, TargetingPriority.Strongest, 3.8f, 1f, new Color(0.6f, 0.8f, 1f), cost); break;
-                case 4: PlaceSpecialTower<FrostAuraTower>("Frost_Aura", 3.5f, new Color(0.4f, 0.85f, 1f), cost); break;
-                case 5: PlaceSpecialTower<KnockbackTower>("Knockback_Pulse", 3.0f, new Color(1f, 0.6f, 0.2f), cost); break;
-                case 6: PlaceMineLayerTower(cost); break;
-                case 7: PlaceChainTower(cost); break;
-                case 8: PlaceBeamTower(cost); break;
-                case 9: PlaceOrbitTower(cost); break;
-                case 10: PlaceMeleeTower(GrayboxMeleeTower.Caste.Worker, cost); break;
-                case 11: PlaceMeleeTower(GrayboxMeleeTower.Caste.Soldier, cost); break;
-                case 12: PlaceMeleeTower(GrayboxMeleeTower.Caste.Major, cost); break;
-                case 13: PlaceMeleeTower(GrayboxMeleeTower.Caste.Nurse, cost); break;
-            }
+        /// <summary>Places a tower from its prefab, without charging for it, and selects it.</summary>
+        public Tower Place(GrayboxTowerData data, Vector3 position, int cost)
+        {
+            Tower tower = Instantiate(data.Prefab, position, Quaternion.identity);
+            tower.name = data.DisplayName;
+            tower.TotalGoldInvested = cost;
+
+            GrayboxSfx.PlayCue("Place", position);
+            SpriteClipPlayer.SpawnOneShot(_animLibrary, "FxBuild", "Rise", position, Quaternion.identity, 1f, 3);
+
+            _showBuildMenu = false;
+            _selectedTower = tower;
+            return tower;
         }
 
         private static Texture2D LoadIcon(string iconName)
@@ -769,173 +696,22 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return Mathf.RoundToInt(baseCost * mult);
         }
 
-        private void DrawBuildOption(string nameLabel, string iconName, int baseCost, System.Action onBuild)
+        private void DrawBuildOption(GrayboxTowerData data)
         {
-            int cost = GetDiscountedCost(baseCost);
+            int cost = GetDiscountedCost(data.BaseCost);
             bool canAfford = GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(cost);
             GUI.color = canAfford ? Color.white : new Color(0.6f, 0.6f, 0.6f, 0.7f);
 
-            Texture2D icon = LoadIcon(iconName);
+            Texture2D icon = LoadIcon(data.IconName);
             GUIContent content = icon != null
-                ? new GUIContent($" {nameLabel} (${cost})", icon)
-                : new GUIContent($" {nameLabel} (${cost})");
+                ? new GUIContent($" {data.DisplayName} (${cost})", icon)
+                : new GUIContent($" {data.DisplayName} (${cost})");
 
             if (GUILayout.Button(content, _btnStyle, GUILayout.Height(24)))
             {
-                if (GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.TrySpendGold(cost))
-                {
-                    onBuild?.Invoke();
-                    GrayboxSfx.PlayCue("Place", _buildWorldPos);
-                }
+                TryBuild(data, _buildWorldPos);
             }
             GUI.color = Color.white;
-        }
-
-        private void PlaceSpecialTower<T>(string typeName, float range, Color color, int cost) where T : Component
-        {
-            Tower tower = CreateBaseTower(typeName, range, 1.5f, color, cost);
-            tower.gameObject.AddComponent<T>();
-            _showBuildMenu = false;
-            _selectedTower = tower;
-        }
-
-        /// <summary>A Worker, Soldier, Major or Nurse: a plain Tower with a GrayboxMeleeTower on it.</summary>
-        public Tower PlaceMeleeTower(GrayboxMeleeTower.Caste caste, int cost)
-        {
-            GrayboxMeleeTower.Stats stats = GrayboxMeleeTower.StatsFor(caste);
-            Tower tower = CreateBaseTower(caste.ToString(), stats.Range, stats.Interval, new Color(0.75f, 0.55f, 0.35f), cost);
-            tower.gameObject.AddComponent<GrayboxMeleeTower>().Configure(caste);
-            _showBuildMenu = false;
-            _selectedTower = tower;
-            return tower;
-        }
-
-        private void PlaceMineLayerTower(int cost)
-        {
-            Tower tower = CreateBaseTower("MineLayer", 4.0f, 2.8f, new Color(0.9f, 0.9f, 0.3f), cost);
-            MineLayerTower layer = tower.gameObject.AddComponent<MineLayerTower>();
-            SetSerializedProperty(layer, "_minePrefab", _minePrefab);
-            _showBuildMenu = false;
-            _selectedTower = tower;
-        }
-
-        private Tower CreateBaseTower(string typeName, float range, float fireInterval, Color color, int cost = 100)
-        {
-            var go = new GameObject($"Tower_{typeName}");
-            go.transform.position = _buildWorldPos;
-
-            var renderer = go.AddComponent<SpriteRenderer>();
-            renderer.sprite = _squareSprite != null ? _squareSprite : AssetDatabase_GetSquareSprite();
-            renderer.color = color;
-            renderer.sortingOrder = 1;
-            renderer.drawMode = SpriteDrawMode.Sliced;
-            renderer.size = new Vector2(0.8f, 0.8f);
-
-            Tower tower = go.AddComponent<Tower>();
-            tower.TotalGoldInvested = cost;
-            SetSerializedProperty(tower, "_range", range);
-            SetSerializedProperty(tower, "_fireInterval", fireInterval);
-            SetSerializedProperty(tower, "_priority", (int)TargetingPriority.Closest);
-            go.AddComponent<TowerTargetVisualizer>();
-
-            if (_animLibrary != null && AnimKeys.TryGetValue(typeName, out string animKey))
-            {
-                GrayboxTowerAnimator.Attach(go, _animLibrary, animKey);
-            }
-
-            GrayboxSfx.PlayCue("Place", go.transform.position);
-            SpriteClipPlayer.SpawnOneShot(_animLibrary, "FxBuild", "Rise", go.transform.position, Quaternion.identity, 1f, 3);
-            return tower;
-        }
-
-        // The next three use the same numbers as GrayboxBuilder's scene towers.
-        private void PlaceChainTower(int cost)
-        {
-            Tower tower = CreateBaseTower("Chain_Lightning", 3.8f, 1.2f, new Color(0.5f, 0.85f, 1f), cost);
-            SetSerializedProperty(tower, "_priority", (int)TargetingPriority.Weakest);
-            ChainLightning chain = tower.gameObject.AddComponent<ChainLightning>();
-            ConfigureLine(tower.GetComponent<LineRenderer>(), new Color(0.6f, 0.9f, 1f), 0.08f);
-            GrayboxLineScroll.Dress(tower.GetComponent<LineRenderer>(), _boltMaterial, 0.25f, -6f, 1f);
-            SetSerializedProperty(chain, "_maxTargets", 4);
-            SetSerializedProperty(chain, "_jumpRange", 3.5f);
-            SetSerializedProperty(chain, "_damage", 10f);
-            SetSerializedProperty(tower, "_chainLightning", chain);
-            _showBuildMenu = false;
-            _selectedTower = tower;
-        }
-
-        private void PlaceBeamTower(int cost)
-        {
-            Tower tower = CreateBaseTower("Beam", 4f, 1f, new Color(1f, 0.5f, 0.3f), cost);
-            ContinuousBeam beam = tower.gameObject.AddComponent<ContinuousBeam>();
-            ConfigureLine(tower.GetComponent<LineRenderer>(), new Color(1f, 0.55f, 0.25f), 0.15f);
-            GrayboxLineScroll.Dress(tower.GetComponent<LineRenderer>(), _beamMaterial, 0.25f, -3f, 0f);
-            SetSerializedProperty(beam, "_range", 4f);
-            SetSerializedProperty(beam, "_baseDamagePerSecond", 5f);
-            SetSerializedProperty(beam, "_rampPerSecond", 5f);
-            SetSerializedProperty(beam, "_maxDamagePerSecond", 25f);
-            SetSerializedProperty(tower, "_continuousBeam", beam);
-            _showBuildMenu = false;
-            _selectedTower = tower;
-        }
-
-        private void PlaceOrbitTower(int cost)
-        {
-            Tower tower = CreateBaseTower("Orbit", 2.5f, 1f, new Color(0.7f, 0.6f, 1f), cost);
-            OrbitingDamageField field = tower.gameObject.AddComponent<OrbitingDamageField>();
-            // Set before the field's Start builds its orbiters.
-            SetSerializedProperty(field, "_radius", 1.6f);
-            SetSerializedProperty(field, "_orbiterCount", 3);
-            SetSerializedProperty(field, "_angularSpeed", 150f);
-            SetSerializedProperty(field, "_contactDamage", 6f);
-            SetSerializedProperty(field, "_hitCooldown", 0.4f);
-            SetSerializedProperty(field, "_orbiterRadius", 0.35f);
-            _showBuildMenu = false;
-            _selectedTower = tower;
-        }
-
-        private void ConfigureLine(LineRenderer line, Color color, float width)
-        {
-            if (line == null)
-            {
-                return;
-            }
-
-            line.material = _lineMaterial;
-            line.startColor = color;
-            line.endColor = color;
-            line.startWidth = width;
-            line.endWidth = width;
-            line.numCapVertices = 2;
-            line.sortingOrder = 4;
-        }
-
-        private void PlaceTower(string typeName, GameObject projectilePrefab, TargetingPriority priority, float range, float fireInterval, Color color, int cost = 100)
-        {
-            Tower tower = CreateBaseTower(typeName, range, fireInterval, color, cost);
-            SetSerializedProperty(tower, "_priority", (int)priority);
-
-            if (projectilePrefab != null)
-            {
-                SetSerializedProperty(tower, "_projectilePrefab", projectilePrefab.GetComponent<Projectile>());
-            }
-
-            _showBuildMenu = false;
-            _selectedTower = tower;
-        }
-
-        private static Sprite AssetDatabase_GetSquareSprite()
-        {
-            return Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
-        }
-
-        private static void SetSerializedProperty(Object target, string fieldName, object value)
-        {
-            System.Reflection.FieldInfo field = target.GetType().GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (field != null)
-            {
-                field.SetValue(target, value);
-            }
         }
     }
 }
