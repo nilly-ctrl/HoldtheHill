@@ -955,9 +955,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 so.FindProperty("_jumpRange").floatValue = 3.5f;
                 so.FindProperty("_damage").floatValue = 10f;
             });
-
-            // The tower still needs a firing cadence even with no projectile prefab.
-            Apply(tower.GetComponent<Tower>(), so => so.FindProperty("_chainLightning").objectReferenceValue = chain);
         }
 
         internal static void AddBeam(GameObject tower, Material lineMaterial)
@@ -973,8 +970,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 so.FindProperty("_rampPerSecond").floatValue = 5f;
                 so.FindProperty("_maxDamagePerSecond").floatValue = 25f;
             });
-
-            Apply(tower.GetComponent<Tower>(), so => so.FindProperty("_continuousBeam").objectReferenceValue = beam);
         }
 
         /// <summary>

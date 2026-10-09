@@ -414,13 +414,20 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             hill.TakeBaseDamage(20f, Vector3.zero);
             float hurt = hill.CurrentHealth;
 
-            Tower tower = MakeMelee(GrayboxMeleeTower.Caste.Nurse, nurse => SetPrivate(nurse, "_healInterval", 0.1f));
+            GameObject go = Track(new GameObject("Nurse"));
+            go.SetActive(false);
+            Tower tower = go.AddComponent<Tower>();
+            SetPrivate(tower, "_range", 0.05f);
+            GrayboxTowerAnimator.Attach(go, _library, "TestTower");
+            var nurse = go.AddComponent<GrayboxNurseTower>();
+            SetPrivate(nurse, "_healInterval", 0.1f);
+            go.SetActive(true);
             yield return new WaitForSeconds(0.4f);
 
             Assert.Greater(hill.CurrentHealth, hurt, "The nurse should mend a hurt hill.");
             Assert.LessOrEqual(hill.CurrentHealth, hill.MaxHealth);
             Assert.AreEqual(1000f, enemy.CurrentHealth, "The nurse does not fight.");
-            Assert.IsNotNull(tower);
+            Assert.Greater(nurse.Heals, 0);
         }
 
         // ---------- weapon picker ----------

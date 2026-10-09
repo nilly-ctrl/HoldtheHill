@@ -78,7 +78,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7742623915142303134}
+      addedObject: {fileID: 7223180254829924172}
     - targetCorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7651740696392696564}
@@ -91,7 +91,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6937550544126968728, guid: b2756af2231d9e3428a39b8f28b53ea5, type: 3}
   m_PrefabInstance: {fileID: 5258708486606282952}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7742623915142303134
+--- !u!114 &7223180254829924172
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100,11 +100,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2935659724353200976}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c93e981a01339b4a8219abf30fc491d, type: 3}
+  m_Script: {fileID: 11500000, guid: 24527c43c5b1ac243ac971bb4f41156b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxMeleeTower
-  _caste: 3
-  _damage: 0
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxNurseTower
   _healAmount: 2
   _healInterval: 3
 --- !u!114 &7651740696392696564

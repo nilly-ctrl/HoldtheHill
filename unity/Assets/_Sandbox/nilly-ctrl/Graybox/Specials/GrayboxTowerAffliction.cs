@@ -13,8 +13,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// <remarks>
     /// Silenced (stunned, cocooned or scalded) switches off every component on the tower that
     /// attacks, and switches back on only the ones that were on before. A web halves
-    /// <see cref="Tower.FireRateScale"/>, so it only slows towers that fire on Tower's own
-    /// cooldown; aura towers (Frost Ant, Kicker, Sapper) keep their own pace under a web.
+    /// <see cref="Tower.FireRateScale"/>, which the tower passes on to its weapons, so aura
+    /// towers (Frost Ant, Kicker, Sapper) slow down under a web as well.
     /// </remarks>
     public class GrayboxTowerAffliction : MonoBehaviour
     {
@@ -331,6 +331,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             foreach (MineLayerTower c in GetComponents<MineLayerTower>()) yield return c;
             foreach (OrbitingDamageField c in GetComponents<OrbitingDamageField>()) yield return c;
             foreach (GrayboxMeleeTower c in GetComponents<GrayboxMeleeTower>()) yield return c;
+            foreach (GrayboxNurseTower c in GetComponents<GrayboxNurseTower>()) yield return c;
         }
     }
 }

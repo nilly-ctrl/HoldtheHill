@@ -11,7 +11,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// Projectile, chain, beam and orbit towers attack whenever <see cref="Tower.ShotsFired"/>
     /// goes up. Frost and Knockback towers run their own pulse timers, so they attack on their
     /// Pulsed events and also drop a range-sized ring effect; the Mine Layer attacks on MineLaid.
-    /// Upgrade comes from the "OnTowerUpgraded" message that <see cref="Tower.Upgrade"/> sends.
+    /// Upgrade comes from the <see cref="Tower.Upgraded"/> event.
     /// </remarks>
     [RequireComponent(typeof(SpriteClipPlayer))]
     public class GrayboxTowerAnimator : MonoBehaviour
@@ -92,11 +92,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             extras.Setup();
 
             // A tower copied by the run checkpoint arrives already upgraded: pick up its overlay
-            // (or make one) instead of waiting for the next OnTowerUpgraded.
+            // (or make one) instead of waiting for the next upgrade.
             Transform tier = transform.Find("Tier");
             if (tier != null) _tier = tier.GetComponent<SpriteClipPlayer>();
             if (_tower != null && _tower.Level >= 2) ShowTier(_tower.Level);
 
+            if (_tower != null) _tower.Upgraded += OnTowerUpgraded;
             if (_frost != null) _frost.Pulsed += OnFrostPulse;
             if (_knockback != null) _knockback.Pulsed += OnShockwave;
             if (_mineLayer != null) _mineLayer.MineLaid += OnMineLaid;
@@ -104,6 +105,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void OnDestroy()
         {
+            if (_tower != null) _tower.Upgraded -= OnTowerUpgraded;
             if (_frost != null) _frost.Pulsed -= OnFrostPulse;
             if (_knockback != null) _knockback.Pulsed -= OnShockwave;
             if (_mineLayer != null) _mineLayer.MineLaid -= OnMineLaid;
@@ -163,7 +165,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             SpriteClipPlayer.SpawnOneShot(_player.Library, key, clip, transform.position, Quaternion.identity, scale, 3);
         }
 
-        // Sent by Tower.Upgrade().
         private void OnTowerUpgraded(int level)
         {
             GrayboxFeedback.RaiseTowerUpgraded(_player.Key, transform.position, level);

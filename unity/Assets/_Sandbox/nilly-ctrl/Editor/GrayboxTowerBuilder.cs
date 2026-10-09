@@ -25,6 +25,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public const string CatalogPath = DataRoot + "/GrayboxTowerCatalog.asset";
 
+        private static readonly Color MeleeColor = new Color(0.75f, 0.55f, 0.35f);
+
         private static GameObject s_base;
         private static SpriteAnimLibrary s_anim;
 
@@ -76,10 +78,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 Build("TowerOrbit", "Swarm Nest", 175, TargetingPriority.Closest, 2.5f, 1f, new Color(0.7f, 0.6f, 1f),
                     AddOrbit),
                 // The close-range castes. Range and interval come from GrayboxMeleeTower.StatsFor.
+                // The Nurse has no reach: she never targets anything, she mends the hill.
                 BuildMelee("TowerWorker", "Worker", 75, GrayboxMeleeTower.Caste.Worker),
                 BuildMelee("TowerSoldier", "Soldier", 125, GrayboxMeleeTower.Caste.Soldier),
                 BuildMelee("TowerMajor", "Major", 200, GrayboxMeleeTower.Caste.Major),
-                BuildMelee("TowerNurse", "Nurse", 150, GrayboxMeleeTower.Caste.Nurse),
+                Build("TowerNurse", "Nurse", 150, TargetingPriority.Closest, 0.05f, 3f, MeleeColor,
+                    go => go.AddComponent<GrayboxNurseTower>()),
             };
 
             var catalog = LoadOrCreate<GrayboxTowerCatalog>(CatalogPath, out _);
@@ -185,7 +189,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private static GrayboxTowerData BuildMelee(string id, string label, int cost, GrayboxMeleeTower.Caste caste)
         {
             GrayboxMeleeTower.Stats stats = GrayboxMeleeTower.StatsFor(caste);
-            return Build(id, label, cost, TargetingPriority.Closest, stats.Range, stats.Interval, new Color(0.75f, 0.55f, 0.35f),
+            return Build(id, label, cost, TargetingPriority.Closest, stats.Range, stats.Interval, MeleeColor,
                 go => go.AddComponent<GrayboxMeleeTower>().Configure(caste));
         }
 

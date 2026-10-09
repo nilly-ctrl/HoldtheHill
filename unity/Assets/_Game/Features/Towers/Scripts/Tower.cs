@@ -11,9 +11,9 @@ namespace HoldTheHill.Features.Towers
     /// <see cref="TargetingPriority"/>, and fires whichever weapon it has been given.
     /// </summary>
     /// <remarks>
-    /// A tower can carry a projectile weapon, a chain-lightning arc, a continuous beam and
-    /// an orbiting field at once; each is optional. The orbiting field runs itself and needs
-    /// no firing logic here.
+    /// A tower fires its own projectile, if it has one, and drives every
+    /// <see cref="TowerWeapon"/> on the same object (chain lightning, a beam, an aura, a melee
+    /// strike). Each is optional and they can be combined.
     /// </remarks>
     [AddComponentMenu("Hold the Hill/Towers/Tower")]
     public class Tower : MonoBehaviour
@@ -35,28 +35,24 @@ namespace HoldTheHill.Features.Towers
         [Tooltip("Seconds between shots. Ignored by the continuous beam.")]
         [SerializeField, Min(0.05f)] private float _fireInterval = 1f;
 
-        [Header("Weapons (all optional)")]
+        [Header("Projectile (optional)")]
         [Tooltip("Projectile fired on each shot.")]
         [SerializeField] private Projectile _projectilePrefab;
 
         [Tooltip("Where shots leave the tower. Defaults to the tower itself.")]
         [SerializeField] private Transform _muzzle;
 
-        [Tooltip("Instant electric arc, fired on the same cooldown as projectiles.")]
-        [SerializeField] private ChainLightning _chainLightning;
-
-        [Tooltip("Held beam. Runs continuously while a target is in range.")]
-        [SerializeField] private ContinuousBeam _continuousBeam;
-
-        [Tooltip("Always-on ring of orbiting wisps. Needs no firing logic.")]
-        [SerializeField] private OrbitingDamageField _orbitingField;
-
         [Header("Pooling")]
         [Tooltip("Pool that recycles this tower's projectiles. Created automatically if left empty.")]
         [SerializeField] private ProjectilePool _projectilePool;
 
         private readonly List<IDamageable> _inRange = new List<IDamageable>();
+        private readonly List<TowerWeapon> _weapons = new List<TowerWeapon>();
         private float _cooldown;
+        private float _fireRateScale = 1f;
+
+        /// <summary>Raised after an upgrade, with the new level. For visuals and sound.</summary>
+        public event System.Action<int> Upgraded;
 
         /// <summary>How far this tower can reach, in world units.</summary>
         public float Range => _range;
@@ -138,7 +134,13 @@ namespace HoldTheHill.Features.Towers
 
             transform.localScale *= 1.12f;
 
-            SendMessage("OnTowerUpgraded", Level, SendMessageOptions.DontRequireReceiver);
+            RefreshWeapons();
+            for (int i = 0; i < _weapons.Count; i++)
+            {
+                _weapons[i].OnUpgraded(Level);
+            }
+
+            Upgraded?.Invoke(Level);
             return true;
         }
 
@@ -160,12 +162,41 @@ namespace HoldTheHill.Features.Towers
             {
                 _projectilePool = ProjectilePool.For(_projectilePrefab);
             }
+
+            RefreshWeapons();
+        }
+
+        // Again in Start, for weapons added in code after this component.
+        private void Start()
+        {
+            RefreshWeapons();
+        }
+
+        /// <summary>
+        /// Finds the weapons on this object again. Call after adding or removing one at runtime.
+        /// </summary>
+        public void RefreshWeapons()
+        {
+            GetComponents(_weapons);
+            for (int i = 0; i < _weapons.Count; i++)
+            {
+                _weapons[i].RateScale = _fireRateScale;
+            }
         }
 
         /// <summary>
         /// Fire-rate multiplier set by things done to this tower (a web halves it). 1 is normal.
+        /// Passed on to every weapon, so the ones that keep their own clock slow down too.
         /// </summary>
-        public float FireRateScale { get; set; } = 1f;
+        public float FireRateScale
+        {
+            get => _fireRateScale;
+            set
+            {
+                _fireRateScale = value;
+                RefreshWeapons();
+            }
+        }
 
         /// <summary>Seconds between shots, accounting for Skill Tree bonuses and <see cref="FireRateScale"/>.</summary>
         public float EffectiveFireInterval
@@ -181,7 +212,10 @@ namespace HoldTheHill.Features.Towers
         {
             CurrentTarget = AcquireTarget();
 
-            UpdateBeam(CurrentTarget);
+            for (int i = 0; i < _weapons.Count; i++)
+            {
+                _weapons[i].Track(CurrentTarget);
+            }
 
             _cooldown -= Time.deltaTime;
             if (CurrentTarget == null || _cooldown > 0f)
@@ -295,30 +329,13 @@ namespace HoldTheHill.Features.Towers
             return bestTravelled;
         }
 
-        private void UpdateBeam(IDamageable target)
-        {
-            if (_continuousBeam == null)
-            {
-                return;
-            }
-
-            if (target == null)
-            {
-                _continuousBeam.StopFiring();
-            }
-            else
-            {
-                _continuousBeam.Fire(target);
-            }
-        }
-
         private void FireAt(IDamageable target)
         {
             ShotsFired++;
 
-            if (_chainLightning != null)
+            for (int i = 0; i < _weapons.Count; i++)
             {
-                _chainLightning.Fire(target);
+                _weapons[i].Shoot(target);
             }
 
             if (_projectilePrefab == null || _projectilePool == null)

@@ -69,9 +69,52 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Assert.IsNotNull(Prefab("TowerMineLayer").GetComponent<MineLayerTower>());
 
             Assert.AreEqual(GrayboxMeleeTower.Caste.Soldier, Prefab("TowerSoldier").GetComponent<GrayboxMeleeTower>().Kind);
-            Assert.AreEqual(GrayboxMeleeTower.Caste.Nurse, Prefab("TowerNurse").GetComponent<GrayboxMeleeTower>().Kind);
+            Assert.IsNotNull(Prefab("TowerNurse").GetComponent<GrayboxNurseTower>());
+            Assert.IsNull(Prefab("TowerNurse").GetComponent<GrayboxMeleeTower>());
             Assert.AreEqual(GrayboxMeleeTower.StatsFor(GrayboxMeleeTower.Caste.Major).Range,
                 Prefab("TowerMajor").GetComponent<Tower>().Range, 0.001f);
+        }
+
+        [Test]
+        public void EveryPrefab_HasAWeaponOrAProjectile()
+        {
+            GrayboxTowerCatalog catalog = Catalog;
+            for (int i = 0; i < catalog.Count; i++)
+            {
+                Tower prefab = catalog[i].Prefab;
+                bool hasProjectile = new SerializedObject(prefab).FindProperty("_projectilePrefab").objectReferenceValue != null;
+                Assert.IsTrue(hasProjectile || prefab.GetComponent<TowerWeapon>() != null, catalog[i].DisplayName);
+            }
+        }
+
+        [Test]
+        public void Upgrade_ReachesTheWeapon_AndRaisesTheEvent()
+        {
+            _placerObject = new GameObject("Tower");
+            var tower = _placerObject.AddComponent<Tower>();
+            var frost = _placerObject.AddComponent<FrostAuraTower>(); // added after the tower woke up
+            float before = frost.Radius;
+            int heard = 0;
+            tower.Upgraded += level => heard = level;
+
+            Assert.IsTrue(tower.Upgrade());
+
+            Assert.AreEqual(before * 1.15f, frost.Radius, 0.001f);
+            Assert.AreEqual(2, heard);
+        }
+
+        [Test]
+        public void FireRateScale_IsPassedToEveryWeapon()
+        {
+            _placerObject = new GameObject("Tower");
+            var tower = _placerObject.AddComponent<Tower>();
+            var frost = _placerObject.AddComponent<FrostAuraTower>();
+            var layer = _placerObject.AddComponent<MineLayerTower>();
+
+            tower.FireRateScale = 0.5f;
+
+            Assert.AreEqual(0.5f, frost.RateScale);
+            Assert.AreEqual(0.5f, layer.RateScale);
         }
 
         [Test]

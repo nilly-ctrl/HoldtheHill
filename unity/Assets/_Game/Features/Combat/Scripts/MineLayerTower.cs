@@ -8,7 +8,7 @@ namespace HoldTheHill.Features.Combat
     /// Tower that periodically lays proximity landmines onto nearby road segments.
     /// </summary>
     [AddComponentMenu("Hold the Hill/Combat/Mine Layer Tower")]
-    public class MineLayerTower : MonoBehaviour
+    public class MineLayerTower : TimedTowerWeapon
     {
         [Header("Mine Layer Parameters")]
         [SerializeField, Min(1f)] private float _range = 4.0f;
@@ -16,7 +16,6 @@ namespace HoldTheHill.Features.Combat
         [SerializeField] private GameObject _minePrefab;
 
         private EnemyPath _path;
-        private float _cooldown;
 
         /// <summary>Raised after each mine is placed. For visuals.</summary>
         public event System.Action<ProximityMine> MineLaid;
@@ -26,15 +25,9 @@ namespace HoldTheHill.Features.Combat
             _path = FindAnyObjectByType<EnemyPath>();
         }
 
-        private void Update()
-        {
-            _cooldown -= Time.deltaTime;
-            if (_cooldown <= 0f)
-            {
-                _cooldown = _layInterval;
-                LayMine();
-            }
-        }
+        protected override float Interval => _layInterval;
+
+        protected override void Trigger() => LayMine();
 
         private void LayMine()
         {
@@ -96,7 +89,7 @@ namespace HoldTheHill.Features.Combat
             return transform.position;
         }
 
-        private void OnTowerUpgraded(int level)
+        public override void OnUpgraded(int level)
         {
             _range *= 1.2f;
             _layInterval = Mathf.Max(0.8f, _layInterval * 0.75f);

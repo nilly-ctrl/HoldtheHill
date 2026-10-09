@@ -10,7 +10,7 @@ namespace HoldTheHill.Features.Combat
     /// rather than reaching out, which makes it the answer to enemies that get close.
     /// </summary>
     [AddComponentMenu("Hold the Hill/Combat/Orbiting Damage Field")]
-    public class OrbitingDamageField : MonoBehaviour
+    public class OrbitingDamageField : TowerWeapon
     {
         /// <summary>The shape the wisps trace.</summary>
         public enum OrbitPath

@@ -10,7 +10,7 @@ namespace HoldTheHill.Features.Combat
     /// </summary>
     [AddComponentMenu("Hold the Hill/Combat/Chain Lightning")]
     [RequireComponent(typeof(LineRenderer))]
-    public class ChainLightning : MonoBehaviour
+    public class ChainLightning : TowerWeapon
     {
         [Header("Chain")]
         [Tooltip("How many enemies the arc can strike in total, including the first.")]
@@ -65,6 +65,8 @@ namespace HoldTheHill.Features.Combat
                 _line.enabled = false;
             }
         }
+
+        public override void Shoot(IDamageable target) => Fire(target);
 
         /// <summary>
         /// Strikes <paramref name="first"/> and chains onward. Does nothing if the

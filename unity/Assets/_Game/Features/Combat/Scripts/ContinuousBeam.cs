@@ -10,7 +10,7 @@ namespace HoldTheHill.Features.Combat
     /// </summary>
     [AddComponentMenu("Hold the Hill/Combat/Continuous Beam")]
     [RequireComponent(typeof(LineRenderer))]
-    public class ContinuousBeam : MonoBehaviour
+    public class ContinuousBeam : TowerWeapon
     {
         [Header("Damage")]
         [Tooltip("Damage per second when the beam first touches a target.")]
@@ -61,6 +61,18 @@ namespace HoldTheHill.Features.Combat
         private void OnDisable()
         {
             StopFiring();
+        }
+
+        public override void Track(IDamageable target)
+        {
+            if (target == null)
+            {
+                StopFiring();
+            }
+            else
+            {
+                Fire(target);
+            }
         }
 
         /// <summary>
