@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40daa1f81055f054588c6ac42ebd247d, type: 3}
+  m_Name: FireAnt
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxSpeciesData
+  _id: FireAnt
+  _displayName: Fire Ant (sample)
+  _description: 'A sample species: three castes that strike faster from closer in.'
+  _color: {r: 0.9, g: 0.3, b: 0.2, a: 1}
+  _towerCatalog: {fileID: 11400000, guid: 97943c8483454ae4e81e324166e3be7f, type: 2}
+  _wardenPrefab: {fileID: 8121067885379380797, guid: 9a15aa1cbbc711d4da4a1955ef1649e0, type: 3}
+  _startingFood: 0

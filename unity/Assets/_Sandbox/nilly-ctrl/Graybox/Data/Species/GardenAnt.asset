@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40daa1f81055f054588c6ac42ebd247d, type: 3}
+  m_Name: GardenAnt
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxSpeciesData
+  _id: GardenAnt
+  _displayName: Garden Ant
+  _description: The all-rounders. Every caste, nothing special, nothing missing.
+  _color: {r: 0.75, g: 0.55, b: 0.35, a: 1}
+  _towerCatalog: {fileID: 11400000, guid: 47c1bacd7f1906a4b96d549edde30a69, type: 2}
+  _wardenPrefab: {fileID: 8121067885379380797, guid: 9a15aa1cbbc711d4da4a1955ef1649e0, type: 3}
+  _startingFood: 0

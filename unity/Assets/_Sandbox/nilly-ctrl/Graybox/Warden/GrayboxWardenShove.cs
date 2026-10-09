@@ -18,10 +18,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private readonly List<IDamageable> _hits = new List<IDamageable>();
 
+        /// <summary>Multiplier on damage from outside, such as a power-up. 1 is normal.</summary>
+        public float DamageMultiplier { get; set; } = 1f;
+
+        /// <summary>Multiplier on reach from outside. 1 is normal.</summary>
+        public float RadiusMultiplier { get; set; } = 1f;
+
+        /// <summary>When true a shove also knocks the shield off anything it hits.</summary>
+        public bool StripsShields { get; set; }
+
         protected override void Perform()
         {
             Vector3 at = Warden.transform.position;
-            CombatUtil.OverlapDamageables(at, _radius, ~0, _hits);
+            CombatUtil.OverlapDamageables(at, _radius * RadiusMultiplier, ~0, _hits);
 
             var stagger = new StatusEffectData
             {
@@ -38,7 +47,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     continue;
                 }
 
-                hit.TakeDamage(new DamageInfo(_damage, Warden.gameObject, hit.Transform.position, DamageType.Physical));
+                if (StripsShields && hit.Transform.TryGetComponent(out EnemyShield shield))
+                {
+                    shield.AbsorbDamage(shield.CurrentShield);
+                }
+
+                hit.TakeDamage(new DamageInfo(_damage * DamageMultiplier, Warden.gameObject, hit.Transform.position, DamageType.Physical));
                 if (!CombatUtil.IsAlive(hit))
                 {
                     continue;
@@ -51,7 +65,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 }
             }
 
-            SpriteClipPlayer.SpawnOneShot(GrayboxSpecials.Library, "FxShockwave", "Blast", at, Quaternion.identity, 0.4f, 3);
+            SpriteClipPlayer.SpawnOneShot(GrayboxSpecials.Library, "FxShockwave", "Blast", at, Quaternion.identity, 0.4f * RadiusMultiplier, 3);
         }
     }
 }

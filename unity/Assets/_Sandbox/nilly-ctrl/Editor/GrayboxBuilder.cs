@@ -99,11 +99,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // The Warden and its five abilities. Dig turns up the small crumb.
             GrayboxWardenBuilder.BuildPrefabs(square);
 
+            // Honey Drop and Berserk Berry: an effect prefab, a pickup and a data asset each.
+            GrayboxPowerUpBuilder.BuildPrefabs();
+
             // Bosses and special enemies (Graybox/Specials): their prefabs, then a wave for each.
             GrayboxSpecialsBuilder.BuildPrefabs(circle, grunt, s_anim, goldenCrumb);
 
             // One prefab variant, data asset and catalog entry per tower (GrayboxTowerBuilder).
             GrayboxTowerBuilder.BuildPrefabs(square, bullet, homing, mortar, ricochet, mine, lineMaterial, s_anim);
+
+            // Species: which catalog and Warden a run uses. Needs the tower and Warden prefabs above.
+            GrayboxSpeciesBuilder.BuildAssets();
 
             MapWaveDataSO waves = BuildWaveAsset(runner, grunt, brute, shielded, splitter, healer);
             GrayboxSpecialsBuilder.AppendWaves(WaveAssetPath, grunt);
@@ -128,7 +134,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxSpecialsBuilder.BuildSceneObject(s_anim);
             GrayboxTowerBuilder.BuildSceneTowers();
             BuildTowerPlacer(lineMaterial);
-            GrayboxWardenBuilder.BuildSceneObject();
+            // The species loader puts the Warden on the map on Play, so it is not placed here.
+            GrayboxSpeciesBuilder.BuildSceneObject();
+            GrayboxPowerUpBuilder.BuildSceneObject();
             BuildReadmeLabel();
             BuildFlow();
 

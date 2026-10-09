@@ -125,6 +125,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             foreach (ProximityMine mine in Object.FindObjectsByType<ProximityMine>()) Remove(mine.gameObject);
             foreach (GroundHazard hazard in Object.FindObjectsByType<GroundHazard>()) Remove(hazard.gameObject);
             foreach (GrayboxPickup pickup in Object.FindObjectsByType<GrayboxPickup>()) Remove(pickup.gameObject);
+            GrayboxPowerUpEffect.EndAll();
         }
 
         // Destroy only takes effect at the end of the frame. Switching the object off first means

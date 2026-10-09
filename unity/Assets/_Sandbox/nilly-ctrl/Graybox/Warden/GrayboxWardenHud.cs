@@ -5,7 +5,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 {
     /// <summary>
     /// Lists the Warden's abilities down the left edge: key, name, and the cooldown or hold in
-    /// progress. A plain placeholder in the same IMGUI as the rest of the graybox HUD.
+    /// progress, then any power-up that is running with its time left. A plain placeholder in the
+    /// same IMGUI as the rest of the graybox HUD.
     /// </summary>
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Warden Hud")]
     [RequireComponent(typeof(GrayboxWarden))]
@@ -33,13 +34,23 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxUi.Apply(); // pixel skin; a no-op without a GrayboxUi in the scene
             _style ??= new GUIStyle(GUI.skin.label) { fontSize = 10, richText = true };
 
-            float height = _warden.Abilities.Count * RowHeight + 12f;
+            int powerUps = GrayboxPowerUpEffect.Active.Count;
+            float height = (_warden.Abilities.Count + powerUps) * RowHeight + 12f;
             var box = new Rect(8f, (Screen.height - height) * 0.5f, Width, height);
             GUI.Box(box, GUIContent.none);
 
             for (int i = 0; i < _warden.Abilities.Count; i++)
             {
                 GUI.Label(new Rect(box.x + 6f, box.y + 6f + i * RowHeight, Width - 12f, RowHeight), Row(_warden.Abilities[i]), _style);
+            }
+
+            for (int i = 0; i < powerUps; i++)
+            {
+                GrayboxPowerUpEffect effect = GrayboxPowerUpEffect.Active[i];
+                float y = box.y + 6f + (_warden.Abilities.Count + i) * RowHeight;
+                string colour = ColorUtility.ToHtmlStringRGB(effect.Data.Color);
+                GUI.Label(new Rect(box.x + 6f, y, Width - 12f, RowHeight),
+                    $"<color=#{colour}>{effect.Data.DisplayName}  {effect.Remaining:0.0}s</color>", _style);
             }
         }
 

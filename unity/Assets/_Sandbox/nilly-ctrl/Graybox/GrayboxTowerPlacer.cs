@@ -37,6 +37,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private int TowerCount => _catalog != null ? _catalog.Count : 0;
 
+        /// <summary>The towers on offer. A species swaps this for its own.</summary>
+        public GrayboxTowerCatalog Catalog => _catalog;
+
+        /// <summary>Changes the towers on offer and drops any placement in progress.</summary>
+        public void SetCatalog(GrayboxTowerCatalog catalog)
+        {
+            _catalog = catalog;
+            _activePlacementTypeIndex = -1;
+            _showBuildMenu = false;
+        }
+
         public Tower SelectedTower => _selectedTower;
 
         /// <summary>True while a tower is selected, the build menu is open, or a tower is being placed.</summary>
