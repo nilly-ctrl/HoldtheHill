@@ -19,8 +19,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [Tooltip("Icon to look up in GrayboxIcons, e.g. TowerLinearIcon.")]
         [SerializeField] private string _iconName;
 
-        [Tooltip("Gold to build, before Skill Tree discounts.")]
+        [Tooltip("Cost to build, before Skill Tree discounts.")]
         [SerializeField, Min(0)] private int _baseCost = 100;
+
+        [Tooltip("What the cost is paid in. Empty means the run's main resource (Food).")]
+        [SerializeField] private GrayboxResourceData _costResource;
 
         [Tooltip("The tower placed when this is built.")]
         [SerializeField] private Tower _prefab;
@@ -33,6 +36,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public string IconName => _iconName;
 
         public int BaseCost => _baseCost;
+
+        /// <summary>What the cost is paid in, or null for the run's main resource.</summary>
+        public GrayboxResourceData CostResource => _costResource;
 
         public Tower Prefab => _prefab;
 

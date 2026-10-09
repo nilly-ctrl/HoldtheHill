@@ -116,7 +116,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _towers.Clear();
         }
 
-        /// <summary>Removes enemies, towers, mines and fire puddles from the field.</summary>
+        /// <summary>Removes enemies, towers, mines, fire puddles and pickups from the field.</summary>
         public static void ClearField()
         {
             foreach (EnemyHealth enemy in Object.FindObjectsByType<EnemyHealth>()) Remove(enemy.gameObject);
@@ -124,6 +124,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             foreach (Tower tower in Towers) Remove(tower.gameObject);
             foreach (ProximityMine mine in Object.FindObjectsByType<ProximityMine>()) Remove(mine.gameObject);
             foreach (GroundHazard hazard in Object.FindObjectsByType<GroundHazard>()) Remove(hazard.gameObject);
+            foreach (GrayboxPickup pickup in Object.FindObjectsByType<GrayboxPickup>()) Remove(pickup.gameObject);
         }
 
         // Destroy only takes effect at the end of the frame. Switching the object off first means

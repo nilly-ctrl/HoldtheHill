@@ -37,6 +37,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private const string BossBaseName = "GrayboxBossBase";
 
         private static GameObject s_bossBase;
+        private static GameObject s_bossDrop;
 
         // A boss is an enemy with a GrayboxBoss on it, which is what the banner listens for.
         private static GameObject BossBase(Sprite sprite)
@@ -48,7 +49,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             var go = (GameObject)PrefabUtility.InstantiatePrefab(GrayboxBuilder.EnemyBase(sprite));
             go.name = BossBaseName;
-            go.AddComponent<GrayboxBoss>();
+            GrayboxBuilder.Apply(go.AddComponent<GrayboxBoss>(),
+                so => so.FindProperty("_dropPrefab").objectReferenceValue = s_bossDrop);
             s_bossBase = GrayboxBuilder.SavePrefab(go, BossBaseName);
             return s_bossBase;
         }
@@ -81,9 +83,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private static GameObject Load(string id) => AssetDatabase.LoadAssetAtPath<GameObject>(PathOf(id));
 
         /// <summary>Builds every special prefab. The grunt is what eggs hatch into.</summary>
-        public static void BuildPrefabs(Sprite sprite, GameObject grunt, SpriteAnimLibrary anim)
+        public static void BuildPrefabs(Sprite sprite, GameObject grunt, SpriteAnimLibrary anim, GameObject bossDrop)
         {
             s_bossBase = null;
+            s_bossDrop = bossDrop;
 
             // ---- regular enemies
             Special<GrayboxWasp>("Wasp", sprite, health: 110f, speed: 2.2f, size: 0.55f, bounty: 12, breach: 6f, facePath: false);

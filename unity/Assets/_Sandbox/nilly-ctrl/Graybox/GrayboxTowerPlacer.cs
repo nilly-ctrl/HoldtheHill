@@ -428,7 +428,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             {
                 GrayboxTowerData info = _catalog[i];
                 int cost = GetDiscountedCost(info.BaseCost);
-                bool canAfford = GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(cost);
+                bool canAfford = CanAfford(info, cost);
                 bool isSelected = _activePlacementTypeIndex == i;
 
                 float cx = startX + 8f + i * cardWidth;
@@ -492,7 +492,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             {
                 GrayboxTowerData info = _catalog[i];
                 int cost = GetDiscountedCost(info.BaseCost);
-                bool canAfford = GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(cost);
+                bool canAfford = CanAfford(info, cost);
                 bool isSelected = _activePlacementTypeIndex == i;
 
                 if (isSelected)
@@ -552,7 +552,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             GrayboxTowerData info = _catalog[_activePlacementTypeIndex];
             int cost = GetDiscountedCost(info.BaseCost);
-            bool canAfford = GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(cost);
+            bool canAfford = CanAfford(info, cost);
             bool isClear = IsPositionClearOfPath(buildPos, 1.2f) && FindTowerAt(buildPos, 0.8f) == null;
 
             Vector3 screenBuildPos = _mainCamera.WorldToScreenPoint(buildPos);
@@ -615,7 +615,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             world.z = 0f;
             Vector3 buildPos = SnapToGrid(world);
 
-            bool canAfford = GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(GetDiscountedCost(info.BaseCost));
+            bool canAfford = CanAfford(info, GetDiscountedCost(info.BaseCost));
             bool isClear = IsPositionClearOfPath(buildPos, 1.2f) && FindTowerAt(buildPos, 0.8f) == null;
             Color tint = canAfford && isClear ? new Color(0.6f, 1f, 0.6f, 0.75f) : new Color(1f, 0.4f, 0.4f, 0.65f);
 
@@ -644,12 +644,18 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             int cost = GetDiscountedCost(data.BaseCost);
-            if (GrayboxEconomy.Instance != null && !GrayboxEconomy.Instance.TrySpendGold(cost))
+            if (GrayboxEconomy.Instance != null && !GrayboxEconomy.Instance.TrySpend(data.CostResource, cost))
             {
                 return;
             }
 
             Place(data, position, cost);
+        }
+
+        // True with no economy in the scene, so a bare test scene can still build.
+        private static bool CanAfford(GrayboxTowerData data, int cost)
+        {
+            return GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(data.CostResource, cost);
         }
 
         /// <summary>Places a tower from its prefab, without charging for it, and selects it.</summary>
@@ -681,7 +687,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private void DrawBuildOption(GrayboxTowerData data)
         {
             int cost = GetDiscountedCost(data.BaseCost);
-            bool canAfford = GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(cost);
+            bool canAfford = CanAfford(data, cost);
             GUI.color = canAfford ? Color.white : new Color(0.6f, 0.6f, 0.6f, 0.7f);
 
             Texture2D icon = LoadIcon(data.IconName);

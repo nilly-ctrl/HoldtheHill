@@ -93,8 +93,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GameObject healer = BuildHealerEnemyPrefab(
                 "GrayboxHealer", circle, health: 210f, speed: 1.0f, new Color(0.2f, 0.9f, 0.4f), 0.65f, bounty: 30);
 
+            // Food and the crumbs that pay it. Bosses drop the golden one.
+            GameObject goldenCrumb = GrayboxPickupBuilder.BuildPrefabs(circle);
+
             // Bosses and special enemies (Graybox/Specials): their prefabs, then a wave for each.
-            GrayboxSpecialsBuilder.BuildPrefabs(circle, grunt, s_anim);
+            GrayboxSpecialsBuilder.BuildPrefabs(circle, grunt, s_anim, goldenCrumb);
 
             // One prefab variant, data asset and catalog entry per tower (GrayboxTowerBuilder).
             GrayboxTowerBuilder.BuildPrefabs(square, bullet, homing, mortar, ricochet, mine, lineMaterial, s_anim);
@@ -153,7 +156,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private static void BuildEconomy()
         {
             var go = new GameObject("GrayboxEconomy");
-            go.AddComponent<GrayboxEconomy>();
+            GrayboxResourceData food = GrayboxPickupBuilder.Food();
+            Apply(go.AddComponent<GrayboxEconomy>(), so => so.FindProperty("_mainResource").objectReferenceValue = food);
         }
 
         private static void BuildSkillTree()

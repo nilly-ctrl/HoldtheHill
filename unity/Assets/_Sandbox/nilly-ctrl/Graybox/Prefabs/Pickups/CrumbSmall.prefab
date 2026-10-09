@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4247647173547524487
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1170133901051441574, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_Size.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1170133901051441574, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_Size.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1170133901051441574, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_Color.b
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 1170133901051441574, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1170133901051441574, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_Color.r
+      value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326718462594589660, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326718462594589660, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326718462594589660, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326718462594589660, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326718462594589660, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326718462594589660, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326718462594589660, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326718462594589660, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326718462594589660, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5326718462594589660, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6363502759187248923, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: m_Name
+      value: CrumbSmall
+      objectReference: {fileID: 0}
+    - target: {fileID: 8963897097850162553, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      propertyPath: _reach
+      value: 0.35
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6363502759187248923, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6883265532837439360}
+  m_SourcePrefab: {fileID: 100100000, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+--- !u!1 &7114870002715260572 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6363502759187248923, guid: aa24ccce187fa3c4d8c942c247b0bf38, type: 3}
+  m_PrefabInstance: {fileID: 4247647173547524487}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6883265532837439360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7114870002715260572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f2bab57f5b2fb04590231f62cceb611, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxResourceGain
+  _resource: {fileID: 11400000, guid: 0bfac2f0557c545499737e1e2f9125cb, type: 2}
+  _amount: 5
