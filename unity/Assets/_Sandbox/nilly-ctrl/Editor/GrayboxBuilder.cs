@@ -164,6 +164,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // Every menu screen (uGUI), rebuilt with the scene so they match the code.
             GrayboxMenusBuilder.BuildPrefab();
             GrayboxMenusBuilder.AddToScene();
+
+            // The in-game HUD (uGUI), under the menus.
+            GrayboxHudBuilder.BuildPrefab();
+            GrayboxHudBuilder.AddToScene();
         }
 
         private static void BuildEconomy()
@@ -198,7 +202,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             go.AddComponent<GrayboxBossBanner>();
             go.AddComponent<GrayboxStatusCombos>();
             go.AddComponent<GrayboxBaseHealth>();
-            go.AddComponent<GrayboxBaseHealthUI>();
         }
 
         // 2 font pixels per art pixel: at 1 the numbers are too small to read at this camera size.

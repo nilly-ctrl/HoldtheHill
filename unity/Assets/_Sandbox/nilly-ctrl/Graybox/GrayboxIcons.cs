@@ -51,43 +51,31 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return null;
         }
 
-        private static readonly string[] EditorFolders = { "Icons/PNG", "Ui/Hud", "Ui/Markers" };
-        private static readonly Dictionary<string, GUIStyle> SliceStyles = new Dictionary<string, GUIStyle>();
+        private static readonly Dictionary<string, Sprite> SpriteCache = new Dictionary<string, Sprite>();
 
         /// <summary>
-        /// Draws a HUD piece stretched to <paramref name="rect"/> with its corners kept square
-        /// (9-slice). Call from OnGUI. Returns false if the sprite is missing, so callers can fall back.
+        /// The icon as a sprite, for a uGUI Image. Made once per icon and kept. Null if there is no such icon.
         /// </summary>
-        public static bool DrawSliced(Rect rect, string spriteName, int left, int right, int top, int bottom)
+        public static Sprite GetSprite(string iconName)
         {
-            Texture2D texture = Get(spriteName);
+            Texture2D texture = Get(iconName);
             if (texture == null)
             {
-                return false;
+                return null;
             }
 
-            if (Event.current.type != EventType.Repaint)
+            if (SpriteCache.TryGetValue(iconName, out Sprite cached) && cached != null && cached.texture == texture)
             {
-                return true;
+                return cached;
             }
 
-            if (!SliceStyles.TryGetValue(spriteName, out GUIStyle style) || style.normal.background != texture)
-            {
-                style = new GUIStyle { border = new RectOffset(left, right, top, bottom) };
-                style.normal.background = texture;
-                SliceStyles[spriteName] = style;
-            }
-
-            style.Draw(rect, false, false, false, false);
-            return true;
+            Sprite sprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
+            sprite.name = iconName;
+            SpriteCache[iconName] = sprite;
+            return sprite;
         }
 
-        /// <summary>9-slice with the same border on every side.</summary>
-        public static bool DrawSliced(Rect rect, string spriteName, int border)
-        {
-            return DrawSliced(rect, spriteName, border, border, border, border);
-        }
-
+        private static readonly string[] EditorFolders = { "Icons/PNG", "Ui/Hud", "Ui/Markers" };
         private void Awake()
         {
             s_instance = this;

@@ -57,7 +57,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxBuilder.AddSprite(go, square, new Color(0.95f, 0.8f, 0.35f), 0.55f, sortingOrder: 5);
             go.AddComponent<GrayboxWarden>();
             go.AddComponent<GrayboxWardenHealth>();
-            go.AddComponent<GrayboxWardenHud>();
             foreach (GameObject ability in abilities)
             {
                 // Nested: the Warden prefab holds a link to each ability prefab, not a copy.
@@ -67,16 +66,23 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxBuilder.SavePrefab(go, $"{PrefabFolder}/Warden");
         }
 
-        // The Warden prefab is kept between builds so its tuning survives, so a part added later is put on it here.
+        // The Warden prefab is kept between builds so its tuning survives, so a part added later is put on
+        // it here, and a part that has been removed from the code (the old IMGUI panel) is taken off.
         private static void EnsureHealth()
         {
             string path = PrefabPath("Warden");
             GameObject root = PrefabUtility.LoadPrefabContents(path);
             try
             {
+                bool changed = GameObjectUtility.RemoveMonoBehavioursWithMissingScript(root) > 0;
                 if (root.GetComponent<GrayboxWardenHealth>() == null)
                 {
                     root.AddComponent<GrayboxWardenHealth>();
+                    changed = true;
+                }
+
+                if (changed)
+                {
                     PrefabUtility.SaveAsPrefabAsset(root, path);
                 }
             }

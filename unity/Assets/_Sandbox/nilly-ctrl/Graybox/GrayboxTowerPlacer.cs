@@ -2,23 +2,53 @@ using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
+    /// <summary>What the cursor would build right now, for the placement label.</summary>
+    public struct PlacementPreview
+    {
+        /// <summary>True while a build-bar tower is picked and the cursor is over the field.</summary>
+        public bool Active;
+
+        public GrayboxTowerData Tower;
+
+        /// <summary>The grid cell under the cursor.</summary>
+        public Vector3 Cell;
+
+        /// <summary>The cell is off the trail, not blocked and has no tower.</summary>
+        public bool Clear;
+
+        public bool CanAfford;
+
+        public int Cost;
+    }
+
     /// <summary>
-    /// Handles interactive mouse clicking in PlayMode to inspect placed towers, adjust their
-    /// priority rules live, view performance metrics (Kills/Damage/Shots), and place new towers on empty grid spaces.
+    /// Places and sells towers: reads the mouse and the build keys, keeps the selection, the open
+    /// build menu and the tower being placed, and shows the placement ghost under the cursor.
     /// </summary>
+    /// <remarks>
+    /// It draws nothing on screen apart from the ghost. The build bar, the tower card, the build
+    /// menu and the placement label are uGUI panels (the Hud/ folder) that read the state here and
+    /// call the commands here.
+    /// </remarks>
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Tower Placer & Inspector")]
     public class GrayboxTowerPlacer : MonoBehaviour
     {
+        private const float PathClearance = 1.2f;
+        private const float TowerSpacing = 0.8f;
+
         [Tooltip("The towers that can be built, in build bar order.")]
         [SerializeField] private GrayboxTowerCatalog _catalog;
         [Tooltip("Material for the placement ghost's range ring.")]
         [SerializeField] private Material _lineMaterial;
         [Tooltip("Holds the build and sell effects. Left empty, towers appear without them.")]
         [SerializeField] private SpriteAnimLibrary _animLibrary;
+        [Tooltip("What upgrading a tower costs, by the level it is at: the first for level 1 to 2, and so on. Before Skill Tree discounts.")]
+        [SerializeField] private int[] _upgradeCosts = { 150, 300 };
 
         private readonly List<Tower> _towers = new List<Tower>();
         private Camera _mainCamera;
@@ -29,11 +59,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private Vector3 _buildWorldPos;
 
         private int _activePlacementTypeIndex = -1; // -1 when not in active build bar placement mode
-
-        private GUIStyle _cardHeaderStyle;
-        private GUIStyle _cardBodyStyle;
-        private GUIStyle _btnStyle;
-        private GUIStyle _barBtnStyle;
 
         private int TowerCount => _catalog != null ? _catalog.Count : 0;
 
@@ -53,6 +78,18 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>True while a tower is selected, the build menu is open, or a tower is being placed.</summary>
         public bool IsBusy => _selectedTower != null || _showBuildMenu || _activePlacementTypeIndex >= 0;
 
+        /// <summary>Index in the catalog of the tower picked on the build bar, or -1.</summary>
+        public int ActivePlacementIndex => _activePlacementTypeIndex;
+
+        /// <summary>True while the build menu is open over an empty cell.</summary>
+        public bool BuildMenuOpen => _showBuildMenu;
+
+        /// <summary>The cell the build menu is open over.</summary>
+        public Vector3 BuildMenuCell => _buildWorldPos;
+
+        /// <summary>What the cursor would build now. <see cref="PlacementPreview.Active"/> is false when nothing is being placed.</summary>
+        public PlacementPreview Preview { get; private set; }
+
         /// <summary>Drops any selection, build menu or placement in progress.</summary>
         public void CancelInteraction()
         {
@@ -66,6 +103,104 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _mainCamera = Camera.main;
             _path = FindAnyObjectByType<EnemyPath>();
         }
+
+        // ---------- commands, for the HUD panels and the build keys ----------
+
+        /// <summary>Picks the catalog tower for placement, or puts it back if it was already picked.</summary>
+        public void TogglePlacement(int index)
+        {
+            if (_activePlacementTypeIndex == index)
+            {
+                _activePlacementTypeIndex = -1;
+            }
+            else if (index >= 0 && index < TowerCount)
+            {
+                _activePlacementTypeIndex = index;
+                _selectedTower = null;
+                _showBuildMenu = false;
+            }
+        }
+
+        /// <summary>Closes the tower card.</summary>
+        public void Deselect()
+        {
+            _selectedTower = null;
+        }
+
+        /// <summary>Closes the build menu.</summary>
+        public void CloseBuildMenu()
+        {
+            _showBuildMenu = false;
+        }
+
+        /// <summary>Builds a tower on the cell the build menu is open over.</summary>
+        public void BuildAtMenu(GrayboxTowerData data)
+        {
+            TryBuild(data, _buildWorldPos);
+        }
+
+        /// <summary>What a tower costs to build, after Skill Tree discounts.</summary>
+        public int CostOf(GrayboxTowerData data)
+        {
+            return GetDiscountedCost(data.BaseCost);
+        }
+
+        /// <summary>True with no economy in the scene, so a bare test scene can still build.</summary>
+        public bool CanAfford(GrayboxTowerData data)
+        {
+            return CanAfford(data, CostOf(data));
+        }
+
+        /// <summary>What upgrading this tower costs now, after Skill Tree discounts. 0 if it cannot be upgraded.</summary>
+        public int UpgradeCost(Tower tower)
+        {
+            if (tower == null || !tower.CanUpgrade || _upgradeCosts == null || _upgradeCosts.Length == 0)
+            {
+                return 0;
+            }
+
+            int step = Mathf.Clamp(tower.Level - 1, 0, _upgradeCosts.Length - 1);
+            return GetDiscountedCost(_upgradeCosts[step]);
+        }
+
+        /// <summary>Pays for and applies the next level of the selected tower. False if it cannot or it costs too much.</summary>
+        public bool TryUpgradeSelected()
+        {
+            Tower tower = _selectedTower;
+            if (tower == null || !tower.CanUpgrade)
+            {
+                return false;
+            }
+
+            int cost = UpgradeCost(tower);
+            if (GrayboxEconomy.Instance != null && !GrayboxEconomy.Instance.TrySpendGold(cost))
+            {
+                return false;
+            }
+
+            tower.Upgrade();
+            tower.TotalGoldInvested += cost;
+            GrayboxSfx.PlayCue("Upgrade", tower.transform.position);
+            return true;
+        }
+
+        /// <summary>Sells the selected tower for its refund and closes its card.</summary>
+        public void SellSelected()
+        {
+            Tower tower = _selectedTower;
+            if (tower == null)
+            {
+                return;
+            }
+
+            GrayboxEconomy.Instance?.EarnGold(tower.RefundValue);
+            GrayboxSfx.PlayCue("Sell", tower.transform.position);
+            SpriteClipPlayer.SpawnOneShot(_animLibrary, "FxBuild", "Sell", tower.transform.position, Quaternion.identity, 1f, 3);
+            Destroy(tower.gameObject);
+            _selectedTower = null;
+        }
+
+        // ---------- input ----------
 
         private void Update()
         {
@@ -95,67 +230,45 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 {
                     if (GrayboxControls.Pressed(GrayboxControls.BuildId(i)))
                     {
-                        if (_activePlacementTypeIndex == i)
-                        {
-                            _activePlacementTypeIndex = -1; // Toggle off if already selected
-                        }
-                        else
-                        {
-                            _activePlacementTypeIndex = i;
-                            _selectedTower = null;
-                            _showBuildMenu = false;
-                        }
+                        TogglePlacement(i);
                     }
                 }
 
                 if (GrayboxControls.Pressed(GrayboxControls.Pause))
                 {
-                    _selectedTower = null;
-                    _showBuildMenu = false;
-                    _activePlacementTypeIndex = -1;
+                    CancelInteraction();
                 }
             }
 
             if (mouse != null && mouse.rightButton.wasPressedThisFrame)
             {
-                _activePlacementTypeIndex = -1;
-                _selectedTower = null;
-                _showBuildMenu = false;
+                CancelInteraction();
             }
 
             // Detect mouse clicks on 2D world
             if (mouse != null && mouse.leftButton.wasPressedThisFrame)
             {
-                Vector3 mouseScreen = mouse.position.ReadValue();
-                float guiY = Screen.height - mouseScreen.y;
-
-                // Ignore click if inside bottom build bar area (Screen.height - 90px down)
-                if (guiY >= Screen.height - 90f)
+                // A click on a HUD panel is the panel's, not the field's.
+                if (PointerOverUi())
                 {
                     return;
                 }
 
-                // Ignore click if over right-side Inspector Card area
-                if (_selectedTower != null && mouseScreen.x >= Screen.width - 280f && guiY <= 350f)
-                {
-                    return;
-                }
-
-                Vector3 worldPoint = _mainCamera.ScreenToWorldPoint(mouseScreen);
+                Vector3 worldPoint = _mainCamera.ScreenToWorldPoint(mouse.position.ReadValue());
                 worldPoint.z = 0f;
 
-                // If currently in active placement mode from the bottom build bar
+                // If currently in active placement mode from the build bar
                 if (_activePlacementTypeIndex >= 0 && _activePlacementTypeIndex < TowerCount)
                 {
                     Vector3 buildPos = SnapToGrid(worldPoint);
-                    if (IsPositionClearOfPath(buildPos, 1.2f) && FindTowerAt(buildPos, 0.8f) == null)
+                    if (IsPositionClearOfPath(buildPos, PathClearance) && FindTowerAt(buildPos, TowerSpacing) == null)
                     {
                         TryBuild(_catalog[_activePlacementTypeIndex], buildPos);
                     }
                     return;
                 }
 
-                Tower clickedTower = FindTowerAt(worldPoint, 0.8f);
+                Tower clickedTower = FindTowerAt(worldPoint, TowerSpacing);
 
                 if (clickedTower != null)
                 {
@@ -166,7 +279,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 else
                 {
                     // Clicked empty ground
-                    if (IsPositionClearOfPath(worldPoint, 1.2f))
+                    if (IsPositionClearOfPath(worldPoint, PathClearance))
                     {
                         _buildWorldPos = SnapToGrid(worldPoint);
                         _showBuildMenu = true;
@@ -178,6 +291,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     }
                 }
             }
+        }
+
+        // No event system (a bare test scene) means no panels to be over.
+        private static bool PointerOverUi()
+        {
+            EventSystem events = EventSystem.current;
+            return events != null && events.IsPointerOverGameObject();
         }
 
         private Tower FindTowerAt(Vector3 point, float radius)
@@ -224,7 +344,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public bool CanBuildAt(Vector3 position, Tower ignore = null)
         {
             Vector3 cell = SnapToGrid(position);
-            if (!IsPositionClearOfPath(cell, 1.2f))
+            if (!IsPositionClearOfPath(cell, PathClearance))
             {
                 return false;
             }
@@ -232,7 +352,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Tower.GetActive(_towers);
             foreach (Tower tower in _towers)
             {
-                if (tower != ignore && Vector2.Distance(cell, tower.transform.position) <= 0.8f)
+                if (tower != ignore && Vector2.Distance(cell, tower.transform.position) <= TowerSpacing)
                 {
                     return false;
                 }
@@ -246,369 +366,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), 0f);
         }
 
-        private void OnGUI()
-        {
-            if (!GrayboxGameFlow.GameplayActive) return;
-
-            HoldTheHill.Sandbox.NillyCtrl.GrayboxUi.Apply(); // pixel skin; a no-op without a GrayboxUi in the scene
-            InitStyles();
-
-            DrawInspectorCard();
-            DrawBuildMenu();
-            DrawBottomBuildBar();
-            DrawPlacementGhost();
-        }
-
-        private void InitStyles()
-        {
-            if (_cardHeaderStyle != null)
-            {
-                return;
-            }
-
-            _cardHeaderStyle = new GUIStyle(GUI.skin.label)
-            {
-                fontSize = 10,
-                fontStyle = FontStyle.Bold,
-                richText = true
-            };
-
-            _cardBodyStyle = new GUIStyle(GUI.skin.label)
-            {
-                fontSize = 10,
-                richText = true
-            };
-
-            _btnStyle = new GUIStyle(GUI.skin.button)
-            {
-                fontSize = 10,
-                fontStyle = FontStyle.Bold
-            };
-
-            _barBtnStyle = new GUIStyle(GUI.skin.button)
-            {
-                fontSize = 10,
-                fontStyle = FontStyle.Bold,
-                alignment = TextAnchor.MiddleCenter,
-                wordWrap = true
-            };
-        }
-
-        private void DrawInspectorCard()
-        {
-            if (_selectedTower == null)
-            {
-                return;
-            }
-
-            float width = 260f;
-            float height = 330f;
-            float x = Screen.width - width - 16f;
-            float y = 16f;
-
-            Rect cardRect = new Rect(x, y, width, height);
-            GUI.Box(cardRect, GUIContent.none);
-
-            GUILayout.BeginArea(new Rect(x + 10f, y + 10f, width - 20f, height - 20f));
-
-            GUILayout.Label($"<b><color=#80d0ff>{_selectedTower.name}</color></b>", _cardHeaderStyle);
-            GUILayout.Space(4);
-
-            // Priority Selector Buttons
-            GUILayout.Label("Targeting Priority:", _cardBodyStyle);
-            GUILayout.BeginHorizontal();
-
-            TargetingPriority currentPrio = _selectedTower.Priority;
-            foreach (TargetingPriority prio in System.Enum.GetValues(typeof(TargetingPriority)))
-            {
-                GUI.color = prio == currentPrio ? new Color(0.4f, 0.9f, 1f) : Color.white;
-                Texture2D prioIcon = LoadIcon($"Target{prio}Icon");
-                GUIContent prioContent = prioIcon != null ? new GUIContent(prioIcon, prio.ToString()) : new GUIContent(prio.ToString().Substring(0, 1));
-                if (GUILayout.Button(prioContent, _btnStyle, GUILayout.Width(36), GUILayout.Height(24)))
-                {
-                    _selectedTower.Priority = prio;
-                }
-            }
-            GUI.color = Color.white;
-            GUILayout.EndHorizontal();
-
-            GUILayout.Space(8);
-            GUILayout.Label($"<b>Priority Active:</b> <color=#ff8080>{_selectedTower.Priority}</color>", _cardBodyStyle);
-            GUILayout.Label($"<b>Range:</b> {_selectedTower.Range:0.0}m | <b>Level:</b> {_selectedTower.Level}/{_selectedTower.MaxLevel}", _cardBodyStyle);
-
-            GUILayout.Space(6);
-            GUILayout.Label("<b>Combat Performance:</b>", _cardBodyStyle);
-            GUILayout.Label($"  Damage Dealt: <color=#7fdd7f>{_selectedTower.TotalDamageDealt:0}</color>", _cardBodyStyle);
-            GUILayout.Label($"  Kills: <color=#7fdd7f>{_selectedTower.TotalKills}</color>", _cardBodyStyle);
-            GUILayout.Label($"  Shots Fired: {_selectedTower.ShotsFired}", _cardBodyStyle);
-
-            GUILayout.Space(6);
-            GUILayout.Space(6);
-            if (_selectedTower.CanUpgrade)
-            {
-                int baseUpgradeCost = _selectedTower.Level == 1 ? 150 : 300;
-                int upgradeCost = GetDiscountedCost(baseUpgradeCost);
-                bool canAfford = GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(upgradeCost);
-
-                GUI.color = canAfford ? new Color(0.4f, 1f, 0.5f) : new Color(0.6f, 0.6f, 0.6f);
-                Texture2D upgIcon = LoadIcon("UiUpgradeIcon");
-                GUIContent upgContent = upgIcon != null
-                    ? new GUIContent($" Upgrade (${upgradeCost} | Lvl {_selectedTower.Level} \u2192 {_selectedTower.Level + 1})", upgIcon)
-                    : new GUIContent($"Upgrade (${upgradeCost} | Lvl {_selectedTower.Level} \u2192 {_selectedTower.Level + 1})");
-
-                if (GUILayout.Button(upgContent, _btnStyle, GUILayout.Height(26)))
-                {
-                    if (GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.TrySpendGold(upgradeCost))
-                    {
-                        _selectedTower.Upgrade();
-                        _selectedTower.TotalGoldInvested += upgradeCost;
-                        GrayboxSfx.PlayCue("Upgrade", _selectedTower.transform.position);
-                    }
-                }
-                GUI.color = Color.white;
-            }
-            else
-            {
-                GUI.color = new Color(0.7f, 0.7f, 0.7f);
-                GUILayout.Button("MAX LEVEL REACHED", _btnStyle, GUILayout.Height(26));
-                GUI.color = Color.white;
-            }
-
-            GUILayout.Space(8);
-            GUILayout.BeginHorizontal();
-            Texture2D sellIcon = LoadIcon("UiSellIcon");
-            GUIContent sellContent = sellIcon != null
-                ? new GUIContent($" Dismantle (+${_selectedTower.RefundValue})", sellIcon)
-                : new GUIContent($"Dismantle (+${_selectedTower.RefundValue})");
-
-            if (GUILayout.Button(sellContent, _btnStyle, GUILayout.Height(26)))
-            {
-                GrayboxEconomy.Instance?.EarnGold(_selectedTower.RefundValue);
-                GrayboxSfx.PlayCue("Sell", _selectedTower.transform.position);
-                SpriteClipPlayer.SpawnOneShot(_animLibrary, "FxBuild", "Sell", _selectedTower.transform.position, Quaternion.identity, 1f, 3);
-                Destroy(_selectedTower.gameObject);
-                _selectedTower = null;
-            }
-            if (GUILayout.Button("Close Card", _btnStyle, GUILayout.Height(26)))
-            {
-                _selectedTower = null;
-            }
-            GUILayout.EndHorizontal();
-
-            GUILayout.EndArea();
-        }
-
-        private void DrawBuildMenu()
-        {
-            if (!_showBuildMenu)
-            {
-                return;
-            }
-
-            Vector3 screenPos = _mainCamera.WorldToScreenPoint(_buildWorldPos);
-            float width = 230f;
-            float height = 84f + TowerCount * 34f;
-            float x = Mathf.Clamp(screenPos.x - width * 0.5f, 10f, Screen.width - width - 10f);
-            float y = Mathf.Clamp(Screen.height - screenPos.y - height * 0.5f, 10f, Screen.height - height - 10f);
-
-            Rect menuRect = new Rect(x, y, width, height);
-            GUI.Box(menuRect, GUIContent.none);
-
-            GUILayout.BeginArea(new Rect(x + 8f, y + 8f, width - 16f, height - 16f));
-            GUILayout.Label("<b>BUILD TOWER</b>", _cardHeaderStyle);
-            GUILayout.Label($"Grid: ({_buildWorldPos.x}, {_buildWorldPos.y})", _cardBodyStyle);
-            GUILayout.Space(4);
-
-            for (int i = 0; i < TowerCount; i++)
-            {
-                DrawBuildOption(_catalog[i]);
-            }
-
-            if (GUILayout.Button("Cancel", _btnStyle))
-            {
-                _showBuildMenu = false;
-            }
-
-            GUILayout.EndArea();
-        }
-
-        private static readonly Color Ink = new Color32(0x1b, 0x11, 0x0b, 0xff);
-        private GUIStyle _inkStyle;
-
-        // Build bar made of HUD pieces: each tower sits in an icon slot with its hotkey on a keycap
-        // and its price on a tag. Falls back to the plain button bar when the pieces are missing.
-        private void DrawBottomBuildBar()
-        {
-            if (GrayboxIcons.Get("Slot") == null)
-            {
-                DrawBottomBuildBarLegacy();
-                return;
-            }
-
-            _inkStyle ??= new GUIStyle(GUI.skin.label)
-            {
-                fontSize = 10, alignment = TextAnchor.MiddleCenter, richText = false, wordWrap = false,
-                padding = new RectOffset(0, 0, 0, 0), margin = new RectOffset(0, 0, 0, 0),
-            };
-            _inkStyle.normal.textColor = Ink;
-
-            const float slot = 36f;
-            const float cardWidth = 48f;
-            const float cardHeight = 54f;
-            int count = TowerCount;
-            float totalWidth = count * cardWidth + 16f;
-            float totalHeight = cardHeight + 16f;
-            float startX = (Screen.width - totalWidth) * 0.5f;
-            float startY = Screen.height - totalHeight - 6f;
-
-            GUI.Box(new Rect(startX, startY, totalWidth, totalHeight), GUIContent.none);
-
-            for (int i = 0; i < count; i++)
-            {
-                GrayboxTowerData info = _catalog[i];
-                int cost = GetDiscountedCost(info.BaseCost);
-                bool canAfford = CanAfford(info, cost);
-                bool isSelected = _activePlacementTypeIndex == i;
-
-                float cx = startX + 8f + i * cardWidth;
-                float cy = startY + 10f;
-                var slotRect = new Rect(cx + 8f, cy, slot, slot);
-
-                Texture2D frame = GrayboxIcons.Get(isSelected ? "SlotSelected" : (canAfford ? "Slot" : "SlotDisabled"));
-                GUI.DrawTexture(slotRect, frame);
-
-                Texture2D icon = LoadIcon(info.IconName);
-                if (icon != null)
-                {
-                    GUI.color = canAfford ? Color.white : new Color(1f, 1f, 1f, 0.45f);
-                    GUI.DrawTexture(new Rect(slotRect.x + 2f, slotRect.y + 2f, 32f, 32f), icon);
-                    GUI.color = Color.white;
-                }
-
-                var keyRect = new Rect(cx + 2f, cy - 4f, 12f, 13f);
-                GrayboxIcons.DrawSliced(keyRect, "Keycap", 4, 4, 4, 5);
-                GUI.Label(new Rect(keyRect.x, keyRect.y, 12f, 10f), GrayboxControls.Name(GrayboxControls.BuildId(i)), _inkStyle);
-
-                var tagRect = new Rect(cx + 5f, cy + slot + 3f, 40f, 12f);
-                GrayboxIcons.DrawSliced(tagRect, canAfford ? "CostTag" : "CostTagCant", 8, 3, 3, 3);
-                GUI.Label(new Rect(tagRect.x + 8f, tagRect.y, 30f, 12f), cost.ToString(), _inkStyle);
-
-                if (GUI.Button(new Rect(cx, cy - 4f, cardWidth, cardHeight + 4f), new GUIContent(string.Empty, info.DisplayName), GUIStyle.none))
-                {
-                    if (_activePlacementTypeIndex == i)
-                    {
-                        _activePlacementTypeIndex = -1;
-                    }
-                    else
-                    {
-                        _activePlacementTypeIndex = i;
-                        _selectedTower = null;
-                        _showBuildMenu = false;
-                    }
-                }
-            }
-        }
-
-        private void DrawBottomBuildBarLegacy()
-        {
-            float cardWidth = 70f;
-            float cardHeight = 62f;
-            float gap = 5f;
-            int count = TowerCount;
-            float totalWidth = count * cardWidth + (count - 1) * gap + 16f;
-            float totalHeight = cardHeight + 16f;
-
-            float startX = (Screen.width - totalWidth) * 0.5f;
-            float startY = Screen.height - totalHeight - 6f;
-
-            Rect barRect = new Rect(startX, startY, totalWidth, totalHeight);
-            GUI.Box(barRect, GUIContent.none);
-
-            GUILayout.BeginArea(new Rect(startX + 8f, startY + 8f, totalWidth - 16f, cardHeight));
-            GUILayout.BeginHorizontal();
-
-            for (int i = 0; i < count; i++)
-            {
-                GrayboxTowerData info = _catalog[i];
-                int cost = GetDiscountedCost(info.BaseCost);
-                bool canAfford = CanAfford(info, cost);
-                bool isSelected = _activePlacementTypeIndex == i;
-
-                if (isSelected)
-                {
-                    GUI.color = new Color(0.3f, 0.95f, 1.0f, 1.0f);
-                }
-                else if (!canAfford)
-                {
-                    GUI.color = new Color(0.5f, 0.5f, 0.5f, 0.65f);
-                }
-                else
-                {
-                    GUI.color = Color.white;
-                }
-
-                Texture2D icon = LoadIcon(info.IconName);
-                GUIContent btnContent = icon != null
-                    ? new GUIContent($"[{GrayboxControls.Name(GrayboxControls.BuildId(i))}]\n${cost}", icon, info.DisplayName)
-                    : new GUIContent($"[{GrayboxControls.Name(GrayboxControls.BuildId(i))}]\n${cost}", info.DisplayName);
-
-                if (GUILayout.Button(btnContent, _barBtnStyle, GUILayout.Width(cardWidth), GUILayout.Height(cardHeight)))
-                {
-                    if (_activePlacementTypeIndex == i)
-                    {
-                        _activePlacementTypeIndex = -1;
-                    }
-                    else
-                    {
-                        _activePlacementTypeIndex = i;
-                        _selectedTower = null;
-                        _showBuildMenu = false;
-                    }
-                }
-            }
-            GUI.color = Color.white;
-            GUILayout.EndHorizontal();
-            GUILayout.EndArea();
-        }
-
-        private void DrawPlacementGhost()
-        {
-            if (_activePlacementTypeIndex < 0 || _activePlacementTypeIndex >= TowerCount || _mainCamera == null)
-            {
-                return;
-            }
-
-            Mouse mouse = Mouse.current;
-            if (mouse == null) return;
-
-            Vector3 mouseScreen = mouse.position.ReadValue();
-            float guiY = Screen.height - mouseScreen.y;
-            if (guiY >= Screen.height - 90f) return;
-
-            Vector3 worldPoint = _mainCamera.ScreenToWorldPoint(mouseScreen);
-            worldPoint.z = 0f;
-            Vector3 buildPos = SnapToGrid(worldPoint);
-
-            GrayboxTowerData info = _catalog[_activePlacementTypeIndex];
-            int cost = GetDiscountedCost(info.BaseCost);
-            bool canAfford = CanAfford(info, cost);
-            bool isClear = IsPositionClearOfPath(buildPos, 1.2f) && FindTowerAt(buildPos, 0.8f) == null;
-
-            Vector3 screenBuildPos = _mainCamera.WorldToScreenPoint(buildPos);
-            float labelY = Screen.height - screenBuildPos.y - 25f;
-
-            Color labelColor = (canAfford && isClear) ? new Color(0.4f, 1f, 0.4f) : new Color(1f, 0.35f, 0.35f);
-            GUIStyle ghostStyle = new GUIStyle(GUI.skin.label)
-            {
-                fontSize = 10,
-                fontStyle = FontStyle.Bold,
-                alignment = TextAnchor.MiddleCenter,
-                normal = { textColor = labelColor }
-            };
-
-            string statusMsg = !isClear ? "[BLOCKED]" : (!canAfford ? "[NEED GOLD]" : $"BUILD {info.DisplayName.ToUpper()} (${cost})");
-            GUI.Label(new Rect(screenBuildPos.x - 120f, labelY, 240f, 24f), statusMsg, ghostStyle);
-        }
+        // ---------- placement ghost ----------
 
         private const int GhostRingSegments = 48;
         private SpriteRenderer _ghost;
@@ -616,20 +374,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         /// <summary>
         /// While a build-bar tower is selected, shows that tower under the cursor, snapped to the
-        /// grid, with its range ring: green where it can be built, red where it can't.
+        /// grid, with its range ring: green where it can be built, red where it can't. Also fills
+        /// in <see cref="Preview"/> for the placement label.
         /// </summary>
         private void UpdateGhost(Mouse mouse)
         {
             int index = _activePlacementTypeIndex;
-            bool active = index >= 0 && index < TowerCount && mouse != null;
-            if (active)
-            {
-                Vector3 screen = mouse.position.ReadValue();
-                active = Screen.height - screen.y < Screen.height - 90f; // not over the build bar
-            }
-
+            bool active = index >= 0 && index < TowerCount && mouse != null && !PointerOverUi();
             if (!active)
             {
+                Preview = default;
                 if (_ghost != null) _ghost.gameObject.SetActive(false);
                 return;
             }
@@ -654,9 +408,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             world.z = 0f;
             Vector3 buildPos = SnapToGrid(world);
 
-            bool canAfford = CanAfford(info, GetDiscountedCost(info.BaseCost));
-            bool isClear = IsPositionClearOfPath(buildPos, 1.2f) && FindTowerAt(buildPos, 0.8f) == null;
+            int cost = CostOf(info);
+            bool canAfford = CanAfford(info, cost);
+            bool isClear = IsPositionClearOfPath(buildPos, PathClearance) && FindTowerAt(buildPos, TowerSpacing) == null;
             Color tint = canAfford && isClear ? new Color(0.6f, 1f, 0.6f, 0.75f) : new Color(1f, 0.4f, 0.4f, 0.65f);
+
+            Preview = new PlacementPreview { Active = true, Tower = info, Cell = buildPos, Clear = isClear, CanAfford = canAfford, Cost = cost };
 
             _ghost.sprite = info.GhostSprite;
             _ghost.color = tint;
@@ -691,7 +448,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Place(data, position, cost);
         }
 
-        // True with no economy in the scene, so a bare test scene can still build.
         private static bool CanAfford(GrayboxTowerData data, int cost)
         {
             return GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(data.CostResource, cost);
@@ -712,33 +468,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return tower;
         }
 
-        private static Texture2D LoadIcon(string iconName)
-        {
-            return GrayboxIcons.Get(iconName);
-        }
-
         private int GetDiscountedCost(int baseCost)
         {
             float mult = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.CostMultiplier : 1.0f;
             return Mathf.RoundToInt(baseCost * mult);
-        }
-
-        private void DrawBuildOption(GrayboxTowerData data)
-        {
-            int cost = GetDiscountedCost(data.BaseCost);
-            bool canAfford = CanAfford(data, cost);
-            GUI.color = canAfford ? Color.white : new Color(0.6f, 0.6f, 0.6f, 0.7f);
-
-            Texture2D icon = LoadIcon(data.IconName);
-            GUIContent content = icon != null
-                ? new GUIContent($" {data.DisplayName} (${cost})", icon)
-                : new GUIContent($" {data.DisplayName} (${cost})");
-
-            if (GUILayout.Button(content, _btnStyle, GUILayout.Height(24)))
-            {
-                TryBuild(data, _buildWorldPos);
-            }
-            GUI.color = Color.white;
         }
     }
 }
