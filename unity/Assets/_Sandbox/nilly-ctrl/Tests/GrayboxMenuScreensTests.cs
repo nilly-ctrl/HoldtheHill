@@ -283,7 +283,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
 
             GrayboxControlsScreen controls = _menus.Controls;
             Assert.AreEqual(GrayboxControls.Entries.Count, controls.Rows.Count);
-            Assert.AreEqual(20, controls.Rows.Count, "10 actions and 10 build slots");
+            Assert.AreEqual(29, controls.Rows.Count, "10 actions, 9 Warden actions and 10 build slots");
 
             Assert.AreEqual(PixelGlyphs.KeyN, controls.FindRow(GrayboxControls.NextWave).Button.Label);
             Assert.AreEqual(PixelGlyphs.KeyEsc, controls.FindRow(GrayboxControls.Pause).Button.Label);

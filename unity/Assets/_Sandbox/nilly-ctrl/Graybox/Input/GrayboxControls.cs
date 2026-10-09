@@ -30,6 +30,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public const string SpecialsPanel = "SpecialsPanel";
         public const string FontTheme = "FontTheme";
 
+        // The Warden: walking, and one action per ability (GrayboxAbilityData.ControlId).
+        public const string MoveUp = "MoveUp";
+        public const string MoveDown = "MoveDown";
+        public const string MoveLeft = "MoveLeft";
+        public const string MoveRight = "MoveRight";
+        public const string Shove = "Shove";
+        public const string Rally = "Rally";
+        public const string Repair = "Repair";
+        public const string Dig = "Dig";
+        public const string Carry = "Carry";
+
         /// <summary>Build slots are "Build1" to "Build10", in build bar order.</summary>
         public const int BuildSlots = 10;
 
@@ -62,6 +73,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 new Entry { Id = Achievements, Label = "Achievements", Page = "Panels", DefaultKey = "<Keyboard>/a" },
                 new Entry { Id = SpecialsPanel, Label = "Spawn specials", Page = "Panels", DefaultKey = "<Keyboard>/b" },
                 new Entry { Id = FontTheme, Label = "Next font theme", Page = "Panels", DefaultKey = "<Keyboard>/f6" },
+                new Entry { Id = MoveUp, Label = "Warden up", Page = "Warden", DefaultKey = "<Keyboard>/upArrow" },
+                new Entry { Id = MoveDown, Label = "Warden down", Page = "Warden", DefaultKey = "<Keyboard>/downArrow" },
+                new Entry { Id = MoveLeft, Label = "Warden left", Page = "Warden", DefaultKey = "<Keyboard>/leftArrow" },
+                new Entry { Id = MoveRight, Label = "Warden right", Page = "Warden", DefaultKey = "<Keyboard>/rightArrow" },
+                new Entry { Id = Shove, Label = "Shove", Page = "Warden", DefaultKey = "<Keyboard>/space" },
+                new Entry { Id = Rally, Label = "Rally", Page = "Warden", DefaultKey = "<Keyboard>/q" },
+                new Entry { Id = Repair, Label = "Repair (hold)", Page = "Warden", DefaultKey = "<Keyboard>/e" },
+                new Entry { Id = Dig, Label = "Dig (hold)", Page = "Warden", DefaultKey = "<Keyboard>/f" },
+                new Entry { Id = Carry, Label = "Carry", Page = "Warden", DefaultKey = "<Keyboard>/c" },
             };
 
             for (int slot = 0; slot < BuildSlots; slot++)
@@ -102,6 +122,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             InputAction action = Find(id);
             return action != null && action.WasPressedThisFrame();
+        }
+
+        /// <summary>True while the action's key (or button) is down.</summary>
+        public static bool Held(string id)
+        {
+            if (IsRebinding || Time.frameCount <= s_suspendedUntilFrame) return false;
+
+            InputAction action = Find(id);
+            return action != null && action.IsPressed();
         }
 
         public static InputAction Find(string id)

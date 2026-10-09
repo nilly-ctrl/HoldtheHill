@@ -280,7 +280,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             if (_tower != null)
             {
-                _tower.FireRateScale = Has(Kind.Web) ? 0.5f : 1f;
+                // Through GrayboxTowerRate, so a web and a Warden's rally multiply instead of overwriting.
+                GrayboxTowerRate.Of(_tower).SetWeb(Has(Kind.Web) ? 0.5f : 1f);
             }
 
             bool silence = Has(Kind.Stun) || Has(Kind.Cocoon) || Has(Kind.Scald);

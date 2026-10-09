@@ -202,6 +202,34 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return _path.DistanceToRoute(point) >= minDistance;
         }
 
+        /// <summary>The centre of the grid cell a world position falls in.</summary>
+        public static Vector3 Snap(Vector3 position) => SnapToGrid(position);
+
+        /// <summary>
+        /// True if a tower could stand on the cell at this position: clear of the trail and of
+        /// blocked ground, and no other tower there. <paramref name="ignore"/> is left out of that
+        /// check, for a tower that is being moved.
+        /// </summary>
+        public bool CanBuildAt(Vector3 position, Tower ignore = null)
+        {
+            Vector3 cell = SnapToGrid(position);
+            if (!IsPositionClearOfPath(cell, 1.2f))
+            {
+                return false;
+            }
+
+            Tower.GetActive(_towers);
+            foreach (Tower tower in _towers)
+            {
+                if (tower != ignore && Vector2.Distance(cell, tower.transform.position) <= 0.8f)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private static Vector3 SnapToGrid(Vector3 pos)
         {
             return new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), 0f);

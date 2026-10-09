@@ -96,6 +96,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // Food and the crumbs that pay it. Bosses drop the golden one.
             GameObject goldenCrumb = GrayboxPickupBuilder.BuildPrefabs(circle);
 
+            // The Warden and its five abilities. Dig turns up the small crumb.
+            GrayboxWardenBuilder.BuildPrefabs(square);
+
             // Bosses and special enemies (Graybox/Specials): their prefabs, then a wave for each.
             GrayboxSpecialsBuilder.BuildPrefabs(circle, grunt, s_anim, goldenCrumb);
 
@@ -125,6 +128,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxSpecialsBuilder.BuildSceneObject(s_anim);
             GrayboxTowerBuilder.BuildSceneTowers();
             BuildTowerPlacer(lineMaterial);
+            GrayboxWardenBuilder.BuildSceneObject();
             BuildReadmeLabel();
             BuildFlow();
 

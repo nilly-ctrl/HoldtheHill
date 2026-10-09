@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -25,6 +26,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [Tooltip("How far it bobs up and down, in world units.")]
         [SerializeField, Min(0f)] private float _bob = 0.06f;
 
+        private static readonly List<GrayboxPickup> s_active = new List<GrayboxPickup>();
+
         private Vector3 _home;
         private float _age;
         private Camera _camera;
@@ -35,6 +38,23 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public float Reach => _reach;
 
         public bool IsCollected { get; private set; }
+
+        /// <summary>Fills <paramref name="results"/> with every pickup lying on the map.</summary>
+        public static void GetActive(List<GrayboxPickup> results)
+        {
+            results.Clear();
+            results.AddRange(s_active);
+        }
+
+        private void OnEnable()
+        {
+            s_active.Add(this);
+        }
+
+        private void OnDisable()
+        {
+            s_active.Remove(this);
+        }
 
         private void Start()
         {
