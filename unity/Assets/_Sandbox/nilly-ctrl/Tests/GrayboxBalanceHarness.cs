@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using HoldTheHill.Features.Enemies;
+using HoldTheHill.Sandbox.NillyCtrl;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -46,6 +47,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         private readonly HashSet<GameObject> _accountedFor = new HashSet<GameObject>();
 
         private int _leaked;
+        private string _saveFile;
 
         /// <summary>
         /// Puts an empty scene back afterwards.
@@ -72,11 +74,22 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             }
 
             yield return null;
+
+            GrayboxSave.Close();
+            if (_saveFile != null && System.IO.File.Exists(_saveFile)) System.IO.File.Delete(_saveFile);
+            if (_saveFile != null && System.IO.File.Exists(_saveFile + ".bak")) System.IO.File.Delete(_saveFile + ".bak");
+            _saveFile = null;
         }
 
         [UnityTest]
         public IEnumerator Graybox_PlayAllWaves_AndReportBalance()
         {
+            // The scene's save host attaches the player's own file unless one is already attached.
+            // Give it a throwaway, so this run does not land in anyone's records.
+            _saveFile = System.IO.Path.Combine(
+                Application.temporaryCachePath, "GrayboxBalanceHarness_" + System.Guid.NewGuid().ToString("N") + ".json");
+            GrayboxSave.Open(_saveFile);
+
             EditorSceneManager.LoadSceneInPlayMode(
                 ScenePath, new LoadSceneParameters(LoadSceneMode.Single));
 
@@ -102,9 +115,21 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             EnemyHealth.Defeated += OnDefeated;
             float previousScale = Time.timeScale;
 
+            // The scene opens on the title screen with time stopped. Start a run the way Home
+            // does; after that every wave, the first included, waits to be prompted.
+            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            bool promptFirstWave = false;
+            if (flow != null && flow.State != GameFlowState.Playing)
+            {
+                flow.StartNewRun(GrayboxRunMode.Campaign);
+                promptFirstWave = true;
+                yield return null;
+            }
+
             // 4x keeps a three-wave run to roughly a minute. Coroutines and
             // deltaTime movement both scale, so behaviour is unchanged.
-            Time.timeScale = 4f;
+            if (flow != null) flow.SetSpeedIndex(flow.SpeedCount - 1);
+            else Time.timeScale = 4f;
 
             var report = new List<string>();
 
@@ -120,8 +145,15 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
                     int leakedBefore = _leaked;
                     float started = Time.realtimeSinceStartup;
 
-                    // Wave 1 auto-starts; later waves wait to be prompted.
-                    if (wave > 1)
+                    // The hill fell: time is stopped and no later wave will ever settle.
+                    if (flow != null && flow.State == GameFlowState.RunEnd)
+                    {
+                        report.Add($"run ended before wave {wave} (victory: {flow.LastRunWasVictory})");
+                        break;
+                    }
+
+                    // Wave 1 auto-starts in a scene that opens in play; later waves wait to be prompted.
+                    if (wave > 1 || promptFirstWave)
                     {
                         Invoke(spawner, "StartNextWave");
                     }
@@ -174,7 +206,8 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
                 bool stillSpawning = GetBool(spawner, "IsSpawning");
                 int alive = CountAlive();
 
-                if (!stillSpawning && alive == 0)
+                bool runOver = GrayboxGameFlow.Instance != null && GrayboxGameFlow.Instance.State == GameFlowState.RunEnd;
+                if ((!stillSpawning && alive == 0) || runOver)
                 {
                     // One more frame so the last death is recorded before moving on.
                     yield return null;

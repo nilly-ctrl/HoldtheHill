@@ -28,6 +28,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public GrayboxRunEndScreen RunEnd => _runEnd;
         public UiConfirmDialog Dialog => _dialog;
 
+        // The longest the run-end panel waits for the VICTORY or DEFEAT banner to play first.
+        private const float MaxBannerSeconds = 1.6f;
+
+        private GrayboxWaveBanner _banner;
+        private Coroutine _runEndWait;
+
         private void OnEnable()
         {
             GrayboxGameFlow.StateChanged += OnStateChanged;
@@ -40,6 +46,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Start()
         {
+            _banner = FindAnyObjectByType<GrayboxWaveBanner>();
             if (GrayboxGameFlow.Instance != null) Sync(GrayboxGameFlow.Instance.State);
         }
 
@@ -56,11 +63,42 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (_home != null) SetOpen(_home.Screen, state == GameFlowState.Home);
             if (_pause != null) SetOpen(_pause.Screen, state == GameFlowState.Paused);
 
-            if (_runEnd != null)
+            if (_runEndWait != null)
             {
-                if (state == GameFlowState.RunEnd) _runEnd.Populate(GrayboxGameFlow.Instance);
-                SetOpen(_runEnd.Screen, state == GameFlowState.RunEnd);
+                StopCoroutine(_runEndWait);
+                _runEndWait = null;
             }
+
+            if (_runEnd == null) return;
+
+            if (state != GameFlowState.RunEnd)
+            {
+                SetOpen(_runEnd.Screen, false);
+            }
+            else if (_banner != null && _banner.isActiveAndEnabled)
+            {
+                // The banner and the panel would sit on top of each other; the banner goes first.
+                _runEndWait = StartCoroutine(OpenRunEndAfterBanner());
+            }
+            else
+            {
+                OpenRunEnd();
+            }
+        }
+
+        private System.Collections.IEnumerator OpenRunEndAfterBanner()
+        {
+            // Real time: the game is frozen at run end.
+            yield return new WaitForSecondsRealtime(Mathf.Min(_banner.EndSeconds, MaxBannerSeconds));
+            _runEndWait = null;
+            _banner.Hide();
+            OpenRunEnd();
+        }
+
+        private void OpenRunEnd()
+        {
+            _runEnd.Populate(GrayboxGameFlow.Instance);
+            SetOpen(_runEnd.Screen, true);
         }
 
         private static void SetOpen(UiScreen screen, bool open)

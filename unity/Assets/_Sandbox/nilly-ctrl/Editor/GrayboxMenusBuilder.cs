@@ -163,12 +163,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             UiKitBuilder.Wire(home, "_honeydew", honeydew);
 
             // Play
+            UiStepper level = UiKitBuilder.AddStepper(playPage, "Level", new[] { GrayboxLevels.All[0].Name }, 0);
             UiStepper mode = UiKitBuilder.AddStepper(playPage, "Mode", new[] { "Campaign", "Endless" }, 0);
             TextMeshProUGUI best = UiKitBuilder.AddBody(playPage, "Hold the hill through every wave.");
             best.name = "Best";
             best.color = UiKitStyle.Dim;
             UiButton start = UiKitBuilder.AddButton(playPage, "Start run");
             UiButton toTitle = UiKitBuilder.AddButton(playPage, "Back to title");
+            UiKitBuilder.Wire(home, "_level", level);
             UiKitBuilder.Wire(home, "_mode", mode);
             UiKitBuilder.Wire(home, "_best", best);
             UiKitBuilder.Wire(home, "_start", start);
@@ -215,6 +217,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             homeObject.FindProperty("_food").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Food earned", "0");
             homeObject.FindProperty("_time").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Time played", "0:00");
             UiKitBuilder.AddDivider(recordsPage);
+            TextMeshProUGUI recordsNote = UiKitBuilder.AddBody(recordsPage, "For the level chosen on the Play tab:");
+            recordsNote.color = UiKitStyle.Dim;
             homeObject.FindProperty("_bestCampaign").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Best campaign", "-");
             homeObject.FindProperty("_fastestWin").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Fastest win", "-");
             homeObject.FindProperty("_bestEndless").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Best endless", "-");

@@ -22,8 +22,8 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
     /// <remarks>
     /// Run it with the editor window showing, not with <c>-batchmode</c>: the menus are a
     /// screen-space overlay and the HUD is IMGUI, and neither is drawn without a Game view.
-    /// The pictures are whatever size the Game view is. The scene is played with an in-memory
-    /// save: nothing is read from or written to the player's file.
+    /// The pictures are whatever size the Game view is. The scene is played with a throwaway
+    /// save file in the pictures folder: nothing is read from or written to the player's own.
     /// </remarks>
     public class GrayboxMenuShots
     {
@@ -37,14 +37,15 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             if (string.IsNullOrEmpty(_dir)) _dir = Path.Combine(Application.temporaryCachePath, "GrayboxMenuShots");
             Directory.CreateDirectory(_dir);
 
+            // A throwaway save, attached before the scene's save host looks for the player's own.
+            string saveFile = Path.Combine(_dir, "shots-save.json");
+            if (File.Exists(saveFile)) File.Delete(saveFile);
+            GrayboxSave.Open(saveFile);
+
             yield return EditorSceneManager.LoadSceneAsyncInPlayMode(ScenePath, new LoadSceneParameters(LoadSceneMode.Single));
             yield return null;
             yield return null;
 
-            // The scene's save host attached the player's file in Awake; let go of it untouched.
-            GrayboxSave.Close();
-            GrayboxSettings.Apply();
-            GrayboxControls.ResetToDefaults();
 
             GrayboxGameFlow flow = GrayboxGameFlow.Instance;
             var menus = Object.FindAnyObjectByType<GrayboxMenus>();
@@ -102,11 +103,34 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             spawner.StartNextWave();
             yield return null;
             GrayboxBaseHealth.Instance.TakeBaseDamage(GrayboxBaseHealth.Instance.MaxHealth, Vector3.zero);
+            yield return Shot("19-defeat-banner-first");
+            yield return new WaitForSecondsRealtime(2f);
             yield return Shot("19-run-end-defeat");
 
             flow.QuitToHome();
             yield return Tab(menus.Home, 3, "20-home-records-after-a-run");
 
+            // Another level: Home loads its scene and the run starts there.
+            if (GrayboxLevels.CanLoad(GrayboxLevels.Find("KitchenFloor")))
+            {
+                yield return Tab(menus.Home, 0, "21-home-level-row");
+                menus.Home.LevelStepper.Step(1);
+                yield return Shot("22-home-kitchen-chosen");
+                Assert.AreEqual("KitchenFloor", menus.Home.SelectedLevelId);
+                menus.Home.StartButton.Clicked.Invoke();
+                yield return new WaitForSecondsRealtime(1.5f);
+
+                flow = GrayboxGameFlow.Instance;
+                Assert.AreEqual("KitchenFloor", flow.MapId, "the kitchen scene is the one loaded");
+                Assert.AreEqual(GameFlowState.Playing, flow.State, "and its run has started");
+                Object.FindAnyObjectByType<EnemySpawner>().StartNextWave();
+                yield return new WaitForSeconds(3f);
+                yield return Shot("23-kitchen-playing");
+                flow.Pause();
+                yield return Shot("24-kitchen-paused");
+            }
+
+            GrayboxSave.Close();
             Debug.Log($"[GrayboxMenuShots] Pictures saved in {_dir}");
         }
 

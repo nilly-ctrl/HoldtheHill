@@ -36,6 +36,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private TMP_Text _honeydew;
 
         [Header("Play")]
+        [SerializeField] private UiStepper _level;
         [SerializeField] private UiStepper _mode;
         [SerializeField] private TMP_Text _best;
         [SerializeField] private UiButton _start;
@@ -58,11 +59,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private TMP_Text _fastestWin;
         [SerializeField] private TMP_Text _bestEndless;
 
+        private readonly List<GrayboxLevels.Level> _levels = new List<GrayboxLevels.Level>();
         private UiScreen _screen;
         private bool _hooked;
 
         public UiScreen Screen => _screen != null ? _screen : _screen = GetComponent<UiScreen>();
         public UiStepper Mode => _mode;
+        public UiStepper LevelStepper => _level;
         public UiButton StartButton => _start;
         public UiButton TitleButton => _toTitle;
         public TMP_Text Honeydew => _honeydew;
@@ -75,11 +78,22 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private GrayboxRunMode SelectedMode => _mode.Index == 1 ? GrayboxRunMode.Endless : GrayboxRunMode.Campaign;
 
+        /// <summary>The id of the level chosen on the Play tab; the scene's own when there is no choice.</summary>
+        public string SelectedLevelId
+        {
+            get
+            {
+                if (_level.Index >= 0 && _level.Index < _levels.Count) return _levels[_level.Index].Id;
+                return Flow != null ? Flow.MapId : "Unknown";
+            }
+        }
+
         private void OnEnable()
         {
             Hook();
             GrayboxMetaProgress.CurrencyChanged += OnCurrencyChanged;
             if (Flow != null) _mode.SetOptions(Modes, Flow.Mode == GrayboxRunMode.Endless ? 1 : 0);
+            ShowLevels();
             Refresh();
         }
 
@@ -95,6 +109,38 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             RefreshUpgrades();
             RefreshAwards();
             RefreshRecords();
+        }
+
+        // The levels that can be loaded, with the one this scene is chosen. A scene that is not in
+        // the catalogue (a test scene) is listed under its map id so the row is never empty.
+        private void ShowLevels()
+        {
+            string here = Flow != null ? Flow.MapId : null;
+            _levels.Clear();
+            _levels.AddRange(GrayboxLevels.Available());
+            if (here != null && _levels.FindIndex(l => l.Id == here) < 0)
+            {
+                _levels.Insert(0, new GrayboxLevels.Level { Id = here, Name = here });
+            }
+
+            var names = new List<string>();
+            foreach (GrayboxLevels.Level level in _levels) names.Add(level.Name);
+            _level.SetOptions(names, Mathf.Max(0, _levels.FindIndex(l => l.Id == here)));
+        }
+
+        private void StartRun()
+        {
+            if (Flow == null) return;
+
+            string chosen = SelectedLevelId;
+            if (chosen == Flow.MapId)
+            {
+                Flow.StartNewRun(SelectedMode);
+            }
+            else
+            {
+                GrayboxLevels.LoadAndPlay(_levels[_level.Index], SelectedMode);
+            }
         }
 
         private void RefreshPlay()
@@ -179,7 +225,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Screen.BackPressed += () => Flow?.GoToTitle();
 
             _mode.IndexChanged.AddListener(_ => RefreshPlay());
-            _start.Clicked.AddListener(() => Flow?.StartNewRun(SelectedMode));
+            _level.IndexChanged.AddListener(_ =>
+            {
+                RefreshPlay();
+                RefreshRecords();
+            });
+            _start.Clicked.AddListener(StartRun);
             _toTitle.Clicked.AddListener(() => Flow?.GoToTitle());
 
             foreach (UpgradeRow row in _upgrades)
@@ -194,9 +245,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
         }
 
-        private static LevelRecord Level(GrayboxRunMode mode)
+        // The record of the level chosen on the Play tab.
+        private LevelRecord Level(GrayboxRunMode mode)
         {
-            return Flow != null ? GrayboxSave.Data.FindLevel(Flow.LevelIdFor(mode)) : null;
+            return GrayboxSave.Data.FindLevel(GrayboxLevels.RecordId(SelectedLevelId, mode));
         }
 
         private static string BestWave(LevelRecord record)

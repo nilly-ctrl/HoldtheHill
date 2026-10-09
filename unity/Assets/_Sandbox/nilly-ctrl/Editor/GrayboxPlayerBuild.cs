@@ -10,13 +10,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// Menu: Tools > Hold the Hill > Build Graybox Player (Windows).
     /// </summary>
     /// <remarks>
-    /// The scene is passed to the build directly, so the project's Build Settings scene list is
+    /// The level scenes are passed to the build directly, so the project's Build Settings scene list is
     /// left alone. Output goes outside the repository; pass <c>-hthBuildDir &lt;folder&gt;</c> on the
     /// command line to choose where, otherwise it is <c>Builds/Graybox</c> beside the project.
     /// </remarks>
     public static class GrayboxPlayerBuild
     {
-        private const string ScenePath = "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxCombatTest.unity";
         private const string ExeName = "HoldTheHill-Graybox.exe";
 
         [MenuItem("Tools/Hold the Hill/Build Graybox Player (Windows)")]
@@ -29,9 +28,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 if (args[i] == "-hthBuildDir") folder = args[i + 1];
             }
 
+            // The first scene is the one the game opens on; the rest are the other levels Home offers.
+            var scenes = new System.Collections.Generic.List<string>();
+            foreach (GrayboxLevels.Level level in GrayboxLevels.Available()) scenes.Add(level.ScenePath);
+
             var options = new BuildPlayerOptions
             {
-                scenes = new[] { ScenePath },
+                scenes = scenes.ToArray(),
                 locationPathName = Path.Combine(folder, ExeName),
                 target = BuildTarget.StandaloneWindows64,
                 options = BuildOptions.None,

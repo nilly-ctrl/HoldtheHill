@@ -58,6 +58,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxBaseHealth.OnGameFinished -= OnGameFinished;
         }
 
+        /// <summary>How long the VICTORY or DEFEAT banner plays. The run-end panel waits for it.</summary>
+        public float EndSeconds => _endSeconds;
+
+        /// <summary>Takes the banner off the screen now, e.g. when a menu opens over it.</summary>
+        public void Hide()
+        {
+            _showing = false;
+            _waitingForClear = false;
+            if (_text != null) _text.gameObject.SetActive(false);
+        }
+
         /// <summary>Shows a banner in the named theme style (Banner, BannerVictory, BannerDefeat, Heading...).</summary>
         public void Show(string message, string themeStyle, float seconds)
         {

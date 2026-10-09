@@ -168,6 +168,36 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Assert.AreEqual(3 * GrayboxUpgrades.HoneydewPerWave + GrayboxUpgrades.HoneydewForVictory, GrayboxUpgrades.HoneydewFor(3, true));
         }
 
+        [UnityTest]
+        public IEnumerator Home_ListsTheLevels_WithThisSceneChosen()
+        {
+            yield return null;
+            _flow.QuitToHome();
+            yield return null;
+
+            // The test scene is not in the catalogue, so it is listed under its map id, first.
+            Assert.AreEqual(_flow.MapId, _menus.Home.SelectedLevelId);
+            Assert.AreEqual(_flow.MapId, _menus.Home.LevelStepper.Current);
+            Assert.GreaterOrEqual(_menus.Home.LevelStepper.Options.Count, 2, "this scene and the graybox");
+
+            // Records follow the level chosen, not the scene loaded.
+            GrayboxSave.Data.records.levels.Add(new LevelRecord { levelId = "Graybox", bestWave = 7 });
+            int graybox = -1;
+            for (int i = 0; i < _menus.Home.LevelStepper.Options.Count; i++)
+            {
+                if (_menus.Home.LevelStepper.Options[i] == GrayboxLevels.Find("Graybox").Name) graybox = i;
+            }
+
+            Assert.GreaterOrEqual(graybox, 0, "the graybox scene exists, so it is offered");
+            for (int i = 0; i < graybox; i++) _menus.Home.LevelStepper.Step(1);
+            Assert.AreEqual("Graybox", _menus.Home.SelectedLevelId);
+            StringAssert.Contains("wave 7", _menus.Home.Best.text);
+            Assert.AreEqual("wave 7", _menus.Home.BestCampaign.text);
+
+            Assert.AreEqual("Graybox-Endless", GrayboxLevels.RecordId("Graybox", GrayboxRunMode.Endless));
+            Assert.IsNull(GrayboxLevels.TakePendingRun(), "nothing asked for a run in another scene");
+        }
+
         // ---------- settings ----------
 
         [UnityTest]

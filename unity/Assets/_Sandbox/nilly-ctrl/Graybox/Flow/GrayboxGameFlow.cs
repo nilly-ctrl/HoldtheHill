@@ -96,9 +96,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public string LevelIdFor(GrayboxRunMode mode)
         {
-            string map = _spawner != null ? _spawner.ActiveMapId : "Unknown";
-            return mode == GrayboxRunMode.Endless ? map + "-Endless" : map;
+            return GrayboxLevels.RecordId(MapId, mode);
         }
+
+        /// <summary>The level this scene is: its spawner's map id.</summary>
+        public string MapId => _spawner != null ? _spawner.ActiveMapId : "Unknown";
 
         /// <summary>What the last finished run changed in the records ("new best" and so on).</summary>
         public RunRecordResult LastRunResult { get; private set; }
@@ -127,6 +129,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _placer = FindAnyObjectByType<GrayboxTowerPlacer>();
             _custom = FindAnyObjectByType<GrayboxCustomSpawner>();
             State = _initialState;
+
+            // Home loaded this scene to play it (GrayboxLevels.LoadAndPlay): skip the menus.
+            GrayboxRunMode? pending = GrayboxLevels.TakePendingRun();
+            if (pending.HasValue)
+            {
+                Mode = pending.Value;
+                State = GameFlowState.Playing;
+            }
+
             ApplyTimeScale();
         }
 
