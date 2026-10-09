@@ -23,6 +23,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         // the stored copy because the restored tower makes them again; left in, every restore
         // would add a second range ring and a second set of orbiters.
         private static readonly string[] SelfBuiltChildPrefixes = { "RangeCircle", "TargetLine", "Orbiter" };
+        private static readonly List<Tower> Towers = new List<Tower>();
 
         private struct StoredTower
         {
@@ -58,12 +59,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 Stats = stats != null ? stats.Clone() : new GrayboxRunStats(),
             };
 
-            // Inactive, so the copies never run Awake and are skipped by FindObjectsByType.
+            // Inactive, so the copies never run Awake and are not counted as standing towers.
             checkpoint._store = new GameObject($"RunCheckpoint (wave {checkpoint.WaveIndex + 1})");
             checkpoint._store.SetActive(false);
             checkpoint._store.transform.SetParent(storeParent, false);
 
-            foreach (Tower tower in Object.FindObjectsByType<Tower>())
+            Tower.GetActive(Towers);
+            foreach (Tower tower in Towers)
             {
                 GameObject copy = Object.Instantiate(tower.gameObject, checkpoint._store.transform, true);
                 copy.name = tower.gameObject.name;
@@ -118,7 +120,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static void ClearField()
         {
             foreach (EnemyHealth enemy in Object.FindObjectsByType<EnemyHealth>()) Remove(enemy.gameObject);
-            foreach (Tower tower in Object.FindObjectsByType<Tower>()) Remove(tower.gameObject);
+            Tower.GetActive(Towers);
+            foreach (Tower tower in Towers) Remove(tower.gameObject);
             foreach (ProximityMine mine in Object.FindObjectsByType<ProximityMine>()) Remove(mine.gameObject);
             foreach (GroundHazard hazard in Object.FindObjectsByType<GroundHazard>()) Remove(hazard.gameObject);
         }

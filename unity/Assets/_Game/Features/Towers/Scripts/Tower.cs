@@ -46,6 +46,8 @@ namespace HoldTheHill.Features.Towers
         [Tooltip("Pool that recycles this tower's projectiles. Created automatically if left empty.")]
         [SerializeField] private ProjectilePool _projectilePool;
 
+        private static readonly List<Tower> s_all = new List<Tower>();
+
         private readonly List<IDamageable> _inRange = new List<IDamageable>();
         private readonly List<TowerWeapon> _weapons = new List<TowerWeapon>();
         private float _cooldown;
@@ -144,8 +146,32 @@ namespace HoldTheHill.Features.Towers
             return true;
         }
 
+        /// <summary>
+        /// Fills <paramref name="results"/> with every tower on an active object, including
+        /// ones whose Tower component is switched off (a stunned tower still stands). Use this
+        /// instead of FindObjectsByType, which searches the whole scene.
+        /// </summary>
+        public static void GetActive(List<Tower> results)
+        {
+            results.Clear();
+            for (int i = 0; i < s_all.Count; i++)
+            {
+                if (s_all[i].gameObject.activeInHierarchy)
+                {
+                    results.Add(s_all[i]);
+                }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            s_all.Remove(this);
+        }
+
         private void Awake()
         {
+            s_all.Add(this);
+
             if (_muzzle == null)
             {
                 _muzzle = transform;
@@ -283,50 +309,10 @@ namespace HoldTheHill.Features.Towers
             }
         }
 
-        /// <summary>
-        /// How far along the enemy path a world position sits, in world units from the start.
-        /// Falls back to zero when there is no path, which makes First and Last behave like
-        /// Closest rather than throwing.
-        /// </summary>
+        // Zero with no path, which makes First and Last behave like Closest rather than throwing.
         private float DistanceAlongPath(Vector3 worldPoint)
         {
-            if (_path == null)
-            {
-                return 0f;
-            }
-
-            IReadOnlyList<Vector3> waypoints = _path.Waypoints;
-            if (waypoints == null || waypoints.Count < 2)
-            {
-                return 0f;
-            }
-
-            var point = (Vector2)worldPoint;
-            float travelled = 0f;
-            float bestDistanceToRoute = float.PositiveInfinity;
-            float bestTravelled = 0f;
-
-            for (int i = 0; i < waypoints.Count - 1; i++)
-            {
-                Vector2 a = waypoints[i];
-                Vector2 b = waypoints[i + 1];
-                Vector2 ab = b - a;
-
-                float segmentLength = ab.magnitude;
-                float t = ab.sqrMagnitude > 0f ? Mathf.Clamp01(Vector2.Dot(point - a, ab) / ab.sqrMagnitude) : 0f;
-                Vector2 closest = a + ab * t;
-
-                float distanceToRoute = Vector2.Distance(point, closest);
-                if (distanceToRoute < bestDistanceToRoute)
-                {
-                    bestDistanceToRoute = distanceToRoute;
-                    bestTravelled = travelled + segmentLength * t;
-                }
-
-                travelled += segmentLength;
-            }
-
-            return bestTravelled;
+            return _path != null ? _path.DistanceAlong(worldPoint) : 0f;
         }
 
         private void FireAt(IDamageable target)

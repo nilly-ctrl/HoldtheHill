@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     {
         private const int GroundOrder = 1;
         private const float Tick = 0.25f;
+        private static readonly List<Tower> Towers = new List<Tower>();
 
         private SpriteAnimLibrary _library;
         private float _left;
@@ -48,7 +50,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             _tick = Tick;
-            foreach (Tower tower in FindObjectsByType<Tower>(FindObjectsSortMode.None))
+            Tower.GetActive(Towers);
+            foreach (Tower tower in Towers)
             {
                 if (((Vector2)tower.transform.position - (Vector2)transform.position).sqrMagnitude <= _radius * _radius)
                 {

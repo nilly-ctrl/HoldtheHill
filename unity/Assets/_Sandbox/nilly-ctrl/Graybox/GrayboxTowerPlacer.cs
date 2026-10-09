@@ -20,6 +20,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [Tooltip("Holds the build and sell effects. Left empty, towers appear without them.")]
         [SerializeField] private SpriteAnimLibrary _animLibrary;
 
+        private readonly List<Tower> _towers = new List<Tower>();
         private Camera _mainCamera;
         private EnemyPath _path;
         private Tower _selectedTower;
@@ -170,7 +171,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private Tower FindTowerAt(Vector3 point, float radius)
         {
-            foreach (Tower t in FindObjectsByType<Tower>())
+            Tower.GetActive(_towers);
+            foreach (Tower t in _towers)
             {
                 if (t != null && Vector2.Distance(point, t.transform.position) <= radius)
                 {
@@ -197,27 +199,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 }
             }
 
-            IReadOnlyList<Vector3> waypoints = _path.Waypoints;
-            if (waypoints == null || waypoints.Count < 2)
-            {
-                return true;
-            }
-
-            Vector2 p = point;
-            for (int i = 0; i < waypoints.Count - 1; i++)
-            {
-                Vector2 a = waypoints[i];
-                Vector2 b = waypoints[i + 1];
-                Vector2 ab = b - a;
-                float t = ab.sqrMagnitude > 0f ? Mathf.Clamp01(Vector2.Dot(p - a, ab) / ab.sqrMagnitude) : 0f;
-                Vector2 closest = a + ab * t;
-                if (Vector2.Distance(p, closest) < minDistance)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return _path.DistanceToRoute(point) >= minDistance;
         }
 
         private static Vector3 SnapToGrid(Vector3 pos)

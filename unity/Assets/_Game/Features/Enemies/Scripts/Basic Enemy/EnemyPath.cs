@@ -41,7 +41,11 @@ namespace HoldTheHill.Features.Enemies
             return DistanceToRoute(cellCenter) < reach;
         }
 
-        private float DistanceToRoute(Vector2 point)
+        /// <summary>
+        /// Shortest distance from a point to the route's centre line, in world units.
+        /// Infinite when the route has fewer than two waypoints.
+        /// </summary>
+        public float DistanceToRoute(Vector2 point)
         {
             float closest = float.PositiveInfinity;
             for (int i = 0; i < _waypoints.Count - 1; i++)
@@ -49,6 +53,76 @@ namespace HoldTheHill.Features.Enemies
                 closest = Mathf.Min(closest, DistanceToSegment(point, _waypoints[i], _waypoints[i + 1]));
             }
             return closest;
+        }
+
+        /// <summary>Length of the whole route in world units.</summary>
+        public float Length
+        {
+            get
+            {
+                float total = 0f;
+                for (int i = 0; i < _waypoints.Count - 1; i++)
+                {
+                    total += Vector2.Distance(_waypoints[i], _waypoints[i + 1]);
+                }
+                return total;
+            }
+        }
+
+        /// <summary>
+        /// How far along the route a world position sits, in world units from the start,
+        /// measured at the nearest point on the route. Zero when the route has fewer than
+        /// two waypoints.
+        /// </summary>
+        public float DistanceAlong(Vector2 point)
+        {
+            float travelled = 0f;
+            float bestDistanceToRoute = float.PositiveInfinity;
+            float bestTravelled = 0f;
+
+            for (int i = 0; i < _waypoints.Count - 1; i++)
+            {
+                Vector2 a = _waypoints[i];
+                Vector2 b = _waypoints[i + 1];
+                Vector2 ab = b - a;
+
+                float segmentLength = ab.magnitude;
+                float t = ab.sqrMagnitude > 0f ? Mathf.Clamp01(Vector2.Dot(point - a, ab) / ab.sqrMagnitude) : 0f;
+
+                float distanceToRoute = Vector2.Distance(point, a + ab * t);
+                if (distanceToRoute < bestDistanceToRoute)
+                {
+                    bestDistanceToRoute = distanceToRoute;
+                    bestTravelled = travelled + segmentLength * t;
+                }
+
+                travelled += segmentLength;
+            }
+
+            return bestTravelled;
+        }
+
+        /// <summary>The point a given distance along the route, clamped to its ends.</summary>
+        public Vector3 PointAt(float distance)
+        {
+            if (_waypoints.Count == 0)
+            {
+                return Vector3.zero;
+            }
+
+            float left = Mathf.Max(0f, distance);
+            for (int i = 0; i < _waypoints.Count - 1; i++)
+            {
+                float length = Vector2.Distance(_waypoints[i], _waypoints[i + 1]);
+                if (left <= length)
+                {
+                    return Vector3.Lerp(_waypoints[i], _waypoints[i + 1], length > 0f ? left / length : 0f);
+                }
+
+                left -= length;
+            }
+
+            return _waypoints[_waypoints.Count - 1];
         }
 
         private static float DistanceToSegment(Vector2 point, Vector2 a, Vector2 b)

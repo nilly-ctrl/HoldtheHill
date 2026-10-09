@@ -134,8 +134,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Every tower standing on the map right now. The list is reused: do not keep it.</summary>
         protected static List<Tower> ActiveTowers()
         {
-            TowerBuffer.Clear();
-            TowerBuffer.AddRange(FindObjectsByType<Tower>(FindObjectsSortMode.None));
+            Tower.GetActive(TowerBuffer);
             return TowerBuffer;
         }
 
@@ -178,7 +177,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private static EnemyPath s_path;
 
-        protected static IReadOnlyList<Vector3> Waypoints
+        private static EnemyPath Route
         {
             get
             {
@@ -187,45 +186,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     s_path = FindAnyObjectByType<EnemyPath>();
                 }
 
-                return s_path != null ? s_path.Waypoints : null;
+                return s_path;
             }
         }
 
-        public static float PathLength()
-        {
-            IReadOnlyList<Vector3> points = Waypoints;
-            float total = 0f;
-            for (int i = 0; points != null && i < points.Count - 1; i++)
-            {
-                total += Vector2.Distance(points[i], points[i + 1]);
-            }
+        protected static IReadOnlyList<Vector3> Waypoints => Route != null ? Route.Waypoints : null;
 
-            return total;
-        }
+        public static float PathLength() => Route != null ? Route.Length : 0f;
 
         /// <summary>The point a given distance along the route, clamped to its ends.</summary>
-        public static Vector3 PointAlongPath(float distance)
-        {
-            IReadOnlyList<Vector3> points = Waypoints;
-            if (points == null || points.Count == 0)
-            {
-                return Vector3.zero;
-            }
-
-            float left = Mathf.Max(0f, distance);
-            for (int i = 0; i < points.Count - 1; i++)
-            {
-                float length = Vector2.Distance(points[i], points[i + 1]);
-                if (left <= length)
-                {
-                    return Vector3.Lerp(points[i], points[i + 1], length > 0f ? left / length : 0f);
-                }
-
-                left -= length;
-            }
-
-            return points[points.Count - 1];
-        }
+        public static Vector3 PointAlongPath(float distance) => Route != null ? Route.PointAt(distance) : Vector3.zero;
 
         /// <summary>Puts a freshly made enemy on the route at a given distance from its start.</summary>
         public static void PlaceOnPath(GameObject enemy, float distance)

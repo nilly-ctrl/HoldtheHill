@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using HoldTheHill.Sandbox.UiKit;
@@ -70,6 +71,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private EnemySpawner _spawner;
         private GrayboxTowerPlacer _placer;
+        private readonly List<Tower> _towers = new List<Tower>();
         private GrayboxCustomSpawner _custom;
         private float _autoStartTimer;
 
@@ -415,7 +417,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (State != GameFlowState.Playing) return;
 
             LastRunWasVictory = victory;
-            Stats.TowersStanding = FindObjectsByType<Tower>().Length;
+            Tower.GetActive(_towers);
+            Stats.TowersStanding = _towers.Count;
 
             LastRunResult = GrayboxRecords.Submit(LevelId, Stats, victory, _counted);
             _counted = Stats.Clone();
