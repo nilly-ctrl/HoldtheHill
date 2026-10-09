@@ -5,61 +5,70 @@ using UnityEngine;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
-    public enum SkillNodeId
-    {
-        Ballistics_HeavyCaliber,
-        Ballistics_RapidCycling,
-        Ballistics_ExplosivePayload,
-
-        Control_DeepFreeze,
-        Control_HeavyShockwave,
-        Control_AbsoluteZero,
-
-        Economy_ScavengerBounties,
-        Economy_BulkDiscounts,
-        Economy_SalvageMastery
-    }
-
-    [System.Serializable]
+    /// <summary>A skill node in play: its data asset and whether the player owns it yet.</summary>
     public class SkillNode
     {
-        public SkillNodeId id;
-        public string name;
-        public string description;
-        public string branch;
-        public int cost;
-        public SkillNodeId prerequisite = (SkillNodeId)(-1);
+        public SkillNode(GrayboxSkillNodeData data)
+        {
+            Data = data;
+        }
+
+        public GrayboxSkillNodeData Data { get; }
+
         public bool isUnlocked;
+
+        public string id => Data.Id;
+
+        public string name => Data.DisplayName;
+
+        public string description => Data.Description;
+
+        public string branch => Data.Branch;
+
+        public int cost => Data.Cost;
+
+        /// <summary>The id of the node that must be unlocked first, or null for a root node.</summary>
+        public string prerequisite => Data.Prerequisite != null ? Data.Prerequisite.Id : null;
     }
 
     /// <summary>
-    /// Test skill tree system providing branch upgrades for combat damage, crowd control, and economy.
+    /// The skill tree: spends skill points on the nodes of a <see cref="GrayboxSkillTreeData"/> and
+    /// folds each owned node's <see cref="SkillEffect"/>s into the stats towers and the economy read.
     /// </summary>
     public class GrayboxSkillTree : MonoBehaviour, IUpgradeModifiers
     {
+        // What each stat is worth with nothing unlocked, indexed by SkillStat.
+        private static readonly float[] BaseValues = { 1f, 1f, 1f, 0f, 0f, 1f, 1f, 1f, 0.75f };
+
         public static GrayboxSkillTree Instance { get; private set; }
 
-        public static event Action<SkillNodeId> OnSkillUnlocked;
+        public static event Action<string> OnSkillUnlocked;
         public static event Action<int> OnSkillPointsChanged;
+
+        [Tooltip("The nodes of the tree.")]
+        [SerializeField] private GrayboxSkillTreeData _catalog;
 
         [Header("Starting Economy")]
         [SerializeField] private int _startingSkillPoints = 5;
 
         public int SkillPoints { get; private set; }
 
-        private readonly Dictionary<SkillNodeId, SkillNode> _nodes = new Dictionary<SkillNodeId, SkillNode>();
+        // Kept in catalog order, so a column draws top to bottom as authored.
+        private readonly List<SkillNode> _nodes = new List<SkillNode>();
+        private readonly Dictionary<string, SkillNode> _byId = new Dictionary<string, SkillNode>();
+        private readonly float[] _stats = new float[BaseValues.Length];
 
-        public float DamageMultiplier { get; private set; } = 1.0f;
-        public float FireRateMultiplier { get; private set; } = 1.0f;
-        public float BlastRadiusMultiplier { get; private set; } = 1.0f;
+        public float DamageMultiplier => _stats[(int)SkillStat.DamageMultiplier];
+        public float FireRateMultiplier => _stats[(int)SkillStat.FireRateMultiplier];
+        public float BlastRadiusMultiplier => _stats[(int)SkillStat.BlastRadiusMultiplier];
 
-        public float FrostSlowBonus { get; private set; } = 0.0f;
-        public float KnockbackBonus { get; private set; } = 0.0f;
-        public float FrostDebuffDamageMultiplier { get; private set; } = 1.0f;
+        public float FrostSlowBonus => _stats[(int)SkillStat.FrostSlowBonus];
+        public float KnockbackBonus => _stats[(int)SkillStat.KnockbackBonus];
+        public float FrostDebuffDamageMultiplier => _stats[(int)SkillStat.FrostDebuffDamageMultiplier];
 
-        public float BountyMultiplier { get; private set; } = 1.0f;
-        public float CostMultiplier { get; private set; } = 1.0f;
-        public float RefundPercentage { get; private set; } = 0.75f;
+        public float BountyMultiplier => _stats[(int)SkillStat.BountyMultiplier];
+        public float CostMultiplier => _stats[(int)SkillStat.CostMultiplier];
+        public float RefundPercentage => _stats[(int)SkillStat.RefundPercentage];
 
         private void Awake()
         {
@@ -78,67 +87,83 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
         }
 
+        /// <summary>Swaps the tree's nodes. Everything is locked again and skill points go back to the start.</summary>
+        public void Configure(GrayboxSkillTreeData catalog)
+        {
+            _catalog = catalog;
+            SkillPoints = _startingSkillPoints;
+            InitNodes();
+            OnSkillPointsChanged?.Invoke(SkillPoints);
+        }
+
         private void InitNodes()
         {
             _nodes.Clear();
+            _byId.Clear();
 
-            // Branch 1: Ballistics & Firepower
-            AddNode(SkillNodeId.Ballistics_HeavyCaliber, "Heavy Caliber", "+20% Damage for all towers.", "Ballistics", 1);
-            AddNode(SkillNodeId.Ballistics_RapidCycling, "Rapid Cycling", "+25% Fire Rate for all towers.", "Ballistics", 2, SkillNodeId.Ballistics_HeavyCaliber);
-            AddNode(SkillNodeId.Ballistics_ExplosivePayload, "Explosive Payload", "+40% Blast Radius for Mortars & Mines.", "Ballistics", 3, SkillNodeId.Ballistics_RapidCycling);
-
-            // Branch 2: Crowd Control & Frost
-            AddNode(SkillNodeId.Control_DeepFreeze, "Deep Freeze", "+20% Slow strength for Frost Aura.", "Control", 1);
-            AddNode(SkillNodeId.Control_HeavyShockwave, "Heavy Shockwave", "+50% Knockback setback distance.", "Control", 2, SkillNodeId.Control_DeepFreeze);
-            AddNode(SkillNodeId.Control_AbsoluteZero, "Absolute Zero", "+30% Damage dealt to slowed enemies.", "Control", 3, SkillNodeId.Control_HeavyShockwave);
-
-            // Branch 3: Logistics & Economy
-            AddNode(SkillNodeId.Economy_ScavengerBounties, "Scavenger Bounties", "+25% Gold earned from ant kills.", "Economy", 1);
-            AddNode(SkillNodeId.Economy_BulkDiscounts, "Bulk Discounts", "20% Discount on tower builds & upgrades.", "Economy", 2, SkillNodeId.Economy_ScavengerBounties);
-            AddNode(SkillNodeId.Economy_SalvageMastery, "Salvage Mastery", "90% Gold refund when dismantling towers.", "Economy", 3, SkillNodeId.Economy_BulkDiscounts);
-        }
-
-        private void AddNode(SkillNodeId id, string name, string description, string branch, int cost, SkillNodeId prerequisite = (SkillNodeId)(-1))
-        {
-            _nodes[id] = new SkillNode
+            if (_catalog != null)
             {
-                id = id,
-                name = name,
-                description = description,
-                branch = branch,
-                cost = cost,
-                prerequisite = prerequisite,
-                isUnlocked = false
-            };
+                foreach (GrayboxSkillNodeData data in _catalog.Nodes)
+                {
+                    if (data == null || _byId.ContainsKey(data.Id))
+                    {
+                        continue;
+                    }
+
+                    var node = new SkillNode(data);
+                    _nodes.Add(node);
+                    _byId[data.Id] = node;
+                }
+            }
+
+            RecalculateStats();
         }
 
-        public SkillNode GetNode(SkillNodeId id)
+        public SkillNode GetNode(string id)
         {
-            _nodes.TryGetValue(id, out var node);
+            _byId.TryGetValue(id ?? string.Empty, out SkillNode node);
             return node;
         }
 
-        public IEnumerable<SkillNode> GetAllNodes() => _nodes.Values;
+        public IReadOnlyList<SkillNode> GetAllNodes() => _nodes;
 
-        public bool IsUnlocked(SkillNodeId id)
+        /// <summary>Branch names in display order, one per column.</summary>
+        public List<string> GetBranches() => _catalog != null ? _catalog.Branches() : new List<string>();
+
+        /// <summary>The nodes of one branch, top to bottom.</summary>
+        public List<SkillNode> GetBranchNodes(string branch)
         {
-            return _nodes.TryGetValue(id, out var node) && node.isUnlocked;
+            var result = new List<SkillNode>();
+            foreach (SkillNode node in _nodes)
+            {
+                if (node.branch == branch)
+                {
+                    result.Add(node);
+                }
+            }
+
+            return result;
         }
 
-        public bool CanUnlock(SkillNodeId id)
+        public bool IsUnlocked(string id)
         {
-            if (!_nodes.TryGetValue(id, out var node)) return false;
+            return _byId.TryGetValue(id ?? string.Empty, out SkillNode node) && node.isUnlocked;
+        }
+
+        public bool CanUnlock(string id)
+        {
+            if (!_byId.TryGetValue(id ?? string.Empty, out SkillNode node)) return false;
             if (node.isUnlocked) return false;
             if (SkillPoints < node.cost) return false;
-            if (node.prerequisite != (SkillNodeId)(-1) && !IsUnlocked(node.prerequisite)) return false;
+            if (node.prerequisite != null && !IsUnlocked(node.prerequisite)) return false;
             return true;
         }
 
-        public bool TryUnlock(SkillNodeId id)
+        public bool TryUnlock(string id)
         {
             if (!CanUnlock(id)) return false;
 
-            var node = _nodes[id];
+            SkillNode node = _byId[id];
             node.isUnlocked = true;
             SkillPoints -= node.cost;
 
@@ -155,26 +180,42 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             OnSkillPointsChanged?.Invoke(SkillPoints);
         }
 
+        // Every stat starts at its base value and each owned node's effects are applied in catalog order.
         private void RecalculateStats()
         {
-            DamageMultiplier = IsUnlocked(SkillNodeId.Ballistics_HeavyCaliber) ? 1.20f : 1.0f;
-            FireRateMultiplier = IsUnlocked(SkillNodeId.Ballistics_RapidCycling) ? 1.25f : 1.0f;
-            BlastRadiusMultiplier = IsUnlocked(SkillNodeId.Ballistics_ExplosivePayload) ? 1.40f : 1.0f;
+            Array.Copy(BaseValues, _stats, BaseValues.Length);
 
-            FrostSlowBonus = IsUnlocked(SkillNodeId.Control_DeepFreeze) ? 0.20f : 0.0f;
-            KnockbackBonus = IsUnlocked(SkillNodeId.Control_HeavyShockwave) ? 0.50f : 0.0f;
-            FrostDebuffDamageMultiplier = IsUnlocked(SkillNodeId.Control_AbsoluteZero) ? 1.30f : 1.0f;
+            foreach (SkillNode node in _nodes)
+            {
+                if (!node.isUnlocked)
+                {
+                    continue;
+                }
 
-            BountyMultiplier = IsUnlocked(SkillNodeId.Economy_ScavengerBounties) ? 1.25f : 1.0f;
-            CostMultiplier = IsUnlocked(SkillNodeId.Economy_BulkDiscounts) ? 0.80f : 1.0f;
-            RefundPercentage = IsUnlocked(SkillNodeId.Economy_SalvageMastery) ? 0.90f : 0.75f;
+                foreach (SkillEffect effect in node.Data.Effects)
+                {
+                    int index = (int)effect.stat;
+                    switch (effect.mode)
+                    {
+                        case SkillEffectMode.Multiply:
+                            _stats[index] *= effect.value;
+                            break;
+                        case SkillEffectMode.Add:
+                            _stats[index] += effect.value;
+                            break;
+                        default:
+                            _stats[index] = effect.value;
+                            break;
+                    }
+                }
+            }
         }
 
         /// <summary>The nodes unlocked right now, for saving a checkpoint.</summary>
-        public List<SkillNodeId> GetUnlockedIds()
+        public List<string> GetUnlockedIds()
         {
-            var ids = new List<SkillNodeId>();
-            foreach (var node in _nodes.Values)
+            var ids = new List<string>();
+            foreach (SkillNode node in _nodes)
             {
                 if (node.isUnlocked) ids.Add(node.id);
             }
@@ -182,10 +223,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         /// <summary>Puts skill points and unlocked nodes back to a saved checkpoint.</summary>
-        public void RestoreState(int skillPoints, ICollection<SkillNodeId> unlocked)
+        public void RestoreState(int skillPoints, ICollection<string> unlocked)
         {
             SkillPoints = skillPoints;
-            foreach (var node in _nodes.Values)
+            foreach (SkillNode node in _nodes)
             {
                 node.isUnlocked = unlocked != null && unlocked.Contains(node.id);
             }
@@ -196,7 +237,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public void ResetSkills()
         {
             SkillPoints = _startingSkillPoints;
-            foreach (var node in _nodes.Values)
+            foreach (SkillNode node in _nodes)
             {
                 node.isUnlocked = false;
             }

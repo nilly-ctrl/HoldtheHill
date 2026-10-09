@@ -7,9 +7,21 @@ using UnityEngine.InputSystem;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
+    /// <summary>An achievement in play: its data asset and how far the player has got.</summary>
     [Serializable]
     public class Achievement
     {
+        public Achievement(GrayboxAchievementData data)
+        {
+            Data = data;
+            Id = data.Id;
+            Title = data.Title;
+            Description = data.Description;
+            IconName = data.IconName;
+            RequiredProgress = data.RequiredProgress;
+        }
+
+        public GrayboxAchievementData Data { get; }
         public string Id;
         public string Title;
         public string Description;
@@ -32,6 +44,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public bool ShowAchievementsWindow { get; set; }
 
+        [Tooltip("The achievements in the game.")]
+        [SerializeField] private GrayboxAchievementCatalog _catalog;
+
         private readonly List<Achievement> _achievements = new List<Achievement>();
         private readonly Queue<Achievement> _unlockBannerQueue = new Queue<Achievement>();
         private float _bannerTimer;
@@ -53,7 +68,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
             Instance = this;
 
-            InitDefaultAchievements();
+            InitAchievements();
+            LoadSaved();
+        }
+
+        /// <summary>Swaps the achievement set. Progress is read again from the save, if one is open.</summary>
+        public void Configure(GrayboxAchievementCatalog catalog)
+        {
+            _catalog = catalog;
+            _unlockBannerQueue.Clear();
+            InitAchievements();
             LoadSaved();
         }
 
@@ -89,19 +113,21 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxSave.MarkDirty();
         }
 
-        private void InitDefaultAchievements()
+        private void InitAchievements()
         {
             _achievements.Clear();
-            _achievements.Add(new Achievement { Id = "first_blood", Title = "First Blood", Description = "Defeat your first enemy worker/grunt.", IconName = "AchFirstBloodIcon", RequiredProgress = 1 });
-            _achievements.Add(new Achievement { Id = "colony_defender", Title = "Colony Defender", Description = "Defeat 50 invading enemies.", IconName = "AchColonyDefenderIcon", RequiredProgress = 50 });
-            _achievements.Add(new Achievement { Id = "ant_terminator", Title = "Ant Terminator", Description = "Defeat 200 total enemies.", IconName = "AchAntTerminatorIcon", RequiredProgress = 200 });
-            _achievements.Add(new Achievement { Id = "gold_tycoon", Title = "Gold Tycoon", Description = "Accumulate $1,000 total Gold in treasury.", IconName = "AchGoldTycoonIcon", RequiredProgress = 1000 });
-            _achievements.Add(new Achievement { Id = "architect", Title = "Master Architect", Description = "Build or upgrade 10 defense towers.", IconName = "AchArchitectIcon", RequiredProgress = 10 });
-            _achievements.Add(new Achievement { Id = "boss_slayer", Title = "Boss Slayer", Description = "Defeat a Wave 5 or Wave 10 Boss Horde.", IconName = "AchBossSlayerIcon", RequiredProgress = 1 });
-            _achievements.Add(new Achievement { Id = "wave_survivor", Title = "Endless Survivor", Description = "Reach Procedural Wave 8.", IconName = "AchWaveSurvivorIcon", RequiredProgress = 8 });
-            _achievements.Add(new Achievement { Id = "commander", Title = "Supreme Commander", Description = "Spend 5 Skill Points in the Commander Tree.", IconName = "AchCommanderIcon", RequiredProgress = 5 });
-            _achievements.Add(new Achievement { Id = "mine_master", Title = "Minefield Master", Description = "Detonate 10 Proximity Landmines.", IconName = "AchMineMasterIcon", RequiredProgress = 10 });
-            _achievements.Add(new Achievement { Id = "fortress", Title = "Impenetrable Fortress", Description = "Complete 3 waves with 100% Base HP.", IconName = "AchFortressIcon", RequiredProgress = 3 });
+            if (_catalog == null)
+            {
+                return;
+            }
+
+            foreach (GrayboxAchievementData data in _catalog.Achievements)
+            {
+                if (data != null && !_achievements.Exists(a => a.Id == data.Id))
+                {
+                    _achievements.Add(new Achievement(data));
+                }
+            }
         }
 
         private void OnEnable()
@@ -120,51 +146,88 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void OnEnemyDefeated(GameObject enemy)
         {
-            AddProgress("first_blood", 1);
-            AddProgress("colony_defender", 1);
-            AddProgress("ant_terminator", 1);
+            Report(AchievementTrigger.EnemyDefeated);
         }
 
         // ProximityMine has no static event; the mine animator announces each blast here.
         private void OnMineDetonated(Vector3 at)
         {
-            AddProgress("mine_master", 1);
+            Report(AchievementTrigger.MineDetonated);
         }
 
         public void ReportGoldEarned(int amount)
         {
             int currentGold = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentGold : 0;
-            if (currentGold >= 1000)
-            {
-                AddProgress("gold_tycoon", 1000);
-            }
+            Report(AchievementTrigger.GoldHeld, currentGold);
         }
 
         public void ReportTowerBuilt()
         {
-            AddProgress("architect", 1);
+            Report(AchievementTrigger.TowerBuilt);
         }
 
         public void ReportSkillPointSpent()
         {
-            AddProgress("commander", 1);
+            Report(AchievementTrigger.SkillPointSpent);
         }
 
         public void ReportWaveCompleted(int waveNumber)
         {
-            if (waveNumber % 5 == 0)
+            Report(AchievementTrigger.WaveCompleted, waveNumber);
+            Report(AchievementTrigger.WaveReached, waveNumber);
+        }
+
+        /// <summary>Moves every achievement that listens for this trigger forward.</summary>
+        /// <param name="value">What the trigger reports: the gold held, or the wave number. Unused by the others.</param>
+        private void Report(AchievementTrigger trigger, int value = 1)
+        {
+            foreach (Achievement ach in _achievements)
             {
-                AddProgress("boss_slayer", 1);
+                GrayboxAchievementData data = ach.Data;
+                if (data.Trigger != trigger || ach.IsUnlocked)
+                {
+                    continue;
+                }
+
+                switch (trigger)
+                {
+                    case AchievementTrigger.GoldHeld:
+                    case AchievementTrigger.WaveReached:
+                        // Progress is the best value seen, not a running count.
+                        if (value > ach.CurrentProgress)
+                        {
+                            AddProgress(ach.Id, value - ach.CurrentProgress);
+                        }
+
+                        break;
+                    case AchievementTrigger.WaveCompleted:
+                        if (WaveCounts(data, value))
+                        {
+                            AddProgress(ach.Id, 1);
+                        }
+
+                        break;
+                    default:
+                        AddProgress(ach.Id, 1);
+                        break;
+                }
             }
-            if (waveNumber >= 8)
+        }
+
+        private static bool WaveCounts(GrayboxAchievementData data, int waveNumber)
+        {
+            if (data.EveryNthWave > 0 && waveNumber % data.EveryNthWave != 0)
             {
-                AddProgress("wave_survivor", waveNumber);
+                return false;
             }
 
-            if (GrayboxBaseHealth.Instance != null && GrayboxBaseHealth.Instance.CurrentHealth >= 100)
+            if (data.RequireFullBaseHealth)
             {
-                AddProgress("fortress", 1);
+                GrayboxBaseHealth hill = GrayboxBaseHealth.Instance;
+                return hill != null && hill.CurrentHealth >= hill.MaxHealth;
             }
+
+            return true;
         }
 
         public void AddProgress(string id, int amount)

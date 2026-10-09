@@ -46,6 +46,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
         }
 
+        public override void Interrupt(bool downed)
+        {
+            base.Interrupt(downed);
+            if (downed && Carried != null)
+            {
+                PutDown(Carried.transform.position);
+            }
+        }
+
         private void LateUpdate()
         {
             if (Carried != null)

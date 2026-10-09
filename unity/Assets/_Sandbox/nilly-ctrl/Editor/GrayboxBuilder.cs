@@ -110,6 +110,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             // Species: which catalog and Warden a run uses. Needs the tower and Warden prefabs above.
             GrayboxSpeciesBuilder.BuildAssets();
+            GrayboxProgressionBuilder.BuildAssets();
 
             MapWaveDataSO waves = BuildWaveAsset(runner, grunt, brute, shielded, splitter, healer);
             GrayboxSpecialsBuilder.AppendWaves(WaveAssetPath, grunt);
@@ -174,9 +175,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private static void BuildSkillTree()
         {
-            var go = new GameObject("GrayboxSkillTree");
-            go.AddComponent<GrayboxSkillTree>();
-            go.AddComponent<GrayboxSkillTreeUI>();
+            GrayboxProgressionBuilder.BuildSkillTreeObject();
         }
 
         private static void BuildCombatSystems()
@@ -957,7 +956,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // The spawner waits to be prompted between waves, so the scene needs something
             // that can prompt it. The HUD also reports kills and leaks while tuning.
             go.AddComponent<GrayboxHud>();
-            go.AddComponent<GrayboxAchievements>();
+            GrayboxProgressionBuilder.ConfigureAchievements(go.AddComponent<GrayboxAchievements>());
         }
 
         internal static void AddChainLightning(GameObject tower, Material lineMaterial)

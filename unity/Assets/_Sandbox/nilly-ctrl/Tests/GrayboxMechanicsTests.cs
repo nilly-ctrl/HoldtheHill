@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections;
+using System.Linq;
 using HoldTheHill.Sandbox.NillyCtrl;
 using NUnit.Framework;
 using UnityEngine;
@@ -73,6 +74,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         public void SkillTree_StartingSP_Is5()
         {
             var skillTree = _holder.AddComponent<GrayboxSkillTree>();
+            skillTree.Configure(GrayboxTestContent.SkillTree());
             Assert.AreEqual(5, skillTree.SkillPoints);
         }
 
@@ -80,7 +82,8 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         public void SkillTree_UnlockNode_DeductsSP_AndRecalculatesMultipliers()
         {
             var skillTree = _holder.AddComponent<GrayboxSkillTree>();
-            bool unlocked = skillTree.TryUnlock(SkillNodeId.Ballistics_HeavyCaliber);
+            skillTree.Configure(GrayboxTestContent.SkillTree());
+            bool unlocked = skillTree.TryUnlock("Ballistics_HeavyCaliber");
 
             Assert.IsTrue(unlocked);
             Assert.AreEqual(4, skillTree.SkillPoints);
@@ -91,19 +94,21 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         public void SkillTree_PrerequisiteLock_PreventsEarlyUnlock()
         {
             var skillTree = _holder.AddComponent<GrayboxSkillTree>();
+            skillTree.Configure(GrayboxTestContent.SkillTree());
             // RapidCycling requires HeavyCaliber first
-            bool unlocked = skillTree.TryUnlock(SkillNodeId.Ballistics_RapidCycling);
+            bool unlocked = skillTree.TryUnlock("Ballistics_RapidCycling");
 
             Assert.IsFalse(unlocked);
-            Assert.IsFalse(skillTree.IsUnlocked(SkillNodeId.Ballistics_RapidCycling));
+            Assert.IsFalse(skillTree.IsUnlocked("Ballistics_RapidCycling"));
         }
 
         [Test]
         public void SkillTree_PrerequisiteChain_UnlocksSuccessfully()
         {
             var skillTree = _holder.AddComponent<GrayboxSkillTree>();
-            skillTree.TryUnlock(SkillNodeId.Ballistics_HeavyCaliber);
-            bool unlocked = skillTree.TryUnlock(SkillNodeId.Ballistics_RapidCycling);
+            skillTree.Configure(GrayboxTestContent.SkillTree());
+            skillTree.TryUnlock("Ballistics_HeavyCaliber");
+            bool unlocked = skillTree.TryUnlock("Ballistics_RapidCycling");
 
             Assert.IsTrue(unlocked);
             Assert.AreEqual(1.25f, skillTree.FireRateMultiplier, 0.001f);
@@ -186,11 +191,67 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         public void Achievements_ReportProgress_UnlocksAchievement()
         {
             var achSystem = _holder.AddComponent<GrayboxAchievements>();
+            achSystem.Configure(GrayboxTestContent.Achievements());
             achSystem.AddProgress("first_blood", 1);
 
             var firstBlood = System.Linq.Enumerable.FirstOrDefault(achSystem.Achievements, a => a.Id == "first_blood");
             Assert.NotNull(firstBlood);
             Assert.IsTrue(firstBlood.IsUnlocked);
+        }
+
+        [Test]
+        public void SkillTree_EffectModes_AddMultiplyAndSet()
+        {
+            var tree = GrayboxSkillTreeData.Create(
+                GrayboxSkillNodeData.Create("A", "A", "", "Test", 1, null,
+                    new SkillEffect { stat = SkillStat.BountyMultiplier, mode = SkillEffectMode.Multiply, value = 1.5f },
+                    new SkillEffect { stat = SkillStat.FrostSlowBonus, mode = SkillEffectMode.Add, value = 0.2f }),
+                GrayboxSkillNodeData.Create("B", "B", "", "Test", 1, null,
+                    new SkillEffect { stat = SkillStat.BountyMultiplier, mode = SkillEffectMode.Multiply, value = 2f },
+                    new SkillEffect { stat = SkillStat.RefundPercentage, mode = SkillEffectMode.Set, value = 0.9f }));
+            var skillTree = _holder.AddComponent<GrayboxSkillTree>();
+            skillTree.Configure(tree);
+
+            Assert.AreEqual(1f, skillTree.BountyMultiplier, 0.001f);
+            Assert.AreEqual(0.75f, skillTree.RefundPercentage, 0.001f);
+
+            skillTree.TryUnlock("A");
+            skillTree.TryUnlock("B");
+
+            Assert.AreEqual(3f, skillTree.BountyMultiplier, 0.001f);
+            Assert.AreEqual(0.2f, skillTree.FrostSlowBonus, 0.001f);
+            Assert.AreEqual(0.9f, skillTree.RefundPercentage, 0.001f);
+        }
+
+        [Test]
+        public void SkillTree_Branches_FollowCatalogOrder()
+        {
+            var skillTree = _holder.AddComponent<GrayboxSkillTree>();
+            skillTree.Configure(GrayboxTestContent.SkillTree());
+
+            CollectionAssert.AreEqual(new[] { "Ballistics" }, skillTree.GetBranches());
+            CollectionAssert.AreEqual(new[] { "Ballistics_HeavyCaliber", "Ballistics_RapidCycling" },
+                skillTree.GetBranchNodes("Ballistics").ConvertAll(n => n.id));
+        }
+
+        [Test]
+        public void Achievements_WaveTriggers_CountByTheirConditions()
+        {
+            var achSystem = _holder.AddComponent<GrayboxAchievements>();
+            achSystem.Configure(GrayboxTestContent.Achievements());
+
+            achSystem.ReportWaveCompleted(4);
+            Assert.IsFalse(achSystem.Achievements.First(a => a.Id == "boss_slayer").IsUnlocked);
+            Assert.AreEqual(4, achSystem.Achievements.First(a => a.Id == "wave_survivor").CurrentProgress);
+
+            achSystem.ReportWaveCompleted(5);
+            Assert.IsTrue(achSystem.Achievements.First(a => a.Id == "boss_slayer").IsUnlocked);
+
+            achSystem.ReportWaveCompleted(8);
+            Assert.IsTrue(achSystem.Achievements.First(a => a.Id == "wave_survivor").IsUnlocked);
+
+            // No base in the scene, so there is no full health to count.
+            Assert.AreEqual(0, achSystem.Achievements.First(a => a.Id == "fortress").CurrentProgress);
         }
     }
 }

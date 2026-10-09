@@ -47,6 +47,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         protected abstract void Perform();
 
+        /// <summary>
+        /// The Warden was hit, or went down. A hold in progress starts over; a subclass can do more,
+        /// such as drop what it carries when <paramref name="downed"/>.
+        /// </summary>
+        public virtual void Interrupt(bool downed)
+        {
+            _held = 0f;
+        }
+
         /// <summary>Called by the Warden every frame with the state of the key for this ability.</summary>
         public void Tick(bool pressedThisFrame, bool held)
         {

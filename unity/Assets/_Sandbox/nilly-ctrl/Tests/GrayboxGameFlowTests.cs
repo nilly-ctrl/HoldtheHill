@@ -52,6 +52,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             _economy = systems.AddComponent<GrayboxEconomy>();
             _hill = systems.AddComponent<GrayboxBaseHealth>();
             _skills = systems.AddComponent<GrayboxSkillTree>();
+            _skills.Configure(GrayboxTestContent.SkillTree());
 
             var spawnerObject = new GameObject("TestSpawner");
             spawnerObject.SetActive(false);
@@ -228,7 +229,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             yield return null;
 
             _economy.TrySpendGold(200);
-            _skills.TryUnlock(SkillNodeId.Ballistics_HeavyCaliber);
+            _skills.TryUnlock("Ballistics_HeavyCaliber");
             int pointsAtWave2 = _skills.SkillPoints;
             _hill.TakeBaseDamage(30f, Vector3.zero);
 
@@ -251,7 +252,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Assert.AreEqual(_hill.MaxHealth - 30f, _hill.CurrentHealth);
             Assert.IsFalse(_hill.IsFinished);
             Assert.AreEqual(pointsAtWave2, _skills.SkillPoints);
-            Assert.IsTrue(_skills.IsUnlocked(SkillNodeId.Ballistics_HeavyCaliber));
+            Assert.IsTrue(_skills.IsUnlocked("Ballistics_HeavyCaliber"));
             Assert.AreEqual(2, _spawner.CurrentWaveNumber, "wave 2 is next");
             Assert.AreEqual(EnemySpawner.SpawnerState.WaitingForNextWave, _spawner.CurrentState, "waits for the player");
             Assert.AreEqual(1, _flow.Stats.WaveRetries);
@@ -274,7 +275,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             _spawner.StartNextWave();
             yield return null;
             _economy.TrySpendGold(400);
-            _skills.TryUnlock(SkillNodeId.Ballistics_HeavyCaliber);
+            _skills.TryUnlock("Ballistics_HeavyCaliber");
             _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
             _flow.RetryWave();
 
@@ -285,7 +286,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Assert.AreEqual(500, _economy.CurrentGold);
             Assert.AreEqual(_hill.MaxHealth, _hill.CurrentHealth);
             Assert.AreEqual(startingPoints, _skills.SkillPoints);
-            Assert.IsFalse(_skills.IsUnlocked(SkillNodeId.Ballistics_HeavyCaliber));
+            Assert.IsFalse(_skills.IsUnlocked("Ballistics_HeavyCaliber"));
             Assert.AreEqual(1, _spawner.CurrentWaveNumber);
             Assert.AreEqual(EnemySpawner.SpawnerState.Idle, _spawner.CurrentState);
             Assert.AreEqual(0, _flow.Stats.WaveRetries);

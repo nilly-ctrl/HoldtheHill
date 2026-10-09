@@ -39,7 +39,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public int Gold { get; private set; }
         public float HillHealth { get; private set; }
         public int SkillPoints { get; private set; }
-        public List<SkillNodeId> UnlockedSkills { get; private set; }
+        public List<string> UnlockedSkills { get; private set; }
         public GrayboxRunStats Stats { get; private set; }
         public int TowerCount => _towers.Count;
 
@@ -55,7 +55,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 Gold = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentGold : 0,
                 HillHealth = GrayboxBaseHealth.Instance != null ? GrayboxBaseHealth.Instance.CurrentHealth : 0f,
                 SkillPoints = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.SkillPoints : 0,
-                UnlockedSkills = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.GetUnlockedIds() : new List<SkillNodeId>(),
+                UnlockedSkills = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.GetUnlockedIds() : new List<string>(),
                 Stats = stats != null ? stats.Clone() : new GrayboxRunStats(),
             };
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using HoldTheHill.Sandbox.NillyCtrl;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -63,33 +64,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             GUILayout.Space(10);
 
-            // 3 Columns for 3 Branches
+            // One column per branch, in catalog order.
             GUILayout.BeginHorizontal();
 
-            DrawBranchColumn("BALLISTICS", new[]
+            List<string> branches = GrayboxSkillTree.Instance.GetBranches();
+            for (int i = 0; i < branches.Count; i++)
             {
-                SkillNodeId.Ballistics_HeavyCaliber,
-                SkillNodeId.Ballistics_RapidCycling,
-                SkillNodeId.Ballistics_ExplosivePayload
-            });
+                if (i > 0)
+                {
+                    GUILayout.Space(10);
+                }
 
-            GUILayout.Space(10);
-
-            DrawBranchColumn("CONTROL", new[]
-            {
-                SkillNodeId.Control_DeepFreeze,
-                SkillNodeId.Control_HeavyShockwave,
-                SkillNodeId.Control_AbsoluteZero
-            });
-
-            GUILayout.Space(10);
-
-            DrawBranchColumn("ECONOMY", new[]
-            {
-                SkillNodeId.Economy_ScavengerBounties,
-                SkillNodeId.Economy_BulkDiscounts,
-                SkillNodeId.Economy_SalvageMastery
-            });
+                DrawBranchColumn(branches[i], GrayboxSkillTree.Instance.GetBranchNodes(branches[i]));
+            }
 
             GUILayout.EndHorizontal();
 
@@ -103,17 +90,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GUILayout.EndArea();
         }
 
-        private void DrawBranchColumn(string title, SkillNodeId[] nodeIds)
+        private void DrawBranchColumn(string title, List<SkillNode> nodes)
         {
             GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(216));
-            GUILayout.Label($"<b><color=#80d0ff>{title}</color></b>", _headerStyle);
+            GUILayout.Label($"<b><color=#80d0ff>{title.ToUpperInvariant()}</color></b>", _headerStyle);
             GUILayout.Space(4);
 
-            foreach (var id in nodeIds)
+            foreach (SkillNode node in nodes)
             {
-                var node = GrayboxSkillTree.Instance.GetNode(id);
-                if (node == null) continue;
-
+                string id = node.id;
                 bool isUnlocked = node.isUnlocked;
                 bool canUnlock = GrayboxSkillTree.Instance.CanUnlock(id);
 
@@ -130,8 +115,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     GUI.color = new Color(0.6f, 0.6f, 0.6f, 0.6f);
                 }
 
-                // Icon files are named after the node id: Control_DeepFreeze -> SkillControlDeepFreezeIcon.
-                Texture2D icon = GrayboxIcons.Get($"Skill{id.ToString().Replace("_", string.Empty)}Icon");
+                Texture2D icon = GrayboxIcons.Get(node.Data.IconName);
                 Color buttonTint = GUI.color;
 
                 GUILayout.BeginHorizontal();

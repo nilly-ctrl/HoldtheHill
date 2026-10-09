@@ -164,6 +164,58 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Assert.AreEqual(1f, _warden.SpeedScale);
         }
 
+        [Test]
+        public void Warden_HasHealth_AndAHitTakesSomeOfIt()
+        {
+            GrayboxWardenHealth health = _warden.Health;
+            Assert.IsNotNull(health, "Rebuild so the Warden prefab gets its health.");
+            Assert.AreEqual(health.MaxHealth, health.CurrentHealth);
+
+            float heard = 0f;
+            health.Hurt += lost => heard += lost;
+            health.TakeDamage(new DamageInfo(5f, null, Vector2.zero));
+
+            Assert.AreEqual(health.MaxHealth - 5f, health.CurrentHealth, 0.001f);
+            Assert.AreEqual(5f, heard, 0.001f);
+            Assert.IsFalse(health.IsDowned);
+        }
+
+        [Test]
+        public void Health_AtZero_GoesDown_DropsWhatItCarries_AndIgnoresFurtherHits()
+        {
+            var carry = Ability<GrayboxWardenCarry>();
+            Tower tower = MakeTower(new Vector3(0.5f, 0f, 0f));
+            Assert.IsTrue(carry.TryUse());
+            Assert.AreSame(tower, carry.Carried);
+
+            GrayboxWardenHealth health = _warden.Health;
+            bool wentDown = false;
+            health.Downed += () => wentDown = true;
+            health.TakeDamage(new DamageInfo(health.MaxHealth + 100f, null, Vector2.zero));
+
+            Assert.IsTrue(wentDown);
+            Assert.IsTrue(health.IsDowned);
+            Assert.AreEqual(0f, health.CurrentHealth);
+            Assert.IsNull(carry.Carried, "a downed Warden drops the tower");
+            Assert.IsTrue(tower.enabled);
+            Assert.AreEqual(1f, _warden.SpeedScale);
+
+            health.TakeDamage(new DamageInfo(5f, null, Vector2.zero));
+            Assert.AreEqual(0f, health.CurrentHealth, "no damage while down");
+        }
+
+        [Test]
+        public void Heal_RestoresHealth_UpToTheMaximum()
+        {
+            GrayboxWardenHealth health = _warden.Health;
+            health.TakeDamage(new DamageInfo(8f, null, Vector2.zero));
+            health.Heal(3f);
+            Assert.AreEqual(health.MaxHealth - 5f, health.CurrentHealth, 0.001f);
+
+            health.Heal(1000f);
+            Assert.AreEqual(health.MaxHealth, health.CurrentHealth);
+        }
+
         private static void SetCooldownOver(GrayboxWardenAbility ability)
         {
             typeof(GrayboxWardenAbility)

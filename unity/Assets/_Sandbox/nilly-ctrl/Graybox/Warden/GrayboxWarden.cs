@@ -10,8 +10,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// dig, carry). It also collects any pickup it walks into.
     /// </summary>
     /// <remarks>
-    /// First pass for the graybox. It has no health and cannot be hurt; what hurts the Warden
-    /// is still an open design question (docs/level-up-plan, W3).
+    /// Its health is a <see cref="GrayboxWardenHealth"/> on the same prefab. What hurts the Warden
+    /// is still an open design question (docs/level-up-plan, W3), so nothing does yet.
     /// </remarks>
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Warden")]
     public class GrayboxWarden : MonoBehaviour
@@ -33,6 +33,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public IReadOnlyList<GrayboxWardenAbility> Abilities => _abilities;
 
+        /// <summary>The Warden's health, or null on a Warden prefab that has none.</summary>
+        public GrayboxWardenHealth Health { get; private set; }
+
         /// <summary>Multiplier on walking speed. Carrying something lowers it.</summary>
         public float SpeedScale { get; set; } = 1f;
 
@@ -43,6 +46,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             Instance = this;
             GetComponentsInChildren(_abilities);
+            Health = GetComponent<GrayboxWardenHealth>();
         }
 
         private void OnDestroy()
@@ -55,6 +59,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Start()
         {
+            ReturnToHill();
+        }
+
+        /// <summary>Puts the Warden back where it starts, beside the hill at the end of the route.</summary>
+        public void ReturnToHill()
+        {
             var path = FindAnyObjectByType<EnemyPath>();
             if (path != null && path.Waypoints.Count > 0)
             {
@@ -62,9 +72,18 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
         }
 
+        /// <summary>Breaks off whatever the abilities are part way through: a hit resets a hold, being downed drops what is carried.</summary>
+        public void InterruptAbilities(bool downed)
+        {
+            foreach (GrayboxWardenAbility ability in _abilities)
+            {
+                ability.Interrupt(downed);
+            }
+        }
+
         private void Update()
         {
-            if (!GrayboxGameFlow.GameplayActive)
+            if (!GrayboxGameFlow.GameplayActive || (Health != null && Health.IsDowned))
             {
                 return;
             }

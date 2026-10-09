@@ -49,12 +49,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             if (!s_madeAnAbility && AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath("Warden")) != null)
             {
+                EnsureHealth();
                 return;
             }
 
             var go = new GameObject("Warden");
             GrayboxBuilder.AddSprite(go, square, new Color(0.95f, 0.8f, 0.35f), 0.55f, sortingOrder: 5);
             go.AddComponent<GrayboxWarden>();
+            go.AddComponent<GrayboxWardenHealth>();
             go.AddComponent<GrayboxWardenHud>();
             foreach (GameObject ability in abilities)
             {
@@ -63,6 +65,25 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             GrayboxBuilder.SavePrefab(go, $"{PrefabFolder}/Warden");
+        }
+
+        // The Warden prefab is kept between builds so its tuning survives, so a part added later is put on it here.
+        private static void EnsureHealth()
+        {
+            string path = PrefabPath("Warden");
+            GameObject root = PrefabUtility.LoadPrefabContents(path);
+            try
+            {
+                if (root.GetComponent<GrayboxWardenHealth>() == null)
+                {
+                    root.AddComponent<GrayboxWardenHealth>();
+                    PrefabUtility.SaveAsPrefabAsset(root, path);
+                }
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(root);
+            }
         }
 
         /// <summary>Puts the Warden in the scene being built. It walks to the hill itself on Play.</summary>

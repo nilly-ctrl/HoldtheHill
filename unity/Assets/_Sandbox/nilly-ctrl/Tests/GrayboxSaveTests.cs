@@ -287,6 +287,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         {
             GrayboxSave.Open(_path);
             var achievements = _holder.AddComponent<GrayboxAchievements>();
+            achievements.Configure(GrayboxTestContent.Achievements());
             yield return null;
 
             achievements.AddProgress("first_blood", 1);     // unlocks, which saves
@@ -298,6 +299,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             GrayboxSave.Open(_path);
             _holder = new GameObject("TestHolder");
             achievements = _holder.AddComponent<GrayboxAchievements>();
+            achievements.Configure(GrayboxTestContent.Achievements());
             yield return null;
 
             Achievement firstBlood = achievements.Achievements.First(a => a.Id == "first_blood");
@@ -312,12 +314,14 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         public IEnumerator Achievements_WithNoSaveAttached_StartEmptyEveryTime()
         {
             var achievements = _holder.AddComponent<GrayboxAchievements>();
+            achievements.Configure(GrayboxTestContent.Achievements());
             yield return null;
             achievements.AddProgress("first_blood", 1);
 
             Object.DestroyImmediate(_holder);
             _holder = new GameObject("TestHolder");
             achievements = _holder.AddComponent<GrayboxAchievements>();
+            achievements.Configure(GrayboxTestContent.Achievements());
             yield return null;
 
             Assert.IsFalse(achievements.Achievements.First(a => a.Id == "first_blood").IsUnlocked);
