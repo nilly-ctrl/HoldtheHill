@@ -46,40 +46,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         protected virtual void OnEnable()
         {
-            EnemyHealth.Damaged += HandleDamaged;
-            EnemyHealth.Defeated += HandleDefeated;
-            EnemyMover.ReachedEnd += HandleReachedEnd;
+            // This enemy's own events: nothing to filter, and nothing runs for other enemies' hits.
+            Health.Hurt += OnHurt;
+            Health.Died += OnDied;
+            if (Mover != null) Mover.Arrived += OnReachedHill;
         }
 
         protected virtual void OnDisable()
         {
-            EnemyHealth.Damaged -= HandleDamaged;
-            EnemyHealth.Defeated -= HandleDefeated;
-            EnemyMover.ReachedEnd -= HandleReachedEnd;
-        }
-
-        private void HandleDamaged(EnemyHealth health, DamageInfo info, float applied)
-        {
-            if (health == Health)
-            {
-                OnHurt(info, applied);
-            }
-        }
-
-        private void HandleDefeated(GameObject enemy)
-        {
-            if (enemy == gameObject)
-            {
-                OnDied();
-            }
-        }
-
-        private void HandleReachedEnd(GameObject enemy)
-        {
-            if (enemy == gameObject)
-            {
-                OnReachedHill();
-            }
+            Health.Hurt -= OnHurt;
+            Health.Died -= OnDied;
+            if (Mover != null) Mover.Arrived -= OnReachedHill;
         }
 
         protected virtual void OnHurt(DamageInfo info, float applied)

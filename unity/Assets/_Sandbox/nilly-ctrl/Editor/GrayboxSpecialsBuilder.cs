@@ -33,6 +33,49 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             ("Bombardier", "Bombardier Beetle", false),
         };
 
+        private const string BossDataRoot = "Assets/_Sandbox/nilly-ctrl/Graybox/Data/Bosses";
+        private const string BossBaseName = "GrayboxBossBase";
+
+        private static GameObject s_bossBase;
+
+        // A boss is an enemy with a GrayboxBoss on it, which is what the banner listens for.
+        private static GameObject BossBase(Sprite sprite)
+        {
+            if (s_bossBase != null)
+            {
+                return s_bossBase;
+            }
+
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(GrayboxBuilder.EnemyBase(sprite));
+            go.name = BossBaseName;
+            go.AddComponent<GrayboxBoss>();
+            s_bossBase = GrayboxBuilder.SavePrefab(go, BossBaseName);
+            return s_bossBase;
+        }
+
+        // Made once: the texts can then be edited in the Inspector and survive a rebuild.
+        private static GrayboxBossData BossData(string id, string label)
+        {
+            GrayboxBuilder.CreateFolderIfMissing("Assets/_Sandbox/nilly-ctrl/Graybox", "Data");
+            GrayboxBuilder.CreateFolderIfMissing("Assets/_Sandbox/nilly-ctrl/Graybox/Data", "Bosses");
+
+            string path = $"{BossDataRoot}/{id}Data.asset";
+            var data = AssetDatabase.LoadAssetAtPath<GrayboxBossData>(path);
+            if (data == null)
+            {
+                data = ScriptableObject.CreateInstance<GrayboxBossData>();
+                AssetDatabase.CreateAsset(data, path);
+                GrayboxBuilder.Apply(data, so =>
+                {
+                    so.FindProperty("_id").stringValue = id;
+                    so.FindProperty("_displayName").stringValue = label;
+                    so.FindProperty("_bannerText").stringValue = label.ToUpperInvariant().Replace('-', ' ');
+                });
+            }
+
+            return data;
+        }
+
         private static string PathOf(string id) => $"{PrefabRoot}/Graybox{id}.prefab";
 
         private static GameObject Load(string id) => AssetDatabase.LoadAssetAtPath<GameObject>(PathOf(id));
@@ -40,6 +83,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Builds every special prefab. The grunt is what eggs hatch into.</summary>
         public static void BuildPrefabs(Sprite sprite, GameObject grunt, SpriteAnimLibrary anim)
         {
+            s_bossBase = null;
+
             // ---- regular enemies
             Special<GrayboxWasp>("Wasp", sprite, health: 110f, speed: 2.2f, size: 0.55f, bounty: 12, breach: 6f, facePath: false);
             Special<GrayboxSpider>("Spider", sprite, health: 200f, speed: 1.3f, size: 0.6f, bounty: 16, breach: 8f);
@@ -70,7 +115,25 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             where T : GrayboxSpecialEnemy
         {
             string name = "Graybox" + id;
-            GameObject go = GrayboxBuilder.BuildBaseEnemyObject(name, sprite, health, speed, Color.white, size, bounty);
+            string label = null;
+            bool boss = false;
+            foreach ((string entryId, string entryLabel, bool entryBoss) in Catalog)
+            {
+                if (entryId == id)
+                {
+                    label = entryLabel;
+                    boss = entryBoss;
+                }
+            }
+
+            GameObject go = GrayboxBuilder.BuildBaseEnemyObject(
+                name, sprite, health, speed, Color.white, size, bounty, boss ? BossBase(sprite) : null);
+
+            GrayboxBossData data = boss ? BossData(id, label) : null;
+            if (boss)
+            {
+                GrayboxBuilder.Apply(go.GetComponent<GrayboxBoss>(), so => so.FindProperty("_data").objectReferenceValue = data);
+            }
 
             GrayboxBuilder.Apply(go.GetComponent<EnemyMover>(), so =>
             {
@@ -86,7 +149,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 extra?.Invoke(so);
             });
 
-            return GrayboxBuilder.SavePrefab(go, name);
+            GameObject prefab = GrayboxBuilder.SavePrefab(go, name);
+            if (boss)
+            {
+                GrayboxBuilder.Apply(data, so => so.FindProperty("_prefab").objectReferenceValue = prefab);
+                EditorUtility.SetDirty(data);
+            }
+
+            return prefab;
         }
 
         // No mover and no enemy animator: it sits where it was laid and plays its own clips.

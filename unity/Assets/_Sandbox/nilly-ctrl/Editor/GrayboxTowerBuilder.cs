@@ -12,9 +12,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// the build bar reads. Called from <see cref="GrayboxBuilder"/>.
     /// </summary>
     /// <remarks>
-    /// The prefabs are rebuilt on every run, so a tower's combat numbers are changed here. A data
-    /// asset is only filled in when it is first made: its name, icon and cost can be edited in
-    /// the Inspector and survive a rebuild.
+    /// A prefab or data asset is only made when it is missing, so a tower's numbers, name, icon
+    /// and cost are tuned in the Inspector and survive a rebuild. The numbers here are the
+    /// starting values. To start one tower over, delete its prefab and rebuild; to start them all
+    /// over use Tools > Hold the Hill > Rebuild Graybox Tower Prefabs.
     /// </remarks>
     internal static class GrayboxTowerBuilder
     {
@@ -27,8 +28,25 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private static readonly Color MeleeColor = new Color(0.75f, 0.55f, 0.35f);
 
+        /// <summary>True while every tower prefab is being remade from the numbers in this file.</summary>
+        public static bool Overwrite { get; private set; }
+
         private static GameObject s_base;
         private static SpriteAnimLibrary s_anim;
+
+        [MenuItem("Tools/Hold the Hill/Rebuild Graybox Tower Prefabs (resets tuning)")]
+        public static void RebuildAll()
+        {
+            Overwrite = true;
+            try
+            {
+                GrayboxBuilder.Build();
+            }
+            finally
+            {
+                Overwrite = false;
+            }
+        }
 
         public static string PrefabPath(string id) => $"{GrayboxRoot}/Prefabs/{PrefabFolder}/{id}.prefab";
 
@@ -144,6 +162,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         // What every tower shares. A change here reaches all of them through the variants.
         private static GameObject BuildBase(Sprite square)
         {
+            var existing = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath("TowerBase"));
+            if (existing != null && !Overwrite)
+            {
+                return existing;
+            }
+
             var go = new GameObject("TowerBase");
             GrayboxBuilder.AddSprite(go, square, Color.white, 0.8f, sortingOrder: 1);
             go.AddComponent<Tower>();
@@ -161,6 +185,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Color color,
             System.Action<GameObject> addWeapon)
         {
+            var existing = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(id));
+            if (existing != null && !Overwrite)
+            {
+                return BuildData(id, label, cost, existing);
+            }
+
             var go = (GameObject)PrefabUtility.InstantiatePrefab(s_base);
             go.name = id;
             go.GetComponent<SpriteRenderer>().color = color;
@@ -174,13 +204,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             addWeapon?.Invoke(go);
             GrayboxTowerAnimator.Attach(go, s_anim, id);
-
-            // Changes made straight to a component (not through a SerializedObject) only become
-            // overrides on the variant once they are recorded.
-            foreach (Component component in go.GetComponents<Component>())
-            {
-                PrefabUtility.RecordPrefabInstancePropertyModifications(component);
-            }
 
             GameObject prefab = GrayboxBuilder.SavePrefab(go, $"{PrefabFolder}/{id}");
             return BuildData(id, label, cost, prefab);

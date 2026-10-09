@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4353928724973931863
+--- !u!1001 &8290277774551576259
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,15 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1195757065929928734, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
       propertyPath: m_Name
-      value: GrayboxGrunt
-      objectReference: {fileID: 0}
-    - target: {fileID: 3583912991585859029, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
-      propertyPath: _maxHealth
-      value: 240
-      objectReference: {fileID: 0}
-    - target: {fileID: 7582586475302253144, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
-      propertyPath: _speed
-      value: 1.4
+      value: GrayboxBossBase
       objectReference: {fileID: 0}
     - target: {fileID: 7672094536703225598, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
       propertyPath: m_LocalPosition.x
@@ -60,70 +52,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8562839543638324662, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 8286306896561965420, guid: fe6affe8e08ba4b42b429ba3a9968561, type: 3}
-    - target: {fileID: 8562839543638324662, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
-      propertyPath: m_DrawMode
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1195757065929928734, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1360728404264178611}
-    - targetCorrespondingSourceObject: {fileID: 1195757065929928734, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7738930805472206807}
-    - targetCorrespondingSourceObject: {fileID: 1195757065929928734, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4302084951315199339}
+      addedObject: {fileID: 6690921390435540580}
   m_SourcePrefab: {fileID: 100100000, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
---- !u!1 &3239334618110524745 stripped
+--- !u!1 &7175594306598395613 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1195757065929928734, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
-  m_PrefabInstance: {fileID: 4353928724973931863}
+  m_PrefabInstance: {fileID: 8290277774551576259}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1360728404264178611
+--- !u!114 &6690921390435540580
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3239334618110524745}
+  m_GameObject: {fileID: 7175594306598395613}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56c04b451619a564598c31d1f4877ded, type: 3}
+  m_Script: {fileID: 11500000, guid: b9c028f5fe82117408112973db20e87c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.SpriteClipPlayer
-  _library: {fileID: 11400000, guid: af6c200ebfff50f49b1c83f8f95ad8df, type: 2}
-  _key: EnemyGrunt
-  _defaultClip: Walk
-  _destroyWhenDone: 0
---- !u!114 &7738930805472206807
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3239334618110524745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be6aab4f8cdca1f428496400e56ba5c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.GrayboxStatusVisuals
---- !u!114 &4302084951315199339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3239334618110524745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f296666e59e01645ac3a40373037c24, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: HoldTheHill.Sandbox.Animation::HoldTheHill.Sandbox.NillyCtrl.GrayboxEnemyAnimator
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxBoss
+  _data: {fileID: 0}

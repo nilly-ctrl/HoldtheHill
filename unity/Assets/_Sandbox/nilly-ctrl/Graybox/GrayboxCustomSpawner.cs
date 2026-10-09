@@ -12,14 +12,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Custom Spawner")]
     public class GrayboxCustomSpawner : MonoBehaviour
     {
+        /// <summary>One enemy the presets and endless waves can use, looked up by id.</summary>
+        [System.Serializable]
+        public class Entry
+        {
+            public string Id;
+            public GameObject Prefab;
+            [Tooltip("Included in the 100-enemy mixed horde.")]
+            public bool Mixed = true;
+        }
+
         [Header("Prefabs")]
-        [SerializeField] private GameObject _runnerPrefab;
-        [SerializeField] private GameObject _gruntPrefab;
-        [SerializeField] private GameObject _brutePrefab;
-        [SerializeField] private GameObject _shieldedPrefab;
-        [SerializeField] private GameObject _swarmPrefab;
-        [SerializeField] private GameObject _splitterPrefab;
-        [SerializeField] private GameObject _healerPrefab;
+        [Tooltip("Ids the presets ask for: Runner, Grunt, Brute, Shielded, Swarm, Splitter, Healer.")]
+        [SerializeField] private List<Entry> _enemies = new List<Entry>();
 
         [Header("Spawn Settings")]
         [SerializeField] private Transform _spawnPoint;
@@ -29,6 +34,27 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private Coroutine _customHordeCoroutine;
 
         public bool IsCustomSpawning { get; private set; }
+
+        public void Configure(List<Entry> enemies, Transform spawnPoint, Transform container)
+        {
+            _enemies = enemies;
+            _spawnPoint = spawnPoint;
+            _enemyContainer = container;
+        }
+
+        /// <summary>The prefab with this id, or the fallback id's prefab, or null.</summary>
+        public GameObject Find(string id, string fallbackId = null)
+        {
+            foreach (Entry entry in _enemies)
+            {
+                if (entry.Id == id && entry.Prefab != null)
+                {
+                    return entry.Prefab;
+                }
+            }
+
+            return fallbackId != null ? Find(fallbackId) : null;
+        }
 
         private void Awake()
         {
@@ -111,7 +137,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (GrayboxProceduralWaveGenerator.Instance == null) return;
 
             Wave waveData = GrayboxProceduralWaveGenerator.Instance.GenerateWave(
-                waveNumber, _runnerPrefab, _gruntPrefab, _brutePrefab, _shieldedPrefab, _splitterPrefab, _healerPrefab);
+                waveNumber, Find("Runner"), Find("Grunt"), Find("Brute"), Find("Shielded"), Find("Splitter"), Find("Healer"));
 
             List<GameObject> prefabs = new List<GameObject>();
             float delay = 0.5f;
@@ -129,21 +155,21 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public void SpawnPreset_SwarmRush()
         {
-            List<GameObject> prefabs = BuildRepeatList(_swarmPrefab != null ? _swarmPrefab : _runnerPrefab, 40);
+            List<GameObject> prefabs = BuildRepeatList(Find("Swarm", "Runner"), 40);
             SpawnCustomHorde(prefabs, 0.25f);
         }
 
         public void SpawnPreset_BruteParade()
         {
-            List<GameObject> prefabs = BuildRepeatList(_brutePrefab, 12);
+            List<GameObject> prefabs = BuildRepeatList(Find("Brute"), 12);
             SpawnCustomHorde(prefabs, 0.85f);
         }
 
         public void SpawnPreset_Phalanx()
         {
             List<GameObject> list = new List<GameObject>();
-            GameObject shielded = _shieldedPrefab != null ? _shieldedPrefab : _gruntPrefab;
-            GameObject healer = _healerPrefab != null ? _healerPrefab : _gruntPrefab;
+            GameObject shielded = Find("Shielded", "Grunt");
+            GameObject healer = Find("Healer", "Grunt");
 
             for (int i = 0; i < 4; i++)
             {
@@ -157,25 +183,30 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public void SpawnPreset_HydraSplitters()
         {
-            List<GameObject> prefabs = BuildRepeatList(_splitterPrefab != null ? _splitterPrefab : _gruntPrefab, 10);
+            List<GameObject> prefabs = BuildRepeatList(Find("Splitter", "Grunt"), 10);
             SpawnCustomHorde(prefabs, 0.85f);
         }
 
         public void SpawnPreset_MegaHorde()
         {
             List<GameObject> list = new List<GameObject>();
-            GameObject[] pool = new[]
+            var pool = new List<GameObject>();
+            foreach (Entry entry in _enemies)
             {
-                _runnerPrefab, _gruntPrefab, _shieldedPrefab, _splitterPrefab, _healerPrefab, _brutePrefab
-            };
+                if (entry.Mixed && entry.Prefab != null)
+                {
+                    pool.Add(entry.Prefab);
+                }
+            }
+
+            if (pool.Count == 0)
+            {
+                return;
+            }
 
             for (int i = 0; i < 100; i++)
             {
-                GameObject pick = pool[Random.Range(0, pool.Length)];
-                if (pick != null)
-                {
-                    list.Add(pick);
-                }
+                list.Add(pool[Random.Range(0, pool.Count)]);
             }
 
             SpawnCustomHorde(list, 0.35f);

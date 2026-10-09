@@ -52,14 +52,9 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         }
 
         [Test]
-        public void Prefabs_KeepTheirOwnNumbersAndWeapons()
+        public void Prefabs_HaveTheirOwnWeapons()
         {
-            Tower linear = Prefab("TowerLinear").GetComponent<Tower>();
-            Assert.AreEqual(3.6f, linear.Range, 0.001f);
-            Assert.AreEqual(0.45f, linear.FireInterval, 0.001f);
-            Assert.AreEqual(TargetingPriority.First, linear.Priority);
-
-            Assert.AreEqual(TargetingPriority.Weakest, Prefab("TowerChain").GetComponent<Tower>().Priority);
+            // Numbers are tuned on the prefabs in the Inspector, so none are pinned here.
             Assert.IsNotNull(Prefab("TowerChain").GetComponent<ChainLightning>());
             Assert.IsNotNull(Prefab("TowerChain").GetComponent<LineRenderer>().sharedMaterial);
             Assert.IsNotNull(Prefab("TowerBeam").GetComponent<ContinuousBeam>());
@@ -71,8 +66,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Assert.AreEqual(GrayboxMeleeTower.Caste.Soldier, Prefab("TowerSoldier").GetComponent<GrayboxMeleeTower>().Kind);
             Assert.IsNotNull(Prefab("TowerNurse").GetComponent<GrayboxNurseTower>());
             Assert.IsNull(Prefab("TowerNurse").GetComponent<GrayboxMeleeTower>());
-            Assert.AreEqual(GrayboxMeleeTower.StatsFor(GrayboxMeleeTower.Caste.Major).Range,
-                Prefab("TowerMajor").GetComponent<Tower>().Range, 0.001f);
+            Assert.AreEqual(GrayboxMeleeTower.Caste.Major, Prefab("TowerMajor").GetComponent<GrayboxMeleeTower>().Kind);
         }
 
         [Test]

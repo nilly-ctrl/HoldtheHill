@@ -38,6 +38,16 @@ namespace HoldTheHill.Features.Enemies
         /// <summary>Raised when a status effect starts or restarts on any enemy. For visuals.</summary>
         public static event Action<EnemyHealth, StatusEffectData> StatusApplied;
 
+        /// <summary>
+        /// Raised after this enemy takes a hit, with the hit (after shields) and the health
+        /// actually removed. Listen here rather than to <see cref="Damaged"/> when only one
+        /// enemy matters.
+        /// </summary>
+        public event Action<DamageInfo, float> Hurt;
+
+        /// <summary>Raised when this enemy dies, just before <see cref="Defeated"/>.</summary>
+        public event Action Died;
+
         [Header("Health")]
         [SerializeField, Min(1f)] private float _maxHealth = 30f;
         [SerializeField, Min(0)] private int _bountyValue = 10;
@@ -135,6 +145,7 @@ namespace HoldTheHill.Features.Enemies
 
             float applied = Mathf.Min(info.Amount, _currentHealth);
             _currentHealth -= info.Amount;
+            Hurt?.Invoke(info, applied);
             Damaged?.Invoke(this, info, applied);
 
             // Credit goes to the owner: a projectile is the source of its damage but is not a
@@ -259,6 +270,7 @@ namespace HoldTheHill.Features.Enemies
             _activeEffects.Clear();
             _activeSlows.Clear();
 
+            Died?.Invoke();
             Defeated?.Invoke(gameObject);
 
             if (_despawnDelay > 0f)

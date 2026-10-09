@@ -244,11 +244,15 @@ namespace HoldTheHill.Features.Enemies
         /// <summary>Raised whenever any enemy reaches the end of its path.</summary>
         public static event System.Action<GameObject> ReachedEnd;
 
+        /// <summary>Raised when this enemy reaches the end of its path, just before <see cref="ReachedEnd"/>.</summary>
+        public event System.Action Arrived;
+
         /// <summary>True if this enemy is removed when it reaches the end, rather than looping or stopping.</summary>
         public bool DespawnsAtEnd => _onReachEnd == EndBehaviour.Despawn;
 
         private void ReachEnd()
         {
+            Arrived?.Invoke();
             ReachedEnd?.Invoke(gameObject);
 
             switch (_onReachEnd)

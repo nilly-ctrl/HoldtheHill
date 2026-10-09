@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
@@ -7,8 +5,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// <summary>
     /// Announces a boss. When one appears its name fills the screen in the dripping Gothic blood
     /// style (through the scene's <see cref="GrayboxWaveBanner"/>), and a small name label then
-    /// rides above it until it dies. It watches for the boss components themselves, so it works
-    /// for bosses from a wave and from the spawn panel alike.
+    /// rides above it until it dies. It listens for <see cref="GrayboxBoss.Appeared"/>, so it works
+    /// for bosses from a wave and from the spawn panel alike, and a new boss needs no change here.
     /// </summary>
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Boss Banner")]
     public class GrayboxBossBanner : MonoBehaviour
@@ -22,44 +20,28 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private Vector2 _labelOffset = new Vector2(0f, 1.1f);
         [SerializeField, Min(1)] private int _labelPixelScale = 2;
 
-        private const float CheckSeconds = 0.4f;
-
-        private static readonly Dictionary<Type, string> Names = new Dictionary<Type, string>
-        {
-            { typeof(GrayboxTitanBeetle), "TITAN BEETLE" },
-            { typeof(GrayboxMantisQueen), "MANTIS QUEEN" },
-            { typeof(GrayboxHornet), "HORNET" },
-            { typeof(GrayboxOrbWeaver), "ORB WEAVER" },
-            { typeof(GrayboxBoulderBug), "BOULDER BUG" },
-            { typeof(GrayboxRivalQueen), "RIVAL QUEEN" },
-        };
-
-        private readonly HashSet<GrayboxSpecialEnemy> _announced = new HashSet<GrayboxSpecialEnemy>();
         private PixelFontTheme _theme;
         private GrayboxWaveBanner _banner;
-        private float _nextCheck;
 
-        private void Update()
+        private void OnEnable()
         {
-            if (Time.time < _nextCheck)
-            {
-                return;
-            }
+            GrayboxBoss.Appeared += OnBossAppeared;
+        }
 
-            _nextCheck = Time.time + CheckSeconds;
-            _announced.RemoveWhere(boss => boss == null);      // bosses that have died
-            foreach (GrayboxSpecialEnemy special in FindObjectsByType<GrayboxSpecialEnemy>())
-            {
-                if (!Names.TryGetValue(special.GetType(), out string bossName) || !_announced.Add(special))
-                {
-                    continue;
-                }
+        private void OnDisable()
+        {
+            GrayboxBoss.Appeared -= OnBossAppeared;
+        }
 
-                Announce(special, bossName);
+        private void OnBossAppeared(GrayboxBoss boss)
+        {
+            if (boss.Data != null)
+            {
+                Announce(boss.transform, boss.Data.BannerText);
             }
         }
 
-        private void Announce(GrayboxSpecialEnemy boss, string bossName)
+        private void Announce(Transform boss, string bossName)
         {
             if (_banner == null)
             {
@@ -84,7 +66,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             // A child of the boss, so it follows it and goes when the boss does.
             var go = new GameObject("Boss Name");
-            go.transform.SetParent(boss.transform, false);
+            go.transform.SetParent(boss, false);
             go.transform.localPosition = _labelOffset;
             var label = go.AddComponent<PixelText>();
             label.ThemeStyle = _labelStyle;

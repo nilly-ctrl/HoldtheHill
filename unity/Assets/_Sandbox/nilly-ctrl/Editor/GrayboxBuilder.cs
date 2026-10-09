@@ -57,6 +57,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static void Build()
         {
             EnsureFolders();
+            s_enemyBase = null;
 
             // Baked from Animations/Aseprite; every tower, enemy and the mine use it below.
             s_anim = GrayboxAnimLibraryBuilder.Build();
@@ -243,35 +244,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private static GameObject BuildEnemyPrefab(
             string name, Sprite sprite, float health, float speed, Color color, float size, int bounty = 10)
         {
-            var go = new GameObject(name);
-            AddSprite(go, sprite, color, size, sortingOrder: 2);
-            Animate(go);
-
-            var collider = go.AddComponent<CircleCollider2D>();
-            collider.radius = size * 0.5f;
-
-            var body = go.AddComponent<Rigidbody2D>();
-            body.bodyType = RigidbodyType2D.Kinematic;
-            body.gravityScale = 0f;
-
-            EnemyHealth enemyHealth = go.AddComponent<EnemyHealth>();
-            Apply(enemyHealth, so =>
-            {
-                so.FindProperty("_maxHealth").floatValue = health;
-                so.FindProperty("_bountyValue").intValue = bounty;
-                so.FindProperty("_despawnDelay").floatValue = 0f;
-            });
-
-            EnemyMover mover = go.AddComponent<EnemyMover>();
-            Apply(mover, so =>
-            {
-                so.FindProperty("_speed").floatValue = speed;
-                so.FindProperty("_onReachEnd").enumValueIndex = (int)EnemyMover.EndBehaviour.Despawn;
-            });
-
-            go.AddComponent<EnemyHealthBar>();
-
-            return SavePrefab(go, name);
+            return SavePrefab(BuildBaseEnemyObject(name, sprite, health, speed, color, size, bounty), name);
         }
 
         private static GameObject BuildShieldedEnemyPrefab(
@@ -315,36 +288,63 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return SavePrefab(go, name);
         }
 
-        internal static GameObject BuildBaseEnemyObject(
-            string name, Sprite sprite, float health, float speed, Color color, float size, int bounty = 10)
-        {
-            var go = new GameObject(name);
-            AddSprite(go, sprite, color, size, sortingOrder: 2);
-            Animate(go);
+        internal const string EnemyBaseName = "GrayboxEnemyBase";
 
-            var collider = go.AddComponent<CircleCollider2D>();
-            collider.radius = size * 0.5f;
+        private static GameObject s_enemyBase;
+
+        // What every enemy shares: a body towers can hit, health, a mover and a health bar.
+        // A change here reaches all of them through the variants.
+        internal static GameObject EnemyBase(Sprite sprite)
+        {
+            if (s_enemyBase != null)
+            {
+                return s_enemyBase;
+            }
+
+            var go = new GameObject(EnemyBaseName);
+            AddSprite(go, sprite, Color.white, 0.6f, sortingOrder: 2);
+
+            go.AddComponent<CircleCollider2D>().radius = 0.3f;
 
             var body = go.AddComponent<Rigidbody2D>();
             body.bodyType = RigidbodyType2D.Kinematic;
             body.gravityScale = 0f;
 
-            EnemyHealth enemyHealth = go.AddComponent<EnemyHealth>();
-            Apply(enemyHealth, so =>
+            Apply(go.AddComponent<EnemyHealth>(), so => so.FindProperty("_despawnDelay").floatValue = 0f);
+            Apply(go.AddComponent<EnemyMover>(),
+                so => so.FindProperty("_onReachEnd").enumValueIndex = (int)EnemyMover.EndBehaviour.Despawn);
+            go.AddComponent<EnemyHealthBar>();
+
+            s_enemyBase = SavePrefab(go, EnemyBaseName);
+            return s_enemyBase;
+        }
+
+        /// <summary>
+        /// An unsaved variant of the enemy base (or of <paramref name="basePrefab"/>) with its own
+        /// look and numbers. Add what makes the enemy special, then <see cref="SavePrefab"/> it.
+        /// </summary>
+        internal static GameObject BuildBaseEnemyObject(
+            string name, Sprite sprite, float health, float speed, Color color, float size, int bounty = 10,
+            GameObject basePrefab = null)
+        {
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(basePrefab != null ? basePrefab : EnemyBase(sprite));
+            go.name = name;
+
+            var renderer = go.GetComponent<SpriteRenderer>();
+            renderer.color = color;
+            renderer.size = new Vector2(size, size);
+            Animate(go);
+
+            go.GetComponent<CircleCollider2D>().radius = size * 0.5f;
+
+            Apply(go.GetComponent<EnemyHealth>(), so =>
             {
                 so.FindProperty("_maxHealth").floatValue = health;
                 so.FindProperty("_bountyValue").intValue = bounty;
-                so.FindProperty("_despawnDelay").floatValue = 0f;
             });
 
-            EnemyMover mover = go.AddComponent<EnemyMover>();
-            Apply(mover, so =>
-            {
-                so.FindProperty("_speed").floatValue = speed;
-                so.FindProperty("_onReachEnd").enumValueIndex = (int)EnemyMover.EndBehaviour.Despawn;
-            });
+            Apply(go.GetComponent<EnemyMover>(), so => so.FindProperty("_speed").floatValue = speed);
 
-            go.AddComponent<EnemyHealthBar>();
             return go;
         }
 
@@ -921,18 +921,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             // Custom horde spawner for stress-testing setups
             GrayboxCustomSpawner customSpawner = go.AddComponent<GrayboxCustomSpawner>();
-            Apply(customSpawner, so =>
-            {
-                so.FindProperty("_runnerPrefab").objectReferenceValue = runner;
-                so.FindProperty("_gruntPrefab").objectReferenceValue = grunt;
-                so.FindProperty("_brutePrefab").objectReferenceValue = brute;
-                so.FindProperty("_shieldedPrefab").objectReferenceValue = shielded;
-                so.FindProperty("_swarmPrefab").objectReferenceValue = swarm;
-                so.FindProperty("_splitterPrefab").objectReferenceValue = splitter;
-                so.FindProperty("_healerPrefab").objectReferenceValue = healer;
-                so.FindProperty("_spawnPoint").objectReferenceValue = go.transform;
-                so.FindProperty("_enemyContainer").objectReferenceValue = container.transform;
-            });
+            customSpawner.Configure(
+                new List<GrayboxCustomSpawner.Entry>
+                {
+                    new GrayboxCustomSpawner.Entry { Id = "Runner", Prefab = runner },
+                    new GrayboxCustomSpawner.Entry { Id = "Grunt", Prefab = grunt },
+                    new GrayboxCustomSpawner.Entry { Id = "Brute", Prefab = brute },
+                    new GrayboxCustomSpawner.Entry { Id = "Shielded", Prefab = shielded },
+                    new GrayboxCustomSpawner.Entry { Id = "Swarm", Prefab = swarm, Mixed = false },
+                    new GrayboxCustomSpawner.Entry { Id = "Splitter", Prefab = splitter },
+                    new GrayboxCustomSpawner.Entry { Id = "Healer", Prefab = healer },
+                },
+                go.transform,
+                container.transform);
 
             // Without this the spawner's living-enemy count never goes down.
             go.AddComponent<EnemySpawnerBridge>();
@@ -1082,6 +1083,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 {
                     throw new System.InvalidOperationException(
                         $"[Graybox] {fileName} has {group.Count()} {group.Key.Name} components. One was probably auto-added by a [RequireComponent].");
+                }
+            }
+
+            // Changes made straight to a component (not through a SerializedObject) only become
+            // overrides on a variant once they are recorded.
+            if (PrefabUtility.IsPartOfPrefabInstance(instance))
+            {
+                foreach (Component component in instance.GetComponentsInChildren<Component>(true))
+                {
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(component);
                 }
             }
 
