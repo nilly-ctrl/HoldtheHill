@@ -126,3 +126,7 @@ Written 2026-10-05 by Nilly with Claude. **Local working note, not committed.**
   clears. It has no wave retry, and its records are kept under "<map>-Endless".
 - Honeydew is paid at run end. A run retried after a defeat is paid only for waves beyond what
   it was already paid for.
+- Level select (2026-10-08): Home's Play tab has a Level row. Each level is its own generated
+  scene, listed in `Flow/GrayboxLevels.cs`; choosing another one loads its scene and starts the
+  run there. Records are per level. A level whose scene has not been built is not offered.
+- The VICTORY or DEFEAT banner plays first (up to 1.6 s), then the run-end panel opens.
