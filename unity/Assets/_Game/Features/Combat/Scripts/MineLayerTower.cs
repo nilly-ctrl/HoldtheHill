@@ -8,7 +8,7 @@ namespace HoldTheHill.Features.Combat
     /// Tower that periodically lays proximity landmines onto nearby road segments.
     /// </summary>
     [AddComponentMenu("Hold the Hill/Combat/Mine Layer Tower")]
-    public class MineLayerTower : TimedTowerWeapon
+    public class MineLayerTower : SplashTower
     {
         [Header("Mine Layer Parameters")]
         [SerializeField, Min(1f)] private float _range = 4.0f;

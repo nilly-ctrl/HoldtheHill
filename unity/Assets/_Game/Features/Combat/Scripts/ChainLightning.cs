@@ -10,7 +10,7 @@ namespace HoldTheHill.Features.Combat
     /// </summary>
     [AddComponentMenu("Hold the Hill/Combat/Chain Lightning")]
     [RequireComponent(typeof(LineRenderer))]
-    public class ChainLightning : TowerWeapon
+    public class ChainLightning : ArcTower
     {
         [Header("Chain")]
         [Tooltip("How many enemies the arc can strike in total, including the first.")]

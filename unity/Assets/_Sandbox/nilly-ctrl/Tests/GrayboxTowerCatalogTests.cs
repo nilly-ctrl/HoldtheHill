@@ -154,6 +154,31 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             placer.Deselect();
             Assert.IsNull(placer.SelectedTower);
         }
+
+        [Test]
+        public void EveryTower_HasAnArchetype_AndTheRolesAreAsDesigned()
+        {
+            var expected = new System.Collections.Generic.Dictionary<string, TowerArchetype>
+            {
+                { "Bullet Tower", TowerArchetype.Gunner }, { "Homing Tower", TowerArchetype.Gunner },
+                { "Ricochet Tower", TowerArchetype.Gunner }, { "Mortar Tower", TowerArchetype.Artillery },
+                { "Mine Layer", TowerArchetype.Artillery }, { "Chain Lightning", TowerArchetype.Arc },
+                { "Beam Tower", TowerArchetype.Arc }, { "Frost Aura", TowerArchetype.Controller },
+                { "Knockback Pulse", TowerArchetype.Controller }, { "Swarm Nest", TowerArchetype.Summoner },
+                { "Worker", TowerArchetype.Brawler }, { "Soldier", TowerArchetype.Brawler },
+                { "Major", TowerArchetype.Brawler }, { "Nurse", TowerArchetype.Support },
+            };
+
+            for (int i = 0; i < Catalog.Count; i++)
+            {
+                GrayboxTowerData data = Catalog[i];
+                Assert.AreNotEqual(TowerArchetype.Unspecified, data.Archetype, data.DisplayName);
+                if (expected.TryGetValue(data.DisplayName, out TowerArchetype role))
+                {
+                    Assert.AreEqual(role, data.Archetype, data.DisplayName);
+                }
+            }
+        }
     }
 }
 #endif

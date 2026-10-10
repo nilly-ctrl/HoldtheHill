@@ -20,7 +20,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// Numbers are first guesses for the graybox, not balanced.
     /// </remarks>
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Melee Tower")]
-    public class GrayboxMeleeTower : TowerWeapon
+    public class GrayboxMeleeTower : MeleeTower
     {
         public enum Caste
         {

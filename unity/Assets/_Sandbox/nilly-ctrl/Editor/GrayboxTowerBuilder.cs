@@ -104,6 +104,28 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     go => go.AddComponent<GrayboxNurseTower>()),
             };
 
+            // Roles in the same order as the list above. Only filled in where an asset has none, so a
+            // role changed in the Inspector survives a rebuild.
+            TowerArchetype[] roles =
+            {
+                TowerArchetype.Gunner, TowerArchetype.Gunner, TowerArchetype.Artillery, TowerArchetype.Gunner,
+                TowerArchetype.Controller, TowerArchetype.Controller, TowerArchetype.Artillery,
+                TowerArchetype.Arc, TowerArchetype.Arc, TowerArchetype.Summoner,
+                TowerArchetype.Brawler, TowerArchetype.Brawler, TowerArchetype.Brawler, TowerArchetype.Support,
+            };
+            for (int i = 0; i < towers.Count && i < roles.Length; i++)
+            {
+                GrayboxBuilder.Apply(towers[i], so =>
+                {
+                    SerializedProperty role = so.FindProperty("_archetype");
+                    if (role.enumValueIndex == (int)TowerArchetype.Unspecified)
+                    {
+                        role.enumValueIndex = (int)roles[i];
+                    }
+                });
+                EditorUtility.SetDirty(towers[i]);
+            }
+
             var catalog = LoadOrCreate<GrayboxTowerCatalog>(CatalogPath, out _);
             GrayboxBuilder.Apply(catalog, so =>
             {

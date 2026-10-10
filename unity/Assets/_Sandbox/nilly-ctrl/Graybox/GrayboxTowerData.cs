@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
@@ -15,6 +16,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     {
         [Tooltip("Name on the build menu and the tower card.")]
         [SerializeField] private string _displayName;
+
+        [Tooltip("The role it plays. Unspecified takes it from the prefab's weapon, or Gunner if it has none.")]
+        [SerializeField] private TowerArchetype _archetype;
 
         [Tooltip("Icon to look up in GrayboxIcons, e.g. TowerLinearIcon.")]
         [SerializeField] private string _iconName;
@@ -34,6 +38,21 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public string DisplayName => _displayName;
 
         public string IconName => _iconName;
+
+        /// <summary>The tower's role: set on the asset, else its weapon's, else Gunner (a tower with only a projectile).</summary>
+        public TowerArchetype Archetype
+        {
+            get
+            {
+                if (_archetype != TowerArchetype.Unspecified)
+                {
+                    return _archetype;
+                }
+
+                TowerWeapon weapon = _prefab != null ? _prefab.GetComponent<TowerWeapon>() : null;
+                return weapon != null && weapon.Archetype != TowerArchetype.Unspecified ? weapon.Archetype : TowerArchetype.Gunner;
+            }
+        }
 
         public int BaseCost => _baseCost;
 

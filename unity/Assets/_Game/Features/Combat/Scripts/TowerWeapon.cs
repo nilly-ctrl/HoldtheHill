@@ -16,6 +16,12 @@ namespace HoldTheHill.Features.Combat
     public abstract class TowerWeapon : MonoBehaviour
     {
         /// <summary>
+        /// The role this weapon plays. The archetype base classes (ArcTower, AuraTower and so on)
+        /// set it; a weapon with no archetype base leaves it Unspecified.
+        /// </summary>
+        public virtual TowerArchetype Archetype => TowerArchetype.Unspecified;
+
+        /// <summary>
         /// Fire-rate multiplier handed down by the tower (a web halves it). 1 is normal.
         /// </summary>
         public float RateScale { get; set; } = 1f;

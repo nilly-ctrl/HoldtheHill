@@ -7,7 +7,7 @@ namespace HoldTheHill.Features.Combat
     /// A timed weapon that hits every enemy in a circle around the tower. Subclasses say
     /// what a hit does.
     /// </summary>
-    public abstract class PulseTower : TimedTowerWeapon
+    public abstract class PulseTower : AuraTower
     {
         private readonly List<IDamageable> _targets = new List<IDamageable>();
 

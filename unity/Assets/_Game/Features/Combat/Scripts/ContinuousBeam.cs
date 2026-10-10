@@ -10,7 +10,7 @@ namespace HoldTheHill.Features.Combat
     /// </summary>
     [AddComponentMenu("Hold the Hill/Combat/Continuous Beam")]
     [RequireComponent(typeof(LineRenderer))]
-    public class ContinuousBeam : TowerWeapon
+    public class ContinuousBeam : ArcTower
     {
         [Header("Damage")]
         [Tooltip("Damage per second when the beam first touches a target.")]

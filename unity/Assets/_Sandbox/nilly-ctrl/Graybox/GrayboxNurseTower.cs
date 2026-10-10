@@ -9,7 +9,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// never targets anything.
     /// </summary>
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Nurse Tower")]
-    public class GrayboxNurseTower : TimedTowerWeapon
+    public class GrayboxNurseTower : SupportTower
     {
         private const int FxOrder = 4;
 
