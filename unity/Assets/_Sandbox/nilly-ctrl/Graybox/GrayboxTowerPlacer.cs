@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
@@ -137,6 +138,29 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public void BuildAtMenu(GrayboxTowerData data)
         {
             TryBuild(data, _buildWorldPos);
+        }
+
+        /// <summary>
+        /// The role of a tower in play: its weapon's, else the catalog entry with its name (towers the
+        /// placer made are named for their data), else Gunner.
+        /// </summary>
+        public TowerArchetype ArchetypeOf(Tower tower)
+        {
+            TowerWeapon weapon = tower.GetComponent<TowerWeapon>();
+            if (weapon != null && weapon.Archetype != TowerArchetype.Unspecified)
+            {
+                return weapon.Archetype;
+            }
+
+            for (int i = 0; i < TowerCount; i++)
+            {
+                if (_catalog[i].DisplayName == tower.name)
+                {
+                    return _catalog[i].Archetype;
+                }
+            }
+
+            return TowerArchetype.Gunner;
         }
 
         /// <summary>What a tower costs to build, after Skill Tree discounts.</summary>

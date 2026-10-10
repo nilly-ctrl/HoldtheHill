@@ -156,6 +156,36 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         }
 
         [Test]
+        public void Catalog_ListsEachArchetypeTogether_ForTheBuildBar()
+        {
+            var seen = new System.Collections.Generic.HashSet<TowerArchetype>();
+            TowerArchetype previous = TowerArchetype.Unspecified;
+            for (int i = 0; i < Catalog.Count; i++)
+            {
+                TowerArchetype role = Catalog[i].Archetype;
+                if (role != previous)
+                {
+                    Assert.IsTrue(seen.Add(role), $"{role} appears in two separate runs");
+                    previous = role;
+                }
+            }
+        }
+
+        [Test]
+        public void Placer_ReportsATowersArchetype_FromItsWeaponOrItsCatalogEntry()
+        {
+            _placerObject = new GameObject("Placer");
+            var placer = _placerObject.AddComponent<GrayboxTowerPlacer>();
+            placer.SetCatalog(Catalog);
+            for (int i = 0; i < Catalog.Count; i++)
+            {
+                Tower tower = placer.Place(Catalog[i], new Vector3(i * 3f, 0f, 0f), 0);
+                Assert.AreEqual(Catalog[i].Archetype, placer.ArchetypeOf(tower), Catalog[i].DisplayName);
+                Object.DestroyImmediate(tower.gameObject);
+            }
+        }
+
+        [Test]
         public void EveryTower_HasAnArchetype_AndTheRolesAreAsDesigned()
         {
             var expected = new System.Collections.Generic.Dictionary<string, TowerArchetype>

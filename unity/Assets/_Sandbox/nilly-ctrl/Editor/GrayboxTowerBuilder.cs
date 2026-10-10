@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Towers;
 using UnityEditor;
@@ -82,13 +83,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     go => SetProjectile(go, mortar)),
                 Build("TowerRicochet", "Ricochet Tower", 175, TargetingPriority.Strongest, 3.8f, 1f, new Color(0.6f, 0.8f, 1f),
                     go => SetProjectile(go, ricochet)),
+                Build("TowerMineLayer", "Mine Layer", 250, TargetingPriority.Closest, 4.0f, 2.8f, new Color(0.9f, 0.9f, 0.3f),
+                    go => GrayboxBuilder.Apply(go.AddComponent<MineLayerTower>(),
+                        so => so.FindProperty("_minePrefab").objectReferenceValue = mine)),
                 Build("TowerFrostAura", "Frost Aura", 225, TargetingPriority.Closest, 3.5f, 1.5f, new Color(0.4f, 0.85f, 1f),
                     go => go.AddComponent<FrostAuraTower>()),
                 Build("TowerKnockback", "Knockback Pulse", 200, TargetingPriority.Closest, 3.0f, 1.5f, new Color(1f, 0.6f, 0.2f),
                     go => go.AddComponent<KnockbackTower>()),
-                Build("TowerMineLayer", "Mine Layer", 250, TargetingPriority.Closest, 4.0f, 2.8f, new Color(0.9f, 0.9f, 0.3f),
-                    go => GrayboxBuilder.Apply(go.AddComponent<MineLayerTower>(),
-                        so => so.FindProperty("_minePrefab").objectReferenceValue = mine)),
                 Build("TowerChain", "Chain Lightning", 200, TargetingPriority.Weakest, 3.8f, 1.2f, new Color(0.5f, 0.85f, 1f),
                     go => GrayboxBuilder.AddChainLightning(go, lineMaterial)),
                 Build("TowerBeam", "Beam Tower", 225, TargetingPriority.Closest, 4f, 1f, new Color(1f, 0.5f, 0.3f),
@@ -109,22 +110,27 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             TowerArchetype[] roles =
             {
                 TowerArchetype.Gunner, TowerArchetype.Gunner, TowerArchetype.Artillery, TowerArchetype.Gunner,
-                TowerArchetype.Controller, TowerArchetype.Controller, TowerArchetype.Artillery,
+                TowerArchetype.Artillery, TowerArchetype.Controller, TowerArchetype.Controller,
                 TowerArchetype.Arc, TowerArchetype.Arc, TowerArchetype.Summoner,
                 TowerArchetype.Brawler, TowerArchetype.Brawler, TowerArchetype.Brawler, TowerArchetype.Support,
             };
             for (int i = 0; i < towers.Count && i < roles.Length; i++)
             {
+                int at = i;
                 GrayboxBuilder.Apply(towers[i], so =>
                 {
                     SerializedProperty role = so.FindProperty("_archetype");
                     if (role.enumValueIndex == (int)TowerArchetype.Unspecified)
                     {
-                        role.enumValueIndex = (int)roles[i];
+                        role.enumValueIndex = (int)roles[at];
                     }
                 });
                 EditorUtility.SetDirty(towers[i]);
             }
+
+            // The build bar lists towers of one archetype together (and hotkeys follow that order).
+            // OrderBy is stable, so towers of a kind keep the order above.
+            towers = towers.OrderBy(t => (int)t.Archetype).ToList();
 
             var catalog = LoadOrCreate<GrayboxTowerCatalog>(CatalogPath, out _);
             GrayboxBuilder.Apply(catalog, so =>

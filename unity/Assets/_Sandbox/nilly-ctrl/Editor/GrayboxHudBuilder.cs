@@ -334,6 +334,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             RectTransform panel = HudPanel(column, "TowerCard", 164f);
             TextMeshProUGUI title = Line(panel, "Tower");
             title.color = new Color32(0x80, 0xd0, 0xff, 0xff);
+            TextMeshProUGUI role = Line(panel, "Gunner");
             UiStepper priority = UiKitBuilder.AddStepper(panel, "Target", new[] { "First" }, 0);
             TextMeshProUGUI level = Line(panel, "Range 3.0m  Level 1/3");
             TextMeshProUGUI damage = Line(panel, "Damage dealt  0");
@@ -346,6 +347,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             var card = panel.gameObject.AddComponent<GrayboxTowerCard>();
             UiKitBuilder.Wire(card, "_title", title);
+            UiKitBuilder.Wire(card, "_role", role);
             UiKitBuilder.Wire(card, "_priority", priority);
             UiKitBuilder.Wire(card, "_levelLine", level);
             UiKitBuilder.Wire(card, "_damage", damage);

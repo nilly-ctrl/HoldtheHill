@@ -16,7 +16,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [Tooltip("Where the slots go. A horizontal layout group.")]
         [SerializeField] private RectTransform _slotRoot;
 
+        [Tooltip("Canvas units of empty space between one archetype's towers and the next's.")]
+        [SerializeField, Min(0f)] private float _groupGap = 8f;
+
         private readonly List<GrayboxBuildSlot> _slots = new List<GrayboxBuildSlot>();
+        private readonly List<GameObject> _gaps = new List<GameObject>();
         private GrayboxTowerPlacer _placer;
         private GrayboxTowerCatalog _builtFor;
 
@@ -56,10 +60,26 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             _slots.Clear();
+            foreach (GameObject gap in _gaps)
+            {
+                Destroy(gap);
+            }
+
+            _gaps.Clear();
             _builtFor = catalog;
 
             for (int i = 0; i < catalog.Count; i++)
             {
+                // The catalog lists towers of a kind together; a gap marks where one kind ends.
+                if (i > 0 && catalog[i].Archetype != catalog[i - 1].Archetype)
+                {
+                    var gap = new GameObject("Gap", typeof(RectTransform), typeof(UnityEngine.UI.LayoutElement));
+                    gap.transform.SetParent(_slotRoot, false);
+                    var element = gap.GetComponent<UnityEngine.UI.LayoutElement>();
+                    element.minWidth = element.preferredWidth = _groupGap;
+                    _gaps.Add(gap);
+                }
+
                 int index = i;
                 GrayboxBuildSlot slot = Instantiate(_slotPrefab, _slotRoot);
                 slot.Bind(catalog[i], () =>

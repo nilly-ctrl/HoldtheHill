@@ -15,6 +15,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     public class GrayboxTowerCard : GrayboxHudPanel
     {
         [SerializeField] private TMP_Text _title;
+        [SerializeField] private TMP_Text _role;
         [SerializeField] private UiStepper _priority;
         [SerializeField] private TMP_Text _levelLine;
         [SerializeField] private TMP_Text _damage;
@@ -72,6 +73,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             {
                 _shownTower = tower;
                 _title.text = $"<color=#80d0ff>{tower.name}</color>";
+                _role.text = GrayboxArchetypeStyle.Coloured(_placer.ArchetypeOf(tower));
                 _shownLevel = -1; // rebuild everything below
                 _shownDamage = _shownKills = _shownShots = _shownUpgradeCost = _shownRefund = -1;
                 _shownRange = -1f;
