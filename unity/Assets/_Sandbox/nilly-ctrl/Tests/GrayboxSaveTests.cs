@@ -328,35 +328,34 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         }
 
         [UnityTest]
-        public IEnumerator Settings_ChangedInTheMenu_AreWrittenWhenItCloses_AndLoadedNextTime()
+        public IEnumerator Settings_Changed_AreStored_AndPutBackInEffectNextTime()
         {
             bool healthBars = EnemyHealthBar.ShowHealthBars;
             try
             {
                 GrayboxSave.Open(_path);
-                var menu = _holder.AddComponent<GrayboxMenuManager>();
                 yield return null;
 
-                menu.ShowSettingsMenu = true;
-                yield return null;
-                menu.MasterVolume = 0.25f;
-                menu.IsMuted = true;
-                EnemyHealthBar.ShowHealthBars = false;
-                menu.ShowSettingsMenu = false;
-                yield return null;
+                SettingsSave settings = GrayboxSave.Data.settings;
+                settings.masterVolume = 0.25f;
+                settings.muted = true;
+                settings.showHealthBars = false;
+                GrayboxSettings.Apply();
+                GrayboxSettings.Store();
+                Assert.IsFalse(EnemyHealthBar.ShowHealthBars, "applied at once");
+                Assert.AreEqual(0f, AudioListener.volume, "muted");
 
-                Object.DestroyImmediate(_holder);
                 GrayboxSave.Close();
                 EnemyHealthBar.ShowHealthBars = true;
+                AudioListener.volume = 1f;
                 GrayboxSave.Open(_path);
-                _holder = new GameObject("TestHolder");
-                menu = _holder.AddComponent<GrayboxMenuManager>();
+                GrayboxSettings.Apply();
                 yield return null;
 
-                Assert.AreEqual(0.25f, menu.MasterVolume);
-                Assert.IsTrue(menu.IsMuted);
+                Assert.AreEqual(0.25f, GrayboxSave.Data.settings.masterVolume);
+                Assert.IsTrue(GrayboxSave.Data.settings.muted);
                 Assert.IsFalse(EnemyHealthBar.ShowHealthBars);
-                Assert.AreEqual(0f, AudioListener.volume, "muted");
+                Assert.AreEqual(0f, AudioListener.volume, "muted again after loading");
             }
             finally
             {

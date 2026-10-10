@@ -179,12 +179,14 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         // ---------- Menu & Achievement System Tests ----------
 
         [Test]
-        public void MenuManager_InitialState_MenusClosed()
+        public void Settings_ANewPlayersDefaults_AreLoudVisibleAndNotMuted()
         {
-            var menu = _holder.AddComponent<GrayboxMenuManager>();
-            Assert.IsFalse(menu.ShowStartMenu);
-            Assert.IsFalse(menu.ShowSettingsMenu);
-            Assert.AreEqual(1.0f, menu.MasterVolume);
+            var settings = new SettingsSave();
+            Assert.AreEqual(1.0f, settings.masterVolume);
+            Assert.IsFalse(settings.muted);
+            Assert.IsTrue(settings.showHealthBars);
+            Assert.IsTrue(settings.showDamageNumbers);
+            Assert.IsFalse(settings.autoStartWaves);
         }
 
         [Test]
