@@ -25,9 +25,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     {
         private static readonly Color32 Clash = new Color32(0xff, 0x9a, 0x5a, 0xff);
 
-        private const string KeyboardHint = "Arrows move, Enter presses, Q and E switch tab, Esc goes back.";
-        private const string GamepadHint = "Stick or d-pad moves, A presses, shoulders switch tab, B goes back.";
-
         [Serializable]
         public class Row
         {
@@ -65,7 +62,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Hook();
             GrayboxControls.Changed += Refresh;
             _message.color = UiKitStyle.Dim;
-            _message.text = "Press a row to change its key.";
+            _message.text = GrayboxLoc.Get("Press a row to change its key.");
             Refresh();
         }
 
@@ -106,9 +103,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (GrayboxControls.BindingIndex(row.Id, _group) < 0) return;
 
             _capturing = row;
-            row.Button.Label = "Press...";
+            row.Button.Label = GrayboxLoc.Get("Press...");
             _message.color = UiKitStyle.Dim;
-            _message.text = _group == GrayboxControls.GamepadGroup ? "Press a button. Esc cancels." : "Press a key. Esc cancels.";
+            _message.text = _group == GrayboxControls.GamepadGroup
+                ? GrayboxLoc.Get("Press a button. Esc cancels.")
+                : GrayboxLoc.Get("Press a key. Esc cancels.");
 
             // Until the capture ends, keys are answers: no back, no tab switching, no moving focus.
             UiInput.Suspended = true;
@@ -134,12 +133,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (clashes != null && clashes.Count > 0)
             {
                 _message.color = Clash;
-                _message.text = $"{GrayboxControls.Display(row.Id, _group)} is also \"{clashes[0].Label}\".";
+                _message.text = GrayboxLoc.Get("{0} is also \"{1}\".", GrayboxControls.Display(row.Id, _group), clashes[0].Label);
             }
             else
             {
                 _message.color = UiKitStyle.Dim;
-                _message.text = changed ? "Saved." : "Unchanged.";
+                _message.text = changed ? GrayboxLoc.Get("Saved.") : GrayboxLoc.Get("Unchanged.");
             }
         }
 
@@ -153,7 +152,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private void Refresh()
         {
             bool pad = _group == GrayboxControls.GamepadGroup;
-            _device.text = (pad ? "Gamepad. " : "Keyboard. ") + (pad ? GamepadHint : KeyboardHint);
+            _device.text = pad
+                ? GrayboxLoc.Get("Gamepad. Stick or d-pad moves, A presses, shoulders switch tab, B goes back.")
+                : GrayboxLoc.Get("Keyboard. Arrows move, Enter presses, Q and E switch tab, Esc goes back.");
 
             foreach (Row row in _rows)
             {
@@ -181,7 +182,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             {
                 GrayboxControls.ResetToDefaults();
                 _message.color = UiKitStyle.Dim;
-                _message.text = "Back to the default keys.";
+                _message.text = GrayboxLoc.Get("Back to the default keys.");
             });
             _done.Clicked.AddListener(Screen.Hide);
         }

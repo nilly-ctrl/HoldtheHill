@@ -54,28 +54,28 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             RunRecordResult record = flow.LastRunResult;
             bool victory = flow.LastRunWasVictory;
 
-            _title.text = victory ? "Hill defended" : "Hill overrun";
+            _title.text = victory ? GrayboxLoc.Get("Hill defended") : GrayboxLoc.Get("Hill overrun");
             _title.color = victory ? VictoryColour : DefeatColour;
 
             _newBest.gameObject.SetActive(record.NewBestWave || record.NewFastestVictory);
-            _newBest.text = record.NewFastestVictory && !record.NewBestWave ? "Fastest win!" : "New best!";
+            _newBest.text = record.NewFastestVictory && !record.NewBestWave ? GrayboxLoc.Get("Fastest win!") : GrayboxLoc.Get("New best!");
 
             // An endless run has no last wave to count towards.
-            _wave.text = stats.TotalWaves > 0 ? $"{stats.WaveReached} of {stats.TotalWaves}" : stats.WaveReached.ToString();
+            _wave.text = stats.TotalWaves > 0 ? GrayboxLoc.Get("{0} of {1}", stats.WaveReached, stats.TotalWaves) : stats.WaveReached.ToString();
             _honeydew.text = $"{PixelGlyphs.IconGem} {flow.LastRunHoneydew}";
             _kills.text = stats.Kills.ToString();
             _food.text = stats.GoldEarned.ToString();
             _towers.text = stats.TowersStanding.ToString();
             _time.text = FormatTime(stats.TimeSeconds);
             _retries.text = stats.WaveRetries.ToString();
-            _best.text = record.BestWaveRetries > 0
-                ? $"Wave {record.BestWave} ({record.BestWaveRetries} {(record.BestWaveRetries == 1 ? "retry" : "retries")})"
-                : $"Wave {record.BestWave}";
+            if (record.BestWaveRetries <= 0) _best.text = GrayboxLoc.Get("Wave {0}", record.BestWave);
+            else if (record.BestWaveRetries == 1) _best.text = GrayboxLoc.Get("Wave {0} ({1} retry)", record.BestWave, record.BestWaveRetries);
+            else _best.text = GrayboxLoc.Get("Wave {0} ({1} retries)", record.BestWave, record.BestWaveRetries);
 
             // Nothing to retry after a win, or before any wave has started.
             bool canRetry = !victory && flow.CanRetryWave;
             _retryWave.gameObject.SetActive(canRetry);
-            if (canRetry) _retryWave.Label = $"Retry wave {flow.RetryWaveNumber}";
+            if (canRetry) _retryWave.Label = GrayboxLoc.Get("Retry wave {0}", flow.RetryWaveNumber);
 
             Screen.FirstSelected = canRetry ? _retryWave.Button : _restart.Button;
         }

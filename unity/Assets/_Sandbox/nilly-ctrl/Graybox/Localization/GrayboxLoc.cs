@@ -8,7 +8,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// to English, then to the key itself, so a missing string is visible but never throws.
     /// </summary>
     /// <remarks>
-    /// Nothing in the existing UI calls this yet. Give it a table with <see cref="SetTable"/> (the
+    /// The menu screens (<c>Graybox/Screens</c>) call this with the English text as the key, so they
+    /// read the same with or without a table. Text baked into prefabs by the builders does not go
+    /// through it yet. Give it a table with <see cref="SetTable"/> (the
     /// <see cref="GrayboxLocBootstrap"/> component does that in a scene) before the first lookup;
     /// with no table every call returns the key.
     /// </remarks>

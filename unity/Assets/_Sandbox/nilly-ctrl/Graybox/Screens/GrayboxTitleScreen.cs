@@ -45,7 +45,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _settings.Clicked.AddListener(_settingsScreen.Show);
             _controls.Clicked.AddListener(_controlsScreen.Show);
             _quit.Clicked.AddListener(() => _dialog.Open(
-                "Quit the game?", "Your progress is saved.", "Quit", "Stay", Quit));
+                GrayboxLoc.Get("Quit the game?"), GrayboxLoc.Get("Your progress is saved."),
+                GrayboxLoc.Get("Quit"), GrayboxLoc.Get("Stay"), Quit));
         }
 
         private static void Quit()

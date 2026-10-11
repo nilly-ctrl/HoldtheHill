@@ -43,8 +43,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             GrayboxRunStats stats = Flow.Stats;
             _subtitle.text = stats.WaveReached > 0
-                ? (stats.TotalWaves > 0 ? $"Wave {stats.WaveReached} of {stats.TotalWaves}" : $"Endless, wave {stats.WaveReached}")
-                : "Before wave 1";
+                ? (stats.TotalWaves > 0
+                    ? GrayboxLoc.Get("Wave {0} of {1}", stats.WaveReached, stats.TotalWaves)
+                    : GrayboxLoc.Get("Endless, wave {0}", stats.WaveReached))
+                : GrayboxLoc.Get("Before wave 1");
         }
 
         private void Hook()
@@ -60,10 +62,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _settings.Clicked.AddListener(_settingsScreen.Show);
             _controls.Clicked.AddListener(_controlsScreen.Show);
             _restart.Clicked.AddListener(() => _dialog.Open(
-                "Restart run?", "You go back to wave 1 and lose this run.", "Restart", "Cancel",
+                GrayboxLoc.Get("Restart run?"), GrayboxLoc.Get("You go back to wave 1 and lose this run."),
+                GrayboxLoc.Get("Restart"), GrayboxLoc.Get("Cancel"),
                 () => { if (Flow != null) Flow.StartNewRun(); }));
             _quit.Clicked.AddListener(() => _dialog.Open(
-                "Quit to Home?", "This run will be lost.", "Quit", "Keep playing",
+                GrayboxLoc.Get("Quit to Home?"), GrayboxLoc.Get("This run will be lost."),
+                GrayboxLoc.Get("Quit"), GrayboxLoc.Get("Keep playing"),
                 () => { if (Flow != null) Flow.QuitToHome(); }));
         }
 

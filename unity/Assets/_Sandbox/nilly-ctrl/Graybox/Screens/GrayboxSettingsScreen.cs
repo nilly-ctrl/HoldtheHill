@@ -12,8 +12,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Settings Screen")]
     public class GrayboxSettingsScreen : MonoBehaviour
     {
-        private static readonly string[] UiSizes = { "Small", "Normal", "Large" };
-
         [Header("Audio")]
         [SerializeField] private UiSliderField _master;
         [SerializeField] private UiSliderField _music;
@@ -80,7 +78,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _healthBars.IsOn = s.showHealthBars;
             _rangeRings.IsOn = s.showRangeRings;
 
-            _uiSize.SetOptions(UiSizes, Mathf.Clamp(s.uiScaleOffset + 1, 0, UiSizes.Length - 1));
+            string[] uiSizes = { GrayboxLoc.Get("Small"), GrayboxLoc.Get("Normal"), GrayboxLoc.Get("Large") };
+            _uiSize.SetOptions(uiSizes, Mathf.Clamp(s.uiScaleOffset + 1, 0, uiSizes.Length - 1));
             _pauseOnFocusLoss.IsOn = s.pauseOnFocusLoss;
         }
 
@@ -89,7 +88,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _sizes.Clear();
             _sizes.AddRange(GrayboxSettings.Resolutions());
 
-            var labels = new List<string> { "Native" };
+            var labels = new List<string> { GrayboxLoc.Get("Native") };
             int index = 0;
             for (int i = 0; i < _sizes.Count; i++)
             {

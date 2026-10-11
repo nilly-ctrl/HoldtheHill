@@ -14,8 +14,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Home Screen")]
     public class GrayboxHomeScreen : MonoBehaviour
     {
-        private static readonly string[] Modes = { "Campaign", "Endless" };
-
         [Serializable]
         public class UpgradeRow
         {
@@ -92,7 +90,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             Hook();
             GrayboxMetaProgress.CurrencyChanged += OnCurrencyChanged;
-            if (Flow != null) _mode.SetOptions(Modes, Flow.Mode == GrayboxRunMode.Endless ? 1 : 0);
+            if (Flow != null)
+            {
+                string[] modes = { GrayboxLoc.Get("Campaign"), GrayboxLoc.Get("Endless") };
+                _mode.SetOptions(modes, Flow.Mode == GrayboxRunMode.Endless ? 1 : 0);
+            }
+
+
             ShowLevels();
             Refresh();
         }
@@ -148,11 +152,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             LevelRecord record = Level(SelectedMode);
             if (record == null || record.bestWave <= 0)
             {
-                _best.text = SelectedMode == GrayboxRunMode.Endless ? "Waves keep coming until the hill falls." : "Hold the hill through every wave.";
+                _best.text = SelectedMode == GrayboxRunMode.Endless
+                    ? GrayboxLoc.Get("Waves keep coming until the hill falls.")
+                    : GrayboxLoc.Get("Hold the hill through every wave.");
             }
             else
             {
-                _best.text = "Best: " + BestWave(record);
+                _best.text = GrayboxLoc.Get("Best: {0}", BestWave(record));
             }
         }
 
@@ -170,8 +176,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 row.Name.text = $"{upgrade.Name}  {level}/{upgrade.MaxLevel}";
                 row.Effect.text = maxed
                     ? GrayboxUpgrades.Describe(upgrade, level)
-                    : "Next: " + GrayboxUpgrades.Describe(upgrade, level + 1);
-                row.Buy.Label = maxed ? "Owned" : $"Buy {PixelGlyphs.IconGem}{cost}";
+                    : GrayboxLoc.Get("Next: {0}", GrayboxUpgrades.Describe(upgrade, level + 1));
+                row.Buy.Label = maxed ? GrayboxLoc.Get("Owned") : GrayboxLoc.Get("Buy {0}{1}", PixelGlyphs.IconGem, cost);
                 row.Buy.Interactable = !maxed && GrayboxMetaProgress.Currency >= cost;
             }
         }
@@ -196,7 +202,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 row.Value.color = row.Label.color;
             }
 
-            _awardCount.text = all == null ? "No achievements here." : $"{unlocked} of {all.Count} earned";
+            _awardCount.text = all == null ? GrayboxLoc.Get("No achievements here.") : GrayboxLoc.Get("{0} of {1} earned", unlocked, all.Count);
         }
 
         private void RefreshRecords()
@@ -253,9 +259,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private static string BestWave(LevelRecord record)
         {
-            return record.bestWaveRetries > 0
-                ? $"wave {record.bestWave} ({record.bestWaveRetries} {(record.bestWaveRetries == 1 ? "retry" : "retries")})"
-                : $"wave {record.bestWave}";
+            if (record.bestWaveRetries <= 0) return GrayboxLoc.Get("wave {0}", record.bestWave);
+            if (record.bestWaveRetries == 1) return GrayboxLoc.Get("wave {0} ({1} retry)", record.bestWave, record.bestWaveRetries);
+            return GrayboxLoc.Get("wave {0} ({1} retries)", record.bestWave, record.bestWaveRetries);
         }
 
         private static void GoToTitle()
