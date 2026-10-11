@@ -44,6 +44,7 @@ namespace HoldTheHill.Features.Combat
 
         private readonly List<IDamageable> _struck = new List<IDamageable>();
         private readonly List<Vector3> _points = new List<Vector3>();
+        private readonly List<IDamageable> _candidates = new List<IDamageable>();
         private LineRenderer _line;
         private float _visibleUntil;
 
@@ -110,15 +111,14 @@ namespace HoldTheHill.Features.Combat
 
         private IDamageable FindNextLink(Vector2 from)
         {
-            var candidates = new List<IDamageable>();
-            CombatUtil.OverlapDamageables(from, _jumpRange, _targetMask, candidates);
+            CombatUtil.OverlapDamageables(from, _jumpRange, _targetMask, _candidates);
 
             IDamageable best = null;
             float bestSqr = float.PositiveInfinity;
 
-            for (int i = 0; i < candidates.Count; i++)
+            for (int i = 0; i < _candidates.Count; i++)
             {
-                IDamageable candidate = candidates[i];
+                IDamageable candidate = _candidates[i];
                 if (_struck.Contains(candidate))
                 {
                     continue;
@@ -164,7 +164,11 @@ namespace HoldTheHill.Features.Combat
             }
 
             _line.positionCount = _points.Count;
-            _line.SetPositions(_points.ToArray());
+            for (int i = 0; i < _points.Count; i++)
+            {
+                _line.SetPosition(i, _points[i]);
+            }
+
             _line.enabled = true;
             _visibleUntil = Time.time + _arcDisplayTime;
         }

@@ -100,7 +100,6 @@ namespace HoldTheHill.Features.GameFlow
             }
 
             _currentHealth -= damageAmount;
-            Debug.Log("Queen current health: " + _currentHealth);
             if (_currentHealth <= 0.0)
             {
                 _currentHealth = 0.0;
