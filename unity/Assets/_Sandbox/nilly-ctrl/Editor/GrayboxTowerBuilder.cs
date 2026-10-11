@@ -128,6 +128,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 EditorUtility.SetDirty(towers[i]);
             }
 
+            // Towers made some other way (the content wizard) are kept: any data asset in the tower
+            // folder that this list did not make is appended, so a rebuild does not drop it.
+            foreach (string guid in AssetDatabase.FindAssets("t:GrayboxTowerData", new[] { TowerDataRoot }))
+            {
+                var extra = AssetDatabase.LoadAssetAtPath<GrayboxTowerData>(AssetDatabase.GUIDToAssetPath(guid));
+                if (extra != null && !towers.Contains(extra))
+                {
+                    towers.Add(extra);
+                }
+            }
+
             // The build bar lists towers of one archetype together (and hotkeys follow that order).
             // OrderBy is stable, so towers of a kind keep the order above.
             towers = towers.OrderBy(t => (int)t.Archetype).ToList();

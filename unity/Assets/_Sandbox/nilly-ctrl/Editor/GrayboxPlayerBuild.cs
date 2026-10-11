@@ -18,15 +18,38 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     {
         private const string ExeName = "HoldTheHill-Graybox.exe";
 
+        /// <summary>Where the player goes: <c>-hthBuildDir</c> if given, else <c>Builds/Graybox</c> beside the project.</summary>
+        public static string OutputFolder
+        {
+            get
+            {
+                string folder = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Builds", "Graybox"));
+                string[] args = System.Environment.GetCommandLineArgs();
+                for (int i = 0; i < args.Length - 1; i++)
+                {
+                    if (args[i] == "-hthBuildDir") folder = Path.GetFullPath(args[i + 1]);
+                }
+
+                return folder;
+            }
+        }
+
+        /// <summary>Full path of the player exe the build writes.</summary>
+        public static string ExePath => Path.Combine(OutputFolder, ExeName);
+
         [MenuItem("Tools/Hold the Hill/Build Graybox Player (Windows)")]
         public static void Build()
         {
-            string folder = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Builds", "Graybox"));
-            string[] args = System.Environment.GetCommandLineArgs();
-            for (int i = 0; i < args.Length - 1; i++)
+            if (!TryBuild() && Application.isBatchMode)
             {
-                if (args[i] == "-hthBuildDir") folder = args[i + 1];
+                EditorApplication.Exit(1);
             }
+        }
+
+        /// <summary>Builds the player and returns whether it succeeded. Never exits the editor.</summary>
+        public static bool TryBuild()
+        {
+            string folder = OutputFolder;
 
             // The first scene is the one the game opens on; the rest are the other levels Home offers.
             var scenes = new System.Collections.Generic.List<string>();
@@ -45,12 +68,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (summary.result == BuildResult.Succeeded)
             {
                 Debug.Log($"[Graybox] Player built: {summary.outputPath} ({summary.totalSize / (1024 * 1024)} MB)");
+                return true;
             }
-            else
-            {
-                Debug.LogError($"[Graybox] Player build {summary.result}: {summary.totalErrors} errors.");
-                if (Application.isBatchMode) EditorApplication.Exit(1);
-            }
+
+            Debug.LogError($"[Graybox] Player build {summary.result}: {summary.totalErrors} errors.");
+            return false;
         }
     }
 }

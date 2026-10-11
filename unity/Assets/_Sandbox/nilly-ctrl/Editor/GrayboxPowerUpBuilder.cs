@@ -50,6 +50,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 }
             }
 
+            // Power-ups made some other way (the content wizard) are offered too: any data asset in
+            // the power-up folder that the list above did not cover.
+            foreach (string guid in AssetDatabase.FindAssets("t:GrayboxPowerUpData", new[] { DataRoot }))
+            {
+                var extra = AssetDatabase.LoadAssetAtPath<GrayboxPowerUpData>(AssetDatabase.GUIDToAssetPath(guid));
+                if (extra != null && !powerUps.Contains(extra))
+                {
+                    powerUps.Add(extra);
+                }
+            }
+
             var go = new GameObject("GrayboxPowerUps");
             go.AddComponent<GrayboxPowerUpSpawner>().Configure(powerUps);
         }

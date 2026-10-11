@@ -11,11 +11,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// <c>persistentDataPath/replays</c> as JSON (see <see cref="ReplayRecording"/>).
     /// </summary>
     /// <remarks>
-    /// Nothing in the game is edited to feed this. Ability uses, skill unlocks, wave starts and
-    /// field resets come from the events those classes already raise. Tower placing, selling and
-    /// upgrading have no event, so each fixed step the active tower list is compared with the
-    /// previous step: a new tower is a place, a destroyed one is a sell, a higher level is an
-    /// upgrade. A tower removed some way other than selling would be recorded as a sell.
+    /// Ability uses, skill unlocks, wave starts and field resets come from the events those classes
+    /// already raise. Tower placing, selling and upgrading come from the static events on
+    /// <see cref="GrayboxTowerPlacer"/>, so only what the player did is recorded. Towers removed or
+    /// reset some other way (a field reset, a hornet) are not commands.
     ///
     /// Commands are accurate to one fixed step. Console commands are recorded as "dev" commands
     /// so a replay that used cheats stays in step.
@@ -29,22 +28,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             "help", "?", "list", "rec", "replay", "tune", "perf", "speed", "god",
         };
 
-        private struct Snap
-        {
-            public Tower Tower;
-            public int Level;
-            public Vector2 Position;
-            public string Name;
-        }
-
-        private readonly Dictionary<Tower, Snap> _known = new Dictionary<Tower, Snap>();
-        private readonly HashSet<Tower> _seen = new HashSet<Tower>();
-        private readonly List<Tower> _gone = new List<Tower>();
         private readonly List<Tower> _towers = new List<Tower>();
         private ReplayRecording _recording;
         private EnemySpawner _spawner;
         private int _tick;
-        private bool _rebaseline;
         private int _retries;
         private int _frames;
 
@@ -83,6 +70,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (Instance != this) return;
 
             GrayboxWardenAbility.Used += OnAbilityUsed;
+            GrayboxTowerPlacer.TowerPlaced += OnTowerPlaced;
+            GrayboxTowerPlacer.TowerUpgraded += OnTowerUpgraded;
+            GrayboxTowerPlacer.TowerSold += OnTowerSold;
             GrayboxSkillTree.OnSkillUnlocked += OnSkillUnlocked;
             GrayboxGameFlow.FieldReset += OnFieldReset;
             GrayboxGameFlow.StateChanged += OnStateChanged;
@@ -93,6 +83,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private void OnDisable()
         {
             GrayboxWardenAbility.Used -= OnAbilityUsed;
+            GrayboxTowerPlacer.TowerPlaced -= OnTowerPlaced;
+            GrayboxTowerPlacer.TowerUpgraded -= OnTowerUpgraded;
+            GrayboxTowerPlacer.TowerSold -= OnTowerSold;
             GrayboxSkillTree.OnSkillUnlocked -= OnSkillUnlocked;
             GrayboxGameFlow.FieldReset -= OnFieldReset;
             GrayboxGameFlow.StateChanged -= OnStateChanged;
@@ -158,7 +151,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             };
 
             _tick = 0;
-            _rebaseline = true;
             _retries = flow != null ? flow.Stats.WaveRetries : 0;
             _frames = 0;
             if (_recording.StartedMidRun)
@@ -178,8 +170,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _recording = null;
             finished.endTick = _tick;
             finished.result = string.IsNullOrEmpty(result) ? "Stopped" : result;
-            _known.Clear();
-
             try
             {
                 LastSavedPath = DevReplayFiles.Save(finished);
@@ -198,65 +188,31 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void FixedUpdate()
         {
-            if (_recording == null) return;
-
-            _tick++;
-            ObserveTowers();
+            if (_recording != null) _tick++;
         }
 
-        private void ObserveTowers()
+        private void OnTowerPlaced(Tower tower)
         {
-            Tower.GetActive(_towers);
+            if (_recording == null || tower == null) return;
 
-            if (_rebaseline)
-            {
-                _rebaseline = false;
-                _known.Clear();
-                foreach (Tower tower in _towers) _known[tower] = Snapshot(tower);
-                return;
-            }
-
-            _seen.Clear();
-            foreach (Tower tower in _towers)
-            {
-                _seen.Add(tower);
-                if (_known.TryGetValue(tower, out Snap snap))
-                {
-                    if (tower.Level > snap.Level)
-                    {
-                        _recording.Add(_tick, ReplayCommandType.Upgrade, snap.Name, snap.Position.x, snap.Position.y, tower.Level);
-                        snap.Level = tower.Level;
-                        _known[tower] = snap;
-                    }
-                }
-                else
-                {
-                    Snap added = Snapshot(tower);
-                    _known[tower] = added;
-                    _recording.Add(_tick, ReplayCommandType.Place, added.Name, added.Position.x, added.Position.y, added.Level);
-                }
-            }
-
-            // A tower that is merely switched off (a hornet carried it away) is still known; one
-            // that has been destroyed reads as null.
-            _gone.Clear();
-            foreach (KeyValuePair<Tower, Snap> pair in _known)
-            {
-                if (!_seen.Contains(pair.Key) && pair.Key == null) _gone.Add(pair.Key);
-            }
-
-            foreach (Tower gone in _gone)
-            {
-                Snap snap = _known[gone];
-                _recording.Add(_tick, ReplayCommandType.Sell, snap.Name, snap.Position.x, snap.Position.y, snap.Level);
-                _known.Remove(gone);
-            }
-        }
-
-        private static Snap Snapshot(Tower tower)
-        {
             Vector3 p = tower.transform.position;
-            return new Snap { Tower = tower, Level = tower.Level, Position = new Vector2(p.x, p.y), Name = tower.name };
+            _recording.Add(_tick, ReplayCommandType.Place, tower.name, p.x, p.y, tower.Level);
+        }
+
+        private void OnTowerUpgraded(Tower tower)
+        {
+            if (_recording == null || tower == null) return;
+
+            Vector3 p = tower.transform.position;
+            _recording.Add(_tick, ReplayCommandType.Upgrade, tower.name, p.x, p.y, tower.Level);
+        }
+
+        private void OnTowerSold(Tower tower)
+        {
+            if (_recording == null || tower == null) return;
+
+            Vector3 p = tower.transform.position;
+            _recording.Add(_tick, ReplayCommandType.Sell, tower.name, p.x, p.y, tower.Level);
         }
 
         // ---------- events ----------
@@ -296,7 +252,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (_recording != null)
             {
                 _recording.Add(_tick, ReplayCommandType.Reset, null, 0f, 0f, retry ? 1 : 0);
-                _rebaseline = true;
             }
             else if (AutoRecord && (DevReplayPlayer.Instance == null || !DevReplayPlayer.Instance.IsPlaying))
             {

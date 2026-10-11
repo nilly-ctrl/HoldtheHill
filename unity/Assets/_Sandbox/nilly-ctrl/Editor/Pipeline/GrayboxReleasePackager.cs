@@ -25,7 +25,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     public static class GrayboxReleasePackager
     {
         private const string VersionFileRelative = "Assets/_Sandbox/nilly-ctrl/Pipeline~/VERSION";
-        private const string ExeName = "HoldTheHill-Graybox.exe";
         private const int MaxChangelogCommits = 300;
 
         [MenuItem("Tools/Hold the Hill/Pipeline/Build Release Package (Windows)")]
@@ -63,28 +62,23 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             string zipPath = stage + ".zip";
 
             // Build with the existing method. It writes to -hthBuildDir if given, else <project>/Builds/Graybox.
-            string builtFolder = Path.GetFullPath(Path.Combine(projectRoot, "Builds", "Graybox"));
-            for (int i = 0; i < args.Length - 1; i++)
-            {
-                if (args[i] == "-hthBuildDir") builtFolder = Path.GetFullPath(args[i + 1]);
-            }
-
-            string exe = Path.Combine(builtFolder, ExeName);
-            DateTime started = DateTime.UtcNow.AddSeconds(-1);
+            string builtFolder = GrayboxPlayerBuild.OutputFolder;
+            string exe = GrayboxPlayerBuild.ExePath;
             string previousVersion = PlayerSettings.bundleVersion;
+            bool built;
             try
             {
                 PlayerSettings.bundleVersion = BundleVersionFrom(version);
-                GrayboxPlayerBuild.Build(); // in batch mode this exits with code 1 on a failed build
+                built = GrayboxPlayerBuild.TryBuild();
             }
             finally
             {
                 PlayerSettings.bundleVersion = previousVersion;
             }
 
-            if (!File.Exists(exe) || File.GetLastWriteTimeUtc(exe) < started)
+            if (!built || !File.Exists(exe))
             {
-                Fail($"[Release] No fresh player at {exe}; the build did not succeed.");
+                Fail($"[Release] The player build did not succeed (expected {exe}).");
                 return;
             }
 

@@ -55,7 +55,7 @@ Set `Auto Record Runs` on the bootstrap to record every run and save it when the
 `replay play latest` starts a new run, sets `UnityEngine.Random` to the recorded seed and gives the
 game the same commands on the same fixed-step ticks.
 
-Recorded: tower place, sell, upgrade (seen by comparing the tower list each fixed step), Warden
+Recorded: tower place, sell, upgrade (from the `GrayboxTowerPlacer` events), Warden
 ability use (with where the Warden stood), skill unlocks, campaign wave starts, field resets
 (restart or retry wave) and console commands.
 

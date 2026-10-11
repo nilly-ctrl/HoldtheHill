@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
@@ -75,6 +76,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         public Tower SelectedTower => _selectedTower;
+
+        /// <summary>Raised after a tower is placed by the placer (including <see cref="Place"/> calls from tools).</summary>
+        public static event Action<Tower> TowerPlaced;
+
+        /// <summary>Raised after a paid upgrade, with the tower at its new level.</summary>
+        public static event Action<Tower> TowerUpgraded;
+
+        /// <summary>Raised just before a tower is sold and destroyed.</summary>
+        public static event Action<Tower> TowerSold;
 
         /// <summary>True while a tower is selected, the build menu is open, or a tower is being placed.</summary>
         public bool IsBusy => _selectedTower != null || _showBuildMenu || _activePlacementTypeIndex >= 0;
@@ -205,6 +215,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             tower.Upgrade();
             tower.TotalGoldInvested += cost;
             GrayboxSfx.PlayCue("Upgrade", tower.transform.position);
+            TowerUpgraded?.Invoke(tower);
             return true;
         }
 
@@ -217,6 +228,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 return;
             }
 
+            TowerSold?.Invoke(tower);
             GrayboxEconomy.Instance?.EarnGold(tower.RefundValue);
             GrayboxSfx.PlayCue("Sell", tower.transform.position);
             SpriteClipPlayer.SpawnOneShot(_animLibrary, "FxBuild", "Sell", tower.transform.position, Quaternion.identity, 1f, 3);
@@ -489,6 +501,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             _showBuildMenu = false;
             _selectedTower = tower;
+            TowerPlaced?.Invoke(tower);
             return tower;
         }
 
