@@ -1,5 +1,7 @@
 # Pixel fonts
 
+> **Only the fonts the game uses are in the repo (since 2026-10-11).** That is `TTF/HoldTheHillPixel-Regular.ttf` and 16 baked styles: the seven `Damage*` styles, `Heal`, `Resource`, `Hud`, `Banner`, `BannerVictory`, `BannerDefeat`, `Combo`, `GothicBlood` and `TinyLabel`. The other alphabets, the 13 themed sets and the `Source~` build scripts are kept outside the repo on nilly-ctrl's computer (`B:\Projects\GameDev\Source\2D\hold-the-hill-fonts`). The rest of this page describes the full set.
+
 Sixteen hand-drawn alphabets for Hold the Hill, made to sit beside the 32x32 icons. The first three are below; the other thirteen have their own section. Each comes as a plain TTF (tint it yourself) and as baked colour styles (colours, outline and shadow already drawn in).
 
 | Alphabet | Size | Has | Use it for |
