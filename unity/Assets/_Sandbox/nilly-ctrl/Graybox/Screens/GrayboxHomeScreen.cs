@@ -222,7 +222,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             // Back from the hub is the title screen.
             Screen.CloseOnBack = false;
-            Screen.BackPressed += () => Flow?.GoToTitle();
+            Screen.BackPressed += GoToTitle;
 
             _mode.IndexChanged.AddListener(_ => RefreshPlay());
             _level.IndexChanged.AddListener(_ =>
@@ -231,7 +231,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 RefreshRecords();
             });
             _start.Clicked.AddListener(StartRun);
-            _toTitle.Clicked.AddListener(() => Flow?.GoToTitle());
+            _toTitle.Clicked.AddListener(GoToTitle);
 
             foreach (UpgradeRow row in _upgrades)
             {
@@ -256,6 +256,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return record.bestWaveRetries > 0
                 ? $"wave {record.bestWave} ({record.bestWaveRetries} {(record.bestWaveRetries == 1 ? "retry" : "retries")})"
                 : $"wave {record.bestWave}";
+        }
+
+        private static void GoToTitle()
+        {
+            if (Flow != null) Flow.GoToTitle();
         }
 
         private static string FormatTime(float seconds)

@@ -229,7 +229,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             TowerSold?.Invoke(tower);
-            GrayboxEconomy.Instance?.EarnGold(tower.RefundValue);
+            if (GrayboxEconomy.Instance != null) GrayboxEconomy.Instance.EarnGold(tower.RefundValue);
             GrayboxSfx.PlayCue("Sell", tower.transform.position);
             SpriteClipPlayer.SpawnOneShot(_animLibrary, "FxBuild", "Sell", tower.transform.position, Quaternion.identity, 1f, 3);
             Destroy(tower.gameObject);

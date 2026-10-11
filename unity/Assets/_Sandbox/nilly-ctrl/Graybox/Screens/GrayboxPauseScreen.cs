@@ -61,12 +61,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _controls.Clicked.AddListener(_controlsScreen.Show);
             _restart.Clicked.AddListener(() => _dialog.Open(
                 "Restart run?", "You go back to wave 1 and lose this run.", "Restart", "Cancel",
-                () => Flow?.StartNewRun()));
+                () => { if (Flow != null) Flow.StartNewRun(); }));
             _quit.Clicked.AddListener(() => _dialog.Open(
                 "Quit to Home?", "This run will be lost.", "Quit", "Keep playing",
-                () => Flow?.QuitToHome()));
+                () => { if (Flow != null) Flow.QuitToHome(); }));
         }
 
-        private static void Resume() => Flow?.Resume();
+        private static void Resume()
+        {
+            if (Flow != null) Flow.Resume();
+        }
     }
 }

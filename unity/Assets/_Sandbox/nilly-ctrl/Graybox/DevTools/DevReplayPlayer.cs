@@ -226,7 +226,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Tower tower = FindTowerAt(c.x, c.y, c.name);
             if (tower == null) return "no tower on that cell";
 
-            GrayboxEconomy.Instance?.EarnGold(tower.RefundValue);
+            GrayboxEconomy economy = GrayboxEconomy.Instance;
+            if (economy != null) economy.EarnGold(tower.RefundValue);
             // Without the sell sound and puff the placer adds, which need its selection.
             Destroy(tower.gameObject);
             return null;

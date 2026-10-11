@@ -37,7 +37,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // The first screen of the game: back has nowhere to go.
             Screen.CloseOnBack = false;
 
-            _play.Clicked.AddListener(() => GrayboxGameFlow.Instance?.QuitToHome());
+            _play.Clicked.AddListener(() =>
+            {
+                GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+                if (flow != null) flow.QuitToHome();
+            });
             _settings.Clicked.AddListener(_settingsScreen.Show);
             _controls.Clicked.AddListener(_controlsScreen.Show);
             _quit.Clicked.AddListener(() => _dialog.Open(

@@ -90,9 +90,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // A finished run has nowhere to go "back" to; one of the three buttons must be chosen.
             Screen.CloseOnBack = false;
 
-            _retryWave.Clicked.AddListener(() => Flow?.RetryWave());
-            _restart.Clicked.AddListener(() => Flow?.StartNewRun());
-            _quit.Clicked.AddListener(() => Flow?.QuitToHome());
+            _retryWave.Clicked.AddListener(() => { if (Flow != null) Flow.RetryWave(); });
+            _restart.Clicked.AddListener(() => { if (Flow != null) Flow.StartNewRun(); });
+            _quit.Clicked.AddListener(() => { if (Flow != null) Flow.QuitToHome(); });
         }
 
         private static string FormatTime(float seconds)
