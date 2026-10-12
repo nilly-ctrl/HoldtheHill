@@ -129,6 +129,24 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Assert.IsTrue(GrayboxGameFlow.GameplayActive, "scenes without a flow controller play as before");
         }
 
+        [UnityTest]
+        public IEnumerator SpeedOverride_ReplacesTheChosenSpeedWhilePlaying_AndClearsBackToIt()
+        {
+            yield return null;
+            _flow.SetSpeedIndex(1);
+            _flow.SetSpeedOverride(10f);
+            Assert.AreEqual(10f, Time.timeScale);
+
+            _flow.Pause();
+            Assert.AreEqual(0f, Time.timeScale, "an override never runs the game while it is paused");
+
+            _flow.Resume();
+            Assert.AreEqual(10f, Time.timeScale);
+
+            _flow.SetSpeedOverride(0f);
+            Assert.AreEqual(2f, Time.timeScale, "clearing the override brings back the chosen speed");
+        }
+
         // ---------- run end ----------
 
         [UnityTest]

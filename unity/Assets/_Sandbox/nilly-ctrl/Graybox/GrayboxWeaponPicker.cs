@@ -160,7 +160,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Update()
         {
-            Time.timeScale = _speed;
+            // This scene has no flow controller, so the picker is the one owner of time here.
+            if (Time.timeScale != _speed) Time.timeScale = _speed;
 
             Keyboard keyboard = Keyboard.current;
             if (keyboard == null || _weapons.Count == 0)

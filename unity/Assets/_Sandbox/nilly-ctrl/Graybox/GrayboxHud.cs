@@ -27,13 +27,11 @@ public class GrayboxHud : MonoBehaviour
     [SerializeField] private EnemySpawner _spawner;
 
     // Keys come from GrayboxControls (next wave, restart, speed, range rings, health bars), so
-    // the controls screen can rebind them.
-
-    private readonly float[] _speeds = { 1f, 2f, 4f };
+    // the controls screen can rebind them. Speed is passed to the flow controller, which is the
+    // only thing that writes Time.timeScale; without one the key does nothing.
 
     private int _spawned;
     private int _killed;
-    private int _speedIndex;
     private float _elapsed;
 
     /// <summary>Seconds since the run started, for other HUD pieces to show.</summary>
@@ -76,13 +74,6 @@ public class GrayboxHud : MonoBehaviour
         {
             _spawner.onEnemySpawned.RemoveListener(OnEnemySpawned);
         }
-
-        // Leaving Play mode with time scaled up would carry the scale into the editor.
-        // With a flow controller in the scene, time scale is its job.
-        if (HoldTheHill.Sandbox.NillyCtrl.GrayboxGameFlow.Instance == null)
-        {
-            Time.timeScale = 1f;
-        }
     }
 
     // The flow controller rewound the field; enemies it removed were neither killed nor leaked.
@@ -117,11 +108,6 @@ public class GrayboxHud : MonoBehaviour
             if (HoldTheHill.Sandbox.NillyCtrl.GrayboxGameFlow.Instance != null)
             {
                 HoldTheHill.Sandbox.NillyCtrl.GrayboxGameFlow.Instance.CycleSpeed();
-            }
-            else
-            {
-                _speedIndex = (_speedIndex + 1) % _speeds.Length;
-                Time.timeScale = _speeds[_speedIndex];
             }
         }
 
@@ -173,8 +159,6 @@ public class GrayboxHud : MonoBehaviour
         _spawned = 0;
         _killed = 0;
         _elapsed = 0f;
-        _speedIndex = 0;
-        Time.timeScale = 1f;
 
         if (_spawner != null)
         {

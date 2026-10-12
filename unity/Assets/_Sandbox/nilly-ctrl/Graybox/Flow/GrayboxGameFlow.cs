@@ -54,6 +54,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Raised after the field has been rewound to a checkpoint (new run or wave retry).</summary>
         public static event Action FieldReset;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Instance = null;
+            StateChanged = null;
+            FieldReset = null;
+        }
+
         /// <summary>
         /// True while the game itself is on screen and running. Also true in a scene with no flow
         /// controller, so gameplay scripts behave as before there.
@@ -299,6 +307,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public float SpeedAt(int index) => Speeds[Mathf.Clamp(index, 0, Speeds.Length - 1)];
 
+        /// <summary>
+        /// A speed the dev console asked for, or 0 for none. While set it replaces the chosen
+        /// speed whenever the game is playing; pause and the menus still freeze time.
+        /// </summary>
+        public float SpeedOverride { get; private set; }
+
+        /// <summary>Sets, or with 0 clears, the dev speed override. The flow stays the only writer of <see cref="Time.timeScale"/>.</summary>
+        public void SetSpeedOverride(float scale)
+        {
+            SpeedOverride = Mathf.Clamp(scale, 0f, 20f);
+            ApplyTimeScale();
+        }
+
         // ---------- Internals ----------
 
         private void Enter(GameFlowState next)
@@ -315,7 +336,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void ApplyTimeScale()
         {
-            Time.timeScale = State == GameFlowState.Playing ? Speeds[SpeedIndex] : 0f;
+            float speed = SpeedOverride > 0f ? SpeedOverride : Speeds[SpeedIndex];
+            Time.timeScale = State == GameFlowState.Playing ? speed : 0f;
         }
 
         private void LeaveRun()

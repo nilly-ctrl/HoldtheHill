@@ -12,9 +12,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// from inside that event. The hill raises the event before it checks for defeat, so the
     /// refill is what the defeat check sees. Nothing in the game scripts is changed.
     ///
-    /// <see cref="GrayboxGameFlow"/> owns <see cref="Time.timeScale"/> and rewrites it when the
-    /// state changes. The speed override is therefore applied again every frame while the game
-    /// is in the Playing state, and left alone while paused.
+    /// <see cref="GrayboxGameFlow"/> is the only thing that writes <see cref="Time.timeScale"/>.
+    /// The speed command hands it an override (<see cref="GrayboxGameFlow.SetSpeedOverride"/>),
+    /// which it applies while playing and drops while paused. Without a flow in the scene the
+    /// command has nothing to talk to and does nothing.
     /// </remarks>
     [AddComponentMenu("Hold the Hill/DevTools/Dev Tools Cheats")]
     public class DevToolsCheats : MonoBehaviour
@@ -36,12 +37,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static void SetSpeed(float scale)
         {
             s_speed = Mathf.Clamp(scale, 0f, 20f);
-            if (s_speed <= 0f)
-            {
-                GrayboxGameFlow flow = GrayboxGameFlow.Instance;
-                if (flow != null) flow.SetSpeedIndex(flow.SpeedIndex); // makes the flow re-apply its own scale
-                else Time.timeScale = 1f;
-            }
+            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            if (flow != null) flow.SetSpeedOverride(s_speed);
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -82,14 +79,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
         }
 
-        private void Update()
-        {
-            if (s_speed > 0f && GrayboxGameFlow.GameplayActive && Time.timeScale != s_speed)
-            {
-                Time.timeScale = s_speed;
-            }
-        }
-
         private void LateUpdate()
         {
             if (!God) return;
@@ -107,7 +96,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (s_speed > 0f)
             {
                 s_speed = 0f;
-                if (GrayboxGameFlow.Instance == null) Time.timeScale = 1f;
+                GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+                if (flow != null) flow.SetSpeedOverride(0f);
             }
         }
     }

@@ -381,9 +381,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             float x = a.Float(0, "x");
             if (x < 0.1f || x > 20f) throw new DevCommandException("<x> must be between 0.1 and 20.");
+            if (GrayboxGameFlow.Instance == null) throw new DevCommandException("No flow controller in the scene; time scale is its job.");
 
             DevToolsCheats.SetSpeed(x);
-            if (DevToolsCheats.Instance == null) Time.timeScale = x;
             return "Speed x" + x.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)
                 + ". The pause menu and wave end keep their own scale.";
         }
