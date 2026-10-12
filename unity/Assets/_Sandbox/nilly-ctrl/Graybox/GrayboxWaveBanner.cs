@@ -77,10 +77,22 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 _theme = FindAnyObjectByType<PixelFontTheme>();
             }
 
-            PixelFontStyle style = _theme != null ? _theme.Find(themeStyle) : null;
-            if (style == null)
+            if (_theme == null)
             {
                 return;
+            }
+
+            // The library has no Title or Heading style yet, so those callers fall back to the wave style
+            // rather than showing nothing.
+            PixelFontStyle style = _theme.Find(themeStyle);
+            if (style == null)
+            {
+                themeStyle = "Banner";
+                style = _theme.Find(themeStyle);
+                if (style == null)
+                {
+                    return;
+                }
             }
 
             if (_text == null)
