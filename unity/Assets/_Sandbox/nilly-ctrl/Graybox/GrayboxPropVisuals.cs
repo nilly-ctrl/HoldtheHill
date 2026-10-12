@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
 namespace HoldTheHill.Sandbox.NillyCtrl

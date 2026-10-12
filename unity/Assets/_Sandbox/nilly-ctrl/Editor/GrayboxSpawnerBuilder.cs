@@ -138,9 +138,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 go.transform,
                 container.transform);
 
-            // Without this the spawner's living-enemy count never goes down.
-            go.AddComponent<EnemySpawnerBridge>();
-
             GrayboxProgressionBuilder.ConfigureAchievements(go.AddComponent<GrayboxAchievements>());
         }
     }
