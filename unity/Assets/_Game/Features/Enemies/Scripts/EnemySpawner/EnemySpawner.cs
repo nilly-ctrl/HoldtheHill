@@ -313,19 +313,58 @@ namespace HoldTheHill.Features.Enemies
             spawnCoroutine = null;
         }
 
-        /// <summary>
-        /// Instantiates an enemy GameObject and tracks it.
-        /// </summary>
+        /// <summary>Instantiates a wave entry's enemy at its spawn point and tracks it.</summary>
         private void SpawnEnemy(EnemySpawnEntry entry)
         {
             Transform spawnPoint = entry.spawnPointOverride != null ? entry.spawnPointOverride : defaultSpawnPoint;
             Vector3 spawnPosition = spawnPoint != null ? spawnPoint.position : Vector3.zero;
             Quaternion spawnRotation = spawnPoint != null ? spawnPoint.rotation : Quaternion.identity;
+            Spawn(entry.enemyPrefab, spawnPosition, spawnRotation, false);
+        }
 
-            GameObject spawnedEnemy = Instantiate(entry.enemyPrefab, spawnPosition, spawnRotation, enemyContainer);
-            activeLivingEnemies.Add(spawnedEnemy);
+        /// <summary>
+        /// Puts an enemy into the run at the default spawn point, snapped to the start of the route.
+        /// The one way to add an enemy outside a wave (hordes, specials, cheats), so the living
+        /// count and <see cref="onEnemySpawned"/> stay right.
+        /// </summary>
+        public GameObject Spawn(GameObject prefab)
+        {
+            Vector3 position = defaultSpawnPoint != null ? defaultSpawnPoint.position : transform.position;
+            return Spawn(prefab, position, Quaternion.identity, true);
+        }
 
-            onEnemySpawned?.Invoke(spawnedEnemy);
+        /// <summary>Puts an enemy into the run at a position, optionally snapped to the route start, and tracks it.</summary>
+        public GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation, bool snapToStart)
+        {
+            if (prefab == null)
+            {
+                return null;
+            }
+
+            GameObject enemy = Instantiate(prefab, position, rotation, enemyContainer);
+            if (snapToStart)
+            {
+                var mover = enemy.GetComponent<EnemyMover>();
+                if (mover != null)
+                {
+                    mover.SnapToStart();
+                }
+            }
+
+            Track(enemy);
+            return enemy;
+        }
+
+        /// <summary>Counts an enemy made elsewhere (a splitter's halves) as living and announces it.</summary>
+        public void Track(GameObject enemy)
+        {
+            if (enemy == null)
+            {
+                return;
+            }
+
+            activeLivingEnemies.Add(enemy);
+            onEnemySpawned?.Invoke(enemy);
         }
 
         /// <summary>

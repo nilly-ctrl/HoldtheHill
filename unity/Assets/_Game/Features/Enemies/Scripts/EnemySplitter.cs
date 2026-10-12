@@ -15,11 +15,14 @@ namespace HoldTheHill.Features.Enemies
         [SerializeField, Min(0f)] private float _spawnOffsetRadius = 0.25f;
 
         private EnemyMover _mover;
+        private EnemySpawner _spawner;
         private bool _hasSplit;
 
         private void Awake()
         {
             _mover = GetComponent<EnemyMover>();
+            // A prefab cannot hold a scene reference, so the spawner is looked up once, like the path in EnemyMover.
+            _spawner = FindAnyObjectByType<EnemySpawner>();
         }
 
         private void OnEnable()
@@ -59,7 +62,10 @@ namespace HoldTheHill.Features.Enemies
                 Vector3 offset = Random.insideUnitCircle * _spawnOffsetRadius;
                 Vector3 spawnPos = pos + offset;
 
-                GameObject mini = Instantiate(_miniAntPrefab, spawnPos, Quaternion.identity);
+                // Through the spawner so the halves count as living and the wave cannot end with them on the path.
+                GameObject mini = _spawner != null
+                    ? _spawner.Spawn(_miniAntPrefab, spawnPos, Quaternion.identity, false)
+                    : Instantiate(_miniAntPrefab, spawnPos, Quaternion.identity);
 
                 var miniMover = mini.GetComponent<EnemyMover>();
                 if (miniMover != null && _mover != null)
