@@ -84,6 +84,10 @@ PrefabInstance:
       propertyPath: _bountyValue
       value: 150
       objectReference: {fileID: 0}
+    - target: {fileID: 4805453325985618710, guid: 188f5be0c55795f49969c7963a76672f, type: 3}
+      propertyPath: _breachDamage
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 6690921390435540580, guid: 188f5be0c55795f49969c7963a76672f, type: 3}
       propertyPath: _data
       value: 
@@ -166,7 +170,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3e0fc8b33a64a669bc507bc3c043b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxRivalQueen
-  _breachDamage: 45
   _antPrefab: {fileID: 5171374620113384573, guid: 78183d16cd8a3df4fbdd87c26c1fa153, type: 3}
   _digAt: 0.4
   _digSeconds: 14

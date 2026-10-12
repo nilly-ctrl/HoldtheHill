@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958236f2b7afc9c4ba6f9e9fba51269d, type: 3}
+  m_Name: Control_AbsoluteZero
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxSkillNodeData
+  _id: Control_AbsoluteZero
+  _displayName: Absolute Zero
+  _description: +30% Damage dealt to slowed enemies.
+  _branch: Control
+  _cost: 3
+  _prerequisite: {fileID: 11400000, guid: 74e0086af1687464e9a7048b6a98bd01, type: 2}
+  _iconName: 
+  _effects:
+  - stat: 5
+    mode: 0
+    value: 1.3

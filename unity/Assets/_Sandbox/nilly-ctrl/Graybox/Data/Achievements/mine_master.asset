@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 967ea4f6f31e2ba4682d6572bea0238b, type: 3}
+  m_Name: mine_master
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxAchievementData
+  _id: mine_master
+  _title: Minefield Master
+  _description: Detonate 10 Proximity Landmines.
+  _iconName: AchMineMasterIcon
+  _requiredProgress: 10
+  _trigger: 2
+  _everyNthWave: 0
+  _requireFullBaseHealth: 0

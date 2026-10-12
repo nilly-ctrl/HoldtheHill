@@ -141,6 +141,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxPowerUpBuilder.BuildSceneObject();
             BuildReadmeLabel();
             BuildFlow();
+            // One prefab of managers; level scenes carry an instance of it instead of their own copies.
+            GrayboxSystemsBuilder.Collect(scene);
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene, ScenePath);

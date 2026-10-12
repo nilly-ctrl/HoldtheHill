@@ -20,6 +20,10 @@ PrefabInstance:
       propertyPath: _bountyValue
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3583912991585859029, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
+      propertyPath: _breachDamage
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6873866240609495841, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
       propertyPath: m_Radius
       value: 0.2
@@ -162,7 +166,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b82f5161f2b4cf0a75dec1babe59a9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxSilverfish
-  _breachDamage: 3
   _zoneSeconds: 5
   _zoneRadius: 0.9
   _zoneSpeedScale: 1.6

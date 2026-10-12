@@ -20,6 +20,10 @@ PrefabInstance:
       propertyPath: _bountyValue
       value: 16
       objectReference: {fileID: 0}
+    - target: {fileID: 3583912991585859029, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
+      propertyPath: _breachDamage
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7582586475302253144, guid: d367e4012a6924646a355f203fdbe2aa, type: 3}
       propertyPath: _speed
       value: 1.3
@@ -150,7 +154,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4d90002691428d93f843890d6fd32d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxSpider
-  _breachDamage: 8
   _webRange: 3.5
   _webInterval: 5
   _webSeconds: 6

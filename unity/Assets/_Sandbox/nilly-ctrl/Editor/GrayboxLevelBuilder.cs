@@ -29,7 +29,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private const string GrayboxScene = "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxCombatTest.unity";
         private static readonly string[] Required =
         {
-            "Enemy Path", "Enemy Spawner", "Main Camera", "Tower Placer & Inspector", "GrayboxGameFlow",
+            "Enemy Path", "Enemy Spawner", "Main Camera", "Tower Placer & Inspector", GrayboxSystemsBuilder.RootName,
         };
 
         // Above EnemyPath's own flat road (-10), below everything that moves.

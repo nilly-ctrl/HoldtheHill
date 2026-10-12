@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958236f2b7afc9c4ba6f9e9fba51269d, type: 3}
+  m_Name: Control_HeavyShockwave
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxSkillNodeData
+  _id: Control_HeavyShockwave
+  _displayName: Heavy Shockwave
+  _description: +50% Knockback setback distance.
+  _branch: Control
+  _cost: 2
+  _prerequisite: {fileID: 11400000, guid: 9d0bb2662554ba0459870a26277cbce7, type: 2}
+  _iconName: 
+  _effects:
+  - stat: 4
+    mode: 1
+    value: 0.5
