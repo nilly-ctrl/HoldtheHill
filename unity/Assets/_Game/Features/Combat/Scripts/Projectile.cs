@@ -32,7 +32,7 @@ namespace HoldTheHill.Features.Combat
     /// recycled objects are easy to get wrong; polling keeps the lifecycle obvious.
     /// </remarks>
     [AddComponentMenu("Hold the Hill/Combat/Projectile")]
-    public class Projectile : MonoBehaviour
+    public class Projectile : MonoBehaviour, IOwned
     {
         [Header("Flight")]
         [SerializeField] protected FlightMode _flightMode = FlightMode.Linear;

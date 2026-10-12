@@ -11,7 +11,17 @@ namespace HoldTheHill.Features.Combat
     {
         // Reused so per-frame queries do not allocate during heavy waves.
         private static readonly List<Collider2D> OverlapBuffer = new List<Collider2D>(64);
+        private static readonly List<IDamageable> SplashBuffer = new List<IDamageable>(32);
+        private static bool s_splashing;
         private static ContactFilter2D _filter = CreateFilter();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            OverlapBuffer.Clear();
+            SplashBuffer.Clear();
+            s_splashing = false;
+        }
 
         private static ContactFilter2D CreateFilter()
         {
@@ -95,21 +105,37 @@ namespace HoldTheHill.Features.Combat
                 return;
             }
 
-            var hits = new List<IDamageable>();
-            OverlapDamageables(center, radius, mask, hits);
-
-            for (int i = 0; i < hits.Count; i++)
+            // One shared list, so a busy wave of splash hits does not allocate. A hit's own
+            // reaction could splash again from inside TakeDamage; that nested call gets a list
+            // of its own rather than clearing the one being walked.
+            bool outer = !s_splashing;
+            List<IDamageable> hits = outer ? SplashBuffer : new List<IDamageable>();
+            s_splashing = true;
+            try
             {
-                IDamageable target = hits[i];
-                if (target == ignore)
-                {
-                    continue;
-                }
+                OverlapDamageables(center, radius, mask, hits);
 
-                target.TakeDamage(new DamageInfo(damage, source, center, type));
-                if (status.IsValid)
+                for (int i = 0; i < hits.Count; i++)
                 {
-                    target.ApplyStatusEffect(status);
+                    IDamageable target = hits[i];
+                    if (target == ignore)
+                    {
+                        continue;
+                    }
+
+                    target.TakeDamage(new DamageInfo(damage, source, center, type));
+                    if (status.IsValid)
+                    {
+                        target.ApplyStatusEffect(status);
+                    }
+                }
+            }
+            finally
+            {
+                if (outer)
+                {
+                    SplashBuffer.Clear();
+                    s_splashing = false;
                 }
             }
         }
@@ -127,14 +153,10 @@ namespace HoldTheHill.Features.Combat
                 return null;
             }
 
-            if (source.TryGetComponent(out Projectile projectile) && projectile.Owner != null)
+            // Shots and hazards say who fired them (IOwned); the contracts here stay free of them.
+            if (source.TryGetComponent(out IOwned owned) && owned.Owner != null)
             {
-                return projectile.Owner;
-            }
-
-            if (source.TryGetComponent(out GroundHazard hazard) && hazard.Owner != null)
-            {
-                return hazard.Owner;
+                return owned.Owner;
             }
 
             return source;

@@ -10,7 +10,7 @@ namespace HoldTheHill.Features.Combat
     /// </summary>
     [AddComponentMenu("Hold the Hill/Combat/Ground Hazard")]
     [RequireComponent(typeof(CircleCollider2D))]
-    public class GroundHazard : MonoBehaviour
+    public class GroundHazard : MonoBehaviour, IOwned
     {
         [Header("Area")]
         [Tooltip("Radius of the damaging patch, in world units.")]
