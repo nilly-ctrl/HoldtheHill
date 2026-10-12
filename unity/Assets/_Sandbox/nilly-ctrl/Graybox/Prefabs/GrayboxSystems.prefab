@@ -317,6 +317,8 @@ GameObject:
   - component: {fileID: 6394511417631102217}
   - component: {fileID: 5552990067407659674}
   - component: {fileID: 3450505183023369286}
+  - component: {fileID: 7395324946055041763}
+  - component: {fileID: 287477773485344656}
   m_Layer: 0
   m_Name: GrayboxGameFlow
   m_TagString: Untagged
@@ -378,6 +380,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxEndlessMode
   _breakSeconds: 4
+--- !u!114 &7395324946055041763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875277499735570838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 719bdd069d634b646af34ea6892eb442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxRunCounters
+  _spawner: {fileID: 0}
+--- !u!114 &287477773485344656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875277499735570838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3ac6683265c77b489363e076059ac10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxRunHotkeys
+  _spawner: {fileID: 0}
 --- !u!1 &3088972371399197954
 GameObject:
   m_ObjectHideFlags: 0

@@ -147,6 +147,22 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Assert.AreEqual(2f, Time.timeScale, "clearing the override brings back the chosen speed");
         }
 
+        [UnityTest]
+        public IEnumerator RunCounters_CountSpawnedEnemies_AndResetWithTheField()
+        {
+            yield return null;
+            var counters = _flow.gameObject.AddComponent<GrayboxRunCounters>();
+            yield return null;
+
+            _spawner.StartNextWave();
+            yield return null;
+            yield return null;
+            Assert.AreEqual(1, counters.Spawned);
+
+            _flow.StartNewRun();
+            Assert.AreEqual(0, counters.Spawned, "a new run rewinds the field, so nothing has spawned yet");
+        }
+
         // ---------- run end ----------
 
         [UnityTest]

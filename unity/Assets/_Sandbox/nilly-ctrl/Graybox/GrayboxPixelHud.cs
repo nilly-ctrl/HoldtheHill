@@ -7,7 +7,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// Food, wave and run time in the pixel font, pinned to the top right of the camera. Each is
     /// a <see cref="PixelText"/> with an icon glyph and fixed-width digits, in the Resource and
     /// Hud styles of the scene's <see cref="PixelFontTheme"/>, so it follows the art theme.
-    /// While it is showing, <see cref="GrayboxHud"/> leaves those three readouts out of its panel.
+    /// While it is showing, <see cref="GrayboxRunCounters"/> leaves those three readouts out of its panel.
     /// Without a font theme in the scene it shows nothing and the old readouts stay.
     /// </summary>
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Pixel HUD")]
@@ -22,7 +22,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private int _sortingOrder = 550;
 
         private EnemySpawner _spawner;
-        private GrayboxHud _hud;
+        private GrayboxRunCounters _hud;
         private PixelFontTheme _theme;
         private PixelText _food;
         private PixelText _wave;
@@ -55,7 +55,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             if (_hud == null)
             {
-                _hud = FindAnyObjectByType<GrayboxHud>();
+                _hud = FindAnyObjectByType<GrayboxRunCounters>();
             }
 
             int gold = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentGold : 0;

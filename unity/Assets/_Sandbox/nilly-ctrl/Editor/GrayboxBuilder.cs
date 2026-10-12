@@ -159,6 +159,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             go.AddComponent<GrayboxSaveHost>(); // attaches the save file; without it nothing is persisted
             var flow = go.AddComponent<GrayboxGameFlow>();
             go.AddComponent<GrayboxEndlessMode>();
+            // Tuning counters for the HUD, and the next-wave, speed, restart and toggle keys.
+            go.AddComponent<GrayboxRunCounters>();
+            go.AddComponent<GrayboxRunHotkeys>();
 
             // The game opens on the title screen. Change "Initial State" on this object to Playing
             // to drop straight into the field while tuning.
@@ -960,9 +963,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // Without this the spawner's living-enemy count never goes down.
             go.AddComponent<EnemySpawnerBridge>();
 
-            // The spawner waits to be prompted between waves, so the scene needs something
-            // that can prompt it. The HUD also reports kills and leaks while tuning.
-            go.AddComponent<GrayboxHud>();
             GrayboxProgressionBuilder.ConfigureAchievements(go.AddComponent<GrayboxAchievements>());
         }
 

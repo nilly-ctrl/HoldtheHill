@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2889188932921030980}
   - component: {fileID: 1712418895340513560}
   - component: {fileID: 8121067885379380797}
-  - component: {fileID: 7117961463165802900}
+  - component: {fileID: 4612530913972131096}
   m_Layer: 0
   m_Name: Warden
   m_TagString: Untagged
@@ -114,7 +114,7 @@ MonoBehaviour:
   _speed: 3.5
   _pickupReach: 0.5
   _startOffset: {x: -1.5, y: 1.5}
---- !u!114 &7117961463165802900
+--- !u!114 &4612530913972131096
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,9 +123,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1530157950885339046}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9c25749c16352145a0d07434478ac73, type: 3}
+  m_Script: {fileID: 11500000, guid: 8c5d43f39d2c180458de780d3d31c527, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxWardenHud
+  m_EditorClassIdentifier: HoldTheHill.Sandbox.Graybox::HoldTheHill.Sandbox.NillyCtrl.GrayboxWardenHealth
+  _maxHealth: 20
+  _regenPerSecond: 1
+  _regenDelay: 3
+  _downedSeconds: 5
 --- !u!1001 &2923982057944201518
 PrefabInstance:
   m_ObjectHideFlags: 0

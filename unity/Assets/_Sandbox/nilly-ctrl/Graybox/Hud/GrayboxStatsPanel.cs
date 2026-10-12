@@ -7,7 +7,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// <summary>
     /// The tuning readout in the top left corner: food and wave (when the pixel HUD is not already
     /// showing them), skill points, the spawner's state, and how many enemies spawned, died, got
-    /// through and are alive. Reads its numbers from <see cref="GrayboxHud"/>.
+    /// through and are alive. Reads its numbers from <see cref="GrayboxRunCounters"/>.
     /// </summary>
     [AddComponentMenu("Hold the Hill/Graybox/HUD/Stats Panel")]
     public class GrayboxStatsPanel : GrayboxHudPanel
@@ -22,7 +22,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private TMP_Text _time;
         [SerializeField] private TMP_Text _keys;
 
-        private GrayboxHud _hud;
+        private GrayboxRunCounters _hud;
         private EnemySpawner _spawner;
         private float _nextKeysRefresh;
 
@@ -43,7 +43,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             if (_hud == null)
             {
-                _hud = FindAnyObjectByType<GrayboxHud>();
+                _hud = FindAnyObjectByType<GrayboxRunCounters>();
             }
 
             if (_spawner == null)
