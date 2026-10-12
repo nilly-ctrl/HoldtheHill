@@ -102,7 +102,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 tick = tick,
                 time = tick * fixedDeltaTime,
                 type = type,
-                name = name,
+                name = name ?? string.Empty, // JsonUtility reads a null string back as "", so store what the file will hold
                 x = x,
                 y = y,
                 value = value,
