@@ -58,7 +58,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 _hud = FindAnyObjectByType<GrayboxRunCounters>();
             }
 
-            int gold = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentGold : 0;
+            int gold = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentFood : 0;
             _food.Text = $"{PixelGlyphs.IconFood} {gold:N0}";
             _wave.Text = _spawner != null
                 ? $"{PixelGlyphs.IconWave} {_spawner.CurrentWaveNumber}/{_spawner.TotalWaves}"

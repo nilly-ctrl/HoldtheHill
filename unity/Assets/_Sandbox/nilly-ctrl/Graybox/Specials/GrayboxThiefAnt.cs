@@ -45,8 +45,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxEconomy economy = GrayboxEconomy.Instance;
             if (economy != null)
             {
-                _stolen = Mathf.Min(_stealAmount, economy.CurrentGold);
-                economy.TrySpendGold(_stolen);
+                _stolen = Mathf.Min(_stealAmount, economy.CurrentFood);
+                economy.TrySpendFood(_stolen);
             }
 
             Say(_stolen > 0 ? $"-{_stolen} STOLEN" : "NOTHING TO STEAL", DamageNumberKind.Fire, transform.position);
@@ -101,7 +101,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             if (GrayboxEconomy.Instance != null)
             {
-                GrayboxEconomy.Instance.EarnGold(_stolen);
+                GrayboxEconomy.Instance.EarnFood(_stolen);
             }
 
             Say($"+{_stolen} RECOVERED", DamageNumberKind.Resource, transform.position);

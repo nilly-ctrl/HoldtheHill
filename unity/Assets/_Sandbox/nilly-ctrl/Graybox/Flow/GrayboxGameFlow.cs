@@ -374,7 +374,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             GrayboxEconomy economy = GrayboxEconomy.Instance;
             int food = GrayboxUpgrades.StartingFoodBonus;
-            if (economy != null && food > 0) economy.ResetGold(economy.CurrentGold + food);
+            if (economy != null && food > 0) economy.ResetFood(economy.CurrentFood + food);
         }
 
         // The "auto-start waves" setting: campaign waves follow each other without the next-wave key.
@@ -415,7 +415,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void OnBountyPaid(int gold)
         {
-            if (State == GameFlowState.Playing) Stats.GoldEarned += gold;
+            if (State == GameFlowState.Playing) Stats.FoodEarned += gold;
         }
 
         // Nothing else declares victory: the spawner only knows when it has finished spawning.

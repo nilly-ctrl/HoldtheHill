@@ -74,7 +74,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             if (species.StartingFood > 0 && GrayboxEconomy.Instance != null)
             {
-                GrayboxEconomy.Instance.ResetGold(species.StartingFood);
+                GrayboxEconomy.Instance.ResetFood(species.StartingFood);
             }
 
             Loaded?.Invoke(species);

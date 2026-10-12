@@ -37,7 +37,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             if (alreadyCounted == null) records.runsFinished++;
             records.totalKills += Mathf.Max(0, stats.Kills - (alreadyCounted?.Kills ?? 0));
-            records.totalFoodEarned += Mathf.Max(0, stats.GoldEarned - (alreadyCounted?.GoldEarned ?? 0));
+            records.totalFoodEarned += Mathf.Max(0, stats.FoodEarned - (alreadyCounted?.FoodEarned ?? 0));
             records.totalPlaySeconds += Mathf.Max(0f, stats.TimeSeconds - (alreadyCounted?.TimeSeconds ?? 0f));
 
             LevelRecord level = data.FindLevel(levelId);

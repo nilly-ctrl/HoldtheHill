@@ -29,7 +29,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             buyable.Sort((a, b) => a.Cost != b.Cost ? a.Cost.CompareTo(b.Cost) : string.CompareOrdinal(a.Name, b.Name));
 
             var placed = new List<BalancePlacedTower>();
-            int gold = settings.StartingGold;
+            int gold = settings.StartingFood;
             int rotation = 0;
             float cumulativeLeak = 0f;
 
@@ -47,7 +47,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                     Name = wave.Name,
                     Enemies = wave.Enemies.Count,
                     TotalHp = wave.TotalHp,
-                    GoldAtStart = gold
+                    FoodAtStart = gold
                 };
 
                 // Buy before the wave starts. Gold that cannot buy the next tower is kept.
@@ -60,7 +60,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                     }
 
                     gold -= pick.Cost;
-                    wr.GoldSpent += pick.Cost;
+                    wr.FoodSpent += pick.Cost;
                     placed.Add(Place(pick, placed, settings, pathLength));
                     result.Purchases.Add($"before wave {w + 1}: {pick.Name} ({pick.Cost})");
                 }
@@ -73,8 +73,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 
                 SimulateWave(placed, wave, settings, pathLength, dt, wr, result.Notes);
 
-                gold += wr.GoldEarned;
-                wr.GoldAtEnd = gold;
+                gold += wr.FoodEarned;
+                wr.FoodAtEnd = gold;
 
                 cumulativeLeak += wr.LeakPoints;
                 if (result.HillFallsInWave == 0 && cumulativeLeak >= settings.HillHealth)
@@ -301,7 +301,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                     state[i] = 2;
                     resolved++;
                     wr.Killed++;
-                    wr.GoldEarned += (int)Math.Round(enemies[i].Bounty * settings.BountyMultiplier);
+                    wr.FoodEarned += (int)Math.Round(enemies[i].Bounty * settings.BountyMultiplier);
                     ttkSum += Math.Max(0f, time - enemies[i].SpawnTime);
                     depthSum += Math.Min(1f, Math.Max(0f, position[i] / pathLength));
                     wr.ClearSeconds = time;
@@ -345,7 +345,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                 notes.Add($"Wave {wr.Number}: {stuck} enemy(ies) never finished within {settings.MaxWaveSeconds:0}s (speed 0?); counted as leaks.");
             }
 
-            wr.GoldEarned += settings.WaveClearBonus;
+            wr.FoodEarned += settings.WaveClearBonus;
 
             if (wr.Killed > 0)
             {

@@ -36,36 +36,36 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         public void Economy_StartingGold_Is500()
         {
             var economy = _holder.AddComponent<GrayboxEconomy>();
-            Assert.AreEqual(500, economy.CurrentGold);
+            Assert.AreEqual(500, economy.CurrentFood);
         }
 
         [Test]
-        public void Economy_TrySpendGold_DeductsBalance()
+        public void Economy_TrySpendFood_DeductsBalance()
         {
             var economy = _holder.AddComponent<GrayboxEconomy>();
-            bool success = economy.TrySpendGold(200);
+            bool success = economy.TrySpendFood(200);
 
             Assert.IsTrue(success);
-            Assert.AreEqual(300, economy.CurrentGold);
+            Assert.AreEqual(300, economy.CurrentFood);
         }
 
         [Test]
-        public void Economy_TrySpendGold_FailsWhenOverspending()
+        public void Economy_TrySpendFood_FailsWhenOverspending()
         {
             var economy = _holder.AddComponent<GrayboxEconomy>();
-            bool success = economy.TrySpendGold(600);
+            bool success = economy.TrySpendFood(600);
 
             Assert.IsFalse(success);
-            Assert.AreEqual(500, economy.CurrentGold);
+            Assert.AreEqual(500, economy.CurrentFood);
         }
 
         [Test]
-        public void Economy_EarnGold_AddsToBalance()
+        public void Economy_EarnFood_AddsToBalance()
         {
             var economy = _holder.AddComponent<GrayboxEconomy>();
-            economy.EarnGold(150);
+            economy.EarnFood(150);
 
-            Assert.AreEqual(650, economy.CurrentGold);
+            Assert.AreEqual(650, economy.CurrentFood);
         }
 
         // ---------- Skill Tree Tests ----------

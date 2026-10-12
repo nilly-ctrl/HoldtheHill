@@ -14,7 +14,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public int Kills;
 
         /// <summary>Gold from kills only; refunds are not income.</summary>
-        public int GoldEarned;
+        public int FoodEarned;
 
         /// <summary>Game-time seconds spent playing (paused time excluded, fast-forward counts faster).</summary>
         public float TimeSeconds;

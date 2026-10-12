@@ -233,7 +233,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
                 mode = "Campaign",
                 seed = 12345,
                 fixedDeltaTime = 0.02f,
-                startGold = 500,
+                startFood = 500,
                 endTick = 900,
                 result = "Victory",
             };
@@ -321,7 +321,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         [Test]
         public void Replay_MissingCommandsListIsEmpty()
         {
-            ReplayRecording loaded = ReplaySerializer.FromJson("{\"version\":1,\"fixedDeltaTime\":0.02}", out string error);
+            ReplayRecording loaded = ReplaySerializer.FromJson("{\"version\":2,\"fixedDeltaTime\":0.02}", out string error);
 
             Assert.IsNull(error);
             Assert.IsNotNull(loaded);

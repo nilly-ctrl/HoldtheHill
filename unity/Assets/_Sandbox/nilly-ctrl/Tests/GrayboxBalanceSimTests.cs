@@ -22,7 +22,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             return new BalanceSettings
             {
                 PathLength = pathLength,
-                StartingGold = gold,
+                StartingFood = gold,
                 MaxTowers = maxTowers,
                 PathOffset = 0f,
                 TimeStep = 0.01f,
@@ -122,7 +122,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         // ---------- gold ----------
 
         [Test]
-        public void Gold_IsSpentBeforeAWave_AndEarnedFromBounties()
+        public void Food_IsSpentBeforeAWave_AndEarnedFromBounties()
         {
             BalanceSimResult result = Run(Settings(gold: 100), new[] { Tower("Gun", 40, 100f) },
                 new BalanceWave("W1", new[]
@@ -132,14 +132,14 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
                 }));
 
             BalanceWaveResult wave = result.Waves[0];
-            Assert.AreEqual(100, wave.GoldAtStart);
-            Assert.AreEqual(40, wave.GoldSpent);
-            Assert.AreEqual(40, wave.GoldEarned);
-            Assert.AreEqual(100, wave.GoldAtEnd, "100 - 40 + 40");
+            Assert.AreEqual(100, wave.FoodAtStart);
+            Assert.AreEqual(40, wave.FoodSpent);
+            Assert.AreEqual(40, wave.FoodEarned);
+            Assert.AreEqual(100, wave.FoodAtEnd, "100 - 40 + 40");
         }
 
         [Test]
-        public void Gold_CarriesOverAndBuysTheNextTowerWhenAffordable()
+        public void Food_CarriesOverAndBuysTheNextTowerWhenAffordable()
         {
             BalanceSettings settings = Settings(pathLength: 100f, gold: 150, maxTowers: 5);
             BalanceSimResult result = Run(settings, new[] { Tower("Gun", 100, 10f) },
@@ -147,7 +147,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
                 Wave("W2", 4, 10f, 0.5f, bounty: 30));
 
             Assert.AreEqual(1, result.Waves[0].TowersOwned, "150 gold buys one 100 gold tower");
-            Assert.AreEqual(170, result.Waves[0].GoldAtEnd, "50 left plus 4 x 30");
+            Assert.AreEqual(170, result.Waves[0].FoodAtEnd, "50 left plus 4 x 30");
             Assert.AreEqual(2, result.Waves[1].TowersOwned, "170 gold buys the second");
         }
 
@@ -161,11 +161,11 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
                 Wave("W1", 1, 10f, 0.1f, bounty: 0));
 
             Assert.AreEqual(1, result.Waves[0].TowersOwned, "buys Cheap, then waits for Dear");
-            Assert.AreEqual(70, result.Waves[0].GoldAtEnd);
+            Assert.AreEqual(70, result.Waves[0].FoodAtEnd);
         }
 
         [Test]
-        public void BestValue_PrefersMoreDamagePerGold()
+        public void BestValue_PrefersMoreDamagePerFood()
         {
             BalanceSettings settings = Settings(gold: 100, maxTowers: 1);
             settings.Strategy = BalanceBuyStrategy.BestValue;
@@ -184,7 +184,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
                 Wave("W1", 1, 10f, 0.1f));
 
             Assert.AreEqual(2, result.Waves[0].TowersOwned);
-            Assert.AreEqual(980, result.Waves[0].GoldAtStart - result.Waves[0].GoldSpent);
+            Assert.AreEqual(980, result.Waves[0].FoodAtStart - result.Waves[0].FoodSpent);
         }
 
         // ---------- verdicts ----------

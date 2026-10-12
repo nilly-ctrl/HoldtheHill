@@ -160,10 +160,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Report(AchievementTrigger.MineDetonated);
         }
 
-        public void ReportGoldEarned(int amount)
+        public void ReportFoodEarned(int amount)
         {
-            int currentGold = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentGold : 0;
-            Report(AchievementTrigger.GoldHeld, currentGold);
+            int currentFood = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentFood : 0;
+            Report(AchievementTrigger.FoodHeld, currentFood);
         }
 
         public void ReportTowerBuilt()
@@ -196,7 +196,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
                 switch (trigger)
                 {
-                    case AchievementTrigger.GoldHeld:
+                    case AchievementTrigger.FoodHeld:
                     case AchievementTrigger.WaveReached:
                         // Progress is the best value seen, not a running count.
                         if (value > ach.CurrentProgress)

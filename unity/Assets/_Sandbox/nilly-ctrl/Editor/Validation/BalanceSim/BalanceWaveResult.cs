@@ -17,15 +17,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
         /// <summary>Sum of the towers' single-target damage per second, before range and placement.</summary>
         public float DefenceDps;
 
-        public int GoldAtStart;
+        public int FoodAtStart;
 
         /// <summary>Gold spent on towers before the wave.</summary>
-        public int GoldSpent;
+        public int FoodSpent;
 
         /// <summary>Bounties plus any wave clear bonus.</summary>
-        public int GoldEarned;
+        public int FoodEarned;
 
-        public int GoldAtEnd;
+        public int FoodAtEnd;
 
         public int Killed;
 

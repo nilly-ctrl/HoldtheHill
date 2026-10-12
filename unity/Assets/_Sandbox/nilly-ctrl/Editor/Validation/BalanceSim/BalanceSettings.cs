@@ -10,7 +10,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
         public float PathLength = 30f;
 
         /// <summary>Gold at the start of the run. 500 is GrayboxEconomy's default.</summary>
-        public int StartingGold = 500;
+        public int StartingFood = 500;
 
         /// <summary>The most towers the model builds. Real maps have a limited number of build cells.</summary>
         public int MaxTowers = 20;

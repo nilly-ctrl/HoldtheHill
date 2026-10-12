@@ -36,7 +36,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                 _waves, typeof(MapWaveDataSO), false);
 
             _settings.PathLength = EditorGUILayout.FloatField("Route length (units)", _settings.PathLength);
-            _settings.StartingGold = EditorGUILayout.IntField("Starting gold", _settings.StartingGold);
+            _settings.StartingFood = EditorGUILayout.IntField("Starting gold", _settings.StartingFood);
             _settings.MaxTowers = EditorGUILayout.IntField("Max towers", _settings.MaxTowers);
             _settings.Strategy = (BalanceBuyStrategy)EditorGUILayout.EnumPopup("Buying", _settings.Strategy);
             _settings.PathOffset = EditorGUILayout.FloatField("Tower distance from road", _settings.PathOffset);

@@ -211,16 +211,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
             {
                 var economy = FindAnyObjectByType<GrayboxEconomy>();
-                int currentGold = economy != null ? economy.CurrentGold : 0;
-                EditorGUILayout.LabelField($"Current Gold Pool: ${currentGold}", EditorStyles.boldLabel);
+                int currentFood = economy != null ? economy.CurrentFood : 0;
+                EditorGUILayout.LabelField($"Current Gold Pool: ${currentFood}", EditorStyles.boldLabel);
 
                 EditorGUI.BeginDisabledGroup(!Application.isPlaying || economy == null);
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    if (GUILayout.Button("+ $250 Gold")) economy?.EarnGold(250);
-                    if (GUILayout.Button("+ $500 Gold")) economy?.EarnGold(500);
-                    if (GUILayout.Button("+ $1,000 Gold")) economy?.EarnGold(1000);
-                    if (GUILayout.Button("Reset ($500)")) economy?.ResetGold(500);
+                    if (GUILayout.Button("+ $250 Gold")) economy?.EarnFood(250);
+                    if (GUILayout.Button("+ $500 Gold")) economy?.EarnFood(500);
+                    if (GUILayout.Button("+ $1,000 Gold")) economy?.EarnFood(1000);
+                    if (GUILayout.Button("Reset ($500)")) economy?.ResetFood(500);
                 }
                 EditorGUI.EndDisabledGroup();
 

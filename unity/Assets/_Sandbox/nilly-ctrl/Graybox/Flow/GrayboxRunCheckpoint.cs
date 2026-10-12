@@ -36,7 +36,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         /// <summary>0-based wave the spawner will run next after a restore.</summary>
         public int WaveIndex { get; private set; }
-        public int Gold { get; private set; }
+        public int Food { get; private set; }
         public float HillHealth { get; private set; }
         public int SkillPoints { get; private set; }
         public List<string> UnlockedSkills { get; private set; }
@@ -52,7 +52,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             var checkpoint = new GrayboxRunCheckpoint
             {
                 WaveIndex = Mathf.Max(0, waveIndex),
-                Gold = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentGold : 0,
+                Food = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentFood : 0,
                 HillHealth = GrayboxBaseHealth.Instance != null ? GrayboxBaseHealth.Instance.CurrentHealth : 0f,
                 SkillPoints = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.SkillPoints : 0,
                 UnlockedSkills = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.GetUnlockedIds() : new List<string>(),
@@ -99,7 +99,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 tower.name = stored.Copy.name;
             }
 
-            if (GrayboxEconomy.Instance != null) GrayboxEconomy.Instance.ResetGold(Gold);
+            if (GrayboxEconomy.Instance != null) GrayboxEconomy.Instance.ResetFood(Food);
             if (GrayboxSkillTree.Instance != null) GrayboxSkillTree.Instance.RestoreState(SkillPoints, UnlockedSkills);
             if (GrayboxBaseHealth.Instance != null) GrayboxBaseHealth.Instance.RestoreHealth(HillHealth);
         }

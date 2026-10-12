@@ -41,11 +41,11 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             var economy = _holder.AddComponent<GrayboxEconomy>();
 
             economy.Earn(null, 25);
-            Assert.AreEqual(525, economy.CurrentGold);
+            Assert.AreEqual(525, economy.CurrentFood);
             Assert.AreEqual(525, economy.Get(null));
             Assert.IsTrue(economy.TrySpend(null, 500));
             Assert.IsFalse(economy.TrySpend(null, 500));
-            Assert.AreEqual(25, economy.CurrentGold);
+            Assert.AreEqual(25, economy.CurrentFood);
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
 
                 Assert.IsTrue(economy.TrySpend(_jelly, 2));
                 Assert.AreEqual(1, economy.Get(_jelly));
-                Assert.AreEqual(500, economy.CurrentGold, "spending another resource leaves the main one alone");
+                Assert.AreEqual(500, economy.CurrentFood, "spending another resource leaves the main one alone");
             }
             finally
             {
@@ -123,7 +123,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
                 GrayboxPickup.Collected -= listen;
             }
 
-            Assert.AreEqual(500 + amount, economy.CurrentGold);
+            Assert.AreEqual(500 + amount, economy.CurrentFood);
             Assert.AreEqual(1, heard);
             Assert.IsTrue(pickup.IsCollected);
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
@@ -19,7 +20,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     {
         public static GrayboxEconomy Instance { get; private set; }
 
-        public static event Action<int> OnGoldChanged;
+        public static event Action<int> OnFoodChanged;
 
         /// <summary>Gold paid for a kill, after skill bonuses. Refunds and cheats do not raise it.</summary>
         public static event Action<int> OnBountyPaid;
@@ -31,7 +32,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private static void ResetStatics()
         {
             Instance = null;
-            OnGoldChanged = null;
+            OnFoodChanged = null;
             OnBountyPaid = null;
             OnResourceChanged = null;
         }
@@ -40,19 +41,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [Tooltip("The main resource: what bounties pay and towers cost by default. Its starting amount is used when set.")]
         [SerializeField] private GrayboxResourceData _mainResource;
         [Tooltip("Starting amount when no main resource is assigned.")]
-        [SerializeField] private int _startingGold = 500;
+        [SerializeField, FormerlySerializedAs("_startingGold")] private int _startingFood = 500;
 
         // Resources other than the main one.
         private readonly Dictionary<GrayboxResourceData, int> _others = new Dictionary<GrayboxResourceData, int>();
 
-        public int CurrentGold { get; private set; }
+        public int CurrentFood { get; private set; }
 
         public GrayboxResourceData MainResource => _mainResource;
 
         private void Awake()
         {
             Instance = this;
-            CurrentGold = _mainResource != null ? _mainResource.StartingAmount : _startingGold;
+            CurrentFood = _mainResource != null ? _mainResource.StartingAmount : _startingFood;
         }
 
         private bool IsMain(GrayboxResourceData resource) => resource == null || resource == _mainResource;
@@ -62,7 +63,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             if (IsMain(resource))
             {
-                return CurrentGold;
+                return CurrentFood;
             }
 
             return _others.TryGetValue(resource, out int amount) ? amount : resource.StartingAmount;
@@ -74,7 +75,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             if (IsMain(resource))
             {
-                EarnGold(amount);
+                EarnFood(amount);
                 return;
             }
 
@@ -90,7 +91,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             if (IsMain(resource))
             {
-                return TrySpendGold(amount);
+                return TrySpendFood(amount);
             }
 
             if (amount <= 0) return true;
@@ -131,41 +132,41 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     float mult = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.BountyMultiplier : 1.0f;
                     mult *= GrayboxUpgrades.BountyMultiplier; // permanent upgrade bought at Home
                     int bounty = Mathf.RoundToInt(health.BountyValue * mult);
-                    EarnGold(bounty);
+                    EarnFood(bounty);
                     if (bounty > 0) OnBountyPaid?.Invoke(bounty);
                 }
             }
         }
 
-        public void EarnGold(int amount)
+        public void EarnFood(int amount)
         {
             if (amount <= 0) return;
-            CurrentGold += amount;
-            OnGoldChanged?.Invoke(CurrentGold);
-            OnResourceChanged?.Invoke(_mainResource, CurrentGold);
+            CurrentFood += amount;
+            OnFoodChanged?.Invoke(CurrentFood);
+            OnResourceChanged?.Invoke(_mainResource, CurrentFood);
         }
 
         public bool CanAfford(int amount)
         {
-            return Instance == null || CurrentGold >= amount;
+            return Instance == null || CurrentFood >= amount;
         }
 
-        public bool TrySpendGold(int amount)
+        public bool TrySpendFood(int amount)
         {
             if (amount <= 0) return true;
             if (!CanAfford(amount)) return false;
 
-            CurrentGold -= amount;
-            OnGoldChanged?.Invoke(CurrentGold);
-            OnResourceChanged?.Invoke(_mainResource, CurrentGold);
+            CurrentFood -= amount;
+            OnFoodChanged?.Invoke(CurrentFood);
+            OnResourceChanged?.Invoke(_mainResource, CurrentFood);
             return true;
         }
 
-        public void ResetGold(int amount = 500)
+        public void ResetFood(int amount = 500)
         {
-            CurrentGold = amount;
-            OnGoldChanged?.Invoke(CurrentGold);
-            OnResourceChanged?.Invoke(_mainResource, CurrentGold);
+            CurrentFood = amount;
+            OnFoodChanged?.Invoke(CurrentFood);
+            OnResourceChanged?.Invoke(_mainResource, CurrentFood);
         }
     }
 }

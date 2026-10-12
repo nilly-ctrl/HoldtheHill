@@ -228,7 +228,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (tower == null) return "no tower on that cell";
 
             GrayboxEconomy economy = GrayboxEconomy.Instance;
-            if (economy != null) economy.EarnGold(tower.RefundValue);
+            if (economy != null) economy.EarnFood(tower.RefundValue);
             // Without the sell sound and puff the placer adds, which need its selection.
             Destroy(tower.gameObject);
             return null;
@@ -242,10 +242,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             int cost = _placer.UpgradeCost(tower);
             GrayboxEconomy economy = GrayboxEconomy.Instance;
-            if (economy != null && !economy.TrySpendGold(cost)) return "cannot afford " + cost;
+            if (economy != null && !economy.TrySpendFood(cost)) return "cannot afford " + cost;
 
             tower.Upgrade();
-            tower.TotalGoldInvested += cost;
+            tower.TotalFoodInvested += cost;
             return null;
         }
 

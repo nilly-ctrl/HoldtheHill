@@ -291,7 +291,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             _spawner.StartNextWave(); // wave 1
             yield return null;
 
-            _economy.TrySpendGold(200);
+            _economy.TrySpendFood(200);
             _skills.TryUnlock("Ballistics_HeavyCaliber");
             int pointsAtWave2 = _skills.SkillPoints;
             _hill.TakeBaseDamage(30f, Vector3.zero);
@@ -301,7 +301,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Assert.IsTrue(_flow.CanRetryWave);
             Assert.AreEqual(2, _flow.RetryWaveNumber);
 
-            _economy.TrySpendGold(100);
+            _economy.TrySpendFood(100);
             _skills.AddSkillPoints(7);
             _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
             Assert.AreEqual(GameFlowState.RunEnd, _flow.State);
@@ -311,7 +311,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
 
             Assert.AreEqual(GameFlowState.Playing, _flow.State);
             Assert.AreEqual(1f, Time.timeScale);
-            Assert.AreEqual(300, _economy.CurrentGold);
+            Assert.AreEqual(300, _economy.CurrentFood);
             Assert.AreEqual(_hill.MaxHealth - 30f, _hill.CurrentHealth);
             Assert.IsFalse(_hill.IsFinished);
             Assert.AreEqual(pointsAtWave2, _skills.SkillPoints);
@@ -321,14 +321,14 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Assert.AreEqual(1, _flow.Stats.WaveRetries);
 
             // Retries are unlimited: the same checkpoint restores again.
-            _economy.TrySpendGold(250);
+            _economy.TrySpendFood(250);
             _flow.RetryWave();
-            Assert.AreEqual(300, _economy.CurrentGold);
+            Assert.AreEqual(300, _economy.CurrentFood);
             Assert.AreEqual(2, _flow.Stats.WaveRetries);
         }
 
         [UnityTest]
-        public IEnumerator StartNewRun_GoesBackToWaveOne_WithStartingGoldAndSkills()
+        public IEnumerator StartNewRun_GoesBackToWaveOne_WithStartingFoodAndSkills()
         {
             yield return null;
             int startingPoints = _skills.SkillPoints;
@@ -337,7 +337,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             yield return null;
             _spawner.StartNextWave();
             yield return null;
-            _economy.TrySpendGold(400);
+            _economy.TrySpendFood(400);
             _skills.TryUnlock("Ballistics_HeavyCaliber");
             _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
             _flow.RetryWave();
@@ -346,7 +346,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             yield return null;
 
             Assert.AreEqual(GameFlowState.Playing, _flow.State);
-            Assert.AreEqual(500, _economy.CurrentGold);
+            Assert.AreEqual(500, _economy.CurrentFood);
             Assert.AreEqual(_hill.MaxHealth, _hill.CurrentHealth);
             Assert.AreEqual(startingPoints, _skills.SkillPoints);
             Assert.IsFalse(_skills.IsUnlocked("Ballistics_HeavyCaliber"));
@@ -365,7 +365,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Tower sold = MakeTower("Tower_Sold", new Vector3(-3f, 1f, 0f));
             yield return null;
             kept.Upgrade(); // level 2 at the checkpoint
-            kept.TotalGoldInvested = 250;
+            kept.TotalFoodInvested = 250;
 
             _spawner.StartNextWave();
             yield return null;
@@ -386,7 +386,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
 
             Tower restored = towers.First(t => t.name == "Tower_Kept");
             Assert.AreEqual(2, restored.Level);
-            Assert.AreEqual(250, restored.TotalGoldInvested);
+            Assert.AreEqual(250, restored.TotalFoodInvested);
             Assert.AreEqual(new Vector3(2f, 1f, 0f), restored.transform.position);
             Assert.AreEqual(1, ChildCount(restored, "RangeCircle"), "one range ring, not one per restore");
 

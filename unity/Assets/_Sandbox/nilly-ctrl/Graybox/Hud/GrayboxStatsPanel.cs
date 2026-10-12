@@ -65,7 +65,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             if (!pixelHud)
             {
-                int gold = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentGold : 500;
+                int gold = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentFood : 500;
                 if (gold != _foodShown || _spawner.CurrentWaveNumber != _waveShown || _spawner.TotalWaves != _totalShown)
                 {
                     _foodShown = gold;

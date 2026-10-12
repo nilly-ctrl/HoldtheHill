@@ -147,7 +147,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 seed = seed,
                 fixedDeltaTime = Time.fixedDeltaTime,
                 startWave = _spawner != null ? _spawner.CurrentWaveIndex : 0,
-                startGold = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentGold : 0,
+                startFood = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentFood : 0,
                 startTowers = _towers.Count,
             };
 

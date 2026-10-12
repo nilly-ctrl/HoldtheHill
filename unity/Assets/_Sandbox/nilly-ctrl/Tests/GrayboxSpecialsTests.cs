@@ -523,7 +523,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         {
             MakePath(new Vector2(0, 0), new Vector2(6, 0));
             var economy = Make("Economy", Vector2.zero).AddComponent<GrayboxEconomy>();
-            int start = economy.CurrentGold;
+            int start = economy.CurrentFood;
 
             GrayboxThiefAnt thief = MakeSpecial<GrayboxThiefAnt>("Thief", Vector2.zero, 1000f,
                 t => Set(t.GetComponent<EnemyMover>(), "_onReachEnd", EnemyMover.EndBehaviour.Stop));
@@ -538,10 +538,10 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             }
 
             Assert.AreEqual(40, thief.Stolen);
-            Assert.AreEqual(start - 40, economy.CurrentGold);
+            Assert.AreEqual(start - 40, economy.CurrentFood);
 
             Hit(thief.gameObject, 99999f, null);
-            Assert.AreEqual(start, economy.CurrentGold, "the food comes back when the thief dies");
+            Assert.AreEqual(start, economy.CurrentFood, "the food comes back when the thief dies");
         }
 
         [UnityTest]

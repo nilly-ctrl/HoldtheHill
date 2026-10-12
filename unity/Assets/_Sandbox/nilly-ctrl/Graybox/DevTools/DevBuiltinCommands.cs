@@ -26,7 +26,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             r.Register("spawn", "spawn <enemy> [n]", "Spawns n of an enemy (default 1) at the entrance. See list enemies.", Spawn);
             r.Register("nextwave", "nextwave", "Starts the next wave.", NextWave);
             r.Register("skipwave", "skipwave", "Clears the field and moves past the next wave without spawning it.", SkipWave);
-            r.Register("setgold", "setgold <n>", "Sets gold (the main resource) to n.", SetGold);
+            r.Register("setgold", "setgold <n>", "Sets gold (the main resource) to n.", SetFood);
             r.Register("give", "give <resource> <n>", "Adds n of gold, honeydew, skillpoints or a resource by name.", Give);
             r.Register("god", "god [on|off]", "The hill and the Warden cannot be hurt.", God);
             r.Register("speed", "speed <x|reset>", "Sets the game speed multiplier (0.1 to 20).", Speed);
@@ -297,14 +297,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         // ---------- resources ----------
 
-        private static string SetGold(DevCommandArgs a)
+        private static string SetFood(DevCommandArgs a)
         {
             int amount = a.Int(0, "n");
             if (amount < 0) throw new DevCommandException("<n> cannot be negative.");
 
             GrayboxEconomy economy = RequireEconomy();
-            economy.ResetGold(amount);
-            return "Gold is " + economy.CurrentGold + ".";
+            economy.ResetFood(amount);
+            return "Gold is " + economy.CurrentFood + ".";
         }
 
         private static GrayboxEconomy RequireEconomy()
@@ -324,8 +324,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             if (key == "gold" || key == "main" || (economy != null && economy.MainResource != null && MatchesResource(economy.MainResource, key)))
             {
-                RequireEconomy().EarnGold(amount);
-                return "Gold is " + economy.CurrentGold + ".";
+                RequireEconomy().EarnFood(amount);
+                return "Gold is " + economy.CurrentFood + ".";
             }
 
             if (key == "honeydew" || key == "hd")

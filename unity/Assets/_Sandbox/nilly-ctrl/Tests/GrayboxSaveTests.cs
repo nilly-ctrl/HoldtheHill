@@ -372,7 +372,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
                 TotalWaves = 4,
                 WaveRetries = retries,
                 Kills = kills,
-                GoldEarned = food,
+                FoodEarned = food,
                 TimeSeconds = seconds,
             };
         }

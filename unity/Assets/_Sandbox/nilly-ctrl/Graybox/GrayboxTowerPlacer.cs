@@ -215,13 +215,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             int cost = UpgradeCost(tower);
-            if (GrayboxEconomy.Instance != null && !GrayboxEconomy.Instance.TrySpendGold(cost))
+            if (GrayboxEconomy.Instance != null && !GrayboxEconomy.Instance.TrySpendFood(cost))
             {
                 return false;
             }
 
             tower.Upgrade();
-            tower.TotalGoldInvested += cost;
+            tower.TotalFoodInvested += cost;
             GrayboxSfx.PlayCue("Upgrade", tower.transform.position);
             TowerUpgraded?.Invoke(tower);
             return true;
@@ -237,7 +237,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             TowerSold?.Invoke(tower);
-            if (GrayboxEconomy.Instance != null) GrayboxEconomy.Instance.EarnGold(tower.RefundValue);
+            if (GrayboxEconomy.Instance != null) GrayboxEconomy.Instance.EarnFood(tower.RefundValue);
             GrayboxSfx.PlayCue("Sell", tower.transform.position);
             SpriteClipPlayer.SpawnOneShot(_animLibrary, "FxBuild", "Sell", tower.transform.position, Quaternion.identity, 1f, 3);
             Destroy(tower.gameObject);
@@ -493,7 +493,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             Tower tower = Instantiate(data.Prefab, position, Quaternion.identity);
             tower.name = data.DisplayName;
-            tower.TotalGoldInvested = cost;
+            tower.TotalFoodInvested = cost;
 
             GrayboxSfx.PlayCue("Place", position);
             SpriteClipPlayer.SpawnOneShot(_animLibrary, "FxBuild", "Rise", position, Quaternion.identity, 1f, 3);

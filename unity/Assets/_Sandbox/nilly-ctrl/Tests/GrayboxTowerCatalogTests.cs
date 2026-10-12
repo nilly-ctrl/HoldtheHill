@@ -127,7 +127,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
 
             Assert.AreEqual(new Vector3(3f, -2f, 0f), _placed.transform.position);
             Assert.AreEqual(frost.DisplayName, _placed.name);
-            Assert.AreEqual(123, _placed.TotalGoldInvested);
+            Assert.AreEqual(123, _placed.TotalFoodInvested);
             Assert.AreEqual(frost.Range, _placed.Range, 0.001f);
             Assert.IsNotNull(_placed.GetComponent<FrostAuraTower>());
             Assert.AreSame(_placed, placer.SelectedTower);

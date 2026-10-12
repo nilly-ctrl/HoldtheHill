@@ -63,7 +63,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     [Serializable]
     public class ReplayRecording
     {
-        public const int CurrentVersion = 1;
+        public const int CurrentVersion = 2;
 
         public int version = CurrentVersion;
         public string unityVersion;
@@ -81,7 +81,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>0-based wave the spawner was on when recording began. Above 0 means a mid-run start.</summary>
         public int startWave;
 
-        public int startGold;
+        public int startFood;
         public int startTowers;
 
         /// <summary>Fixed steps recorded in total.</summary>

@@ -64,7 +64,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _wave.text = stats.TotalWaves > 0 ? GrayboxLoc.Get("{0} of {1}", stats.WaveReached, stats.TotalWaves) : stats.WaveReached.ToString();
             _honeydew.text = $"{PixelGlyphs.IconGem} {flow.LastRunHoneydew}";
             _kills.text = stats.Kills.ToString();
-            _food.text = stats.GoldEarned.ToString();
+            _food.text = stats.FoodEarned.ToString();
             _towers.text = stats.TowersStanding.ToString();
             _time.text = FormatTime(stats.TimeSeconds);
             _retries.text = stats.WaveRetries.ToString();

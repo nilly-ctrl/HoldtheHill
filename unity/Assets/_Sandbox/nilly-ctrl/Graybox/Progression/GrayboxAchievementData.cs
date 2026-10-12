@@ -21,7 +21,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         SkillPointSpent,
 
         /// <summary>The gold held when it is reported; progress is the highest amount seen.</summary>
-        GoldHeld,
+        FoodHeld,
 
         /// <summary>Each wave completed adds 1, if the wave and base health conditions below hold.</summary>
         WaveCompleted,

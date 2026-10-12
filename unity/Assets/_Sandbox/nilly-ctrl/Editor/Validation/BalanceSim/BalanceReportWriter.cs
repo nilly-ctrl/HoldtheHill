@@ -24,10 +24,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                   .Append(F(w.TotalHp)).Append(',')
                   .Append(w.TowersOwned).Append(',')
                   .Append(F(w.DefenceDps)).Append(',')
-                  .Append(w.GoldAtStart).Append(',')
-                  .Append(w.GoldSpent).Append(',')
-                  .Append(w.GoldEarned).Append(',')
-                  .Append(w.GoldAtEnd).Append(',')
+                  .Append(w.FoodAtStart).Append(',')
+                  .Append(w.FoodSpent).Append(',')
+                  .Append(w.FoodEarned).Append(',')
+                  .Append(w.FoodAtEnd).Append(',')
                   .Append(w.Killed).Append(',')
                   .Append(w.Leaked).Append(',')
                   .Append(F(w.LeakPoints)).Append(',')
@@ -54,7 +54,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             sb.AppendLine("It leaves out slows, statuses, healers, shields regenerating, projectile travel, upgrades,");
             sb.AppendLine("abilities and the Warden. Trust the direction of a flag, not the exact numbers.");
             sb.AppendLine();
-            sb.AppendLine($"Route {s.PathLength:0.#} units, start {s.StartingGold} gold, up to {s.MaxTowers} towers, " +
+            sb.AppendLine($"Route {s.PathLength:0.#} units, start {s.StartingFood} gold, up to {s.MaxTowers} towers, " +
                           $"{s.Strategy} buying, towers {s.PathOffset:0.##} units from the road, " +
                           $"damage x{s.DamageMultiplier:0.##}, bounty x{s.BountyMultiplier:0.##}.");
             sb.AppendLine();
@@ -64,7 +64,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             {
                 sb.AppendLine(
                     $"{w.Number,4}  {w.Enemies,7}  {w.TowersOwned,6}  " +
-                    $"{w.GoldAtStart,6}/{w.GoldSpent,5}/{w.GoldEarned,5}/{w.GoldAtEnd,6}   " +
+                    $"{w.FoodAtStart,6}/{w.FoodSpent,5}/{w.FoodEarned,5}/{w.FoodAtEnd,6}   " +
                     $"{w.Killed,6} {w.Leaked,6}  {w.LeakPoints,6:0}  {w.ClearSeconds,8:0.0}  {w.AvgTimeToKill,9:0.0}  " +
                     $"{w.MeanKillDepth * 100f,4:0}%  {w.Verdict}" + Measured(w));
             }
