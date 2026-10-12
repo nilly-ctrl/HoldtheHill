@@ -130,9 +130,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             // Towers made some other way (the content wizard) are kept: any data asset in the tower
             // folder that this list did not make is appended, so a rebuild does not drop it.
+            // Subfolders belong to other catalogs (Towers/FireAnt is the sample species'), so only
+            // assets sitting directly in the folder count.
             foreach (string guid in AssetDatabase.FindAssets("t:GrayboxTowerData", new[] { TowerDataRoot }))
             {
-                var extra = AssetDatabase.LoadAssetAtPath<GrayboxTowerData>(AssetDatabase.GUIDToAssetPath(guid));
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                if (path.LastIndexOf('/') != TowerDataRoot.Length) continue;
+
+                var extra = AssetDatabase.LoadAssetAtPath<GrayboxTowerData>(path);
                 if (extra != null && !towers.Contains(extra))
                 {
                     towers.Add(extra);
