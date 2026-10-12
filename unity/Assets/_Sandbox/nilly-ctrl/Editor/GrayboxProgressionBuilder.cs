@@ -97,7 +97,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             var go = new GameObject("GrayboxSkillTree");
             var tree = go.AddComponent<GrayboxSkillTree>();
-            go.AddComponent<GrayboxSkillTreeUI>();
             GrayboxBuildKit.Apply(tree, so =>
                 so.FindProperty("_catalog").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GrayboxSkillTreeData>(SkillCatalogPath));
         }

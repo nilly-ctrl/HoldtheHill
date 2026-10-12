@@ -46,6 +46,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxBuildOption option = GrayboxHudPartsBuilder.BuildOption();
             Image marker = GrayboxHudPartsBuilder.BuildWaveMarker();
             GrayboxHudChip chip = GrayboxHudPartsBuilder.BuildChip();
+            GrayboxSkillNodeRow skillRow = GrayboxHudWindowsBuilder.BuildSkillNodeRow();
 
             GameObject root = UiKitBuilder.InstantiatePrefab("UiRoot", null);
             if (root == null)
@@ -66,6 +67,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             BuildWardenStrip(canvas, chip);
             BuildBuildBar(canvas, slot);
             BuildBuildMenu(canvas, option);
+            // The windows a key opens, over everything but the placement label.
+            GrayboxHudWindowsBuilder.BuildSkillTreePanel(canvas, skillRow);
+            GrayboxHudWindowsBuilder.BuildAchievementsPanel(canvas);
+            GrayboxHudWindowsBuilder.BuildSpecialsPanel(canvas);
             BuildPlacementLabel(canvas);
 
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);

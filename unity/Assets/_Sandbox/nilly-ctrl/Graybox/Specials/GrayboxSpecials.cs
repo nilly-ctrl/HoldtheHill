@@ -35,9 +35,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private Transform _enemyContainer;
 
         private EnemySpawner _spawner;
-        private bool _panelOpen;
-        private GUIStyle _button;
-        private GUIStyle _label;
 
         public IReadOnlyList<Entry> Entries => _entries;
 
@@ -139,49 +136,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             return player;
-        }
-
-        private void Update()
-        {
-            if (GrayboxGameFlow.GameplayActive && GrayboxControls.Pressed(GrayboxControls.SpecialsPanel))
-            {
-                _panelOpen = !_panelOpen;
-            }
-        }
-
-        private void OnGUI()
-        {
-            if (!_panelOpen || !GrayboxGameFlow.GameplayActive)
-            {
-                return;
-            }
-
-            if (_button == null)
-            {
-                _button = new GUIStyle(GUI.skin.button) { fontSize = 13, alignment = TextAnchor.MiddleLeft };
-                _label = new GUIStyle(GUI.skin.label) { fontSize = 13, fontStyle = FontStyle.Bold };
-            }
-
-            const float Width = 210f;
-            float height = 60f + _entries.Count * 26f;
-            GUILayout.BeginArea(new Rect(Screen.width - Width - 12f, 120f, Width, height), GUI.skin.box);
-            GUILayout.Label($"Spawn a special ({GrayboxControls.Name(GrayboxControls.SpecialsPanel)} closes)", _label);
-            bool lastBoss = true;
-            foreach (Entry entry in _entries)
-            {
-                if (lastBoss && !entry.Boss)
-                {
-                    GUILayout.Space(6f);
-                }
-
-                lastBoss = entry.Boss;
-                if (GUILayout.Button((entry.Boss ? "BOSS  " : "") + entry.Label, _button, GUILayout.Height(22f)))
-                {
-                    Spawn(entry.Id);
-                }
-            }
-
-            GUILayout.EndArea();
         }
     }
 }

@@ -22,6 +22,7 @@ What exists, where it lives, how to use it in Unity and how to change it. Everyt
 | Title art | `Ui/Title/Source~/` | 320x180 backdrop and a layout mockup | `build_title_art.py` in that folder |
 | Animations | `Animations/` | Towers, enemies, projectiles, weapons, effects as `.aseprite` | See `Animations/README.md` |
 | Tiles | `Tiles/` | Grass and dirt-trail ground | `Animations/Source~/build_tiles.py` |
+| Tile sets | `Tiles/Sets/` | Six sets for painting levels on a Tilemap (Meadow, Forest, Riverbank, Patio, Picnic, Kitchen): ground variations, 47-tile blob terrains, Rule Tiles and a Tile Palette each. See `Tiles/README.md` | `Tiles/Source~/build_tile_sets.py`, then **Tools > Hold the Hill > Build Tile Sets** |
 
 Each folder has its own README with the full file list.
 
@@ -44,12 +45,14 @@ Skill icons are named after the `SkillNodeId`: `Control_DeepFreeze` becomes `Ski
 
 ## Using them
 
-**An icon in the graybox HUD (IMGUI):**
+**An icon in the graybox HUD (uGUI):**
 
 ```csharp
-Texture2D icon = GrayboxIcons.Get("TowerLinearIcon");   // null if missing
-GUI.DrawTexture(new Rect(x, y, 32, 32), icon);
+Sprite icon = GrayboxIcons.GetSprite("TowerLinearIcon");   // null if missing
+image.sprite = icon;
 ```
+
+(`GrayboxIcons.Get` still returns the `Texture2D` for the IMGUI dev tools.)
 
 `GrayboxIcons` is added to the scene by `GrayboxBuilder` and holds every icon, so this also works in a build.
 

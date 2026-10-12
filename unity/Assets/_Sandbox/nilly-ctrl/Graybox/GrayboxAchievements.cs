@@ -35,7 +35,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// <summary>
     /// Achievement tracking system for the graybox sandbox environment.
     /// Monitors combat events, gold earnings, wave milestones, and tower placement.
-    /// Provides an IMGUI Achievements modal and pop-up banners upon unlock.
+    /// Shows a banner on unlock; the list is the Achievements HUD panel and the Home hub.
     /// </summary>
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Achievements")]
     public class GrayboxAchievements : MonoBehaviour
@@ -45,20 +45,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Instance = null;
 
-        public bool ShowAchievementsWindow { get; set; }
-
         [Tooltip("The achievements in the game.")]
         [SerializeField] private GrayboxAchievementCatalog _catalog;
 
         private readonly List<Achievement> _achievements = new List<Achievement>();
         private readonly Queue<Achievement> _unlockBannerQueue = new Queue<Achievement>();
+        private const float BannerSeconds = 3.5f;
         private float _bannerTimer;
         private Achievement _currentBanner;
 
-        private GUIStyle _titleStyle;
-        private GUIStyle _bodyStyle;
-        private GUIStyle _headerStyle;
-        private GUIStyle _btnStyle;
+        private GrayboxWaveBanner _banner;
+        private bool _lookedForBanner;
 
         public IReadOnlyList<Achievement> Achievements => _achievements;
 
@@ -268,11 +265,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Update()
         {
-            if (GrayboxGameFlow.GameplayActive && GrayboxControls.Pressed(GrayboxControls.Achievements))
-            {
-                ShowAchievementsWindow = !ShowAchievementsWindow;
-            }
-
             if (_bannerTimer > 0f)
             {
                 _bannerTimer -= Time.unscaledDeltaTime;
@@ -280,115 +272,24 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             else if (_unlockBannerQueue.Count > 0)
             {
                 _currentBanner = _unlockBannerQueue.Dequeue();
-                _bannerTimer = 3.5f;
+                _bannerTimer = BannerSeconds;
+                ShowBanner(_currentBanner);
             }
         }
 
-        private void OnGUI()
+        // "ACHIEVEMENT: title" in the scene's banner style, if the scene has a wave banner.
+        private void ShowBanner(Achievement ach)
         {
-            if (!GrayboxGameFlow.GameplayActive) return;
-
-            HoldTheHill.Sandbox.NillyCtrl.GrayboxUi.Apply(); // pixel skin; a no-op without a GrayboxUi in the scene
-            InitStyles();
-
-            DrawUnlockBanner();
-            DrawAchievementsModal();
-        }
-
-        private void InitStyles()
-        {
-            if (_titleStyle != null) return;
-
-            _titleStyle = new GUIStyle(GUI.skin.label)
+            if (!_lookedForBanner)
             {
-                fontSize = 10,
-                fontStyle = FontStyle.Bold,
-                alignment = TextAnchor.MiddleCenter,
-                richText = true
-            };
-
-            _headerStyle = new GUIStyle(GUI.skin.label)
-            {
-                fontSize = 10,
-                fontStyle = FontStyle.Bold,
-                richText = true
-            };
-
-            _bodyStyle = new GUIStyle(GUI.skin.label)
-            {
-                fontSize = 10,
-                richText = true
-            };
-
-            _btnStyle = new GUIStyle(GUI.skin.button)
-            {
-                fontSize = 10,
-                fontStyle = FontStyle.Bold
-            };
-        }
-
-        private void DrawUnlockBanner()
-        {
-            if (_bannerTimer <= 0f || _currentBanner == null) return;
-
-            float width = 320f;
-            float height = 55f;
-            float x = (Screen.width - width) * 0.5f;
-            float y = 45f;
-
-            GUI.color = new Color(0.1f, 0.12f, 0.16f, 0.95f);
-            GUI.Box(new Rect(x, y, width, height), GUIContent.none);
-            GUI.color = Color.white;
-
-            GUILayout.BeginArea(new Rect(x + 10f, y + 6f, width - 20f, height - 12f));
-            GUILayout.Label($"<b>🏆 ACHIEVEMENT UNLOCKED!</b>", _headerStyle);
-            GUILayout.Label($"<color=#ffd700>{_currentBanner.Title}</color> — {_currentBanner.Description}", _bodyStyle);
-            GUILayout.EndArea();
-        }
-
-        private void DrawAchievementsModal()
-        {
-            if (!ShowAchievementsWindow) return;
-
-            float width = 450f;
-            float height = 480f;
-            float x = (Screen.width - width) * 0.5f;
-            float y = (Screen.height - height) * 0.5f;
-
-            GUI.Box(new Rect(x, y, width, height), GUIContent.none);
-
-            GUILayout.BeginArea(new Rect(x + 12f, y + 12f, width - 24f, height - 24f));
-            GUILayout.Label("<b>🏆 ACHIEVEMENTS & MILESTONES</b>", _titleStyle);
-            GUILayout.Space(6);
-
-            int unlockedCount = 0;
-            foreach (var a in _achievements) if (a.IsUnlocked) unlockedCount++;
-            GUILayout.Label($"Unlocked: <color=#7fdd7f>{unlockedCount}</color> / {_achievements.Count} ({Mathf.RoundToInt((float)unlockedCount / _achievements.Count * 100f)}%)", _headerStyle);
-            GUILayout.Space(8);
-
-            for (int i = 0; i < _achievements.Count; i++)
-            {
-                Achievement a = _achievements[i];
-                GUILayout.BeginHorizontal(GUI.skin.box);
-
-                string iconStr = a.IsUnlocked ? "🏆" : "🔒";
-                string colorHex = a.IsUnlocked ? "#ffd700" : "#808080";
-                string statusStr = a.IsUnlocked ? $"<color=#7fdd7f>[UNLOCKED {a.UnlockedTimeStr}]</color>" : $"[{a.CurrentProgress}/{a.RequiredProgress}]";
-
-                GUILayout.Label($"{iconStr} <b><color={colorHex}>{a.Title}</color></b>", _headerStyle, GUILayout.Width(180));
-                GUILayout.Label($"{a.Description}\n{statusStr}", _bodyStyle);
-
-                GUILayout.EndHorizontal();
-                GUILayout.Space(2);
+                _lookedForBanner = true;
+                _banner = FindAnyObjectByType<GrayboxWaveBanner>();
             }
 
-            GUILayout.Space(10);
-            if (GUILayout.Button("Close Window [A]", _btnStyle, GUILayout.Height(28)))
+            if (_banner != null)
             {
-                ShowAchievementsWindow = false;
+                _banner.Show(ach.Title, "Heading", BannerSeconds);
             }
-
-            GUILayout.EndArea();
         }
     }
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
     /// <summary>
-    /// The in-run keys that are not building or the Warden: next wave, speed, restart, range
-    /// rings and health bars. Every key comes from <see cref="GrayboxControls"/>, so the controls
+    /// The in-run keys that are not building or the Warden: next wave, speed, restart, the skill
+    /// tree, achievements and specials windows, range rings and health bars. Every key comes from <see cref="GrayboxControls"/>, so the controls
     /// screen can rebind it, and every action is handed to the flow controller or the spawner.
     /// </summary>
     /// <remarks>
@@ -36,6 +36,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxGameFlow flow = GrayboxGameFlow.Instance;
             if (GrayboxControls.Pressed(GrayboxControls.Speed) && flow != null) flow.CycleSpeed();
             if (GrayboxControls.Pressed(GrayboxControls.Restart) && flow != null) flow.StartNewRun();
+
+            // The windows over the field (HUD panels; the HUD root shows and hides them).
+            if (GrayboxControls.Pressed(GrayboxControls.SkillTree)) GrayboxSkillTreePanel.Open = !GrayboxSkillTreePanel.Open;
+            if (GrayboxControls.Pressed(GrayboxControls.Achievements)) GrayboxAchievementsPanel.Open = !GrayboxAchievementsPanel.Open;
+            if (GrayboxControls.Pressed(GrayboxControls.SpecialsPanel)) GrayboxSpecialsPanel.Open = !GrayboxSpecialsPanel.Open;
 
             if (GrayboxControls.Pressed(GrayboxControls.ToggleRings))
             {

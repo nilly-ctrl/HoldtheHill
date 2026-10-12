@@ -27,7 +27,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static readonly string[] Members =
         {
             "GrayboxEconomy", "GrayboxSkillTree", "GrayboxCombatSystems", "GrayboxProceduralWaveGenerator",
-            "GrayboxSfx", "GrayboxUi", "GrayboxIcons", "GrayboxImpactFx", "GrayboxSpecies", "GrayboxPowerUps",
+            "GrayboxSfx", "GrayboxIcons", "GrayboxImpactFx", "GrayboxSpecies", "GrayboxPowerUps",
             "GrayboxGameFlow",
         };
 

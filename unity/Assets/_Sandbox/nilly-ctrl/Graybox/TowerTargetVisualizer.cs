@@ -4,7 +4,8 @@ using UnityEngine;
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
     /// <summary>
-    /// Visualizes tower range circles, target lock-on lines, and priority tags in PlayMode.
+    /// Visualizes tower range circles, target lock-on lines, and a priority and level label
+    /// under the tower (a <see cref="PixelText"/> in the scene's Hud style) in PlayMode.
     /// </summary>
     [AddComponentMenu("Hold the Hill/Graybox/Tower Target Visualizer")]
     [RequireComponent(typeof(Tower))]
@@ -17,8 +18,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private Tower _tower;
         private LineRenderer _rangeLine;
         private LineRenderer _targetLine;
-        private Camera _mainCamera;
-        private GUIStyle _labelStyle;
+        private PixelText _label;
+        private PixelFontTheme _theme;
+        private bool _lookedForTheme;
+        private int _levelShown = -1;
+        private bool _hasTargetShown;
+        private TargetingPriority _priorityShown;
 
         public static bool ShowRangeRings { get; set; } = true;
         public static bool ShowTargetLines { get; set; } = true;
@@ -35,7 +40,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private void Awake()
         {
             _tower = GetComponent<Tower>();
-            _mainCamera = Camera.main;
 
             SetupLines();
         }
@@ -73,9 +77,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private static Material GetUnlitMaterial()
         {
-            Shader shader = Shader.Find("Sprites/Default")
-                         ?? Shader.Find("Universal Render Pipeline/Unlit")
-                         ?? Shader.Find("Unlit/Color");
+            // Explicit null checks: ?? would skip Unity's destroyed-object check on a Shader.
+            Shader shader = Shader.Find("Sprites/Default");
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Unlit");
+            if (shader == null) shader = Shader.Find("Unlit/Color");
             return new Material(shader);
         }
 
@@ -87,7 +92,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             UpdateRangeRing();
-            UpdateTargetLine();
+            bool hasTarget = UpdateTargetLine();
+            UpdateLabel(hasTarget);
         }
 
         private void UpdateRangeRing()
@@ -111,7 +117,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
         }
 
-        private void UpdateTargetLine()
+        /// <returns>True while the tower has a live target.</returns>
+        private bool UpdateTargetLine()
         {
             // CurrentTarget is only refreshed in Tower.Update, so this frame it can still point at an
             // enemy destroyed last frame. It's an interface, so `== null` alone can't see that:
@@ -121,60 +128,65 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (!ShowTargetLines || gone)
             {
                 _targetLine.enabled = false;
-                return;
+                return !gone;
             }
 
             _targetLine.enabled = true;
             _targetLine.SetPosition(0, transform.position);
             _targetLine.SetPosition(1, target.Transform.position);
+            return true;
         }
 
-        private void OnGUI()
+        // "Closest  LVL 2  TARGET" under the tower. Only when the scene has a font theme with a Hud style.
+        private void UpdateLabel(bool hasTarget)
         {
-            if (!GrayboxGameFlow.GameplayActive) return;
+            bool show = ShowTowerLabels && GrayboxGameFlow.GameplayActive;
+            if (!show)
+            {
+                if (_label != null && _label.gameObject.activeSelf) _label.gameObject.SetActive(false);
+                return;
+            }
 
-            GUI.depth = 10; // world-space overlay: draw behind the HUD panels
-
-            HoldTheHill.Sandbox.NillyCtrl.GrayboxUi.Apply(); // pixel skin; a no-op without a GrayboxUi in the scene
-            if (!ShowTowerLabels || _tower == null)
+            if (_label == null && !CreateLabel())
             {
                 return;
             }
 
-            if (_mainCamera == null)
+            if (_tower.Level != _levelShown || hasTarget != _hasTargetShown || _tower.Priority != _priorityShown)
             {
-                _mainCamera = Camera.main;
-                if (_mainCamera == null)
-                {
-                    return;
-                }
+                _levelShown = _tower.Level;
+                _hasTargetShown = hasTarget;
+                _priorityShown = _tower.Priority;
+                string level = _tower.Level > 1 ? $"  LVL {_tower.Level}" : string.Empty;
+                _label.Text = $"{_tower.Priority}{level}  {(hasTarget ? "TARGET" : "IDLE")}";
             }
 
-            Vector3 worldPos = transform.position + Vector3.down * 0.55f;
-            Vector3 screenPos = _mainCamera.WorldToScreenPoint(worldPos);
-            if (screenPos.z < 0f)
+            if (!_label.gameObject.activeSelf) _label.gameObject.SetActive(true);
+        }
+
+        private bool CreateLabel()
+        {
+            if (!_lookedForTheme)
             {
-                return;
+                _lookedForTheme = true;
+                _theme = FindAnyObjectByType<PixelFontTheme>();
             }
 
-            float guiX = screenPos.x - 60f;
-            float guiY = Screen.height - screenPos.y;
-
-            if (_labelStyle == null)
+            PixelFontStyle style = _theme != null ? _theme.Find("Hud") : null;
+            if (style == null)
             {
-                _labelStyle = new GUIStyle(GUI.skin.label)
-                {
-                    fontSize = 10,
-                    alignment = TextAnchor.MiddleCenter,
-                    richText = true,
-                    fontStyle = FontStyle.Bold
-                };
+                return false;
             }
 
-            string targetText = _tower.CurrentTarget != null ? "<color=#ff7070>● Target</color>" : "<color=#808080>Idle</color>";
-            string lvlBadge = _tower.Level > 1 ? $" <color=#ffd700>[LVL {_tower.Level}]</color>" : string.Empty;
-            string tag = $"<color=#80d0ff><b>{_tower.Priority}</b></color>{lvlBadge}\n{targetText}";
-            GUI.Label(new Rect(guiX, guiY, 120f, 32f), tag, _labelStyle);
+            var go = new GameObject("Label");
+            go.transform.SetParent(transform, false);
+            go.transform.localPosition = Vector3.down * 0.55f;
+            _label = go.AddComponent<PixelText>();
+            _label.ThemeStyle = "Hud";
+            _label.Style = style;
+            _label.Alignment = PixelText.Anchor.Centre;
+            _label.SetRendering(1, 6);
+            return true;
         }
     }
 }

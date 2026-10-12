@@ -4,144 +4,147 @@ using UnityEngine;
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
     /// <summary>
-    /// Renders a floating world-space GUI health bar and status indicators above an enemy.
+    /// A small health bar above an enemy, and a thinner shield bar above that when the enemy has
+    /// an <see cref="EnemyShield"/>. Drawn with sprites in the world, not with IMGUI.
     /// </summary>
+    /// <remarks>
+    /// Slow, burn and poison are shown by <see cref="GrayboxStatusVisuals"/> (a tint and an icon),
+    /// so the bar carries no status badge of its own.
+    /// </remarks>
     [AddComponentMenu("Hold the Hill/Graybox/Enemy Health Bar")]
     public class EnemyHealthBar : MonoBehaviour
     {
+        private const int Order = 20; // above the enemy (2) and its status icon, below popups
+        private const float Pad = 0.02f;
+        private const float ShieldHeight = 0.035f;
+        private static readonly Color Back = new Color(0.1f, 0.1f, 0.12f, 0.85f);
+        private static readonly Color ShieldColour = new Color(0.3f, 0.75f, 1f, 0.9f);
+
         [SerializeField] private Vector3 _offset = new Vector3(0f, 0.55f, 0f);
-        [SerializeField] private Vector2 _size = new Vector2(38f, 5f);
+        [Tooltip("Bar size in world units.")]
+        [SerializeField] private Vector2 _size = new Vector2(0.5f, 0.06f);
         [SerializeField] private bool _showOnlyWhenDamaged = false;
 
         private EnemyHealth _health;
-        private Camera _mainCamera;
-        private GUIStyle _bgStyle;
-        private GUIStyle _fillStyle;
-        private GUIStyle _textStyle;
+        private EnemyShield _shield;
+        private GameObject _root;
+        private SpriteRenderer _fill;
+        private SpriteRenderer _shieldBack;
+        private SpriteRenderer _shieldFill;
+        private float _fractionShown = -1f;
+        private float _shieldShown = -1f;
+
+        private static Sprite s_pixel;
 
         public static bool ShowHealthBars { get; set; } = true;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetStatics() => ShowHealthBars = true;
+        private static void ResetStatics()
+        {
+            ShowHealthBars = true;
+            s_pixel = null;
+        }
+
+        // One white unit square with its pivot on the left edge, so scale.x is a bar's length.
+        private static Sprite Pixel
+        {
+            get
+            {
+                if (s_pixel == null)
+                {
+                    s_pixel = Sprite.Create(Texture2D.whiteTexture, new Rect(0f, 0f, 4f, 4f), new Vector2(0f, 0.5f), 4f);
+                }
+
+                return s_pixel;
+            }
+        }
 
         private void Awake()
         {
             _health = GetComponent<EnemyHealth>();
-            _mainCamera = Camera.main;
+            _shield = GetComponent<EnemyShield>();
+            Build();
         }
 
-        private void OnGUI()
+        private void Build()
         {
-            if (!GrayboxGameFlow.GameplayActive) return;
+            _root = new GameObject("Health Bar");
+            _root.transform.SetParent(transform, false);
+            _root.transform.localPosition = _offset;
 
-            GUI.depth = 10; // world-space overlay: draw behind the HUD panels
+            float left = -_size.x * 0.5f;
+            Bar("Back", left, 0f, _size, Back, Order);
+            _fill = Bar("Fill", left + Pad, 0f, new Vector2(_size.x - Pad * 2f, _size.y - Pad * 2f), Color.green, Order + 1);
 
-            HoldTheHill.Sandbox.NillyCtrl.GrayboxUi.Apply(); // pixel skin; a no-op without a GrayboxUi in the scene
-            if (!ShowHealthBars || _health == null || _health.IsDead)
+            if (_shield != null)
+            {
+                float y = _size.y * 0.5f + ShieldHeight;
+                _shieldBack = Bar("Shield Back", left, y, new Vector2(_size.x, ShieldHeight), Back, Order);
+                _shieldFill = Bar("Shield Fill", left + Pad, y, new Vector2(_size.x - Pad * 2f, ShieldHeight - Pad), ShieldColour, Order + 1);
+            }
+        }
+
+        private SpriteRenderer Bar(string name, float left, float y, Vector2 size, Color colour, int order)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(_root.transform, false);
+            go.transform.localPosition = new Vector3(left, y, 0f);
+            go.transform.localScale = new Vector3(size.x, size.y, 1f);
+            var renderer = go.AddComponent<SpriteRenderer>();
+            renderer.sprite = Pixel;
+            renderer.color = colour;
+            renderer.sortingOrder = order;
+            return renderer;
+        }
+
+        private void Update()
+        {
+            bool show = ShowHealthBars && GrayboxGameFlow.GameplayActive && _health != null && !_health.IsDead
+                        && (!_showOnlyWhenDamaged || _health.HealthFraction < 0.999f);
+            if (_root.activeSelf != show)
+            {
+                _root.SetActive(show);
+            }
+
+            if (!show)
             {
                 return;
             }
 
-            if (_showOnlyWhenDamaged && Mathf.Approximately(_health.HealthFraction, 1f))
+            float fraction = _health.HealthFraction;
+            if (fraction != _fractionShown)
             {
-                return;
+                _fractionShown = fraction;
+                Vector3 scale = _fill.transform.localScale;
+                scale.x = (_size.x - Pad * 2f) * Mathf.Clamp01(fraction);
+                _fill.transform.localScale = scale;
+                _fill.color = HealthColour(fraction);
             }
 
-            if (_mainCamera == null)
+            if (_shieldFill != null)
             {
-                _mainCamera = Camera.main;
-                if (_mainCamera == null)
+                float shield = _shield.ShieldFraction;
+                if (shield != _shieldShown)
                 {
-                    return;
+                    _shieldShown = shield;
+                    bool has = shield > 0f;
+                    _shieldBack.enabled = has;
+                    _shieldFill.enabled = has;
+                    Vector3 scale = _shieldFill.transform.localScale;
+                    scale.x = (_size.x - Pad * 2f) * Mathf.Clamp01(shield);
+                    _shieldFill.transform.localScale = scale;
                 }
             }
-
-            Vector3 worldPos = transform.position + _offset;
-            Vector3 screenPos = _mainCamera.WorldToScreenPoint(worldPos);
-
-            // Behind camera
-            if (screenPos.z < 0f)
-            {
-                return;
-            }
-
-            // Convert GUI Y-coordinate (GUI 0 is top of screen)
-            float guiX = screenPos.x - _size.x * 0.5f;
-            float guiY = Screen.height - screenPos.y - _size.y * 0.5f;
-
-            InitStyles();
-
-            // Background rect
-            Rect bgRect = new Rect(guiX, guiY, _size.x, _size.y);
-            GUI.Box(bgRect, GUIContent.none, _bgStyle);
-
-            // Fill rect
-            float fillWidth = Mathf.Max(0f, (_size.x - 2f) * _health.HealthFraction);
-            Rect fillRect = new Rect(guiX + 1f, guiY + 1f, fillWidth, _size.y - 2f);
-
-            Color originalColor = GUI.color;
-            GUI.color = GetHealthColor(_health.HealthFraction);
-            GUI.Box(fillRect, GUIContent.none, _fillStyle);
-            GUI.color = originalColor;
-
-            // Render energy shield bar if present
-            var shield = GetComponent<EnemyShield>();
-            if (shield != null && shield.ShieldFraction > 0f)
-            {
-                Rect shieldBgRect = new Rect(guiX, guiY - 5f, _size.x, 3f);
-                GUI.Box(shieldBgRect, GUIContent.none, _bgStyle);
-
-                float shieldWidth = Mathf.Max(0f, (_size.x - 2f) * shield.ShieldFraction);
-                Rect shieldFillRect = new Rect(guiX + 1f, guiY - 4f, shieldWidth, 2f);
-                GUI.color = new Color(0.3f, 0.75f, 1f, 0.9f);
-                GUI.Box(shieldFillRect, GUIContent.none, _fillStyle);
-                GUI.color = originalColor;
-            }
-
-            // Slow indicator badge
-            if (_health.SpeedMultiplier < 0.99f)
-            {
-                Rect slowRect = new Rect(guiX + _size.x + 3f, guiY - 3f, 30f, 12f);
-                GUI.Label(slowRect, "<color=#70c0ff>SLOW</color>", _textStyle);
-            }
         }
 
-        private void InitStyles()
-        {
-            if (_bgStyle != null)
-            {
-                return;
-            }
-
-            Texture2D texDark = MakeTexture(2, 2, new Color(0.1f, 0.1f, 0.12f, 0.85f));
-            Texture2D texWhite = MakeTexture(2, 2, Color.white);
-
-            _bgStyle = new GUIStyle { normal = { background = texDark } };
-            _fillStyle = new GUIStyle { normal = { background = texWhite } };
-            _textStyle = new GUIStyle(GUI.skin.label) { fontSize = 10, richText = true, fontStyle = FontStyle.Bold };
-        }
-
-        private static Color GetHealthColor(float fraction)
+        private static Color HealthColour(float fraction)
         {
             if (fraction > 0.5f)
             {
                 return Color.Lerp(new Color(0.9f, 0.8f, 0.2f), new Color(0.2f, 0.85f, 0.3f), (fraction - 0.5f) * 2f);
             }
+
             return Color.Lerp(new Color(0.9f, 0.2f, 0.2f), new Color(0.9f, 0.8f, 0.2f), fraction * 2f);
-        }
-
-        private static Texture2D MakeTexture(int width, int height, Color color)
-        {
-            Color[] pix = new Color[width * height];
-            for (int i = 0; i < pix.Length; i++)
-            {
-                pix[i] = color;
-            }
-
-            Texture2D result = new Texture2D(width, height);
-            result.SetPixels(pix);
-            result.Apply();
-            return result;
         }
     }
 }

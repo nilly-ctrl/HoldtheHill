@@ -117,7 +117,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxSceneDressingBuilder.BuildGround(path);
             GrayboxSceneDressingBuilder.BuildDecor(path);
             BuildSfx();
-            BuildUi();
             BuildIcons();
             GrayboxSceneDressingBuilder.BuildProps();
             BuildImpactFx();
