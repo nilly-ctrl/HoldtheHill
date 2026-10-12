@@ -218,18 +218,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
         }
 
-        // The same steps the wave spawner takes: instantiate at the entrance, snap to the route, announce.
+        // Through the spawner, so the cheat's enemies count as living; without one, the same steps by hand.
         private static GameObject SpawnOnPath(GameObject prefab)
         {
             var spawner = UnityEngine.Object.FindAnyObjectByType<EnemySpawner>();
+            if (spawner != null) return spawner.Spawn(prefab);
+
             var path = UnityEngine.Object.FindAnyObjectByType<EnemyPath>();
             Vector3 position = path != null && path.Waypoints.Count > 0 ? path.Waypoints[0] : Vector3.zero;
-            var container = DevReflect.Get<Transform>(spawner, "enemyContainer");
-
-            GameObject enemy = UnityEngine.Object.Instantiate(prefab, position, Quaternion.identity, container);
+            GameObject enemy = UnityEngine.Object.Instantiate(prefab, position, Quaternion.identity);
             EnemyMover mover = enemy.GetComponent<EnemyMover>();
             if (mover != null) mover.SnapToStart();
-            if (spawner != null) spawner.onEnemySpawned?.Invoke(enemy);
             return enemy;
         }
 

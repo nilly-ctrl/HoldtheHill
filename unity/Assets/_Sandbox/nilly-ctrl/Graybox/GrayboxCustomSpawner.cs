@@ -106,17 +106,18 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 if (prefab != null)
                 {
                     Vector3 pos = _spawnPoint != null ? _spawnPoint.position : transform.position;
-                    GameObject enemy = Instantiate(prefab, pos, Quaternion.identity, _enemyContainer);
-
-                    var mover = enemy.GetComponent<EnemyMover>();
-                    if (mover != null)
-                    {
-                        mover.SnapToStart();
-                    }
-
                     if (_spawner != null)
                     {
-                        _spawner.onEnemySpawned?.Invoke(enemy);
+                        _spawner.Spawn(prefab, pos, Quaternion.identity, true);
+                    }
+                    else
+                    {
+                        GameObject enemy = Instantiate(prefab, pos, Quaternion.identity, _enemyContainer);
+                        var mover = enemy.GetComponent<EnemyMover>();
+                        if (mover != null)
+                        {
+                            mover.SnapToStart();
+                        }
                     }
                 }
 

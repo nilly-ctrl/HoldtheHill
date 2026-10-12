@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         private readonly List<Object> _made = new List<Object>();
         private readonly List<GameObject> _spawnedEnemies = new List<GameObject>();
         private EnemySpawner _spawner;
+        private GameObject _template;
         private GrayboxEconomy _economy;
         private GrayboxBaseHealth _hill;
         private GrayboxSkillTree _skills;
@@ -38,6 +40,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             var template = new GameObject("TestEnemyTemplate");
             template.SetActive(false);
             _made.Add(template);
+            _template = template;
 
             var waves = ScriptableObject.CreateInstance<MapWaveDataSO>();
             _made.Add(waves);
@@ -92,6 +95,31 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             _spawnedEnemies.Clear();
             Time.timeScale = 1f;
             GrayboxSave.Close();
+        }
+
+        // ---------- enemies outside a wave ----------
+
+        [Test]
+        public void Spawn_OutsideAWave_CountsAsLiving_AndIsAnnounced()
+        {
+            GameObject enemy = _spawner.Spawn(_template);
+
+            Assert.IsNotNull(enemy);
+            Assert.AreEqual(1, _spawner.LivingEnemyCount);
+            CollectionAssert.Contains(_spawnedEnemies, enemy);
+        }
+
+        [Test]
+        public void TrackedEnemy_LeavesTheLivingCount_WhenItDies()
+        {
+            var enemy = new GameObject("TrackedEnemy");
+            var health = enemy.AddComponent<EnemyHealth>();
+            _spawner.Track(enemy);
+            Assert.AreEqual(1, _spawner.LivingEnemyCount);
+
+            health.TakeDamage(new DamageInfo(1000f, null, Vector2.zero));
+
+            Assert.AreEqual(0, _spawner.LivingEnemyCount);
         }
 
         // ---------- pausing and speed ----------

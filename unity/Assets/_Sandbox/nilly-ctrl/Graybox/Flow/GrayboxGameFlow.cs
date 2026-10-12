@@ -428,9 +428,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxBaseHealth hill = GrayboxBaseHealth.Instance;
             if (hill == null || hill.IsFinished) return;
 
-            // The spawner does not count split-off or custom-horde enemies.
-            if (FindAnyObjectByType<EnemyHealth>() != null) return;
-
             hill.TriggerVictory();
         }
 
