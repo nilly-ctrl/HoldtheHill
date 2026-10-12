@@ -56,6 +56,25 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         }
 
         [Test]
+        public void EveryEnemyThatWalksIntoTheHill_HasItsBreachDamageSet()
+        {
+            // Breach damage is data on the prefab (EnemyHealth), not a name table. 0 is "never set".
+            foreach (string[] group in new[] { Regular, Bosses })
+            {
+                foreach (string name in group)
+                {
+                    GameObject prefab = Prefab(name);
+                    Assert.IsNotNull(prefab, name);
+                    var mover = prefab.GetComponent<EnemyMover>();
+                    if (mover == null || !mover.DespawnsAtEnd) continue; // stops at the hill (thief ant): no breach
+
+                    Assert.Greater(prefab.GetComponent<EnemyHealth>().BreachDamage, 0f,
+                        $"{name}: set breach damage in the builder and rebuild the graybox.");
+                }
+            }
+        }
+
+        [Test]
         public void EveryBoss_IsAVariantOfTheBossBase_AndKnowsItsData()
         {
             GameObject bossBase = Prefab("BossBase");

@@ -77,21 +77,22 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             // Fast and fragile, the baseline, and a slow wall. The spread is what makes
             // Strongest and Weakest targeting visibly different from Closest.
+            // breach: hill health lost when one walks in (was a name table in GrayboxBaseHealth).
             GameObject runner = BuildEnemyPrefab(
-                "GrayboxRunner", circle, health: 90f, speed: 2.4f, new Color(0.95f, 0.75f, 0.2f), 0.45f, bounty: 8);
+                "GrayboxRunner", circle, health: 90f, speed: 2.4f, new Color(0.95f, 0.75f, 0.2f), 0.45f, bounty: 8, breach: 5f);
             GameObject grunt = BuildEnemyPrefab(
-                "GrayboxGrunt", circle, health: 240f, speed: 1.4f, new Color(0.85f, 0.25f, 0.25f), 0.6f, bounty: 10);
+                "GrayboxGrunt", circle, health: 240f, speed: 1.4f, new Color(0.85f, 0.25f, 0.25f), 0.6f, bounty: 10, breach: 10f);
             GameObject brute = BuildEnemyPrefab(
-                "GrayboxBrute", circle, health: 900f, speed: 0.85f, new Color(0.5f, 0.1f, 0.35f), 0.95f, bounty: 35);
+                "GrayboxBrute", circle, health: 900f, speed: 0.85f, new Color(0.5f, 0.1f, 0.35f), 0.95f, bounty: 35, breach: 25f);
 
             GameObject shielded = BuildShieldedEnemyPrefab(
-                "GrayboxShielded", circle, health: 160f, shield: 120f, speed: 1.2f, new Color(0.3f, 0.7f, 0.9f), 0.65f, bounty: 25);
+                "GrayboxShielded", circle, health: 160f, shield: 120f, speed: 1.2f, new Color(0.3f, 0.7f, 0.9f), 0.65f, bounty: 25, breach: 12f);
             GameObject swarm = BuildEnemyPrefab(
-                "GrayboxSwarm", circle, health: 35f, speed: 2.8f, new Color(1f, 0.85f, 0.1f), 0.35f, bounty: 4);
+                "GrayboxSwarm", circle, health: 35f, speed: 2.8f, new Color(1f, 0.85f, 0.1f), 0.35f, bounty: 4, breach: 2f);
             GameObject splitter = BuildSplitterEnemyPrefab(
-                "GrayboxSplitter", circle, swarm, health: 180f, speed: 1.1f, new Color(0.7f, 0.2f, 0.7f), 0.75f, bounty: 20);
+                "GrayboxSplitter", circle, swarm, health: 180f, speed: 1.1f, new Color(0.7f, 0.2f, 0.7f), 0.75f, bounty: 20, breach: 8f);
             GameObject healer = BuildHealerEnemyPrefab(
-                "GrayboxHealer", circle, health: 210f, speed: 1.0f, new Color(0.2f, 0.9f, 0.4f), 0.65f, bounty: 30);
+                "GrayboxHealer", circle, health: 210f, speed: 1.0f, new Color(0.2f, 0.9f, 0.4f), 0.65f, bounty: 30, breach: 15f);
 
             // Food and the crumbs that pay it. Bosses drop the golden one.
             GameObject goldenCrumb = GrayboxPickupBuilder.BuildPrefabs(circle);
@@ -260,15 +261,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         // ---------- prefabs ----------
 
         private static GameObject BuildEnemyPrefab(
-            string name, Sprite sprite, float health, float speed, Color color, float size, int bounty = 10)
+            string name, Sprite sprite, float health, float speed, Color color, float size, int bounty = 10, float breach = 0f)
         {
-            return SavePrefab(BuildBaseEnemyObject(name, sprite, health, speed, color, size, bounty), name);
+            return SavePrefab(BuildBaseEnemyObject(name, sprite, health, speed, color, size, bounty, breach: breach), name);
         }
 
         private static GameObject BuildShieldedEnemyPrefab(
-            string name, Sprite sprite, float health, float shield, float speed, Color color, float size, int bounty = 25)
+            string name, Sprite sprite, float health, float shield, float speed, Color color, float size, int bounty = 25, float breach = 0f)
         {
-            var go = BuildBaseEnemyObject(name, sprite, health, speed, color, size, bounty);
+            var go = BuildBaseEnemyObject(name, sprite, health, speed, color, size, bounty, breach: breach);
             EnemyShield s = go.AddComponent<EnemyShield>();
             Apply(s, so =>
             {
@@ -280,9 +281,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         private static GameObject BuildSplitterEnemyPrefab(
-            string name, Sprite sprite, GameObject swarmPrefab, float health, float speed, Color color, float size, int bounty = 20)
+            string name, Sprite sprite, GameObject swarmPrefab, float health, float speed, Color color, float size, int bounty = 20, float breach = 0f)
         {
-            var go = BuildBaseEnemyObject(name, sprite, health, speed, color, size, bounty);
+            var go = BuildBaseEnemyObject(name, sprite, health, speed, color, size, bounty, breach: breach);
             EnemySplitter splitter = go.AddComponent<EnemySplitter>();
             Apply(splitter, so =>
             {
@@ -293,9 +294,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         private static GameObject BuildHealerEnemyPrefab(
-            string name, Sprite sprite, float health, float speed, Color color, float size, int bounty = 30)
+            string name, Sprite sprite, float health, float speed, Color color, float size, int bounty = 30, float breach = 0f)
         {
-            var go = BuildBaseEnemyObject(name, sprite, health, speed, color, size, bounty);
+            var go = BuildBaseEnemyObject(name, sprite, health, speed, color, size, bounty, breach: breach);
             EnemyHealer healer = go.AddComponent<EnemyHealer>();
             Apply(healer, so =>
             {
@@ -343,7 +344,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// </summary>
         internal static GameObject BuildBaseEnemyObject(
             string name, Sprite sprite, float health, float speed, Color color, float size, int bounty = 10,
-            GameObject basePrefab = null)
+            GameObject basePrefab = null, float breach = 0f)
         {
             var go = (GameObject)PrefabUtility.InstantiatePrefab(basePrefab != null ? basePrefab : EnemyBase(sprite));
             go.name = name;
@@ -359,6 +360,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             {
                 so.FindProperty("_maxHealth").floatValue = health;
                 so.FindProperty("_bountyValue").intValue = bounty;
+                so.FindProperty("_breachDamage").floatValue = breach;
             });
 
             Apply(go.GetComponent<EnemyMover>(), so => so.FindProperty("_speed").floatValue = speed);

@@ -292,14 +292,6 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             StringAssert.Contains("harness: killed 6, leaked 2", BalanceReportWriter.ToText(result));
         }
 
-        [Test]
-        public void BreachDamage_FollowsTheBaseHealthNameTable()
-        {
-            Assert.AreEqual(25f, BalanceBreachDamage.ForName("BruteAnt(Clone)"));
-            Assert.AreEqual(2f, BalanceBreachDamage.ForName("SwarmAnt"));
-            Assert.AreEqual(5f, BalanceBreachDamage.ForName("Unknown"));
-        }
-
         private static int Columns(string csvLine)
         {
             int columns = 1;

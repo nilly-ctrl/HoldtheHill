@@ -272,7 +272,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 
             var shield = prefab.GetComponent<EnemyShield>();
             var mover = prefab.GetComponent<EnemyMover>();
-            var special = prefab.GetComponent<GrayboxSpecialEnemy>();
 
             float hp = health.MaxHealth + (shield != null ? shield.MaxShield : 0f);
             int bounty = health.BountyValue;
@@ -302,8 +301,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                 }
             }
 
-            float breach = special != null ? special.BreachDamage : BalanceBreachDamage.ForName(prefab.name);
-            return new BalanceEnemy(prefab.name, 0f, hp, speed, bounty, breach);
+            return new BalanceEnemy(prefab.name, 0f, hp, speed, bounty, health.BreachDamage);
         }
 
         // ---------- SerializedObject helpers ----------

@@ -148,7 +148,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             kind.Fields.Add(new Field { Column = "bounty", Property = "_bountyValue", Target = r => Part<EnemyHealth>(r) });
             kind.Fields.Add(new Field { Column = "speed", Property = "_speed", Target = r => Part<EnemyMover>(r) });
             kind.Fields.Add(new Field { Column = "maxShield", Property = "_maxShield", Target = r => Part<EnemyShield>(r) });
-            kind.Fields.Add(new Field { Column = "breachDamage", Property = "_breachDamage", Target = r => Part<GrayboxSpecialEnemy>(r) });
+            kind.Fields.Add(new Field { Column = "breachDamage", Property = "_breachDamage", Target = r => Part<EnemyHealth>(r) });
             kind.Fields.Add(new Field
             {
                 Column = "bossName",

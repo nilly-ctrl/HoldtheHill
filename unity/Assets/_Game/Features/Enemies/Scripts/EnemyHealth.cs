@@ -52,6 +52,9 @@ namespace HoldTheHill.Features.Enemies
         [SerializeField, Min(1f)] private float _maxHealth = 30f;
         [SerializeField, Min(0)] private int _bountyValue = 10;
 
+        [Tooltip("Hill health lost when this enemy walks in. 0 means it was never set; the enemy prefab test catches that.")]
+        [SerializeField, Min(0f)] private float _breachDamage = 0f;
+
         [Header("Death")]
         [Tooltip("Seconds to wait before the body disappears, leaving room for a death animation.")]
         [SerializeField, Min(0f)] private float _despawnDelay = 0f;
@@ -74,6 +77,9 @@ namespace HoldTheHill.Features.Enemies
 
         /// <summary>Gold awarded upon defeat.</summary>
         public int BountyValue { get => _bountyValue; set => _bountyValue = value; }
+
+        /// <summary>Hill health lost when this enemy reaches the end of the path.</summary>
+        public float BreachDamage => _breachDamage;
 
         /// <summary>True once health has run out.</summary>
         public bool IsDead { get; private set; }

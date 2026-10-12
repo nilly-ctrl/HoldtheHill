@@ -18,9 +18,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     [RequireComponent(typeof(EnemyHealth))]
     public abstract class GrayboxSpecialEnemy : MonoBehaviour
     {
-        [Tooltip("Hill health lost if this enemy gets in.")]
-        [SerializeField, Min(0f)] private float _breachDamage = 10f;
-
         protected EnemyHealth Health { get; private set; }
 
         protected EnemyMover Mover { get; private set; }
@@ -30,9 +27,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         protected GrayboxEnemyAnimator Animator { get; private set; }
 
         protected SpriteAnimLibrary Library => Player != null ? Player.Library : GrayboxSpecials.Library;
-
-        /// <summary>Hill health lost if this enemy gets in. Read by <see cref="GrayboxBaseHealth"/>.</summary>
-        public float BreachDamage => _breachDamage;
 
         protected bool Alive => Health != null && !Health.IsDead;
 

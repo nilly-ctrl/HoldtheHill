@@ -130,7 +130,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             GameObject go = GrayboxBuilder.BuildBaseEnemyObject(
-                name, sprite, health, speed, Color.white, size, bounty, boss ? BossBase(sprite) : null);
+                name, sprite, health, speed, Color.white, size, bounty, boss ? BossBase(sprite) : null, breach);
 
             GrayboxBossData data = boss ? BossData(id, label) : null;
             if (boss)
@@ -146,11 +146,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             });
 
             T behaviour = go.AddComponent<T>();
-            GrayboxBuilder.Apply(behaviour, so =>
-            {
-                so.FindProperty("_breachDamage").floatValue = breach;
-                extra?.Invoke(so);
-            });
+            if (extra != null) GrayboxBuilder.Apply(behaviour, extra);
 
             GameObject prefab = GrayboxBuilder.SavePrefab(go, name);
             if (boss)

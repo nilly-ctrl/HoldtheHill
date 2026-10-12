@@ -15,6 +15,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static event Action<float, float> OnBaseHealthChanged;
         public static event Action<bool> OnGameFinished; // true for Victory, false for Defeat
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Instance = null;
+            OnBaseHealthChanged = null;
+            OnGameFinished = null;
+        }
+
         [Header("Hill Base Health")]
         [SerializeField] private float _maxHealth = 100f;
 
@@ -53,6 +61,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             EnemyMover.ReachedEnd -= OnAntBreachedBase;
         }
 
+        private void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
+        }
+
         private void OnAntBreachedBase(GameObject antObj)
         {
             if (IsFinished || antObj == null) return;
@@ -61,18 +74,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             var mover = antObj.GetComponent<EnemyMover>();
             if (mover != null && !mover.DespawnsAtEnd) return;
 
-            float breachDamage = 5f;
-            string antName = antObj.name;
-
-            if (antName.Contains("Brute")) breachDamage = 25f;
-            else if (antName.Contains("Shielded")) breachDamage = 12f;
-            else if (antName.Contains("Healer")) breachDamage = 15f;
-            else if (antName.Contains("Grunt")) breachDamage = 10f;
-            else if (antName.Contains("Splitter")) breachDamage = 8f;
-            else if (antName.Contains("Runner")) breachDamage = 5f;
-            else if (antName.Contains("Swarm")) breachDamage = 2f;
-            var special = antObj.GetComponent<GrayboxSpecialEnemy>();
-            if (special != null) breachDamage = special.BreachDamage;
+            // The number lives on the enemy prefab (EnemyHealth), set by the graybox builders.
+            var health = antObj.GetComponent<EnemyHealth>();
+            float breachDamage = health != null ? health.BreachDamage : 0f;
+            if (breachDamage <= 0f) return;
 
             TakeBaseDamage(breachDamage, antObj.transform.position);
         }
