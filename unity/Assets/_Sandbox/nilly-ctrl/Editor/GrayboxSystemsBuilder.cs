@@ -12,7 +12,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// one prefab instance instead of its own copy of every manager.
     /// </summary>
     /// <remarks>
-    /// Runs at the end of <see cref="GrayboxBuilder.Build"/>: the managers are built as root
+    /// Runs at the end of <see cref="Build"/>: the managers are built as root
     /// objects the way they always were, then parented under one root and saved as a prefab that
     /// the open scene stays connected to. Scene-bound objects (camera, path, ground, spawner,
     /// tower placer, the specials panel that points at the spawner) stay at the root; a level
@@ -59,7 +59,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 }
             }
 
-            GrayboxBuilder.CreateFolderIfMissing("Assets/_Sandbox/nilly-ctrl/Graybox", "Prefabs");
+            GrayboxBuildKit.CreateFolderIfMissing("Assets/_Sandbox/nilly-ctrl/Graybox", "Prefabs");
             return PrefabUtility.SaveAsPrefabAssetAndConnect(systems, PrefabPath, InteractionMode.AutomatedAction);
         }
     }

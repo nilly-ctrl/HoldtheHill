@@ -47,19 +47,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 return s_bossBase;
             }
 
-            var go = (GameObject)PrefabUtility.InstantiatePrefab(GrayboxBuilder.EnemyBase(sprite));
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(GrayboxEnemyPrefabBuilder.EnemyBase(sprite));
             go.name = BossBaseName;
-            GrayboxBuilder.Apply(go.AddComponent<GrayboxBoss>(),
+            GrayboxBuildKit.Apply(go.AddComponent<GrayboxBoss>(),
                 so => so.FindProperty("_dropPrefab").objectReferenceValue = s_bossDrop);
-            s_bossBase = GrayboxBuilder.SavePrefab(go, BossBaseName);
+            s_bossBase = GrayboxBuildKit.SavePrefab(go, BossBaseName);
             return s_bossBase;
         }
 
         // Made once: the texts can then be edited in the Inspector and survive a rebuild.
         private static GrayboxBossData BossData(string id, string label)
         {
-            GrayboxBuilder.CreateFolderIfMissing("Assets/_Sandbox/nilly-ctrl/Graybox", "Data");
-            GrayboxBuilder.CreateFolderIfMissing("Assets/_Sandbox/nilly-ctrl/Graybox/Data", "Bosses");
+            GrayboxBuildKit.CreateFolderIfMissing("Assets/_Sandbox/nilly-ctrl/Graybox", "Data");
+            GrayboxBuildKit.CreateFolderIfMissing("Assets/_Sandbox/nilly-ctrl/Graybox/Data", "Bosses");
 
             string path = $"{BossDataRoot}/{id}Data.asset";
             var data = AssetDatabase.LoadAssetAtPath<GrayboxBossData>(path);
@@ -67,7 +67,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             {
                 data = ScriptableObject.CreateInstance<GrayboxBossData>();
                 AssetDatabase.CreateAsset(data, path);
-                GrayboxBuilder.Apply(data, so =>
+                GrayboxBuildKit.Apply(data, so =>
                 {
                     so.FindProperty("_id").stringValue = id;
                     so.FindProperty("_displayName").stringValue = label;
@@ -129,16 +129,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 }
             }
 
-            GameObject go = GrayboxBuilder.BuildBaseEnemyObject(
+            GameObject go = GrayboxEnemyPrefabBuilder.BuildBaseEnemyObject(
                 name, sprite, health, speed, Color.white, size, bounty, boss ? BossBase(sprite) : null, breach);
 
             GrayboxBossData data = boss ? BossData(id, label) : null;
             if (boss)
             {
-                GrayboxBuilder.Apply(go.GetComponent<GrayboxBoss>(), so => so.FindProperty("_data").objectReferenceValue = data);
+                GrayboxBuildKit.Apply(go.GetComponent<GrayboxBoss>(), so => so.FindProperty("_data").objectReferenceValue = data);
             }
 
-            GrayboxBuilder.Apply(go.GetComponent<EnemyMover>(), so =>
+            GrayboxBuildKit.Apply(go.GetComponent<EnemyMover>(), so =>
             {
                 // Flyers flip instead of turning: their shadow is drawn into the sprite.
                 so.FindProperty("_faceTravelDirection").boolValue = facePath;
@@ -146,12 +146,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             });
 
             T behaviour = go.AddComponent<T>();
-            if (extra != null) GrayboxBuilder.Apply(behaviour, extra);
+            if (extra != null) GrayboxBuildKit.Apply(behaviour, extra);
 
-            GameObject prefab = GrayboxBuilder.SavePrefab(go, name);
+            GameObject prefab = GrayboxBuildKit.SavePrefab(go, name);
             if (boss)
             {
-                GrayboxBuilder.Apply(data, so => so.FindProperty("_prefab").objectReferenceValue = prefab);
+                GrayboxBuildKit.Apply(data, so => so.FindProperty("_prefab").objectReferenceValue = prefab);
                 EditorUtility.SetDirty(data);
             }
 
@@ -173,15 +173,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             body.bodyType = RigidbodyType2D.Kinematic;
             body.gravityScale = 0f;
 
-            GrayboxBuilder.Apply(go.AddComponent<EnemyHealth>(), so =>
+            GrayboxBuildKit.Apply(go.AddComponent<EnemyHealth>(), so =>
             {
                 so.FindProperty("_maxHealth").floatValue = 70f;
                 so.FindProperty("_bountyValue").intValue = 3;
             });
             go.AddComponent<EnemyHealthBar>();
-            GrayboxBuilder.Apply(go.AddComponent<GrayboxEggSac>(), so => so.FindProperty("_hatchPrefab").objectReferenceValue = hatchling);
+            GrayboxBuildKit.Apply(go.AddComponent<GrayboxEggSac>(), so => so.FindProperty("_hatchPrefab").objectReferenceValue = hatchling);
 
-            return GrayboxBuilder.SavePrefab(go, "GrayboxEggSac");
+            return GrayboxBuildKit.SavePrefab(go, "GrayboxEggSac");
         }
 
         /// <summary>Adds one wave per boss, and a mixed wave of the regular specials, after the waves already in the asset.</summary>

@@ -143,15 +143,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                 throw new InvalidOperationException("TowerBase.prefab is missing. Run Build Graybox Combat Test first.");
             }
 
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", "Towers");
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot, "Data");
-            GrayboxBuilder.CreateFolderIfMissing(DataRoot, "Towers");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", "Towers");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            GrayboxBuildKit.CreateFolderIfMissing(DataRoot, "Towers");
 
             var go = (GameObject)PrefabUtility.InstantiatePrefab(basePrefab);
             go.name = spec.Id;
             go.GetComponent<SpriteRenderer>().color = spec.Color;
 
-            GrayboxBuilder.Apply(go.GetComponent<Tower>(), so =>
+            GrayboxBuildKit.Apply(go.GetComponent<Tower>(), so =>
             {
                 so.FindProperty("_range").floatValue = spec.Range;
                 so.FindProperty("_fireInterval").floatValue = spec.FireInterval;
@@ -162,11 +162,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                 }
             });
 
-            GameObject prefab = GrayboxBuilder.SavePrefab(go, $"Towers/{spec.Id}");
+            GameObject prefab = GrayboxBuildKit.SavePrefab(go, $"Towers/{spec.Id}");
 
             var data = ScriptableObject.CreateInstance<GrayboxTowerData>();
             AssetDatabase.CreateAsset(data, dataPath);
-            GrayboxBuilder.Apply(data, so =>
+            GrayboxBuildKit.Apply(data, so =>
             {
                 so.FindProperty("_displayName").stringValue = string.IsNullOrEmpty(spec.DisplayName) ? spec.Id : spec.DisplayName;
                 so.FindProperty("_archetype").enumValueIndex = (int)spec.Archetype;
@@ -220,37 +220,37 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             }
 
             // The same helper the builders use: a variant with its own look and numbers.
-            GameObject go = GrayboxBuilder.BuildBaseEnemyObject(
+            GameObject go = GrayboxEnemyPrefabBuilder.BuildBaseEnemyObject(
                 "Graybox" + spec.Id, null, spec.Health, spec.Speed, spec.Color, spec.Size, spec.Bounty, basePrefab);
 
-            GrayboxBuilder.Apply(go.GetComponent<HoldTheHill.Features.Enemies.EnemyMover>(),
+            GrayboxBuildKit.Apply(go.GetComponent<HoldTheHill.Features.Enemies.EnemyMover>(),
                 so => so.FindProperty("_faceTravelDirection").boolValue = spec.FaceTravelDirection);
 
             var made = new List<string> { prefabPath };
             GrayboxBossData data = null;
             if (spec.Boss)
             {
-                GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot, "Data");
-                GrayboxBuilder.CreateFolderIfMissing(DataRoot, "Bosses");
+                GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+                GrayboxBuildKit.CreateFolderIfMissing(DataRoot, "Bosses");
                 data = ScriptableObject.CreateInstance<GrayboxBossData>();
                 AssetDatabase.CreateAsset(data, dataPath);
                 string label = string.IsNullOrEmpty(spec.DisplayName) ? spec.Id : spec.DisplayName;
-                GrayboxBuilder.Apply(data, so =>
+                GrayboxBuildKit.Apply(data, so =>
                 {
                     so.FindProperty("_id").stringValue = spec.Id;
                     so.FindProperty("_displayName").stringValue = label;
                     so.FindProperty("_bannerText").stringValue =
                         (string.IsNullOrEmpty(spec.BannerText) ? label : spec.BannerText).ToUpperInvariant();
                 });
-                GrayboxBuilder.Apply(go.GetComponent<GrayboxBoss>(),
+                GrayboxBuildKit.Apply(go.GetComponent<GrayboxBoss>(),
                     so => so.FindProperty("_data").objectReferenceValue = data);
                 made.Add(dataPath);
             }
 
-            GameObject prefab = GrayboxBuilder.SavePrefab(go, "Graybox" + spec.Id);
+            GameObject prefab = GrayboxBuildKit.SavePrefab(go, "Graybox" + spec.Id);
             if (data != null)
             {
-                GrayboxBuilder.Apply(data, so => so.FindProperty("_prefab").objectReferenceValue = prefab);
+                GrayboxBuildKit.Apply(data, so => so.FindProperty("_prefab").objectReferenceValue = prefab);
                 EditorUtility.SetDirty(data);
             }
 
@@ -275,7 +275,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                 throw new InvalidOperationException("PickupBase.prefab is missing. Run Build Graybox Combat Test first.");
             }
 
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", "Pickups");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", "Pickups");
 
             var go = (GameObject)PrefabUtility.InstantiatePrefab(pickupBase);
             go.name = spec.Id;
@@ -284,19 +284,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             renderer.color = spec.Color;
             renderer.size = new Vector2(spec.Size, spec.Size);
 
-            GrayboxBuilder.Apply(go.GetComponent<GrayboxPickup>(), so =>
+            GrayboxBuildKit.Apply(go.GetComponent<GrayboxPickup>(), so =>
             {
                 so.FindProperty("_reach").floatValue = Mathf.Max(0.35f, spec.Size);
                 so.FindProperty("_lifetime").floatValue = spec.Lifetime;
             });
 
-            GrayboxBuilder.Apply(go.AddComponent<GrayboxResourceGain>(), so =>
+            GrayboxBuildKit.Apply(go.AddComponent<GrayboxResourceGain>(), so =>
             {
                 so.FindProperty("_resource").objectReferenceValue = spec.Resource;
                 so.FindProperty("_amount").intValue = spec.Amount;
             });
 
-            GameObject prefab = GrayboxBuilder.SavePrefab(go, $"Pickups/{spec.Id}");
+            GameObject prefab = GrayboxBuildKit.SavePrefab(go, $"Pickups/{spec.Id}");
             Finish(prefab);
             return new List<string> { path };
         }
@@ -336,13 +336,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                 throw new InvalidOperationException("PickupBase.prefab is missing. Run Build Graybox Combat Test first.");
             }
 
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", "PowerUps");
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot, "Data");
-            GrayboxBuilder.CreateFolderIfMissing(DataRoot, "PowerUps");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", "PowerUps");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            GrayboxBuildKit.CreateFolderIfMissing(DataRoot, "PowerUps");
 
             var data = ScriptableObject.CreateInstance<GrayboxPowerUpData>();
             AssetDatabase.CreateAsset(data, dataPath);
-            GrayboxBuilder.Apply(data, so =>
+            GrayboxBuildKit.Apply(data, so =>
             {
                 so.FindProperty("_id").stringValue = spec.Id;
                 so.FindProperty("_displayName").stringValue = string.IsNullOrEmpty(spec.DisplayName) ? spec.Id : spec.DisplayName;
@@ -353,23 +353,23 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 
             var effectObject = new GameObject("Effect" + spec.Id);
             effectObject.AddComponent(spec.EffectType);
-            GameObject effect = GrayboxBuilder.SavePrefab(effectObject, $"PowerUps/Effect{spec.Id}");
+            GameObject effect = GrayboxBuildKit.SavePrefab(effectObject, $"PowerUps/Effect{spec.Id}");
 
             var pickupObject = (GameObject)PrefabUtility.InstantiatePrefab(pickupBase);
             pickupObject.name = spec.Id;
             var renderer = pickupObject.GetComponent<SpriteRenderer>();
             renderer.color = spec.Color;
             renderer.size = new Vector2(0.5f, 0.5f);
-            GrayboxBuilder.Apply(pickupObject.GetComponent<GrayboxPickup>(), so =>
+            GrayboxBuildKit.Apply(pickupObject.GetComponent<GrayboxPickup>(), so =>
             {
                 so.FindProperty("_reach").floatValue = 0.5f;
                 so.FindProperty("_lifetime").floatValue = 25f;
             });
-            GrayboxBuilder.Apply(pickupObject.AddComponent<GrayboxPowerUpGain>(),
+            GrayboxBuildKit.Apply(pickupObject.AddComponent<GrayboxPowerUpGain>(),
                 so => so.FindProperty("_powerUp").objectReferenceValue = data);
-            GameObject pickup = GrayboxBuilder.SavePrefab(pickupObject, $"PowerUps/{spec.Id}");
+            GameObject pickup = GrayboxBuildKit.SavePrefab(pickupObject, $"PowerUps/{spec.Id}");
 
-            GrayboxBuilder.Apply(data, so =>
+            GrayboxBuildKit.Apply(data, so =>
             {
                 so.FindProperty("_pickupPrefab").objectReferenceValue = pickup;
                 so.FindProperty("_effectPrefab").objectReferenceValue = effect.GetComponent<GrayboxPowerUpEffect>();

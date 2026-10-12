@@ -24,9 +24,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public static void BuildPrefabs()
         {
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PrefabFolder);
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot, "Data");
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Data", "PowerUps");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PrefabFolder);
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Data", "PowerUps");
 
             var pickupBase = AssetDatabase.LoadAssetAtPath<GameObject>(GrayboxPickupBuilder.PrefabPath("PickupBase"));
 
@@ -73,7 +73,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             {
                 data = ScriptableObject.CreateInstance<GrayboxPowerUpData>();
                 AssetDatabase.CreateAsset(data, DataPath(id));
-                GrayboxBuilder.Apply(data, so =>
+                GrayboxBuildKit.Apply(data, so =>
                 {
                     so.FindProperty("_id").stringValue = id;
                     so.FindProperty("_displayName").stringValue = label;
@@ -85,23 +85,23 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             var effectObject = new GameObject("Effect" + id);
             effectObject.AddComponent<T>();
-            GameObject effect = GrayboxBuilder.SavePrefab(effectObject, $"{PrefabFolder}/Effect{id}");
+            GameObject effect = GrayboxBuildKit.SavePrefab(effectObject, $"{PrefabFolder}/Effect{id}");
 
             var pickupObject = (GameObject)PrefabUtility.InstantiatePrefab(pickupBase);
             pickupObject.name = id;
             var renderer = pickupObject.GetComponent<SpriteRenderer>();
             renderer.color = color;
             renderer.size = new Vector2(0.5f, 0.5f);
-            GrayboxBuilder.Apply(pickupObject.GetComponent<GrayboxPickup>(), so =>
+            GrayboxBuildKit.Apply(pickupObject.GetComponent<GrayboxPickup>(), so =>
             {
                 so.FindProperty("_reach").floatValue = 0.5f;
                 so.FindProperty("_lifetime").floatValue = 25f;
             });
-            GrayboxBuilder.Apply(pickupObject.AddComponent<GrayboxPowerUpGain>(),
+            GrayboxBuildKit.Apply(pickupObject.AddComponent<GrayboxPowerUpGain>(),
                 so => so.FindProperty("_powerUp").objectReferenceValue = data);
-            GameObject pickup = GrayboxBuilder.SavePrefab(pickupObject, $"{PrefabFolder}/{id}");
+            GameObject pickup = GrayboxBuildKit.SavePrefab(pickupObject, $"{PrefabFolder}/{id}");
 
-            GrayboxBuilder.Apply(data, so =>
+            GrayboxBuildKit.Apply(data, so =>
             {
                 so.FindProperty("_pickupPrefab").objectReferenceValue = pickup;
                 so.FindProperty("_effectPrefab").objectReferenceValue = effect.GetComponent<GrayboxPowerUpEffect>();

@@ -83,9 +83,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Makes any missing data assets and catalogs. Safe to run on every build.</summary>
         public static void BuildAssets()
         {
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot, "Data");
-            GrayboxBuilder.CreateFolderIfMissing(DataRoot, SkillFolder);
-            GrayboxBuilder.CreateFolderIfMissing(DataRoot, AchievementFolder);
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            GrayboxBuildKit.CreateFolderIfMissing(DataRoot, SkillFolder);
+            GrayboxBuildKit.CreateFolderIfMissing(DataRoot, AchievementFolder);
 
             BuildSkillTree();
             BuildAchievements();
@@ -98,14 +98,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             var go = new GameObject("GrayboxSkillTree");
             var tree = go.AddComponent<GrayboxSkillTree>();
             go.AddComponent<GrayboxSkillTreeUI>();
-            GrayboxBuilder.Apply(tree, so =>
+            GrayboxBuildKit.Apply(tree, so =>
                 so.FindProperty("_catalog").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GrayboxSkillTreeData>(SkillCatalogPath));
         }
 
         /// <summary>Wires an achievements component to the catalog.</summary>
         public static void ConfigureAchievements(GrayboxAchievements achievements)
         {
-            GrayboxBuilder.Apply(achievements, so =>
+            GrayboxBuildKit.Apply(achievements, so =>
                 so.FindProperty("_catalog").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GrayboxAchievementCatalog>(AchievementCatalogPath));
         }
 
@@ -126,7 +126,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     data = ScriptableObject.CreateInstance<GrayboxSkillNodeData>();
                     AssetDatabase.CreateAsset(data, SkillPath(def.Id));
                     SkillDef captured = def;
-                    GrayboxBuilder.Apply(data, so =>
+                    GrayboxBuildKit.Apply(data, so =>
                     {
                         so.FindProperty("_id").stringValue = captured.Id;
                         so.FindProperty("_displayName").stringValue = captured.Name;
@@ -178,7 +178,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     data = ScriptableObject.CreateInstance<GrayboxAchievementData>();
                     AssetDatabase.CreateAsset(data, AchievementPath(def.Id));
                     AchievementDef captured = def;
-                    GrayboxBuilder.Apply(data, so =>
+                    GrayboxBuildKit.Apply(data, so =>
                     {
                         so.FindProperty("_id").stringValue = captured.Id;
                         so.FindProperty("_title").stringValue = captured.Title;
@@ -209,7 +209,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             var catalog = ScriptableObject.CreateInstance<TCatalog>();
             AssetDatabase.CreateAsset(catalog, path);
-            GrayboxBuilder.Apply(catalog, so =>
+            GrayboxBuildKit.Apply(catalog, so =>
             {
                 SerializedProperty list = so.FindProperty(listField);
                 list.arraySize = items.Count;

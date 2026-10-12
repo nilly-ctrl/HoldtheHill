@@ -23,15 +23,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>The run's main resource. Made on first use.</summary>
         public static GrayboxResourceData Food()
         {
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot, "Data");
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Data", "Economy");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Data", "Economy");
 
             var food = AssetDatabase.LoadAssetAtPath<GrayboxResourceData>(FoodPath);
             if (food == null)
             {
                 food = ScriptableObject.CreateInstance<GrayboxResourceData>();
                 AssetDatabase.CreateAsset(food, FoodPath);
-                GrayboxBuilder.Apply(food, so =>
+                GrayboxBuildKit.Apply(food, so =>
                 {
                     so.FindProperty("_id").stringValue = "Food";
                     so.FindProperty("_displayName").stringValue = "Food";
@@ -47,14 +47,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Builds the pickup base and the three crumbs. Returns the golden crumb, which bosses drop.</summary>
         public static GameObject BuildPrefabs(Sprite circle)
         {
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PrefabFolder);
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PrefabFolder);
             GrayboxResourceData food = Food();
 
             // What every pickup shares: something to see, and the component that collects it.
             var baseObject = new GameObject("PickupBase");
-            GrayboxBuilder.AddSprite(baseObject, circle, Color.white, 0.3f, sortingOrder: 3);
+            GrayboxBuildKit.AddSprite(baseObject, circle, Color.white, 0.3f, sortingOrder: 3);
             baseObject.AddComponent<GrayboxPickup>();
-            GameObject pickupBase = GrayboxBuilder.SavePrefab(baseObject, $"{PrefabFolder}/PickupBase");
+            GameObject pickupBase = GrayboxBuildKit.SavePrefab(baseObject, $"{PrefabFolder}/PickupBase");
 
             Crumb(pickupBase, "CrumbSmall", food, 5, 0.25f, new Color(0.85f, 0.7f, 0.45f), lifetime: 12f);
             Crumb(pickupBase, "CrumbBig", food, 20, 0.4f, new Color(0.8f, 0.6f, 0.3f), lifetime: 12f);
@@ -71,19 +71,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             renderer.color = color;
             renderer.size = new Vector2(size, size);
 
-            GrayboxBuilder.Apply(go.GetComponent<GrayboxPickup>(), so =>
+            GrayboxBuildKit.Apply(go.GetComponent<GrayboxPickup>(), so =>
             {
                 so.FindProperty("_reach").floatValue = Mathf.Max(0.35f, size);
                 so.FindProperty("_lifetime").floatValue = lifetime;
             });
 
-            GrayboxBuilder.Apply(go.AddComponent<GrayboxResourceGain>(), so =>
+            GrayboxBuildKit.Apply(go.AddComponent<GrayboxResourceGain>(), so =>
             {
                 so.FindProperty("_resource").objectReferenceValue = resource;
                 so.FindProperty("_amount").intValue = amount;
             });
 
-            return GrayboxBuilder.SavePrefab(go, $"{PrefabFolder}/{name}");
+            return GrayboxBuildKit.SavePrefab(go, $"{PrefabFolder}/{name}");
         }
     }
 }

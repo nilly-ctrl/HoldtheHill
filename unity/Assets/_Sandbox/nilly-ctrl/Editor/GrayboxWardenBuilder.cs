@@ -25,9 +25,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public static void BuildPrefabs(Sprite square)
         {
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PrefabFolder);
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot, "Data");
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Data", "Abilities");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PrefabFolder);
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Data", "Abilities");
             s_madeAnAbility = false;
 
             var crumb = AssetDatabase.LoadAssetAtPath<GameObject>(GrayboxPickupBuilder.PrefabPath("CrumbSmall"));
@@ -54,7 +54,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             var go = new GameObject("Warden");
-            GrayboxBuilder.AddSprite(go, square, new Color(0.95f, 0.8f, 0.35f), 0.55f, sortingOrder: 5);
+            GrayboxBuildKit.AddSprite(go, square, new Color(0.95f, 0.8f, 0.35f), 0.55f, sortingOrder: 5);
             go.AddComponent<GrayboxWarden>();
             go.AddComponent<GrayboxWardenHealth>();
             foreach (GameObject ability in abilities)
@@ -63,7 +63,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 PrefabUtility.InstantiatePrefab(ability, go.transform);
             }
 
-            GrayboxBuilder.SavePrefab(go, $"{PrefabFolder}/Warden");
+            GrayboxBuildKit.SavePrefab(go, $"{PrefabFolder}/Warden");
         }
 
         // The Warden prefab is kept between builds so its tuning survives, so a part added later is put on
@@ -115,7 +115,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             {
                 data = ScriptableObject.CreateInstance<GrayboxAbilityData>();
                 AssetDatabase.CreateAsset(data, dataPath);
-                GrayboxBuilder.Apply(data, so =>
+                GrayboxBuildKit.Apply(data, so =>
                 {
                     so.FindProperty("_id").stringValue = id;
                     so.FindProperty("_displayName").stringValue = label;
@@ -136,12 +136,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             s_madeAnAbility = true;
             var go = new GameObject(name);
-            GrayboxBuilder.Apply(go.AddComponent<T>(), so =>
+            GrayboxBuildKit.Apply(go.AddComponent<T>(), so =>
             {
                 so.FindProperty("_data").objectReferenceValue = data;
                 extra?.Invoke(so);
             });
-            return GrayboxBuilder.SavePrefab(go, $"{PrefabFolder}/{name}");
+            return GrayboxBuildKit.SavePrefab(go, $"{PrefabFolder}/{name}");
         }
     }
 }

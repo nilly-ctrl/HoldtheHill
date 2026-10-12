@@ -16,7 +16,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 {
     /// <summary>
     /// Generates the UI kit: the TextMeshPro pixel font, one prefab per widget, and a gallery
-    /// scene that shows them all. Menu: Tools > Hold the Hill > Build UI Kit.
+    /// scene that shows them all. Menu: Tools > Hold the Hill > UiKitPrefabBuilder.Build UI Kit.
     /// </summary>
     /// <remarks>
     /// The prefabs are generated rather than hand-made, like the graybox scene, so the kit can
@@ -33,547 +33,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public const string FontPath = Root + "/Fonts/HoldTheHillPixel.asset";
         public const string GalleryPath = Root + "/UiKitGallery.unity";
 
-        private const string SpriteDir = Root + "/Sprites";
-        private const string TtfPath = "Assets/_Sandbox/nilly-ctrl/Fonts/TTF/HoldTheHillPixel-Regular.ttf";
-        private const string InputActionsPath = "Assets/Settings/InputSystem_Actions.inputactions";
+        internal const string SpriteDir = Root + "/Sprites";
 
-        // Every character the pixel font has, as inclusive ranges (the TTF's character map; see
-        // Fonts/Source~/build_pixel_fonts.py). E000 and up are the inline icons and the key, mouse
-        // and gamepad prompts named in PixelGlyphs.cs.
-        private static readonly int[] GlyphRanges =
-        {
-            0x0020, 0x007E, 0x00A1, 0x00A1, 0x00B0, 0x00B1, 0x00B7, 0x00B7, 0x00BF, 0x00C4,
-            0x00C7, 0x00CF, 0x00D1, 0x00D7, 0x00D9, 0x00DD, 0x00DF, 0x00E4, 0x00E7, 0x00EF,
-            0x00F1, 0x00F6, 0x00F9, 0x00FD, 0x00FF, 0x00FF, 0x2013, 0x2014, 0x2018, 0x2019,
-            0x201C, 0x201D, 0x2022, 0x2022, 0x2026, 0x2026, 0x2190, 0x2193, 0x221E, 0x221E,
-            0x24B6, 0x24B7, 0x24C1, 0x24C1, 0x24C7, 0x24C7, 0x24CD, 0x24CE, 0x25B2, 0x25B2,
-            0x25B6, 0x25B6, 0x25BC, 0x25BC, 0x25C0, 0x25C0, 0x25CF, 0x25CF, 0x2605, 0x2606,
-            0x2665, 0x2665, 0x2713, 0x2713, 0x2715, 0x2715, 0xE000, 0xE00B, 0xE010, 0xE019,
-            0xE020, 0xE039, 0xE040, 0xE04B, 0xE050, 0xE053, 0xE060, 0xE06F, 0xE080, 0xE0A0,
-        };
-
-        private const float LabelSplit = 0.42f; // where a row's label ends and its control begins
-
-        private static TMP_FontAsset s_font;
-
-        [MenuItem("Tools/Hold the Hill/Build UI Kit")]
-        public static void Build()
-        {
-            // Building opens a new scene, which would silently drop unsaved work in the open one.
-            if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
-            {
-                return;
-            }
-
-            EnsureFolder(Root, "Prefabs");
-            EnsureFolder(Root, "Fonts");
-            AssetDatabase.ImportAsset(SpriteDir, ImportAssetOptions.ImportRecursive);
-
-            // Prefabs are assembled in a scratch scene so nothing leaks into the user's scene.
-            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-            s_font = BuildFont();
-
-            SavePrefab(MakeButton("Button", "Button", "ButtonHover", "ButtonPressed", "ButtonDisabled", new Vector2(120f, UiKitStyle.RowHeight)));
-            SavePrefab(MakeButton("TabButton", "TabInactive", "TabHover", "TabActive", "ButtonDisabled", new Vector2(72f, UiKitStyle.RowHeight)));
-            SavePrefab(MakePanel());
-            SavePrefab(MakeSliderField());
-            SavePrefab(MakeToggleField());
-            SavePrefab(MakeStepper());
-            SavePrefab(MakeTabBar());
-            SavePrefab(MakeConfirmDialog());
-            SavePrefab(MakeUiRoot());
-            SavePrefab(MakeEventSystem());
-
-            BuildGallery();
-
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-            Debug.Log($"[UiKit] Built prefabs in {PrefabDir} and {GalleryPath}.");
-        }
-
-        [MenuItem("Tools/Hold the Hill/Open UI Kit Gallery")]
-        public static void OpenGallery()
-        {
-            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(GalleryPath) == null)
-            {
-                Build();
-                return;
-            }
-
-            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
-            {
-                EditorSceneManager.OpenScene(GalleryPath, OpenSceneMode.Single);
-            }
-        }
+        internal static TMP_FontAsset s_font;
 
         // ---------- font ----------
 
-        // The TTF as a TextMeshPro bitmap font: sampled at 10 px, where one font pixel is exactly
-        // one texel, with no anti-aliasing and point filtering, so text scales like the sprites.
-        private static TMP_FontAsset BuildFont()
-        {
-            var existing = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
-            if (existing != null)
-            {
-                return existing;
-            }
-
-            return CreateFont();
-        }
-
-        /// <summary>
-        /// Samples the TTF again into the font asset, after the TTF or its character list changed.
-        /// The asset, its material and its atlas keep their ids, so prefabs and scenes keep their links.
-        /// </summary>
-        [MenuItem("Tools/Hold the Hill/Rebuild UI Kit Font")]
-        public static void RebuildFont()
-        {
-            var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
-            if (font == null)
-            {
-                EnsureFolder(Root, "Fonts");
-                s_font = CreateFont();
-                return;
-            }
-
-            AssetDatabase.ImportAsset(TtfPath, ImportAssetOptions.ForceUpdate);
-            font.atlasPopulationMode = AtlasPopulationMode.Dynamic; // brings the TTF back as the source
-            font.ClearFontAssetData(false);
-            Populate(font);
-            s_font = font;
-            Debug.Log($"[UiKit] Rebuilt {FontPath}: {font.characterTable.Count} characters.");
-        }
-
-        private static TMP_FontAsset CreateFont()
-        {
-
-            var ttf = AssetDatabase.LoadAssetAtPath<Font>(TtfPath);
-            if (ttf == null)
-            {
-                Debug.LogError($"[UiKit] Pixel font not found at {TtfPath}.");
-                return null;
-            }
-
-            TMP_FontAsset font = TMP_FontAsset.CreateFontAsset(
-                ttf, UiKitStyle.BodySize, 1, GlyphRenderMode.RASTER, 256, 256, AtlasPopulationMode.Dynamic, false);
-            font.name = "HoldTheHillPixel";
-            AssetDatabase.CreateAsset(font, FontPath);
-
-            font.material.name = "HoldTheHillPixel Material";
-            AssetDatabase.AddObjectToAsset(font.material, font);
-            font.atlasTexture.name = "HoldTheHillPixel Atlas";
-            AssetDatabase.AddObjectToAsset(font.atlasTexture, font);
-
-            Populate(font);
-            return font;
-        }
-
-        private static void Populate(TMP_FontAsset font)
-        {
-            var glyphs = new System.Text.StringBuilder();
-            for (int i = 0; i < GlyphRanges.Length; i += 2)
-            {
-                for (int code = GlyphRanges[i]; code <= GlyphRanges[i + 1]; code++) glyphs.Append((char)code);
-            }
-
-            if (!font.TryAddCharacters(glyphs.ToString(), out string missing) && !string.IsNullOrEmpty(missing))
-            {
-                string codes = string.Join(" ", missing.Select(c => ((int)c).ToString("X4")));
-                Debug.LogError($"[UiKit] The pixel font could not take {missing.Length} characters: {codes}");
-            }
-
-            font.atlasTexture.filterMode = FilterMode.Point;
-            // Static: the atlas is complete, and a dynamic one would rewrite the asset during Play.
-            font.atlasPopulationMode = AtlasPopulationMode.Static;
-
-            EditorUtility.SetDirty(font);
-            EditorUtility.SetDirty(font.atlasTexture);
-            AssetDatabase.SaveAssets();
-        }
-
         // ---------- widgets ----------
 
-        private static GameObject MakeButton(string name, string normal, string hover, string pressed, string disabled, Vector2 size)
-        {
-            RectTransform root = NewRect(name);
-            root.sizeDelta = size;
-
-            Image image = AddImage(root, normal);
-            var button = root.gameObject.AddComponent<Button>();
-            button.targetGraphic = image;
-            button.transition = Selectable.Transition.SpriteSwap;
-            button.spriteState = new SpriteState
-            {
-                highlightedSprite = Sprite(hover),
-                selectedSprite = Sprite(hover),
-                pressedSprite = Sprite(pressed),
-                disabledSprite = Sprite(disabled),
-            };
-
-            AddRowLayout(root, minWidth: 48f, flexibleWidth: 1f);
-
-            TextMeshProUGUI label = AddText(root, "Label", name == "TabButton" ? "Tab" : "Button", UiKitStyle.BodySize, TextAlignmentOptions.Center);
-            Stretch(label.rectTransform, 6f, 0f, 6f, 0f);
-
-            GameObject ring = AddFocusRing(root);
-            Set(root.gameObject.AddComponent<UiFocusable>(), "_focusRing", ring);
-            Set(root.gameObject.AddComponent<UiButton>(), "_label", label);
-            return root.gameObject;
-        }
-
-        private static GameObject MakePanel()
-        {
-            RectTransform root = NewRect("Panel");
-            root.sizeDelta = new Vector2(240f, 120f);
-            AddImage(root, "Panel");
-
-            var layout = root.gameObject.AddComponent<VerticalLayoutGroup>();
-            int pad = (int)UiKitStyle.Padding;
-            layout.padding = new RectOffset(pad, pad, pad, pad);
-            layout.spacing = UiKitStyle.Spacing;
-            layout.childAlignment = TextAnchor.UpperCenter;
-            layout.childControlWidth = true;
-            layout.childControlHeight = true;
-            layout.childForceExpandWidth = true;
-            layout.childForceExpandHeight = false;
-            return root.gameObject;
-        }
-
-        private static GameObject MakeSliderField()
-        {
-            RectTransform root = NewRow("SliderField");
-
-            TextMeshProUGUI label = AddText(root, "Label", "Slider", UiKitStyle.BodySize, TextAlignmentOptions.Left);
-            Anchor(label.rectTransform, new Vector2(0f, 0f), new Vector2(LabelSplit, 1f), new Vector2(2f, 0f), Vector2.zero);
-
-            RectTransform sliderRect = NewRect("Slider", root);
-            Anchor(sliderRect, new Vector2(LabelSplit, 0f), new Vector2(0.84f, 1f), Vector2.zero, Vector2.zero);
-
-            RectTransform track = NewRect("Track", sliderRect);
-            Anchor(track, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0f, -5f), new Vector2(0f, 5f));
-            AddImage(track, "Well");
-
-            RectTransform fillArea = NewRect("Fill Area", sliderRect);
-            Anchor(fillArea, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(2f, -3f), new Vector2(-2f, 3f));
-            RectTransform fill = NewRect("Fill", fillArea);
-            fill.sizeDelta = Vector2.zero;
-            AddImage(fill, "SliderFill", raycast: false);
-
-            RectTransform handleArea = NewRect("Handle Slide Area", sliderRect);
-            Anchor(handleArea, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(4f, -7f), new Vector2(-4f, 7f));
-            RectTransform handle = NewRect("Handle", handleArea);
-            handle.sizeDelta = new Vector2(8f, 0f);
-            Image handleImage = AddImage(handle, "SliderHandle");
-
-            var slider = sliderRect.gameObject.AddComponent<Slider>();
-            slider.fillRect = fill;
-            slider.handleRect = handle;
-            slider.targetGraphic = handleImage;
-            slider.direction = Slider.Direction.LeftToRight;
-            slider.transition = Selectable.Transition.SpriteSwap;
-            slider.spriteState = new SpriteState
-            {
-                highlightedSprite = Sprite("SliderHandleHover"),
-                selectedSprite = Sprite("SliderHandleHover"),
-                pressedSprite = Sprite("SliderHandleHover"),
-            };
-            slider.value = 0.8f;
-
-            TextMeshProUGUI value = AddText(root, "Value", "80%", UiKitStyle.BodySize, TextAlignmentOptions.Right);
-            Anchor(value.rectTransform, new Vector2(0.84f, 0f), new Vector2(1f, 1f), Vector2.zero, new Vector2(-2f, 0f));
-
-            GameObject ring = AddFocusRing(root);
-            var focusable = sliderRect.gameObject.AddComponent<UiFocusable>();
-            Set(focusable, "_focusRing", ring);
-            Set(focusable, "_pressCue", false);
-
-            var field = root.gameObject.AddComponent<UiSliderField>();
-            Set(field, "_slider", slider);
-            Set(field, "_label", label);
-            Set(field, "_valueText", value);
-            return root.gameObject;
-        }
-
-        private static GameObject MakeToggleField()
-        {
-            RectTransform root = NewRow("ToggleField");
-            AddHitArea(root); // so a click anywhere on the row flips it
-
-            TextMeshProUGUI label = AddText(root, "Label", "Toggle", UiKitStyle.BodySize, TextAlignmentOptions.Left);
-            Stretch(label.rectTransform, 2f, 0f, 20f, 0f);
-
-            RectTransform box = NewRect("Box", root);
-            box.anchorMin = box.anchorMax = new Vector2(1f, 0.5f);
-            box.pivot = new Vector2(1f, 0.5f);
-            box.anchoredPosition = new Vector2(-2f, 0f);
-            box.sizeDelta = new Vector2(14f, 14f);
-            Image boxImage = AddImage(box, "ToggleBox", raycast: false);
-
-            RectTransform check = NewRect("Check", box);
-            Stretch(check);
-            Image checkImage = AddImage(check, "ToggleCheck", raycast: false);
-
-            var toggle = root.gameObject.AddComponent<Toggle>();
-            toggle.targetGraphic = boxImage;
-            toggle.graphic = checkImage;
-            toggle.transition = Selectable.Transition.SpriteSwap;
-            toggle.spriteState = new SpriteState
-            {
-                highlightedSprite = Sprite("ToggleBoxHover"),
-                selectedSprite = Sprite("ToggleBoxHover"),
-                pressedSprite = Sprite("ToggleBoxHover"),
-            };
-            toggle.isOn = true;
-
-            GameObject ring = AddFocusRing(root);
-            var focusable = root.gameObject.AddComponent<UiFocusable>();
-            Set(focusable, "_focusRing", ring);
-            Set(focusable, "_pressCue", false);
-
-            var field = root.gameObject.AddComponent<UiToggleField>();
-            Set(field, "_toggle", toggle);
-            Set(field, "_label", label);
-            return root.gameObject;
-        }
-
-        private static GameObject MakeStepper()
-        {
-            RectTransform root = NewRow("Stepper");
-            Image hit = AddHitArea(root);
-
-            TextMeshProUGUI label = AddText(root, "Label", "Stepper", UiKitStyle.BodySize, TextAlignmentOptions.Left);
-            Anchor(label.rectTransform, new Vector2(0f, 0f), new Vector2(LabelSplit, 1f), new Vector2(2f, 0f), Vector2.zero);
-
-            RectTransform group = NewRect("Choice", root);
-            Anchor(group, new Vector2(LabelSplit, 0f), new Vector2(1f, 1f), Vector2.zero, new Vector2(-2f, 0f));
-
-            Button previous = MakeArrowButton("Previous", group, left: true);
-            Button next = MakeArrowButton("Next", group, left: false);
-
-            RectTransform well = NewRect("Well", group);
-            Stretch(well, 16f, 3f, 16f, 3f);
-            AddImage(well, "Well", raycast: false);
-            TextMeshProUGUI value = AddText(well, "Value", "Option A", UiKitStyle.BodySize, TextAlignmentOptions.Center);
-            Stretch(value.rectTransform, 2f, 0f, 2f, 0f);
-
-            var stepper = root.gameObject.AddComponent<UiStepper>();
-            stepper.targetGraphic = hit;
-            stepper.transition = Selectable.Transition.None; // the focus ring shows focus
-            Set(stepper, "_label", label);
-            Set(stepper, "_valueText", value);
-            Set(stepper, "_previous", previous);
-            Set(stepper, "_next", next);
-            SetStrings(stepper, "_options", new[] { "Option A", "Option B", "Option C" });
-
-            GameObject ring = AddFocusRing(root);
-            var focusable = root.gameObject.AddComponent<UiFocusable>();
-            Set(focusable, "_focusRing", ring);
-            Set(focusable, "_pressCue", false);
-            return root.gameObject;
-        }
-
-        // Mouse-only: a keyboard or gamepad changes the stepper with left/right instead.
-        private static Button MakeArrowButton(string name, RectTransform parent, bool left)
-        {
-            RectTransform rect = NewRect(name, parent);
-            rect.anchorMin = new Vector2(left ? 0f : 1f, 0f);
-            rect.anchorMax = new Vector2(left ? 0f : 1f, 1f);
-            rect.pivot = new Vector2(left ? 0f : 1f, 0.5f);
-            rect.sizeDelta = new Vector2(14f, 0f);
-            AddHitArea(rect);
-
-            RectTransform arrow = NewRect("Arrow", rect);
-            arrow.sizeDelta = new Vector2(6f, 9f);
-            arrow.localScale = new Vector3(left ? -1f : 1f, 1f, 1f);
-            Image arrowImage = AddImage(arrow, "Arrow", raycast: false);
-            arrowImage.color = UiKitStyle.Cream;
-
-            var button = rect.gameObject.AddComponent<Button>();
-            button.targetGraphic = arrowImage;
-            ColorBlock colours = button.colors;
-            colours.normalColor = Color.white;
-            colours.highlightedColor = UiKitStyle.Gold;
-            colours.pressedColor = UiKitStyle.Dim;
-            colours.selectedColor = Color.white;
-            colours.fadeDuration = 0f;
-            button.colors = colours;
-            button.navigation = new Navigation { mode = Navigation.Mode.None };
-            return button;
-        }
-
-        private static GameObject MakeTabBar()
-        {
-            RectTransform root = NewRow("TabBar");
-            var layout = root.gameObject.AddComponent<HorizontalLayoutGroup>();
-            layout.spacing = 2f;
-            layout.childControlWidth = true;
-            layout.childControlHeight = true;
-            layout.childForceExpandWidth = true;
-            layout.childForceExpandHeight = true;
-
-            var bar = root.gameObject.AddComponent<UiTabBar>();
-            Set(bar, "_activeSprite", Sprite("TabActive"));
-            Set(bar, "_inactiveSprite", Sprite("TabInactive"));
-            return root.gameObject;
-        }
-
-        private static GameObject MakeConfirmDialog()
-        {
-            RectTransform root = NewRect("ConfirmDialog");
-            Stretch(root);
-            root.gameObject.AddComponent<CanvasGroup>();
-            var screen = root.gameObject.AddComponent<UiScreen>();
-
-            // Dims the screen underneath and swallows clicks aimed at it.
-            RectTransform dim = NewRect("Dim", root);
-            Stretch(dim);
-            dim.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.6f);
-
-            RectTransform panel = AddPanel(root, 260f);
-            TextMeshProUGUI title = AddTitle(panel, "Are you sure?");
-            TextMeshProUGUI message = AddBody(panel, "This cannot be undone.");
-            RectTransform buttons = AddButtonRow(panel);
-            UiButton cancel = AddButton(buttons, "Cancel");
-            UiButton confirm = AddButton(buttons, "Confirm");
-
-            var dialog = root.gameObject.AddComponent<UiConfirmDialog>();
-            Set(dialog, "_title", title);
-            Set(dialog, "_message", message);
-            Set(dialog, "_confirm", confirm);
-            Set(dialog, "_cancel", cancel);
-            Set(screen, "_firstSelected", cancel.Button);
-
-            root.gameObject.SetActive(false); // closed until Open() is called
-            return root.gameObject;
-        }
-
-        private static GameObject MakeUiRoot()
-        {
-            var go = new GameObject("UiRoot", typeof(RectTransform));
-            var canvas = go.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 100;
-            canvas.pixelPerfect = true;
-            go.AddComponent<CanvasScaler>();
-            go.AddComponent<UiPixelCanvasScaler>();
-            go.AddComponent<GraphicRaycaster>();
-            return go;
-        }
-
-        // Wired to the project's own input actions (the UI map) rather than left on the module's
-        // built-in defaults, so the controls screen can rebind menu input later.
-        private static GameObject MakeEventSystem()
-        {
-            var go = new GameObject("UiEventSystem");
-            go.AddComponent<EventSystem>();
-            var module = go.AddComponent<InputSystemUIInputModule>();
-
-            var actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputActionsPath);
-            if (actions == null)
-            {
-                Debug.LogWarning($"[UiKit] {InputActionsPath} not found; the UI falls back to Unity's default menu actions.");
-                return go;
-            }
-
-            // The visible reference for each action (the importer also adds a hidden duplicate).
-            Dictionary<string, InputActionReference> refs = AssetDatabase.LoadAllAssetsAtPath(InputActionsPath)
-                .OfType<InputActionReference>()
-                .Where(r => (r.hideFlags & HideFlags.HideInHierarchy) == 0)
-                .GroupBy(r => r.name)
-                .ToDictionary(g => g.Key, g => g.First());
-
-            // Written straight to the serialized fields. The module's own setters skip a reference
-            // that points at the same action as the temporary one it made for itself, and that
-            // temporary one is not an asset, so it would save as "none".
-            void Wire(string field, string action)
-            {
-                if (refs.TryGetValue("UI/" + action, out InputActionReference reference))
-                {
-                    Set(module, field, reference);
-                }
-                else
-                {
-                    Debug.LogWarning($"[UiKit] {InputActionsPath} has no UI/{action} action.");
-                }
-            }
-
-            Set(module, "m_ActionsAsset", actions);
-            Wire("m_PointAction", "Point");
-            Wire("m_LeftClickAction", "Click");
-            Wire("m_RightClickAction", "RightClick");
-            Wire("m_MiddleClickAction", "MiddleClick");
-            Wire("m_ScrollWheelAction", "ScrollWheel");
-            Wire("m_MoveAction", "Navigate");
-            Wire("m_SubmitAction", "Submit");
-            Wire("m_CancelAction", "Cancel");
-            Wire("m_TrackedDevicePositionAction", "TrackedDevicePosition");
-            Wire("m_TrackedDeviceOrientationAction", "TrackedDeviceOrientation");
-            return go;
-        }
-
         // ---------- gallery ----------
-
-        private static void BuildGallery()
-        {
-            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-
-            var cameraObject = new GameObject("Main Camera") { tag = "MainCamera" };
-            var camera = cameraObject.AddComponent<Camera>();
-            camera.orthographic = true;
-            camera.clearFlags = CameraClearFlags.SolidColor;
-            camera.backgroundColor = new Color32(0x2f, 0x4a, 0x2a, 0xff);
-            cameraObject.AddComponent<AudioListener>();
-
-            InstantiatePrefab("UiEventSystem", null);
-            Transform canvas = InstantiatePrefab("UiRoot", null).transform;
-
-            RectTransform screenRect = NewRect("GalleryScreen", canvas);
-            Stretch(screenRect);
-            screenRect.gameObject.AddComponent<CanvasGroup>();
-            var screen = screenRect.gameObject.AddComponent<UiScreen>();
-            Set(screen, "_closeOnBack", false);
-
-            RectTransform panel = AddPanel(screenRect, 300f);
-            AddTitle(panel, "UI Kit");
-
-            UiTabBar tabs = AddTabBar(panel);
-            RectTransform controls = AddPage(panel, "ControlsPage");
-            RectTransform buttons = AddPage(panel, "ButtonsPage");
-            RectTransform about = AddPage(panel, "AboutPage");
-            UiButton firstTab = AddTab(tabs, "Controls", controls.gameObject);
-            AddTab(tabs, "Buttons", buttons.gameObject);
-            AddTab(tabs, "About", about.gameObject);
-
-            AddSlider(controls, "Master volume", 0.8f);
-            AddSlider(controls, "Music", 0.5f);
-            AddToggle(controls, "Screen shake", true);
-            AddToggle(controls, "Fullscreen", false);
-            AddStepper(controls, "Game speed", new[] { "1x", "2x", "4x" }, 0);
-            AddStepper(controls, "Resolution", new[] { "1280x720", "1920x1080", "2560x1440" }, 1);
-
-            UiButton openDialog = AddButton(buttons, "Open confirm dialog");
-            AddButton(buttons, "Plain button");
-            UiButton disabled = AddButton(buttons, "Disabled button");
-            disabled.Button.interactable = false;
-
-            AddBody(about, "Arrows or stick: move. Enter or A: press.\nLeft and right: change a value.\nQ and E or shoulders: switch tab.\nEsc or B: back.");
-
-            AddDivider(panel);
-            TextMeshProUGUI status = AddBody(panel, "Last cue: none");
-            status.color = UiKitStyle.Dim;
-
-            Set(screen, "_firstSelected", firstTab.Button);
-
-            var dialog = InstantiatePrefab("ConfirmDialog", canvas).GetComponent<UiConfirmDialog>();
-
-            var demo = screenRect.gameObject.AddComponent<UiKitGalleryDemo>();
-            Set(demo, "_openDialog", openDialog);
-            Set(demo, "_dialog", dialog);
-            Set(demo, "_status", status);
-
-            EditorSceneManager.MarkSceneDirty(scene);
-            EditorSceneManager.SaveScene(scene, GalleryPath);
-        }
 
         // ---------- for screen builders ----------
 
@@ -801,7 +269,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         // ---------- plumbing ----------
 
-        private static Sprite Sprite(string name)
+        internal static Sprite Sprite(string name)
         {
             var sprite = AssetDatabase.LoadAssetAtPath<Sprite>($"{SpriteDir}/{name}.png");
             if (sprite == null)
@@ -818,7 +286,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return s_font;
         }
 
-        private static RectTransform NewRect(string name, Transform parent = null)
+        internal static RectTransform NewRect(string name, Transform parent = null)
         {
             var go = new GameObject(name, typeof(RectTransform)) { layer = LayerMask.NameToLayer("UI") };
             var rect = (RectTransform)go.transform;
@@ -827,7 +295,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         // A full-width row of the standard height, for use inside a panel or page.
-        private static RectTransform NewRow(string name)
+        internal static RectTransform NewRow(string name)
         {
             RectTransform row = NewRect(name);
             row.sizeDelta = new Vector2(240f, UiKitStyle.RowHeight);
@@ -835,7 +303,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return row;
         }
 
-        private static void AddRowLayout(RectTransform rect, float minWidth, float flexibleWidth)
+        internal static void AddRowLayout(RectTransform rect, float minWidth, float flexibleWidth)
         {
             var element = rect.gameObject.AddComponent<LayoutElement>();
             element.minHeight = element.preferredHeight = UiKitStyle.RowHeight;
@@ -843,12 +311,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             element.flexibleWidth = flexibleWidth;
         }
 
-        private static void Stretch(RectTransform rect, float left = 0f, float bottom = 0f, float right = 0f, float top = 0f)
+        internal static void Stretch(RectTransform rect, float left = 0f, float bottom = 0f, float right = 0f, float top = 0f)
         {
             Anchor(rect, Vector2.zero, Vector2.one, new Vector2(left, bottom), new Vector2(-right, -top));
         }
 
-        private static void Anchor(RectTransform rect, Vector2 min, Vector2 max, Vector2 offsetMin, Vector2 offsetMax)
+        internal static void Anchor(RectTransform rect, Vector2 min, Vector2 max, Vector2 offsetMin, Vector2 offsetMax)
         {
             rect.anchorMin = min;
             rect.anchorMax = max;
@@ -856,7 +324,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             rect.offsetMax = offsetMax;
         }
 
-        private static Image AddImage(RectTransform rect, string spriteName, bool raycast = true)
+        internal static Image AddImage(RectTransform rect, string spriteName, bool raycast = true)
         {
             var image = rect.gameObject.AddComponent<Image>();
             Sprite sprite = Sprite(spriteName);
@@ -867,14 +335,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         // An invisible graphic: uGUI only delivers clicks to something that draws.
-        private static Image AddHitArea(RectTransform rect)
+        internal static Image AddHitArea(RectTransform rect)
         {
             var image = rect.gameObject.AddComponent<Image>();
             image.color = Color.clear;
             return image;
         }
 
-        private static TextMeshProUGUI AddText(Transform parent, string name, string text, int size, TextAlignmentOptions alignment)
+        internal static TextMeshProUGUI AddText(Transform parent, string name, string text, int size, TextAlignmentOptions alignment)
         {
             RectTransform rect = NewRect(name, parent);
             var label = rect.gameObject.AddComponent<TextMeshProUGUI>();
@@ -890,7 +358,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         // Sits just outside the control and is ignored by layout groups.
-        private static GameObject AddFocusRing(RectTransform parent)
+        internal static GameObject AddFocusRing(RectTransform parent)
         {
             RectTransform ring = NewRect("FocusRing", parent);
             Stretch(ring, -3f, -3f, -3f, -3f);
@@ -909,7 +377,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private static string Tidy(string label) => new string(label.Where(char.IsLetterOrDigit).ToArray());
 
-        private static void Set(Object target, string property, object value)
+        internal static void Set(Object target, string property, object value)
         {
             var so = new SerializedObject(target);
             SerializedProperty prop = so.FindProperty(property);
@@ -932,7 +400,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void SetStrings(Object target, string property, string[] values)
+        internal static void SetStrings(Object target, string property, string[] values)
         {
             var so = new SerializedObject(target);
             SerializedProperty prop = so.FindProperty(property);
@@ -945,18 +413,5 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void SavePrefab(GameObject instance)
-        {
-            PrefabUtility.SaveAsPrefabAsset(instance, $"{PrefabDir}/{instance.name}.prefab");
-            Object.DestroyImmediate(instance);
-        }
-
-        private static void EnsureFolder(string parent, string child)
-        {
-            if (!AssetDatabase.IsValidFolder($"{parent}/{child}"))
-            {
-                AssetDatabase.CreateFolder(parent, child);
-            }
-        }
     }
 }

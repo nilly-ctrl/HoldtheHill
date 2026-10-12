@@ -147,7 +147,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // Ends of the route.
             GameObject spawner = Root("Enemy Spawner");
             spawner.transform.position = first;
-            GrayboxBuilder.Apply(spawner.GetComponent<EnemySpawner>(), so =>
+            GrayboxBuildKit.Apply(spawner.GetComponent<EnemySpawner>(), so =>
             {
                 so.FindProperty("activeMapId").stringValue = level;
             });

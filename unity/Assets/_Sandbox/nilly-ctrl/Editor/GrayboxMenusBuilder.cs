@@ -21,11 +21,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     {
         public const string PrefabPath = "Assets/_Sandbox/nilly-ctrl/Graybox/Prefabs/GrayboxMenus.prefab";
 
-        private const string TitleBackgroundPath = "Assets/_Sandbox/nilly-ctrl/Ui/Title/TitleBackground.png";
-        private const string TitleLogoPath = "Assets/_Sandbox/nilly-ctrl/Icons/PNG/TitleLogo.png";
+        internal const string TitleBackgroundPath = "Assets/_Sandbox/nilly-ctrl/Ui/Title/TitleBackground.png";
+        internal const string TitleLogoPath = "Assets/_Sandbox/nilly-ctrl/Icons/PNG/TitleLogo.png";
 
         // More than the game has, so a new achievement shows without rebuilding the prefab.
-        private const int AwardRows = 12;
+        internal const int AwardRows = 12;
 
         [MenuItem("Tools/Hold the Hill/Build Graybox Menus")]
         public static GameObject BuildPrefab()
@@ -42,7 +42,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // Order is draw order. Settings and Controls open over the screen that asked for them,
             // and the dialog comes last so it sits over whichever screen asked.
             GrayboxTitleScreen title = BuildTitle(canvas);
-            GrayboxHomeScreen home = BuildHome(canvas);
+            GrayboxHomeScreen home = GrayboxHomeScreenBuilder.BuildHome(canvas);
             GrayboxPauseScreen pause = BuildPause(canvas);
             GrayboxRunEndScreen runEnd = BuildRunEnd(canvas);
             GrayboxSettingsScreen settings = BuildSettings(canvas);
@@ -98,7 +98,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         // Laid out after Ui/Title/Source~/TitleMockup.png: the hill on the left, the logo and the
         // buttons on the right.
-        private static GrayboxTitleScreen BuildTitle(Transform canvas)
+        internal static GrayboxTitleScreen BuildTitle(Transform canvas)
         {
             RectTransform screen = UiKitBuilder.AddScreen(canvas, "TitleScreen", dim: false);
 
@@ -132,105 +132,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         // ---------- home ----------
 
-        private static GrayboxHomeScreen BuildHome(Transform canvas)
-        {
-            RectTransform screen = UiKitBuilder.AddScreen(canvas, "HomeScreen", dim: false);
-
-            Image backdrop = UiKitBuilder.AddPicture(screen, "Backdrop", PixelSprite(TitleBackgroundPath), Vector2.zero);
-            backdrop.rectTransform.anchorMin = Vector2.zero;
-            backdrop.rectTransform.anchorMax = Vector2.one;
-            backdrop.rectTransform.offsetMin = backdrop.rectTransform.offsetMax = Vector2.zero;
-            backdrop.color = new Color(0.55f, 0.55f, 0.6f, 1f); // pushed back so the panel reads
-            backdrop.raycastTarget = true;
-
-            RectTransform panel = UiKitBuilder.AddPanel(screen, 320f);
-            UiKitBuilder.AddTitle(panel, "Home");
-            TextMeshProUGUI honeydew = UiKitBuilder.AddBody(panel, "0 Honeydew");
-            honeydew.name = "Honeydew";
-            honeydew.color = UiKitStyle.Gold;
-
-            UiTabBar tabs = UiKitBuilder.AddTabBar(panel);
-            RectTransform playPage = UiKitBuilder.AddPage(panel, "PlayPage");
-            RectTransform upgradesPage = UiKitBuilder.AddPage(panel, "UpgradesPage");
-            RectTransform awardsPage = UiKitBuilder.AddPage(panel, "AwardsPage");
-            RectTransform recordsPage = UiKitBuilder.AddPage(panel, "RecordsPage");
-            UiButton playTab = UiKitBuilder.AddTab(tabs, "Play", playPage.gameObject);
-            UiKitBuilder.AddTab(tabs, "Upgrades", upgradesPage.gameObject);
-            UiKitBuilder.AddTab(tabs, "Awards", awardsPage.gameObject);
-            UiKitBuilder.AddTab(tabs, "Records", recordsPage.gameObject);
-
-            var home = screen.gameObject.AddComponent<GrayboxHomeScreen>();
-            UiKitBuilder.Wire(home, "_honeydew", honeydew);
-
-            // Play
-            UiStepper level = UiKitBuilder.AddStepper(playPage, "Level", new[] { GrayboxLevels.All[0].Name }, 0);
-            UiStepper mode = UiKitBuilder.AddStepper(playPage, "Mode", new[] { "Campaign", "Endless" }, 0);
-            TextMeshProUGUI best = UiKitBuilder.AddBody(playPage, "Hold the hill through every wave.");
-            best.name = "Best";
-            best.color = UiKitStyle.Dim;
-            UiButton start = UiKitBuilder.AddButton(playPage, "Start run");
-            UiButton toTitle = UiKitBuilder.AddButton(playPage, "Back to title");
-            UiKitBuilder.Wire(home, "_level", level);
-            UiKitBuilder.Wire(home, "_mode", mode);
-            UiKitBuilder.Wire(home, "_best", best);
-            UiKitBuilder.Wire(home, "_start", start);
-            UiKitBuilder.Wire(home, "_toTitle", toTitle);
-
-            // Upgrades: a name-and-buy row with the effect of the next level under it.
-            var homeObject = new SerializedObject(home);
-            SerializedProperty upgradeRows = homeObject.FindProperty("_upgrades");
-            foreach (GrayboxUpgrades.Upgrade upgrade in GrayboxUpgrades.All)
-            {
-                UiButton buy = UiKitBuilder.AddButtonRow(upgradesPage, upgrade.Name, "Buy", out TextMeshProUGUI name);
-                buy.transform.parent.name = Tidy(upgrade.Id) + "Row";
-                TextMeshProUGUI effect = UiKitBuilder.AddBody(upgradesPage, "Next: " + GrayboxUpgrades.Describe(upgrade, 1));
-                effect.name = Tidy(upgrade.Id) + "Effect";
-                effect.alignment = TextAlignmentOptions.Left;
-                effect.color = UiKitStyle.Dim;
-
-                SerializedProperty row = Append(upgradeRows);
-                row.FindPropertyRelative("Id").stringValue = upgrade.Id;
-                row.FindPropertyRelative("Name").objectReferenceValue = name;
-                row.FindPropertyRelative("Effect").objectReferenceValue = effect;
-                row.FindPropertyRelative("Buy").objectReferenceValue = buy;
-            }
-
-            // Awards
-            TextMeshProUGUI awardCount = UiKitBuilder.AddBody(awardsPage, "0 of 0 earned");
-            awardCount.name = "AwardCount";
-            awardCount.color = UiKitStyle.Dim;
-            SerializedProperty awardRows = homeObject.FindProperty("_awards");
-            for (int i = 0; i < AwardRows; i++)
-            {
-                TextMeshProUGUI value = UiKitBuilder.AddValueRow(awardsPage, "Award " + (i + 1), "0/1");
-                SerializedProperty row = Append(awardRows);
-                row.FindPropertyRelative("Root").objectReferenceValue = value.transform.parent.gameObject;
-                row.FindPropertyRelative("Label").objectReferenceValue = value.transform.parent.Find("Label").GetComponent<TMP_Text>();
-                row.FindPropertyRelative("Value").objectReferenceValue = value;
-            }
-
-            // Records
-            homeObject.FindProperty("_awardCount").objectReferenceValue = awardCount;
-            homeObject.FindProperty("_runs").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Runs finished", "0");
-            homeObject.FindProperty("_wins").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Hills defended", "0");
-            homeObject.FindProperty("_kills").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Kills", "0");
-            homeObject.FindProperty("_food").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Food earned", "0");
-            homeObject.FindProperty("_time").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Time played", "0:00");
-            UiKitBuilder.AddDivider(recordsPage);
-            TextMeshProUGUI recordsNote = UiKitBuilder.AddBody(recordsPage, "For the level chosen on the Play tab:");
-            recordsNote.color = UiKitStyle.Dim;
-            homeObject.FindProperty("_bestCampaign").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Best campaign", "-");
-            homeObject.FindProperty("_fastestWin").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Fastest win", "-");
-            homeObject.FindProperty("_bestEndless").objectReferenceValue = UiKitBuilder.AddValueRow(recordsPage, "Best endless", "-");
-            homeObject.ApplyModifiedPropertiesWithoutUndo();
-
-            UiKitBuilder.Wire(screen.GetComponent<UiScreen>(), "_firstSelected", playTab.Button);
-            return home;
-        }
-
         // ---------- pause and run end ----------
 
-        private static GrayboxPauseScreen BuildPause(Transform canvas)
+        internal static GrayboxPauseScreen BuildPause(Transform canvas)
         {
             RectTransform screen = UiKitBuilder.AddScreen(canvas, "PauseScreen");
             RectTransform panel = UiKitBuilder.AddPanel(screen, 200f);
@@ -257,7 +161,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return pause;
         }
 
-        private static GrayboxRunEndScreen BuildRunEnd(Transform canvas)
+        internal static GrayboxRunEndScreen BuildRunEnd(Transform canvas)
         {
             RectTransform screen = UiKitBuilder.AddScreen(canvas, "RunEndScreen");
             RectTransform panel = UiKitBuilder.AddPanel(screen, 240f);
@@ -305,7 +209,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         // ---------- settings ----------
 
-        private static GrayboxSettingsScreen BuildSettings(Transform canvas)
+        internal static GrayboxSettingsScreen BuildSettings(Transform canvas)
         {
             RectTransform screen = UiKitBuilder.AddScreen(canvas, "SettingsScreen");
             RectTransform panel = UiKitBuilder.AddPanel(screen, 300f);
@@ -352,7 +256,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         // ---------- controls ----------
 
-        private static GrayboxControlsScreen BuildControls(Transform canvas)
+        internal static GrayboxControlsScreen BuildControls(Transform canvas)
         {
             RectTransform screen = UiKitBuilder.AddScreen(canvas, "ControlsScreen");
             RectTransform panel = UiKitBuilder.AddPanel(screen, 320f);
@@ -410,19 +314,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         // ---------- plumbing ----------
 
         // Anchors and pivots a rect to one corner of its parent, then offsets it from there.
-        private static void Place(RectTransform rect, Vector2 corner, Vector2 offset)
+        internal static void Place(RectTransform rect, Vector2 corner, Vector2 offset)
         {
             rect.anchorMin = rect.anchorMax = rect.pivot = corner;
             rect.anchoredPosition = offset;
         }
 
-        private static SerializedProperty Append(SerializedProperty array)
+        internal static SerializedProperty Append(SerializedProperty array)
         {
             array.arraySize++;
             return array.GetArrayElementAtIndex(array.arraySize - 1);
         }
 
-        private static string Tidy(string text)
+        internal static string Tidy(string text)
         {
             var builder = new System.Text.StringBuilder();
             bool upper = true;
@@ -442,7 +346,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         // Pixel art for the canvas: a sprite, point-sampled, uncompressed, no mipmaps.
-        private static Sprite PixelSprite(string path)
+        internal static Sprite PixelSprite(string path)
         {
             var importer = AssetImporter.GetAtPath(path) as TextureImporter;
             if (importer == null)
@@ -466,7 +370,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return AssetDatabase.LoadAssetAtPath<Sprite>(path);
         }
 
-        private static void EnsureFolder(string parent, string child)
+        internal static void EnsureFolder(string parent, string child)
         {
             if (!AssetDatabase.IsValidFolder($"{parent}/{child}"))
             {

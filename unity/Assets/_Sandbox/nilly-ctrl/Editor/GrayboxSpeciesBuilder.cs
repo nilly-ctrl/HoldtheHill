@@ -28,8 +28,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public static void BuildAssets()
         {
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot, "Data");
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Data", "Species");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Data", "Species");
 
             var catalog = AssetDatabase.LoadAssetAtPath<GrayboxTowerCatalog>(GrayboxTowerBuilder.CatalogPath);
             var warden = AssetDatabase.LoadAssetAtPath<GameObject>(GrayboxWardenBuilder.PrefabPath("Warden"));
@@ -60,7 +60,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             var go = new GameObject("GrayboxSpecies");
-            GrayboxBuilder.Apply(go.AddComponent<GrayboxSpeciesLoader>(),
+            GrayboxBuildKit.Apply(go.AddComponent<GrayboxSpeciesLoader>(),
                 so => so.FindProperty("_species").objectReferenceValue = species);
         }
 
@@ -75,7 +75,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             var species = ScriptableObject.CreateInstance<GrayboxSpeciesData>();
             AssetDatabase.CreateAsset(species, path);
-            GrayboxBuilder.Apply(species, so =>
+            GrayboxBuildKit.Apply(species, so =>
             {
                 so.FindProperty("_id").stringValue = id;
                 so.FindProperty("_displayName").stringValue = label;
@@ -90,8 +90,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         // Worker, Soldier and Bullet Tower, each as a variant of the shared prefab.
         private static GrayboxTowerCatalog BuildSampleCatalog(GrayboxTowerCatalog shared)
         {
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Prefabs/Towers", "FireAnt");
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Data/Towers", "FireAnt");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs/Towers", "FireAnt");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Data/Towers", "FireAnt");
 
             var towers = new List<GrayboxTowerData>();
             foreach (string id in new[] { "TowerWorker", "TowerSoldier", "TowerLinear" })
@@ -109,16 +109,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 Tower tower = go.GetComponent<Tower>();
                 float range = tower.Range * 0.9f;
                 float interval = tower.FireInterval * 0.8f;
-                GrayboxBuilder.Apply(tower, so =>
+                GrayboxBuildKit.Apply(tower, so =>
                 {
                     so.FindProperty("_range").floatValue = range;
                     so.FindProperty("_fireInterval").floatValue = interval;
                 });
-                GameObject prefab = GrayboxBuilder.SavePrefab(go, $"Towers/FireAnt/{id}_FireAnt");
+                GameObject prefab = GrayboxBuildKit.SavePrefab(go, $"Towers/FireAnt/{id}_FireAnt");
 
                 var data = ScriptableObject.CreateInstance<GrayboxTowerData>();
                 AssetDatabase.CreateAsset(data, $"{GrayboxRoot}/Data/Towers/FireAnt/{id}_FireAntData.asset");
-                GrayboxBuilder.Apply(data, so =>
+                GrayboxBuildKit.Apply(data, so =>
                 {
                     so.FindProperty("_displayName").stringValue = "Fire " + source.DisplayName;
                     so.FindProperty("_iconName").stringValue = source.IconName;
@@ -132,7 +132,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             var catalog = ScriptableObject.CreateInstance<GrayboxTowerCatalog>();
             AssetDatabase.CreateAsset(catalog, $"{DataRoot}/FireAntCatalog.asset");
-            GrayboxBuilder.Apply(catalog, so =>
+            GrayboxBuildKit.Apply(catalog, so =>
             {
                 SerializedProperty list = so.FindProperty("_towers");
                 list.arraySize = towers.Count;

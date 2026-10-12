@@ -62,9 +62,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Material lineMaterial,
             SpriteAnimLibrary anim)
         {
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PrefabFolder);
-            GrayboxBuilder.CreateFolderIfMissing(GrayboxRoot, "Data");
-            GrayboxBuilder.CreateFolderIfMissing(DataRoot, "Towers");
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PrefabFolder);
+            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            GrayboxBuildKit.CreateFolderIfMissing(DataRoot, "Towers");
 
             s_anim = anim;
             s_base = BuildBase(square);
@@ -84,16 +84,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 Build("TowerRicochet", "Ricochet Tower", 175, TargetingPriority.Strongest, 3.8f, 1f, new Color(0.6f, 0.8f, 1f),
                     go => SetProjectile(go, ricochet)),
                 Build("TowerMineLayer", "Mine Layer", 250, TargetingPriority.Closest, 4.0f, 2.8f, new Color(0.9f, 0.9f, 0.3f),
-                    go => GrayboxBuilder.Apply(go.AddComponent<MineLayerTower>(),
+                    go => GrayboxBuildKit.Apply(go.AddComponent<MineLayerTower>(),
                         so => so.FindProperty("_minePrefab").objectReferenceValue = mine)),
                 Build("TowerFrostAura", "Frost Aura", 225, TargetingPriority.Closest, 3.5f, 1.5f, new Color(0.4f, 0.85f, 1f),
                     go => go.AddComponent<FrostAuraTower>()),
                 Build("TowerKnockback", "Knockback Pulse", 200, TargetingPriority.Closest, 3.0f, 1.5f, new Color(1f, 0.6f, 0.2f),
                     go => go.AddComponent<KnockbackTower>()),
                 Build("TowerChain", "Chain Lightning", 200, TargetingPriority.Weakest, 3.8f, 1.2f, new Color(0.5f, 0.85f, 1f),
-                    go => GrayboxBuilder.AddChainLightning(go, lineMaterial)),
+                    go => GrayboxProjectilePrefabBuilder.AddChainLightning(go, lineMaterial)),
                 Build("TowerBeam", "Beam Tower", 225, TargetingPriority.Closest, 4f, 1f, new Color(1f, 0.5f, 0.3f),
-                    go => GrayboxBuilder.AddBeam(go, lineMaterial)),
+                    go => GrayboxProjectilePrefabBuilder.AddBeam(go, lineMaterial)),
                 Build("TowerOrbit", "Swarm Nest", 175, TargetingPriority.Closest, 2.5f, 1f, new Color(0.7f, 0.6f, 1f),
                     AddOrbit),
                 // The close-range castes. Range and interval come from GrayboxMeleeTower.StatsFor.
@@ -117,7 +117,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             for (int i = 0; i < towers.Count && i < roles.Length; i++)
             {
                 int at = i;
-                GrayboxBuilder.Apply(towers[i], so =>
+                GrayboxBuildKit.Apply(towers[i], so =>
                 {
                     SerializedProperty role = so.FindProperty("_archetype");
                     if (role.enumValueIndex == (int)TowerArchetype.Unspecified)
@@ -149,7 +149,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             towers = towers.OrderBy(t => (int)t.Archetype).ToList();
 
             var catalog = LoadOrCreate<GrayboxTowerCatalog>(CatalogPath, out _);
-            GrayboxBuilder.Apply(catalog, so =>
+            GrayboxBuildKit.Apply(catalog, so =>
             {
                 SerializedProperty list = so.FindProperty("_towers");
                 list.arraySize = towers.Count;
@@ -213,10 +213,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             var go = new GameObject("TowerBase");
-            GrayboxBuilder.AddSprite(go, square, Color.white, 0.8f, sortingOrder: 1);
+            GrayboxBuildKit.AddSprite(go, square, Color.white, 0.8f, sortingOrder: 1);
             go.AddComponent<Tower>();
             go.AddComponent<TowerTargetVisualizer>();
-            return GrayboxBuilder.SavePrefab(go, $"{PrefabFolder}/TowerBase");
+            return GrayboxBuildKit.SavePrefab(go, $"{PrefabFolder}/TowerBase");
         }
 
         private static GrayboxTowerData Build(
@@ -239,7 +239,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             go.name = id;
             go.GetComponent<SpriteRenderer>().color = color;
 
-            GrayboxBuilder.Apply(go.GetComponent<Tower>(), so =>
+            GrayboxBuildKit.Apply(go.GetComponent<Tower>(), so =>
             {
                 so.FindProperty("_range").floatValue = range;
                 so.FindProperty("_fireInterval").floatValue = fireInterval;
@@ -249,7 +249,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             addWeapon?.Invoke(go);
             GrayboxTowerAnimator.Attach(go, s_anim, id);
 
-            GameObject prefab = GrayboxBuilder.SavePrefab(go, $"{PrefabFolder}/{id}");
+            GameObject prefab = GrayboxBuildKit.SavePrefab(go, $"{PrefabFolder}/{id}");
             return BuildData(id, label, cost, prefab);
         }
 
@@ -262,13 +262,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private static void SetProjectile(GameObject tower, GameObject projectile)
         {
-            GrayboxBuilder.Apply(tower.GetComponent<Tower>(),
+            GrayboxBuildKit.Apply(tower.GetComponent<Tower>(),
                 so => so.FindProperty("_projectilePrefab").objectReferenceValue = projectile.GetComponent<Projectile>());
         }
 
         private static void AddOrbit(GameObject tower)
         {
-            GrayboxBuilder.Apply(tower.AddComponent<OrbitingDamageField>(), so =>
+            GrayboxBuildKit.Apply(tower.AddComponent<OrbitingDamageField>(), so =>
             {
                 so.FindProperty("_radius").floatValue = 1.6f;
                 so.FindProperty("_orbiterCount").intValue = 3;
@@ -284,7 +284,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             var data = LoadOrCreate<GrayboxTowerData>($"{TowerDataRoot}/{id}Data.asset", out bool created);
             SpriteAnimClip idle = s_anim != null ? s_anim.Find(id)?.Find("Idle") : null;
 
-            GrayboxBuilder.Apply(data, so =>
+            GrayboxBuildKit.Apply(data, so =>
             {
                 if (created)
                 {

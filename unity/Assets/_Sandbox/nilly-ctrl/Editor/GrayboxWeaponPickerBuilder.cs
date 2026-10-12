@@ -45,7 +45,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             camera.backgroundColor = new Color(0.16f, 0.17f, 0.19f);
             cameraObject.AddComponent<AudioListener>();
 
-            GrayboxBuilder.BuildGrass(new Vector3(0f, 0f, 0f), new Vector2(40f, 24f));
+            GrayboxSceneDressingBuilder.BuildGrass(new Vector3(0f, 0f, 0f), new Vector2(40f, 24f));
             GrayboxBuilder.BuildUi();
 
             var picker = new GameObject("GrayboxWeaponPicker").AddComponent<GrayboxWeaponPicker>();
