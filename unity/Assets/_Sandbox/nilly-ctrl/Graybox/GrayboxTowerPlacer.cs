@@ -262,35 +262,26 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 }
             }
 
-            Mouse mouse = Mouse.current;
-            Keyboard keyboard = Keyboard.current;
+            bool hasPointer = GrayboxControls.TryPointerPosition(out Vector2 pointer);
 
-            UpdateGhost(mouse);
+            UpdateGhost(hasPointer, pointer);
 
             // Handle hotkey numbers 1-0 for selecting placement mode
-            if (keyboard != null)
+            for (int i = 0; i < TowerCount; i++)
             {
-                for (int i = 0; i < TowerCount; i++)
+                if (GrayboxControls.Pressed(GrayboxControls.BuildId(i)))
                 {
-                    if (GrayboxControls.Pressed(GrayboxControls.BuildId(i)))
-                    {
-                        TogglePlacement(i);
-                    }
-                }
-
-                if (GrayboxControls.Pressed(GrayboxControls.Pause))
-                {
-                    CancelInteraction();
+                    TogglePlacement(i);
                 }
             }
 
-            if (mouse != null && mouse.rightButton.wasPressedThisFrame)
+            if (GrayboxControls.Pressed(GrayboxControls.Pause) || GrayboxControls.Pressed(GrayboxControls.Cancel))
             {
                 CancelInteraction();
             }
 
-            // Detect mouse clicks on 2D world
-            if (mouse != null && mouse.leftButton.wasPressedThisFrame)
+            // Detect pointer clicks on 2D world
+            if (hasPointer && GrayboxControls.Pressed(GrayboxControls.Confirm))
             {
                 // A click on a HUD panel is the panel's, not the field's.
                 if (PointerOverUi())
@@ -298,7 +289,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     return;
                 }
 
-                Vector3 worldPoint = _mainCamera.ScreenToWorldPoint(mouse.position.ReadValue());
+                Vector3 worldPoint = _mainCamera.ScreenToWorldPoint(pointer);
                 worldPoint.z = 0f;
 
                 // If currently in active placement mode from the build bar
@@ -421,10 +412,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// grid, with its range ring: green where it can be built, red where it can't. Also fills
         /// in <see cref="Preview"/> for the placement label.
         /// </summary>
-        private void UpdateGhost(Mouse mouse)
+        private void UpdateGhost(bool hasPointer, Vector2 pointer)
         {
             int index = _activePlacementTypeIndex;
-            bool active = index >= 0 && index < TowerCount && mouse != null && !PointerOverUi();
+            bool active = index >= 0 && index < TowerCount && hasPointer && !PointerOverUi();
             if (!active)
             {
                 Preview = default;
@@ -448,7 +439,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             GrayboxTowerData info = _catalog[index];
-            Vector3 world = _mainCamera.ScreenToWorldPoint(mouse.position.ReadValue());
+            Vector3 world = _mainCamera.ScreenToWorldPoint(pointer);
             world.z = 0f;
             Vector3 buildPos = SnapToGrid(world);
 

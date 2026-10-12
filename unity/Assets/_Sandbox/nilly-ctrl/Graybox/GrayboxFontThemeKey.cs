@@ -5,7 +5,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 {
     /// <summary>
     /// Steps the scene's font theme while playing, to compare the themed number, banner and label
-    /// sets live: F6 for the next theme, Shift+F6 for the one before. The new theme's name shows
+    /// sets live: F6 for the next theme, F5 for the one before (both rebindable). The new theme's name shows
     /// for a moment in its own title style if the scene has a <see cref="GrayboxWaveBanner"/>.
     /// Fonts only; sprites do not change. Needs a <see cref="PixelFontTheme"/> in the scene.
     /// </summary>
@@ -19,8 +19,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Update()
         {
-            Keyboard keyboard = Keyboard.current;
-            if (keyboard == null || !GrayboxControls.Pressed(GrayboxControls.FontTheme))
+            int step = GrayboxControls.Pressed(GrayboxControls.FontTheme) ? 1
+                : GrayboxControls.Pressed(GrayboxControls.FontThemeBack) ? -1 : 0;
+            if (step == 0)
             {
                 return;
             }
@@ -35,7 +36,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 return;
             }
 
-            string themeName = _theme.StepTheme(keyboard.shiftKey.isPressed ? -1 : 1);
+            string themeName = _theme.StepTheme(step);
             if (_banner == null)
             {
                 _banner = FindAnyObjectByType<GrayboxWaveBanner>();

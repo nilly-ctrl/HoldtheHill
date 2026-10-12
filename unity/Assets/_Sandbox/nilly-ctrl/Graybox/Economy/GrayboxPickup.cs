@@ -88,8 +88,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private bool MouseIsOver()
         {
-            Mouse mouse = Mouse.current;
-            if (mouse == null)
+            if (!GrayboxControls.TryPointerPosition(out Vector2 pointer))
             {
                 return false;
             }
@@ -103,7 +102,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 }
             }
 
-            Vector2 world = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
+            Vector2 world = _camera.ScreenToWorldPoint(pointer);
             return (world - (Vector2)_home).sqrMagnitude <= _reach * _reach;
         }
 

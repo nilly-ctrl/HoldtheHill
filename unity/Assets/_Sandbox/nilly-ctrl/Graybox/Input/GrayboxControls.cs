@@ -29,6 +29,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public const string Achievements = "Achievements";
         public const string SpecialsPanel = "SpecialsPanel";
         public const string FontTheme = "FontTheme";
+        public const string FontThemeBack = "FontThemeBack";
 
         // The Warden: walking, and one action per ability (GrayboxAbilityData.ControlId).
         public const string MoveUp = "MoveUp";
@@ -43,6 +44,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         /// <summary>Build slots are "Build1" to "Build10", in build bar order.</summary>
         public const int BuildSlots = 10;
+
+        // Pointer actions. Not rows on the controls screen (there is nothing to rebind), but the
+        // one place gameplay reads the mouse from, so a touch or pen binding is one line here.
+        public const string Point = "Point";
+        public const string Confirm = "Confirm";
+        public const string Cancel = "Cancel";
 
         public const string KeyboardGroup = "Keyboard";
         public const string GamepadGroup = "Gamepad";
@@ -73,6 +80,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 new Entry { Id = Achievements, Label = "Achievements", Page = "Panels", DefaultKey = "<Keyboard>/a" },
                 new Entry { Id = SpecialsPanel, Label = "Spawn specials", Page = "Panels", DefaultKey = "<Keyboard>/b" },
                 new Entry { Id = FontTheme, Label = "Next font theme", Page = "Panels", DefaultKey = "<Keyboard>/f6" },
+                new Entry { Id = FontThemeBack, Label = "Previous font theme", Page = "Panels", DefaultKey = "<Keyboard>/f5" },
                 new Entry { Id = MoveUp, Label = "Warden up", Page = "Warden", DefaultKey = "<Keyboard>/upArrow" },
                 new Entry { Id = MoveDown, Label = "Warden down", Page = "Warden", DefaultKey = "<Keyboard>/downArrow" },
                 new Entry { Id = MoveLeft, Label = "Warden left", Page = "Warden", DefaultKey = "<Keyboard>/leftArrow" },
@@ -114,6 +122,20 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static bool IsRebinding { get; private set; }
 
         public static string BuildId(int slot) => "Build" + (slot + 1);
+
+        /// <summary>The pointer's screen position, or false when no pointer device is present.</summary>
+        public static bool TryPointerPosition(out Vector2 position)
+        {
+            InputAction point = Find(Point);
+            if (point == null || Pointer.current == null)
+            {
+                position = default;
+                return false;
+            }
+
+            position = point.ReadValue<Vector2>();
+            return true;
+        }
 
         /// <summary>True on the frame the action's key (or button) went down.</summary>
         public static bool Pressed(string id)
@@ -267,6 +289,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 action.AddBinding(entry.DefaultKey, groups: KeyboardGroup);
                 if (!string.IsNullOrEmpty(entry.DefaultPad)) action.AddBinding(entry.DefaultPad, groups: GamepadGroup);
             }
+
+            s_map.AddAction(Point, InputActionType.Value, binding: "<Pointer>/position", expectedControlLayout: "Vector2");
+            s_map.AddAction(Confirm, InputActionType.Button, binding: "<Mouse>/leftButton");
+            s_map.AddAction(Cancel, InputActionType.Button, binding: "<Mouse>/rightButton");
 
             GrayboxSave.Loaded -= Load;
             GrayboxSave.Loaded += Load;
