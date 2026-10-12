@@ -28,6 +28,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private Texture2D _buttonPressed;
 
         private static GrayboxUi s_instance;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => s_instance = null;
         private GUISkin _skin;
 
         /// <summary>Switches the current OnGUI call to the pixel skin. Only valid inside OnGUI.</summary>

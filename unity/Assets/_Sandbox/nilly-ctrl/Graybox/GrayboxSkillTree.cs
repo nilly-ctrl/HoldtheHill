@@ -45,6 +45,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static event Action<string> OnSkillUnlocked;
         public static event Action<int> OnSkillPointsChanged;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Instance = null;
+            OnSkillUnlocked = null;
+            OnSkillPointsChanged = null;
+        }
+
         [Tooltip("The nodes of the tree.")]
         [SerializeField] private GrayboxSkillTreeData _catalog;
 

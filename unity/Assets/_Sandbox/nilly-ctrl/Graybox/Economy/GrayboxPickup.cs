@@ -35,6 +35,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Raised when any pickup is collected, before it is removed.</summary>
         public static event Action<GrayboxPickup> Collected;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Collected = null;
+
         public float Reach => _reach;
 
         public bool IsCollected { get; private set; }

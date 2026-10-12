@@ -21,6 +21,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Raised after any ability is used.</summary>
         public static event Action<GrayboxWardenAbility> Used;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Used = null;
+
         public GrayboxAbilityData Data => _data;
 
         /// <summary>Times this ability has been used.</summary>

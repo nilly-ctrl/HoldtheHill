@@ -19,10 +19,18 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private EnemySpawner _spawner;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         private void Awake()
         {
             Instance = this;
             _spawner = FindAnyObjectByType<EnemySpawner>();
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
         }
 
         /// <summary>

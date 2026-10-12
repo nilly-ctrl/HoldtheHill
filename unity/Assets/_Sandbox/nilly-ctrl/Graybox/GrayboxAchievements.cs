@@ -42,6 +42,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     {
         public static GrayboxAchievements Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         public bool ShowAchievementsWindow { get; set; }
 
         [Tooltip("The achievements in the game.")]
@@ -142,6 +145,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             EnemyHealth.Defeated -= OnEnemyDefeated;
             GrayboxFeedback.MineExploded -= OnMineDetonated;
             GrayboxSave.Loaded -= LoadSaved;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
         }
 
         private void OnEnemyDefeated(GameObject enemy)

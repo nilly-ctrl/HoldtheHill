@@ -27,6 +27,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Raised when the amount of any resource changes, with the resource and its new amount.</summary>
         public static event Action<GrayboxResourceData, int> OnResourceChanged;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Instance = null;
+            OnGoldChanged = null;
+            OnBountyPaid = null;
+            OnResourceChanged = null;
+        }
+
         [Header("Starting Economy")]
         [Tooltip("The main resource: what bounties pay and towers cost by default. Its starting amount is used when set.")]
         [SerializeField] private GrayboxResourceData _mainResource;
@@ -105,6 +114,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private void OnDisable()
         {
             EnemyHealth.Defeated -= OnEnemyDefeated;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
         }
 
         private void OnEnemyDefeated(GameObject enemyObj)

@@ -75,6 +75,18 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private static GrayboxTowerPlacer s_placer;
         private static bool s_disabledPlacer;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            s_panel = null;
+            s_field = null;
+            s_size = 0; // forces Ensure to rebuild the styles
+            Panel = Label = Heading = Button = Field = Toggle = null;
+            s_rects.Clear();
+            s_placer = null;
+            s_disabledPlacer = false;
+        }
+
         /// <summary>Call from OnGUI with the screen rectangle (GUI space) a panel covers this frame.</summary>
         public static void Occupy(Rect rect)
         {

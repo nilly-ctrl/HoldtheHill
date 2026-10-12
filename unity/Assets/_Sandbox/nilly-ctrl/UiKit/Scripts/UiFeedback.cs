@@ -37,6 +37,13 @@ namespace HoldTheHill.Sandbox.UiKit
 
         private static int s_muted;
 
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Cue = null;
+            s_muted = 0;
+        }
+
         /// <summary>
         /// Silences cues until the returned scope is disposed. Used while code, not the player,
         /// is moving focus or setting values.

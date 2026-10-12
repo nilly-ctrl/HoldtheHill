@@ -21,6 +21,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Raised once for each boss, on its first frame in the scene.</summary>
         public static event Action<GrayboxBoss> Appeared;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Appeared = null;
+
         public GrayboxBossData Data => _data;
 
         private void Awake()

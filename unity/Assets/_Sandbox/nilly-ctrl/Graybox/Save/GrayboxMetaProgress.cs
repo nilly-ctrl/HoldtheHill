@@ -12,6 +12,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Raised with the new balance whenever it changes.</summary>
         public static event Action<int> CurrencyChanged;
 
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => CurrencyChanged = null;
+
         public static int Currency => GrayboxSave.Data.metaCurrency;
 
         public static void AddCurrency(int amount)

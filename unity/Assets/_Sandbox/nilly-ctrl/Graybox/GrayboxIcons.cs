@@ -21,6 +21,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private Texture2D[] _icons = new Texture2D[0];
 
         private static GrayboxIcons s_instance;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => s_instance = null;
         private readonly Dictionary<string, Texture2D> _lookup = new Dictionary<string, Texture2D>();
 
         /// <summary>The icon with this file name (no extension), or null if there is none.</summary>

@@ -18,6 +18,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     {
         public static DamageNumberSpawner Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Instance = null;
+            Enabled = true;
+        }
+
         [Header("Font styles (Fonts/Generated)")]
         [SerializeField] private PixelFontStyle _physical;
         [SerializeField] private PixelFontStyle _magic;

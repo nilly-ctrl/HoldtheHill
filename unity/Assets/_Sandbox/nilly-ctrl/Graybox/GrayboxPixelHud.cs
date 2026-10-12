@@ -31,6 +31,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>True while a pixel HUD is drawing the food, wave and time readouts.</summary>
         public static bool Showing { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Showing = false;
+
         private void OnDisable()
         {
             Showing = false;

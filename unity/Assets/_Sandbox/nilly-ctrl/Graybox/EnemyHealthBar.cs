@@ -21,6 +21,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public static bool ShowHealthBars { get; set; } = true;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => ShowHealthBars = true;
+
         private void Awake()
         {
             _health = GetComponent<EnemyHealth>();

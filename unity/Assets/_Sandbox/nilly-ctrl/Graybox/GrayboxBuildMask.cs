@@ -18,6 +18,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private RectInt _bounds;
 
         private static GrayboxBuildMask s_instance;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => s_instance = null;
         private HashSet<Vector2Int> _lookup;
 
         public void Configure(IEnumerable<Vector2Int> blocked, RectInt bounds)

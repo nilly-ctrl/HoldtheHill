@@ -24,6 +24,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static bool ShowTargetLines { get; set; } = true;
         public static bool ShowTowerLabels { get; set; } = true;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            ShowRangeRings = true;
+            ShowTargetLines = true;
+            ShowTowerLabels = true;
+        }
+
         private void Awake()
         {
             _tower = GetComponent<Tower>();

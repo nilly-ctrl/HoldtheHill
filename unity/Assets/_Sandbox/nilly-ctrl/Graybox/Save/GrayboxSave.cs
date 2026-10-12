@@ -30,6 +30,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Raised after <see cref="Open"/> or <see cref="ResetAll"/> replaces <see cref="Data"/>.</summary>
         public static event Action Loaded;
 
+        // A save left open by the last Play must not leak into the next one when domain reload is off.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Close();
+            Loaded = null;
+        }
+
         /// <summary>The live save data. Never null. Call <see cref="MarkDirty"/> after changing it.</summary>
         public static GrayboxSaveData Data => s_data;
 

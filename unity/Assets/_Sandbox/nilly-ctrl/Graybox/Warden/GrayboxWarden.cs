@@ -31,6 +31,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public static GrayboxWarden Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         public IReadOnlyList<GrayboxWardenAbility> Abilities => _abilities;
 
         /// <summary>The Warden's health, or null on a Warden prefab that has none.</summary>

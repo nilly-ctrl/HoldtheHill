@@ -24,6 +24,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static bool AutoStartWaves { get; private set; }
         public static bool PauseOnFocusLoss { get; private set; } = true;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Applied = null;
+            MusicVolume = 0.8f;
+            SfxVolume = 0.8f;
+            AutoStartWaves = false;
+            PauseOnFocusLoss = true;
+        }
+
         private static SettingsSave Saved => GrayboxSave.Data.settings;
 
         public static void Apply()

@@ -23,6 +23,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public static GrayboxSpecials Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         /// <summary>The scene's animation library, for effects made by code that has no sprite of its own.</summary>
         public static SpriteAnimLibrary Library => Instance != null ? Instance._library : null;
 

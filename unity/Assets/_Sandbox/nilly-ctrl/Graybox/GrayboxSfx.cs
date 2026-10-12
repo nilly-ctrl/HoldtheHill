@@ -33,6 +33,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public static GrayboxSfx Instance { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Instance = null;
+
         public GrayboxSfxBank Bank => _bank;
 
         /// <summary>Plays a cue by id if a GrayboxSfx is in the scene; does nothing otherwise.</summary>

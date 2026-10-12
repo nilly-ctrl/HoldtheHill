@@ -25,6 +25,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>The species being played, or null before one is loaded.</summary>
         public static GrayboxSpeciesData Current { get; private set; }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Loaded = null;
+            Current = null;
+        }
+
         private void Start()
         {
             if (_species != null)

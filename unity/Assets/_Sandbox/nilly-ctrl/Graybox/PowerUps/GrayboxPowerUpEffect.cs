@@ -22,6 +22,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Raised when a power-up starts or is restarted.</summary>
         public static event Action<GrayboxPowerUpEffect> Started;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Started = null;
+
         /// <summary>Every power-up running now.</summary>
         public static IReadOnlyList<GrayboxPowerUpEffect> Active => s_active;
 

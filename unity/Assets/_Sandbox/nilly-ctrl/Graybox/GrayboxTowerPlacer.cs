@@ -86,6 +86,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Raised just before a tower is sold and destroyed.</summary>
         public static event Action<Tower> TowerSold;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            TowerPlaced = null;
+            TowerUpgraded = null;
+            TowerSold = null;
+        }
+
         /// <summary>True while a tower is selected, the build menu is open, or a tower is being placed.</summary>
         public bool IsBusy => _selectedTower != null || _showBuildMenu || _activePlacementTypeIndex >= 0;
 

@@ -18,6 +18,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static event Action<Vector3> HealPulsed;
         public static event Action<Vector3> MineExploded;
 
+        // Statics outlive a scene when domain reload is off; drop stale listeners before each Play.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            TowerAttacked = null;
+            TowerUpgraded = null;
+            EnemyHurt = null;
+            EnemyDied = null;
+            ShieldBroke = null;
+            HealPulsed = null;
+            MineExploded = null;
+        }
+
         internal static void RaiseTowerAttacked(string key, Vector3 at) => TowerAttacked?.Invoke(key, at);
         internal static void RaiseTowerUpgraded(string key, Vector3 at, int level) => TowerUpgraded?.Invoke(key, at, level);
         internal static void RaiseEnemyHurt(string key, Vector3 at) => EnemyHurt?.Invoke(key, at);
