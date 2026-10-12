@@ -13,9 +13,8 @@ namespace HoldTheHill.Features.Enemies
     /// </summary>
     /// <remarks>
     /// Death is announced through the static <see cref="Defeated"/> event rather than by
-    /// calling the spawner directly. <c>EnemySpawner</c> lives outside this assembly, so a
-    /// direct call would not compile; see <c>EnemySpawnerBridge</c> for the adapter that
-    /// forwards this event to <c>EnemySpawner.NotifyEnemyDefeated</c>.
+    /// calling the spawner directly; <see cref="EnemySpawner"/> listens to it, and so can
+    /// anything else that cares, without this component knowing about them.
     /// </remarks>
     [AddComponentMenu("Hold the Hill/Enemies/Enemy Health")]
     public class EnemyHealth : MonoBehaviour, IDamageable, IHealthReadable
