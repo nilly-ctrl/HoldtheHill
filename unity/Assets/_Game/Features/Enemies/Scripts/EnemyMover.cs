@@ -244,6 +244,9 @@ namespace HoldTheHill.Features.Enemies
         /// <summary>Raised whenever any enemy reaches the end of its path.</summary>
         public static event System.Action<GameObject> ReachedEnd;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => ReachedEnd = null;
+
         /// <summary>Raised when this enemy reaches the end of its path, just before <see cref="ReachedEnd"/>.</summary>
         public event System.Action Arrived;
 

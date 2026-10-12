@@ -38,6 +38,16 @@ namespace HoldTheHill.Features.Enemies
         /// <summary>Raised when a status effect starts or restarts on any enemy. For visuals.</summary>
         public static event Action<EnemyHealth, StatusEffectData> StatusApplied;
 
+        // Static listeners outlive a scene when domain reload is off; drop them before each Play.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Defeated = null;
+            Damaged = null;
+            Healed = null;
+            StatusApplied = null;
+        }
+
         /// <summary>
         /// Raised after this enemy takes a hit, with the hit (after shields) and the health
         /// actually removed. Listen here rather than to <see cref="Damaged"/> when only one
@@ -152,23 +162,8 @@ namespace HoldTheHill.Features.Enemies
             float applied = Mathf.Min(info.Amount, _currentHealth);
             _currentHealth -= info.Amount;
             Hurt?.Invoke(info, applied);
+            // Towers credit themselves from this event (TowerCredit); the enemy does not know what a tower is.
             Damaged?.Invoke(this, info, applied);
-
-            // Credit goes to the owner: a projectile is the source of its damage but is not a
-            // child of the tower that fired it, so looking only at the source credited nobody.
-            GameObject owner = CombatUtil.OwnerOf(info.Source);
-            if (owner != null)
-            {
-                var tower = owner.GetComponentInParent<HoldTheHill.Features.Towers.Tower>();
-                if (tower != null)
-                {
-                    tower.RecordDamage(applied);
-                    if (_currentHealth <= 0f)
-                    {
-                        tower.RecordKill();
-                    }
-                }
-            }
 
             if (_currentHealth <= 0f)
             {
