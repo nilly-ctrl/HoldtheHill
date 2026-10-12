@@ -1,0 +1,25 @@
+{
+    "name": "HoldTheHill.Sandbox.DevTools",
+    "rootNamespace": "HoldTheHill.Sandbox.NillyCtrl",
+    "references": [
+        "HoldTheHill.Runtime",
+        "HoldTheHill.Sandbox.Graybox",
+        "HoldTheHill.Sandbox.Animation",
+        "HoldTheHill.Sandbox.DamageNumbers",
+        "HoldTheHill.Sandbox.UiKit",
+        "UnityEngine.UI",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_EDITOR || DEVELOPMENT_BUILD"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
