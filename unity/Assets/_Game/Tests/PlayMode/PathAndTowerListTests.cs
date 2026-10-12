@@ -5,12 +5,12 @@ using HoldTheHill.Features.Towers;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.Graybox.Tests
+namespace HoldTheHill.Tests
 {
     /// <summary>
     /// The route maths on <see cref="EnemyPath"/> and the list of standing towers on <see cref="Tower"/>.
     /// </summary>
-    public class GrayboxPathAndTowerListTests
+    public class PathAndTowerListTests
     {
         private readonly List<GameObject> _made = new List<GameObject>();
         private readonly List<Tower> _towers = new List<Tower>();
