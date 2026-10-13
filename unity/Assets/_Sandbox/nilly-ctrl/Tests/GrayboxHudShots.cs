@@ -57,9 +57,9 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             yield return Shot("hud-3-tower-card");
 
             placer.CancelInteraction();
-            typeof(GrayboxTowerPlacer).GetField("_buildWorldPos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            typeof(TowerPlacer).GetField("_buildWorldPos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
                 .SetValue(placer, new Vector3(2f, 2f, 0f));
-            typeof(GrayboxTowerPlacer).GetField("_showBuildMenu", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            typeof(TowerPlacer).GetField("_showBuildMenu", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
                 .SetValue(placer, true);
             yield return Shot("hud-4-build-menu");
             placer.CancelInteraction();

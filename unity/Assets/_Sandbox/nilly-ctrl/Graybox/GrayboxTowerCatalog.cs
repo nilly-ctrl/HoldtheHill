@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HoldTheHill.Features.Towers;
 using UnityEngine;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
@@ -12,6 +13,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private List<GrayboxTowerData> _towers = new List<GrayboxTowerData>();
 
         public int Count => _towers.Count;
+
+        /// <summary>The towers in build bar order, as the shared placer reads them.</summary>
+        public IReadOnlyList<TowerData> Towers => _towers;
 
         public GrayboxTowerData this[int index] => _towers[index];
     }

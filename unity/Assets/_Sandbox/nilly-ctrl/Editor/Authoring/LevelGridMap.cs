@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Towers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,7 +30,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             Spill,
         }
 
-        /// <summary>GrayboxTowerPlacer.IsPositionClearOfPath, same as CLEARANCE in level_grid.py.</summary>
+        /// <summary>PathClearanceBlocker, same as CLEARANCE in level_grid.py.</summary>
         public const float Clearance = 1.2f;
 
         private static readonly (int Dx, int Dy)[] Steps = { (0, -1), (1, 0), (0, 1), (-1, 0) };

@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Towers;
 using TMPro;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private float _lift = 16f;
 
         private GrayboxTowerPlacer _placer;
-        private GrayboxTowerData _shownTower;
+        private TowerData _shownTower;
         private int _shownCost = -1;
         private int _shownState = -1;
 
