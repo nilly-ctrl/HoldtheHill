@@ -2,6 +2,7 @@
 //Gemini generated code
 //10.9.2026
 
+using HoldTheHill.Features.Towers;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -20,9 +21,9 @@ public class TowerCardUI : MonoBehaviour
     {
         myTowerData = data;
         
-        nameText.text = myTowerData.towerName;
-        costText.text = myTowerData.honeydewCost.ToString();
-        iconImage.sprite = myTowerData.towerIcon;
+        nameText.text = myTowerData.DisplayName;
+        costText.text = myTowerData.BaseCost.ToString();
+        iconImage.sprite = myTowerData.Icon;
 
         cardButton.onClick.RemoveAllListeners();
         cardButton.onClick.AddListener(OnCardClicked);
@@ -30,7 +31,6 @@ public class TowerCardUI : MonoBehaviour
 
     private void OnCardClicked()
     {
-        // Debug.Log($"Player clicked {myTowerData.towerName}. Ready to place {myTowerData.towerPrefab.name}!");
-        Debug.Log($"Player clicked {myTowerData.towerName}. Placement logic pending indev merge.");
+        Debug.Log($"Player clicked {myTowerData.DisplayName}. Placement logic pending indev merge.");
     }
 }
