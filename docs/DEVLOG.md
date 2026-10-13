@@ -26,6 +26,24 @@ Copy this to the top of the log:
 - What you or the team should do next
 ```
 
+## 2026-10-09 — Tower Shop Architecture Complete
+**Who:** Adam Montgomery, with AI assistance — see [AI use log](AI_DEVLOG.md)
+**Branch:** `Sandbox/Montgomery-Adam`
+
+**Worked on**
+- Architected dynamic Tower Shop UI using ScriptableObjects (TowerData). 
+- Built TowerShopManager.cs to instantiate UI cards into a ScrollRect and TowerCardUI.cs to map data to visuals. 
+- Analyzed nilly's Tower.cs to ensure architecture alignment. 
+- Debugged UI scaling issues.
+
+**Decisions**
+- Decouple UI from combat logic using data containers. 
+- Grouped UI into a TowerShopPanel master prefab. 
+- Commented out nilly's namespace and prefab references to maintain clean compilation until their fork is merged into Indev.
+
+**Problems / blockers**
+- Actual tower placement logic and prefab linking (pending Indev merge).
+
 ## 2026-10-02 — Dynamic Tower Card UI & Prefab Setup
 **Who:** Adam Montgomery, with AI assistance — see [AI use log](AI_DEVLOG.md)
 **Branch:** `Sandbox/Montgomery-Adam`
