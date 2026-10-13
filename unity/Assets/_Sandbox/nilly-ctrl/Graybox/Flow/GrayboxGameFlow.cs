@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;
+using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Towers;
 using HoldTheHill.Sandbox.UiKit;
 using UnityEngine;
@@ -8,16 +9,6 @@ using UnityEngine.InputSystem;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
-    /// <summary>Which screen the game is on.</summary>
-    public enum GameFlowState
-    {
-        Title,
-        Home,
-        Playing,
-        Paused,
-        RunEnd,
-    }
-
     /// <summary>What kind of run is being played.</summary>
     public enum GrayboxRunMode
     {
@@ -29,27 +20,25 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     }
 
     /// <summary>
-    /// The one owner of game state: which screen is up, whether time runs and how fast, and the
-    /// checkpoints that "restart" and "retry current wave" rewind to.
+    /// The graybox's run on top of <see cref="GameFlowController"/> (which screen is up, whether
+    /// time runs and how fast): what a run is, the checkpoints that "restart" and "retry current
+    /// wave" rewind to, records and honeydew.
     /// </summary>
     /// <remarks>
-    /// Nothing else should set <see cref="Time.timeScale"/>. Gameplay scripts ask
-    /// <see cref="GameplayActive"/> before reading input or drawing IMGUI, because IMGUI always
-    /// draws over a Canvas and would cover the menus.
+    /// Gameplay scripts ask <see cref="GameplayActive"/> before reading input or drawing IMGUI,
+    /// because IMGUI always draws over a Canvas and would cover the menus.
     ///
     /// Runs before other scripts so that on the frame Escape is pressed it can see whether the
     /// tower placer still has something to cancel, before the placer cancels it.
     /// </remarks>
     [DefaultExecutionOrder(-100)]
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Game Flow")]
-    public class GrayboxGameFlow : MonoBehaviour
+    public class GrayboxGameFlow : GameFlowController
     {
-        private static readonly float[] Speeds = { 1f, 2f, 4f };
-
         public static GrayboxGameFlow Instance { get; private set; }
 
-        /// <summary>Raised after every state change with (previous, current).</summary>
-        public static event Action<GameFlowState, GameFlowState> StateChanged;
+        /// <summary>Raised after every state change with (previous, current). The static twin of the base event, for the sandbox.</summary>
+        public static new event Action<GameFlowState, GameFlowState> StateChanged;
 
         /// <summary>Raised after the field has been rewound to a checkpoint (new run or wave retry).</summary>
         public static event Action FieldReset;
@@ -67,9 +56,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// controller, so gameplay scripts behave as before there.
         /// </summary>
         public static bool GameplayActive => Instance == null || Instance.State == GameFlowState.Playing;
-
-        [Tooltip("State on Play. Playing drops straight into the graybox; Title goes through the menus.")]
-        [SerializeField] private GameFlowState _initialState = GameFlowState.Playing;
 
         // Pause is GrayboxControls.Pause (Esc, or Start on a gamepad). The key first cancels a tower
         // placement or selection if there is any.
@@ -91,7 +77,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         // What this run has already added to the lifetime totals; null until its first ending.
         private GrayboxRunStats _counted;
 
-        public GameFlowState State { get; private set; }
         public GrayboxRunStats Stats { get; private set; } = new GrayboxRunStats();
         public bool LastRunWasVictory { get; private set; }
 
@@ -114,11 +99,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         /// <summary>What the last finished run changed in the records ("new best" and so on).</summary>
         public RunRecordResult LastRunResult { get; private set; }
-        public int SpeedIndex { get; private set; }
-        public int SpeedCount => Speeds.Length;
-
-        /// <summary>The fast-forward multiplier chosen, whether or not time is running now.</summary>
-        public float Speed => Speeds[SpeedIndex];
 
         /// <summary>True once a wave has started this run, so there is a wave to retry.</summary>
         public bool CanRetryWave => _waveStart != null;
@@ -126,7 +106,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>1-based wave "retry current wave" goes back to, or 0 when there is none.</summary>
         public int RetryWaveNumber => _waveStart != null ? _waveStart.WaveIndex + 1 : 0;
 
-        private void Awake()
+        protected override void Awake()
         {
             if (Instance != null && Instance != this)
             {
@@ -138,21 +118,20 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _spawner = FindAnyObjectByType<EnemySpawner>();
             _placer = FindAnyObjectByType<GrayboxTowerPlacer>();
             _custom = FindAnyObjectByType<GrayboxCustomSpawner>();
-            State = _initialState;
+            base.Awake();
 
             // Home loaded this scene to play it (GrayboxLevels.LoadAndPlay): skip the menus.
             GrayboxRunMode? pending = GrayboxLevels.TakePendingRun();
             if (pending.HasValue)
             {
                 Mode = pending.Value;
-                State = GameFlowState.Playing;
+                ForceState(GameFlowState.Playing);
             }
-
-            ApplyTimeScale();
         }
 
         private void OnEnable()
         {
+            base.StateChanged += ForwardStateChanged;
             EnemyHealth.Defeated += OnEnemyDefeated;
             GrayboxEconomy.OnBountyPaid += OnBountyPaid;
             GrayboxBaseHealth.OnGameFinished += OnGameFinished;
@@ -161,6 +140,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void OnDisable()
         {
+            base.StateChanged -= ForwardStateChanged;
             EnemyHealth.Defeated -= OnEnemyDefeated;
             GrayboxEconomy.OnBountyPaid -= OnBountyPaid;
             GrayboxBaseHealth.OnGameFinished -= OnGameFinished;
@@ -183,14 +163,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (!focused && GrayboxSettings.PauseOnFocusLoss && !Application.isEditor) Pause();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
             if (Instance != this) return;
 
             Instance = null;
-            // Leaving Play mode paused or sped up would carry the scale into the editor.
-            Time.timeScale = 1f;
+            base.OnDestroy();
         }
+
+        private static void ForwardStateChanged(GameFlowState previous, GameFlowState next) => StateChanged?.Invoke(previous, next);
 
         private void Update()
         {
@@ -240,7 +221,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _counted = null;
             _honeydewPaid = 0;
             _autoStartTimer = 0f;
-            SpeedIndex = 0;
+            SetSpeedIndex(0);
             FieldReset?.Invoke();
             Enter(GameFlowState.Playing);
         }
@@ -267,16 +248,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Enter(GameFlowState.Playing);
         }
 
-        public void Pause()
-        {
-            if (State == GameFlowState.Playing) Enter(GameFlowState.Paused);
-        }
-
-        public void Resume()
-        {
-            if (State == GameFlowState.Paused) Enter(GameFlowState.Playing);
-        }
-
         /// <summary>Abandons the run and clears the field.</summary>
         public void QuitToHome()
         {
@@ -290,14 +261,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Enter(GameFlowState.Title);
         }
 
-        public void SetSpeedIndex(int index)
-        {
-            SpeedIndex = Mathf.Clamp(index, 0, Speeds.Length - 1);
-            ApplyTimeScale();
-        }
-
-        public void CycleSpeed() => SetSpeedIndex((SpeedIndex + 1) % Speeds.Length);
-
         /// <summary>Called by <see cref="GrayboxEndlessMode"/> as each endless wave starts.</summary>
         public void ReportEndlessWave(int waveNumber)
         {
@@ -305,39 +268,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Stats.TotalWaves = 0; // no last wave to count towards
         }
 
-        public float SpeedAt(int index) => Speeds[Mathf.Clamp(index, 0, Speeds.Length - 1)];
-
-        /// <summary>
-        /// A speed the dev console asked for, or 0 for none. While set it replaces the chosen
-        /// speed whenever the game is playing; pause and the menus still freeze time.
-        /// </summary>
-        public float SpeedOverride { get; private set; }
-
-        /// <summary>Sets, or with 0 clears, the dev speed override. The flow stays the only writer of <see cref="Time.timeScale"/>.</summary>
-        public void SetSpeedOverride(float scale)
-        {
-            SpeedOverride = Mathf.Clamp(scale, 0f, 20f);
-            ApplyTimeScale();
-        }
-
         // ---------- Internals ----------
 
-        private void Enter(GameFlowState next)
+        protected override void Enter(GameFlowState next)
         {
             GameFlowState previous = State;
-            State = next;
-            ApplyTimeScale();
+            base.Enter(next);
 
             // Leaving play (pause, run end, quit) is the natural moment to write progress.
             if (previous == GameFlowState.Playing && next != GameFlowState.Playing) GrayboxSave.SaveIfDirty();
-
-            if (previous != next) StateChanged?.Invoke(previous, next);
-        }
-
-        private void ApplyTimeScale()
-        {
-            float speed = SpeedOverride > 0f ? SpeedOverride : Speeds[SpeedIndex];
-            Time.timeScale = State == GameFlowState.Playing ? speed : 0f;
         }
 
         private void LeaveRun()
