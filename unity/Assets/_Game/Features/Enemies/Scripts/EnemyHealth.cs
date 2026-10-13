@@ -84,7 +84,7 @@ namespace HoldTheHill.Features.Enemies
         /// <summary>Health when at full.</summary>
         public float MaxHealth => _maxHealth;
 
-        /// <summary>Gold awarded upon defeat.</summary>
+        /// <summary>Food awarded upon defeat.</summary>
         public int BountyValue { get => _bountyValue; set => _bountyValue = value; }
 
         /// <summary>Hill health lost when this enemy reaches the end of the path.</summary>
