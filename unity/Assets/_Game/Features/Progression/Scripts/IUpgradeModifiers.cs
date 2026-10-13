@@ -26,5 +26,8 @@ namespace HoldTheHill.Features.Progression
 
         /// <summary>Multiplier on the bounty an enemy pays. 1 = no bonus.</summary>
         float BountyMultiplier { get; }
+
+        /// <summary>Multiplier on what towers cost to build and upgrade. 1 = no discount.</summary>
+        float CostMultiplier { get; }
     }
 }
