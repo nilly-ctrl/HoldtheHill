@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
+using HoldTheHill.Features.Economy;
 using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
@@ -52,6 +53,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [SerializeField] private int[] _upgradeCosts = { 150, 300 };
 
         private readonly List<Tower> _towers = new List<Tower>();
+        private TowerCommands _commands;
         private Camera _mainCamera;
         private Tower _selectedTower;
 
@@ -118,6 +120,33 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private void Awake()
         {
             _mainCamera = Camera.main;
+            // The economy may wake after the placer, so the wallet is asked for each time.
+            _commands = new TowerCommands(() => GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.Wallet : null, _upgradeCosts);
+            _commands.Placed += OnPlaced;
+            _commands.Upgraded += OnUpgraded;
+            _commands.Sold += OnSold;
+        }
+
+        private void OnPlaced(Tower tower)
+        {
+            GrayboxSfx.PlayCue("Place", tower.transform.position);
+            SpriteClipPlayer.SpawnOneShot(_animLibrary, "FxBuild", "Rise", tower.transform.position, Quaternion.identity, 1f, 3);
+            _showBuildMenu = false;
+            _selectedTower = tower;
+            TowerPlaced?.Invoke(tower);
+        }
+
+        private void OnUpgraded(Tower tower)
+        {
+            GrayboxSfx.PlayCue("Upgrade", tower.transform.position);
+            TowerUpgraded?.Invoke(tower);
+        }
+
+        private void OnSold(Tower tower)
+        {
+            TowerSold?.Invoke(tower);
+            GrayboxSfx.PlayCue("Sell", tower.transform.position);
+            SpriteClipPlayer.SpawnOneShot(_animLibrary, "FxBuild", "Sell", tower.transform.position, Quaternion.identity, 1f, 3);
         }
 
         // ---------- commands, for the HUD panels and the build keys ----------
@@ -179,49 +208,18 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         /// <summary>What a tower costs to build, after Skill Tree discounts.</summary>
-        public int CostOf(GrayboxTowerData data)
-        {
-            return GetDiscountedCost(data.BaseCost);
-        }
+        public int CostOf(GrayboxTowerData data) => _commands.CostOf(data);
 
         /// <summary>True with no economy in the scene, so a bare test scene can still build.</summary>
-        public bool CanAfford(GrayboxTowerData data)
-        {
-            return CanAfford(data, CostOf(data));
-        }
+        public bool CanAfford(GrayboxTowerData data) => _commands.CanAfford(data);
 
         /// <summary>What upgrading this tower costs now, after Skill Tree discounts. 0 if it cannot be upgraded.</summary>
-        public int UpgradeCost(Tower tower)
-        {
-            if (tower == null || !tower.CanUpgrade || _upgradeCosts == null || _upgradeCosts.Length == 0)
-            {
-                return 0;
-            }
-
-            int step = Mathf.Clamp(tower.Level - 1, 0, _upgradeCosts.Length - 1);
-            return GetDiscountedCost(_upgradeCosts[step]);
-        }
+        public int UpgradeCost(Tower tower) => _commands.UpgradeCost(tower);
 
         /// <summary>Pays for and applies the next level of the selected tower. False if it cannot or it costs too much.</summary>
         public bool TryUpgradeSelected()
         {
-            Tower tower = _selectedTower;
-            if (tower == null || !tower.CanUpgrade)
-            {
-                return false;
-            }
-
-            int cost = UpgradeCost(tower);
-            if (GrayboxEconomy.Instance != null && !GrayboxEconomy.Instance.TrySpendFood(cost))
-            {
-                return false;
-            }
-
-            tower.Upgrade();
-            tower.TotalFoodInvested += cost;
-            GrayboxSfx.PlayCue("Upgrade", tower.transform.position);
-            TowerUpgraded?.Invoke(tower);
-            return true;
+            return _selectedTower != null && _commands.TryUpgrade(_selectedTower);
         }
 
         /// <summary>Sells the selected tower for its refund and closes its card.</summary>
@@ -233,12 +231,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 return;
             }
 
-            TowerSold?.Invoke(tower);
-            if (GrayboxEconomy.Instance != null) GrayboxEconomy.Instance.EarnFood(tower.RefundValue);
-            GrayboxSfx.PlayCue("Sell", tower.transform.position);
-            SpriteClipPlayer.SpawnOneShot(_animLibrary, "FxBuild", "Sell", tower.transform.position, Quaternion.identity, 1f, 3);
-            Destroy(tower.gameObject);
             _selectedTower = null;
+            _commands.Sell(tower);
         }
 
         // ---------- input ----------
@@ -395,7 +389,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Vector3 buildPos = BuildGrid.Snap(world);
 
             int cost = CostOf(info);
-            bool canAfford = CanAfford(info, cost);
+            bool canAfford = _commands.CanAfford(info);
             bool isClear = !BuildBlockers.Blocked(buildPos) && FindTowerAt(buildPos, TowerSpacing) == null;
             Color tint = canAfford && isClear ? new Color(0.6f, 1f, 0.6f, 0.75f) : new Color(1f, 0.4f, 0.4f, 0.65f);
 
@@ -417,48 +411,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _ghostRing.startColor = _ghostRing.endColor = tint;
         }
 
-        // Pays for a tower and places it. Does nothing if the gold isn't there.
+        // Pays for a tower and places it. Does nothing if the cost is not there.
         private void TryBuild(GrayboxTowerData data, Vector3 position)
         {
-            if (data == null || data.Prefab == null)
-            {
-                return;
-            }
-
-            int cost = GetDiscountedCost(data.BaseCost);
-            if (GrayboxEconomy.Instance != null && !GrayboxEconomy.Instance.TrySpend(data.CostResource, cost))
-            {
-                return;
-            }
-
-            Place(data, position, cost);
-        }
-
-        private static bool CanAfford(GrayboxTowerData data, int cost)
-        {
-            return GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(data.CostResource, cost);
+            _commands.TryBuild(data, position);
         }
 
         /// <summary>Places a tower from its prefab, without charging for it, and selects it.</summary>
         public Tower Place(GrayboxTowerData data, Vector3 position, int cost)
         {
-            Tower tower = Instantiate(data.Prefab, position, Quaternion.identity);
-            tower.name = data.DisplayName;
-            tower.TotalFoodInvested = cost;
-
-            GrayboxSfx.PlayCue("Place", position);
-            SpriteClipPlayer.SpawnOneShot(_animLibrary, "FxBuild", "Rise", position, Quaternion.identity, 1f, 3);
-
-            _showBuildMenu = false;
-            _selectedTower = tower;
-            TowerPlaced?.Invoke(tower);
-            return tower;
-        }
-
-        private int GetDiscountedCost(int baseCost)
-        {
-            float mult = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.CostMultiplier : 1.0f;
-            return Mathf.RoundToInt(baseCost * mult);
+            return _commands.Place(data, position, cost);
         }
     }
 }
