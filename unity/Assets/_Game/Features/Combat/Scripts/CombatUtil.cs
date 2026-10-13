@@ -54,6 +54,26 @@ namespace HoldTheHill.Features.Combat
             }
         }
 
+        /// <summary>The live damageable nearest to a point within a radius, or null.</summary>
+        public static IDamageable NearestDamageable(Vector2 from, float radius, LayerMask mask, List<IDamageable> buffer)
+        {
+            OverlapDamageables(from, radius, mask, buffer);
+
+            IDamageable best = null;
+            float bestSqr = float.PositiveInfinity;
+            for (int i = 0; i < buffer.Count; i++)
+            {
+                float sqr = ((Vector2)buffer[i].Transform.position - from).sqrMagnitude;
+                if (sqr < bestSqr)
+                {
+                    bestSqr = sqr;
+                    best = buffer[i];
+                }
+            }
+
+            return best;
+        }
+
         /// <summary>
         /// True if a target still exists and has health left. Use this rather than a
         /// plain null check anywhere an <see cref="IDamageable"/> is held across frames.
