@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HoldTheHill.Features.Towers;
 using UnityEngine;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
@@ -6,10 +7,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// <summary>
     /// The cells of a hand-drawn level where nothing can be built: cabinets, the fridge, table
     /// legs, spills, crumbs, the hill, and everything outside the map. Written into the scene by
-    /// <c>GrayboxLevelBuilder</c> from the level's text map; <see cref="GrayboxTowerPlacer"/>
-    /// asks it before placing. A scene without one (the graybox) blocks nothing.
+    /// <c>GrayboxLevelBuilder</c> from the level's text map; registered with
+    /// <see cref="BuildBlockers"/> while enabled, so the placer asks it before placing. A scene
+    /// without one (the graybox) blocks nothing.
     /// </summary>
-    public class GrayboxBuildMask : MonoBehaviour
+    public class GrayboxBuildMask : MonoBehaviour, IBuildBlocker
     {
         [Tooltip("Blocked cells. A cell's centre sits on whole world units, where towers snap.")]
         [SerializeField] private Vector2Int[] _blocked = new Vector2Int[0];
@@ -17,10 +19,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [Tooltip("The map's cells. Anything outside is blocked too.")]
         [SerializeField] private RectInt _bounds;
 
-        private static GrayboxBuildMask s_instance;
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetStatics() => s_instance = null;
         private HashSet<Vector2Int> _lookup;
 
         public void Configure(IEnumerable<Vector2Int> blocked, RectInt bounds)
@@ -30,30 +28,22 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _lookup = null;
         }
 
-        /// <summary>True if a tower cannot stand at <paramref name="point"/> in the current level.</summary>
-        public static bool Blocks(Vector3 point)
+        private void OnEnable()
         {
-            if (s_instance == null)
-            {
-                return false;
-            }
-
-            s_instance._lookup ??= new HashSet<Vector2Int>(s_instance._blocked);
-            var cell = new Vector2Int(Mathf.RoundToInt(point.x), Mathf.RoundToInt(point.y));
-            return !s_instance._bounds.Contains(cell) || s_instance._lookup.Contains(cell);
+            BuildBlockers.Register(this);
         }
 
-        private void Awake()
+        private void OnDisable()
         {
-            s_instance = this;
+            BuildBlockers.Unregister(this);
         }
 
-        private void OnDestroy()
+        /// <summary>True if a tower cannot stand on the cell at <paramref name="cellCentre"/> in this level.</summary>
+        public bool Blocks(Vector3 cellCentre)
         {
-            if (s_instance == this)
-            {
-                s_instance = null;
-            }
+            _lookup ??= new HashSet<Vector2Int>(_blocked);
+            Vector2Int cell = BuildGrid.CellOf(cellCentre);
+            return !_bounds.Contains(cell) || _lookup.Contains(cell);
         }
     }
 }

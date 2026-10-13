@@ -40,7 +40,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Tower Placer & Inspector")]
     public class GrayboxTowerPlacer : MonoBehaviour
     {
-        private const float PathClearance = 1.2f;
         private const float TowerSpacing = 0.8f;
 
         [Tooltip("The towers that can be built, in build bar order.")]
@@ -54,7 +53,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private readonly List<Tower> _towers = new List<Tower>();
         private Camera _mainCamera;
-        private EnemyPath _path;
         private Tower _selectedTower;
 
         private bool _showBuildMenu;
@@ -120,7 +118,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private void Awake()
         {
             _mainCamera = Camera.main;
-            _path = FindAnyObjectByType<EnemyPath>();
         }
 
         // ---------- commands, for the HUD panels and the build keys ----------
@@ -295,8 +292,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 // If currently in active placement mode from the build bar
                 if (_activePlacementTypeIndex >= 0 && _activePlacementTypeIndex < TowerCount)
                 {
-                    Vector3 buildPos = SnapToGrid(worldPoint);
-                    if (IsPositionClearOfPath(buildPos, PathClearance) && FindTowerAt(buildPos, TowerSpacing) == null)
+                    Vector3 buildPos = BuildGrid.Snap(worldPoint);
+                    if (!BuildBlockers.Blocked(buildPos) && FindTowerAt(buildPos, TowerSpacing) == null)
                     {
                         TryBuild(_catalog[_activePlacementTypeIndex], buildPos);
                     }
@@ -314,9 +311,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 else
                 {
                     // Clicked empty ground
-                    if (IsPositionClearOfPath(worldPoint, PathClearance))
+                    if (!BuildBlockers.Blocked(BuildGrid.Snap(worldPoint)))
                     {
-                        _buildWorldPos = SnapToGrid(worldPoint);
+                        _buildWorldPos = BuildGrid.Snap(worldPoint);
                         _showBuildMenu = true;
                         _selectedTower = null;
                     }
@@ -338,38 +335,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private Tower FindTowerAt(Vector3 point, float radius)
         {
             Tower.GetActive(_towers);
-            foreach (Tower t in _towers)
-            {
-                if (t != null && Vector2.Distance(point, t.transform.position) <= radius)
-                {
-                    return t;
-                }
-            }
-            return null;
-        }
-
-        private bool IsPositionClearOfPath(Vector3 point, float minDistance)
-        {
-            // Hand-drawn levels mark cabinets, spills and the like as unbuildable.
-            if (GrayboxBuildMask.Blocks(point))
-            {
-                return false;
-            }
-
-            if (_path == null)
-            {
-                _path = FindAnyObjectByType<EnemyPath>();
-                if (_path == null)
-                {
-                    return true;
-                }
-            }
-
-            return _path.DistanceToRoute(point) >= minDistance;
+            return BuildRules.TowerAt(point, _towers, radius);
         }
 
         /// <summary>The centre of the grid cell a world position falls in.</summary>
-        public static Vector3 Snap(Vector3 position) => SnapToGrid(position);
+        public static Vector3 Snap(Vector3 position) => BuildGrid.Snap(position);
 
         /// <summary>
         /// True if a tower could stand on the cell at this position: clear of the trail and of
@@ -378,27 +348,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// </summary>
         public bool CanBuildAt(Vector3 position, Tower ignore = null)
         {
-            Vector3 cell = SnapToGrid(position);
-            if (!IsPositionClearOfPath(cell, PathClearance))
-            {
-                return false;
-            }
-
             Tower.GetActive(_towers);
-            foreach (Tower tower in _towers)
-            {
-                if (tower != ignore && Vector2.Distance(cell, tower.transform.position) <= TowerSpacing)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private static Vector3 SnapToGrid(Vector3 pos)
-        {
-            return new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), 0f);
+            return BuildRules.CanBuildAt(position, _towers, ignore, TowerSpacing, BuildBlockers.All);
         }
 
         // ---------- placement ghost ----------
@@ -441,11 +392,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxTowerData info = _catalog[index];
             Vector3 world = _mainCamera.ScreenToWorldPoint(pointer);
             world.z = 0f;
-            Vector3 buildPos = SnapToGrid(world);
+            Vector3 buildPos = BuildGrid.Snap(world);
 
             int cost = CostOf(info);
             bool canAfford = CanAfford(info, cost);
-            bool isClear = IsPositionClearOfPath(buildPos, PathClearance) && FindTowerAt(buildPos, TowerSpacing) == null;
+            bool isClear = !BuildBlockers.Blocked(buildPos) && FindTowerAt(buildPos, TowerSpacing) == null;
             Color tint = canAfford && isClear ? new Color(0.6f, 1f, 0.6f, 0.75f) : new Color(1f, 0.4f, 0.4f, 0.65f);
 
             Preview = new PlacementPreview { Active = true, Tower = info, Cell = buildPos, Clear = isClear, CanAfford = canAfford, Cost = cost };

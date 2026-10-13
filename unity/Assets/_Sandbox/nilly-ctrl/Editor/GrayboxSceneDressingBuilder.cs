@@ -265,6 +265,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             var go = new GameObject("Enemy Path");
             EnemyPath path = go.AddComponent<EnemyPath>();
+            go.AddComponent<PathClearanceBlocker>();
 
             for (int i = 0; i < Route.Length; i++)
             {

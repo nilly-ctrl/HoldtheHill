@@ -108,6 +108,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             // Route.
             Transform path = Root("Enemy Path").transform;
+            if (path.GetComponent<PathClearanceBlocker>() == null)
+            {
+                path.gameObject.AddComponent<PathClearanceBlocker>();
+            }
+
             for (int i = path.childCount - 1; i >= 0; i--)
             {
                 UnityEngine.Object.DestroyImmediate(path.GetChild(i).gameObject);
