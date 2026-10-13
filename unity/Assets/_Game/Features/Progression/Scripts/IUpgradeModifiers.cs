@@ -23,5 +23,8 @@ namespace HoldTheHill.Features.Progression
 
         /// <summary>Fraction of invested cost returned when a tower is dismantled.</summary>
         float RefundPercentage { get; }
+
+        /// <summary>Multiplier on the bounty an enemy pays. 1 = no bonus.</summary>
+        float BountyMultiplier { get; }
     }
 }

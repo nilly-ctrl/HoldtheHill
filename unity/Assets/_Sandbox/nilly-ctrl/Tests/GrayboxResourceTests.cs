@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using HoldTheHill.Features.Economy;
 using HoldTheHill.Sandbox.NillyCtrl;
 using NUnit.Framework;
 using UnityEditor;
@@ -15,7 +16,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
 
         private GameObject _holder;
         private GameObject _pickup;
-        private GrayboxResourceData _jelly;
+        private ResourceData _jelly;
 
         private static GameObject Pickup(string name) =>
             AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Pickups/{name}.prefab");
@@ -24,7 +25,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         public void SetUp()
         {
             _holder = new GameObject("Economy");
-            _jelly = ScriptableObject.CreateInstance<GrayboxResourceData>();
+            _jelly = ScriptableObject.CreateInstance<ResourceData>();
         }
 
         [TearDown]
@@ -52,9 +53,9 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         public void Wallet_KeepsOtherResourcesApartFromTheMainOne()
         {
             var economy = _holder.AddComponent<GrayboxEconomy>();
-            GrayboxResourceData changed = null;
+            ResourceData changed = null;
             int amount = -1;
-            System.Action<GrayboxResourceData, int> listen = (r, a) => { changed = r; amount = a; };
+            System.Action<ResourceData, int> listen = (r, a) => { changed = r; amount = a; };
             GrayboxEconomy.OnResourceChanged += listen;
             try
             {
@@ -81,7 +82,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         {
             GameObject pickupBase = Pickup("PickupBase");
             Assert.IsNotNull(pickupBase, "Run Tools > Hold the Hill > Build Graybox Combat Test.");
-            var food = AssetDatabase.LoadAssetAtPath<GrayboxResourceData>($"{Root}/Data/Economy/Food.asset");
+            var food = AssetDatabase.LoadAssetAtPath<ResourceData>($"{Root}/Data/Economy/Food.asset");
             Assert.IsNotNull(food);
 
             int last = 0;
@@ -105,7 +106,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             var economy = _holder.AddComponent<GrayboxEconomy>();
             var wallet = new SerializedObject(economy);
             wallet.FindProperty("_mainResource").objectReferenceValue =
-                AssetDatabase.LoadAssetAtPath<GrayboxResourceData>($"{Root}/Data/Economy/Food.asset");
+                AssetDatabase.LoadAssetAtPath<ResourceData>($"{Root}/Data/Economy/Food.asset");
             wallet.ApplyModifiedPropertiesWithoutUndo();
             _pickup = Object.Instantiate(Pickup("CrumbBig"));
             var pickup = _pickup.GetComponent<GrayboxPickup>();

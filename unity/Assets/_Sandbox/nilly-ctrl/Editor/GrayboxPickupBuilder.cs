@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Economy;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,15 +22,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static string PrefabPath(string name) => $"{GrayboxRoot}/Prefabs/{PrefabFolder}/{name}.prefab";
 
         /// <summary>The run's main resource. Made on first use.</summary>
-        public static GrayboxResourceData Food()
+        public static ResourceData Food()
         {
             GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
             GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Data", "Economy");
 
-            var food = AssetDatabase.LoadAssetAtPath<GrayboxResourceData>(FoodPath);
+            var food = AssetDatabase.LoadAssetAtPath<ResourceData>(FoodPath);
             if (food == null)
             {
-                food = ScriptableObject.CreateInstance<GrayboxResourceData>();
+                food = ScriptableObject.CreateInstance<ResourceData>();
                 AssetDatabase.CreateAsset(food, FoodPath);
                 GrayboxBuildKit.Apply(food, so =>
                 {
@@ -48,7 +49,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static GameObject BuildPrefabs(Sprite circle)
         {
             GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PrefabFolder);
-            GrayboxResourceData food = Food();
+            ResourceData food = Food();
 
             // What every pickup shares: something to see, and the component that collects it.
             var baseObject = new GameObject("PickupBase");
@@ -62,7 +63,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         private static GameObject Crumb(
-            GameObject pickupBase, string name, GrayboxResourceData resource, int amount, float size, Color color, float lifetime)
+            GameObject pickupBase, string name, ResourceData resource, int amount, float size, Color color, float lifetime)
         {
             var go = (GameObject)PrefabUtility.InstantiatePrefab(pickupBase);
             go.name = name;

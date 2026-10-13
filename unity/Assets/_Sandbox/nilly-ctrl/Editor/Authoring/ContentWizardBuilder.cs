@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Economy;
 using System;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
@@ -70,7 +71,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
         public sealed class PickupSpec
         {
             public string Id;
-            public GrayboxResourceData Resource;
+            public ResourceData Resource;
             public int Amount = 5;
             public float Size = 0.3f;
             public float Lifetime = 12f;

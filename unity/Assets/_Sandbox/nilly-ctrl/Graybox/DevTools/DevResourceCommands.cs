@@ -1,4 +1,5 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+using HoldTheHill.Features.Economy;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 return "Skill points: " + tree.SkillPoints + ".";
             }
 
-            foreach (GrayboxResourceData data in Resources.FindObjectsOfTypeAll<GrayboxResourceData>())
+            foreach (ResourceData data in Resources.FindObjectsOfTypeAll<ResourceData>())
             {
                 if (data != null && MatchesResource(data, key))
                 {
@@ -72,7 +73,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             throw new DevCommandException("No resource '" + what + "'. Try: list resources");
         }
 
-        internal static bool MatchesResource(GrayboxResourceData data, string lowerKey)
+        internal static bool MatchesResource(ResourceData data, string lowerKey)
         {
             return string.Equals(data.Id, lowerKey, StringComparison.OrdinalIgnoreCase)
                 || string.Equals(data.DisplayName, lowerKey, StringComparison.OrdinalIgnoreCase);

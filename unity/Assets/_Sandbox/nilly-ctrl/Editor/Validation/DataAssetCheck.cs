@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Economy;
 using System.Collections.Generic;
 using System.IO;
 using HoldTheHill.Features.Combat;
@@ -23,7 +24,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
         {
             foreach (var (path, tower) in GrayboxProjectValidator.FindAll<GrayboxTowerData>(root)) CheckTower(tower, path, findings);
             foreach (var (path, boss) in GrayboxProjectValidator.FindAll<GrayboxBossData>(root)) CheckBoss(boss, path, findings);
-            foreach (var (path, resource) in GrayboxProjectValidator.FindAll<GrayboxResourceData>(root)) CheckResource(resource, path, findings);
+            foreach (var (path, resource) in GrayboxProjectValidator.FindAll<ResourceData>(root)) CheckResource(resource, path, findings);
             foreach (var (path, powerUp) in GrayboxProjectValidator.FindAll<GrayboxPowerUpData>(root)) CheckPowerUp(powerUp, path, findings);
             foreach (var (path, species) in GrayboxProjectValidator.FindAll<GrayboxSpeciesData>(root)) CheckSpecies(species, path, findings);
             foreach (var (path, ability) in GrayboxProjectValidator.FindAll<GrayboxAbilityData>(root)) CheckAbility(ability, path, findings);
@@ -73,7 +74,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             CheckEnemyPrefab(findings, data.Prefab, "Boss prefab", path);
         }
 
-        private static void CheckResource(GrayboxResourceData data, string path, List<ValidationFinding> findings)
+        private static void CheckResource(ResourceData data, string path, List<ValidationFinding> findings)
         {
             Empty(findings, data.Id, "id", path, ValidationSeverity.Error);
             Empty(findings, data.DisplayName, "display name", path, ValidationSeverity.Error);

@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Economy;
 using System;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
@@ -47,7 +48,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             _effectNames = _effectTypes.ConvertAll(t => t.Name).ToArray();
             if (_pickup.Resource == null)
             {
-                _pickup.Resource = AssetDatabase.LoadAssetAtPath<GrayboxResourceData>(GrayboxPickupBuilder.FoodPath);
+                _pickup.Resource = AssetDatabase.LoadAssetAtPath<ResourceData>(GrayboxPickupBuilder.FoodPath);
             }
         }
 
@@ -161,8 +162,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                 MessageType.None);
 
             _pickup.Id = EditorGUILayout.TextField("Id (prefab name)", _pickup.Id);
-            _pickup.Resource = (GrayboxResourceData)EditorGUILayout.ObjectField(
-                "Resource", _pickup.Resource, typeof(GrayboxResourceData), false);
+            _pickup.Resource = (ResourceData)EditorGUILayout.ObjectField(
+                "Resource", _pickup.Resource, typeof(ResourceData), false);
             _pickup.Amount = Mathf.Max(1, EditorGUILayout.IntField("Amount", _pickup.Amount));
             _pickup.Size = Mathf.Max(0.1f, EditorGUILayout.FloatField("Size", _pickup.Size));
             _pickup.Lifetime = Mathf.Max(0f, EditorGUILayout.FloatField("Lifetime (s)", _pickup.Lifetime));

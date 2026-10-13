@@ -1,32 +1,25 @@
 using System;
-using System.Collections.Generic;
-using HoldTheHill.Features.Enemies;
+using HoldTheHill.Features.Economy;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
     /// <summary>
-    /// Economy manager tracking Gold earnings from enemy bounties, spendings on tower builds/upgrades,
-    /// and refunds on tower dismantling.
+    /// The graybox's wallet: a <see cref="WalletBehaviour"/> with the static <c>Instance</c>,
+    /// events and Food shorthands the sandbox still reaches for. A shim until the scenes hold a
+    /// reference to the wallet themselves (step 4b of <c>docs/CODEBASE_CONVERGENCE.md</c>).
     /// </summary>
-    /// <remarks>
-    /// This is also the run's wallet. "Gold" is the main resource (the Food asset, when one is
-    /// assigned); <see cref="Get"/>, <see cref="Earn"/>, <see cref="CanAfford(GrayboxResourceData, int)"/>
-    /// and <see cref="TrySpend"/> take any <see cref="GrayboxResourceData"/>, and treat null as
-    /// the main one.
-    /// </remarks>
-    public class GrayboxEconomy : MonoBehaviour
+    public class GrayboxEconomy : WalletBehaviour
     {
         public static GrayboxEconomy Instance { get; private set; }
 
         public static event Action<int> OnFoodChanged;
 
-        /// <summary>Gold paid for a kill, after skill bonuses. Refunds and cheats do not raise it.</summary>
+        /// <summary>Food paid for a kill, after skill bonuses. Refunds and cheats do not raise it.</summary>
         public static event Action<int> OnBountyPaid;
 
         /// <summary>Raised when the amount of any resource changes, with the resource and its new amount.</summary>
-        public static event Action<GrayboxResourceData, int> OnResourceChanged;
+        public static event Action<ResourceData, int> OnResourceChanged;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics()
@@ -37,84 +30,25 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             OnResourceChanged = null;
         }
 
-        [Header("Starting Economy")]
-        [Tooltip("The main resource: what bounties pay and towers cost by default. Its starting amount is used when set.")]
-        [SerializeField] private GrayboxResourceData _mainResource;
-        [Tooltip("Starting amount when no main resource is assigned.")]
-        [SerializeField, FormerlySerializedAs("_startingGold")] private int _startingFood = 500;
-
-        // Resources other than the main one.
-        private readonly Dictionary<GrayboxResourceData, int> _others = new Dictionary<GrayboxResourceData, int>();
-
-        public int CurrentFood { get; private set; }
-
-        public GrayboxResourceData MainResource => _mainResource;
+        public int CurrentFood => Wallet.MainAmount;
 
         private void Awake()
         {
             Instance = this;
-            CurrentFood = _mainResource != null ? _mainResource.StartingAmount : _startingFood;
         }
 
-        private bool IsMain(GrayboxResourceData resource) => resource == null || resource == _mainResource;
-
-        /// <summary>How much of a resource the player holds. A resource never earned starts at its starting amount.</summary>
-        public int Get(GrayboxResourceData resource)
+        protected override void OnEnable()
         {
-            if (IsMain(resource))
-            {
-                return CurrentFood;
-            }
-
-            return _others.TryGetValue(resource, out int amount) ? amount : resource.StartingAmount;
+            base.OnEnable();
+            Wallet.Changed += ForwardChanged;
+            BountyPaid += ForwardBounty;
         }
 
-        public void Earn(GrayboxResourceData resource, int amount)
+        protected override void OnDisable()
         {
-            if (amount <= 0) return;
-
-            if (IsMain(resource))
-            {
-                EarnFood(amount);
-                return;
-            }
-
-            Set(resource, Get(resource) + amount);
-        }
-
-        public bool CanAfford(GrayboxResourceData resource, int amount)
-        {
-            return Get(resource) >= amount;
-        }
-
-        public bool TrySpend(GrayboxResourceData resource, int amount)
-        {
-            if (IsMain(resource))
-            {
-                return TrySpendFood(amount);
-            }
-
-            if (amount <= 0) return true;
-            if (!CanAfford(resource, amount)) return false;
-
-            Set(resource, Get(resource) - amount);
-            return true;
-        }
-
-        private void Set(GrayboxResourceData resource, int amount)
-        {
-            _others[resource] = amount;
-            OnResourceChanged?.Invoke(resource, amount);
-        }
-
-        private void OnEnable()
-        {
-            EnemyHealth.Defeated += OnEnemyDefeated;
-        }
-
-        private void OnDisable()
-        {
-            EnemyHealth.Defeated -= OnEnemyDefeated;
+            base.OnDisable();
+            Wallet.Changed -= ForwardChanged;
+            BountyPaid -= ForwardBounty;
         }
 
         private void OnDestroy()
@@ -122,51 +56,33 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (Instance == this) Instance = null;
         }
 
-        private void OnEnemyDefeated(GameObject enemyObj)
+        private void ForwardChanged(ResourceData resource, int amount)
         {
-            if (enemyObj != null)
+            if (resource == null || resource == MainResource)
             {
-                var health = enemyObj.GetComponent<EnemyHealth>();
-                if (health != null)
-                {
-                    float mult = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.BountyMultiplier : 1.0f;
-                    mult *= GrayboxUpgrades.BountyMultiplier; // permanent upgrade bought at Home
-                    int bounty = Mathf.RoundToInt(health.BountyValue * mult);
-                    EarnFood(bounty);
-                    if (bounty > 0) OnBountyPaid?.Invoke(bounty);
-                }
+                OnFoodChanged?.Invoke(amount);
             }
+
+            OnResourceChanged?.Invoke(resource, amount);
         }
 
-        public void EarnFood(int amount)
-        {
-            if (amount <= 0) return;
-            CurrentFood += amount;
-            OnFoodChanged?.Invoke(CurrentFood);
-            OnResourceChanged?.Invoke(_mainResource, CurrentFood);
-        }
+        private static void ForwardBounty(int amount) => OnBountyPaid?.Invoke(amount);
 
-        public bool CanAfford(int amount)
-        {
-            return Instance == null || CurrentFood >= amount;
-        }
+        /// <summary>How much of a resource the player holds. Null means Food.</summary>
+        public int Get(ResourceData resource) => Wallet.Get(resource);
 
-        public bool TrySpendFood(int amount)
-        {
-            if (amount <= 0) return true;
-            if (!CanAfford(amount)) return false;
+        public void Earn(ResourceData resource, int amount) => Wallet.Earn(resource, amount);
 
-            CurrentFood -= amount;
-            OnFoodChanged?.Invoke(CurrentFood);
-            OnResourceChanged?.Invoke(_mainResource, CurrentFood);
-            return true;
-        }
+        public bool CanAfford(ResourceData resource, int amount) => Wallet.CanAfford(resource, amount);
 
-        public void ResetFood(int amount = 500)
-        {
-            CurrentFood = amount;
-            OnFoodChanged?.Invoke(CurrentFood);
-            OnResourceChanged?.Invoke(_mainResource, CurrentFood);
-        }
+        public bool TrySpend(ResourceData resource, int amount) => Wallet.TrySpend(resource, amount);
+
+        public void EarnFood(int amount) => Wallet.Earn(null, amount);
+
+        public bool CanAfford(int amount) => Wallet.CanAfford(null, amount);
+
+        public bool TrySpendFood(int amount) => Wallet.TrySpend(null, amount);
+
+        public void ResetFood(int amount = 500) => Wallet.Set(null, amount);
     }
 }

@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Economy;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,7 +34,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             foreach (var (path, item) in GrayboxProjectValidator.FindAll<GrayboxSpeciesData>(root)) others.Add(new KeyValuePair<string, string>(item.Id, path));
             ReportDuplicates(findings, others, "species");
             others.Clear();
-            foreach (var (path, item) in GrayboxProjectValidator.FindAll<GrayboxResourceData>(root)) others.Add(new KeyValuePair<string, string>(item.Id, path));
+            foreach (var (path, item) in GrayboxProjectValidator.FindAll<ResourceData>(root)) others.Add(new KeyValuePair<string, string>(item.Id, path));
             ReportDuplicates(findings, others, "resource");
 
             CheckPrerequisites(root, index, findings);

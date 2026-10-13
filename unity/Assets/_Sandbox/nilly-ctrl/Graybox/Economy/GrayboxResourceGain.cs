@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Economy;
 using UnityEngine;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
@@ -7,11 +8,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     public class GrayboxResourceGain : GrayboxPickupEffect
     {
         [Tooltip("What is gained. Empty means the run's main resource.")]
-        [SerializeField] private GrayboxResourceData _resource;
+        [SerializeField] private ResourceData _resource;
 
         [SerializeField, Min(1)] private int _amount = 5;
 
-        public GrayboxResourceData Resource => _resource;
+        public ResourceData Resource => _resource;
 
         public int Amount => _amount;
 

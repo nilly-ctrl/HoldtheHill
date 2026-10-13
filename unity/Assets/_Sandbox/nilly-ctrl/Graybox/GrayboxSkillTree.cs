@@ -75,6 +75,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public float FrostDebuffDamageMultiplier => _stats[(int)SkillStat.FrostDebuffDamageMultiplier];
 
         public float BountyMultiplier => _stats[(int)SkillStat.BountyMultiplier];
+
+        // What the wallet pays: the run's skill bonus times the permanent upgrade bought at Home.
+        float IUpgradeModifiers.BountyMultiplier => BountyMultiplier * GrayboxUpgrades.BountyMultiplier;
         public float CostMultiplier => _stats[(int)SkillStat.CostMultiplier];
         public float RefundPercentage => _stats[(int)SkillStat.RefundPercentage];
 

@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Economy;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             ReportUnreferenced<GrayboxBossData>(root, index, findings, "boss data");
             ReportUnreferenced<GrayboxPowerUpData>(root, index, findings, "power-up data");
             ReportUnreferenced<GrayboxSpeciesData>(root, index, findings, "species data");
-            ReportUnreferenced<GrayboxResourceData>(root, index, findings, "resource data");
+            ReportUnreferenced<ResourceData>(root, index, findings, "resource data");
             ReportUnreferenced<GrayboxAbilityData>(root, index, findings, "ability data");
         }
 

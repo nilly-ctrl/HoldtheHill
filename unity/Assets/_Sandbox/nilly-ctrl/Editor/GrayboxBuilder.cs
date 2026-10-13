@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Economy;
 using System.Collections.Generic;
 using System.Linq;
 using HoldTheHill.Features.Combat;
@@ -167,7 +168,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private static void BuildEconomy()
         {
             var go = new GameObject("GrayboxEconomy");
-            GrayboxResourceData food = GrayboxPickupBuilder.Food();
+            ResourceData food = GrayboxPickupBuilder.Food();
             GrayboxBuildKit.Apply(go.AddComponent<GrayboxEconomy>(), so => so.FindProperty("_mainResource").objectReferenceValue = food);
         }
 

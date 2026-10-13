@@ -1,4 +1,5 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+using HoldTheHill.Features.Economy;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -89,7 +90,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                         text.Append("  ").Append(economy.MainResource.Id).Append(" (main)");
                     }
 
-                    foreach (GrayboxResourceData data in Resources.FindObjectsOfTypeAll<GrayboxResourceData>())
+                    foreach (ResourceData data in Resources.FindObjectsOfTypeAll<ResourceData>())
                     {
                         if (data != null && (economy == null || data != economy.MainResource)) text.Append("  ").Append(data.Id);
                     }
