@@ -3,25 +3,6 @@ using UnityEngine;
 
 namespace HoldTheHill.Features.Combat
 {
-    /// <summary>How a projectile travels once it leaves the tower.</summary>
-    public enum FlightMode
-    {
-        /// <summary>Straight line in the direction it was fired.</summary>
-        Linear,
-
-        /// <summary>Steers toward its target. Overshoots and loops back if the target dodges.</summary>
-        Homing,
-
-        /// <summary>Parabolic arc to a landing point, ignoring whatever is in between.</summary>
-        Lobbed,
-
-        /// <summary>Resolves the moment it is fired, with no travel time.</summary>
-        Instant,
-
-        /// <summary>Hovers in place, picks a target, then dives into it at speed.</summary>
-        SeekAndDestroy
-    }
-
     /// <summary>
     /// One shot in flight. Handles travel, hit detection, damage, splash, status
     /// effects and ground hazards, then returns itself to its pool.
@@ -107,22 +88,12 @@ namespace HoldTheHill.Features.Combat
         private readonly Dictionary<IDamageable, float> _recentHits = new Dictionary<IDamageable, float>();
         private readonly List<IDamageable> _overlapBuffer = new List<IDamageable>();
 
+        private readonly ProjectileFlight _flight = new ProjectileFlight();
+
         private ProjectilePool _pool;
         private IDamageable _target;
-        private Vector2 _direction = Vector2.right;
-        private float _age;
         private int _pierceCount;
         private bool _isReleased;
-
-        // Lobbed state.
-        private Vector2 _launchPoint;
-        private Vector2 _landingPoint;
-        private float _arcProgress;
-        private float _arcDuration = 1f;
-
-        // Seek-and-destroy state.
-        private Vector2 _loiterOrigin;
-        private bool _isDiving;
 
         /// <summary>
         /// Raised each time any shot is launched, after it has been aimed and before it moves.
@@ -168,37 +139,35 @@ namespace HoldTheHill.Features.Combat
             transform.position = origin;
 
             _target = target;
-            _age = 0f;
             _pierceCount = 0;
             _isReleased = false;
-            _isDiving = false;
-            _arcProgress = 0f;
             _recentHits.Clear();
 
-            Vector2 toTarget = IsTargetAlive(target)
-                ? (Vector2)target.Transform.position - origin
-                : direction;
-
-            _direction = toTarget.sqrMagnitude > 0.0001f ? toTarget.normalized : Vector2.right;
-            FaceDirection(_direction);
+            _flight.Launch(FlightSettings, origin, PositionOf(target), direction);
+            FaceDirection(_flight.Facing);
             Launched?.Invoke(this);
 
-            switch (_flightMode)
+            if (_flightMode == FlightMode.Instant)
             {
-                case FlightMode.Lobbed:
-                    _launchPoint = origin;
-                    _landingPoint = IsTargetAlive(target) ? (Vector2)target.Transform.position : origin + direction;
-                    _arcDuration = Mathf.Max(0.1f, Vector2.Distance(_launchPoint, _landingPoint) / _speed);
-                    break;
-
-                case FlightMode.SeekAndDestroy:
-                    _loiterOrigin = origin;
-                    break;
-
-                case FlightMode.Instant:
-                    ResolveInstant(origin, target, direction);
-                    break;
+                ResolveInstant(origin, target, direction);
             }
+        }
+
+        private ProjectileFlight.Settings FlightSettings => new ProjectileFlight.Settings
+        {
+            Mode = _flightMode,
+            Speed = _speed,
+            TurnRate = _turnRate,
+            Lifetime = _lifetime,
+            ArcHeight = _arcHeight,
+            LoiterDuration = _loiterDuration,
+            DiveSpeedMultiplier = _diveSpeedMultiplier,
+            LoiterBobAmplitude = _loiterBobAmplitude,
+        };
+
+        private static Vector2? PositionOf(IDamageable target)
+        {
+            return IsTargetAlive(target) ? (Vector2)target.Transform.position : (Vector2?)null;
         }
 
         protected virtual void Update()
@@ -209,103 +178,35 @@ namespace HoldTheHill.Features.Combat
             }
 
             float dt = Time.deltaTime;
-            _age += dt;
-            if (_age >= _lifetime)
+            if (!IsTargetAlive(_target) && _flight.WantsTarget(dt))
+            {
+                _target = FindNearestTarget(transform.position, float.PositiveInfinity);
+            }
+
+            _flight.Advance(dt, PositionOf(_target));
+            if (_flight.HasExpired)
             {
                 Expire();
                 return;
             }
 
+            transform.position = _flight.Position;
+            FaceDirection(_flight.Facing);
+
             switch (_flightMode)
             {
-                case FlightMode.Linear:
-                    MoveLinear(dt);
-                    break;
-                case FlightMode.Homing:
-                    MoveHoming(dt);
-                    break;
                 case FlightMode.Lobbed:
-                    MoveLobbed(dt);
+                    if (_flight.HasLanded)
+                    {
+                        Detonate(_flight.Position, null);
+                    }
+
                     return; // Lobbed only detonates on landing, not on contact.
-                case FlightMode.SeekAndDestroy:
-                    MoveSeekAndDestroy(dt);
-                    break;
                 case FlightMode.Instant:
                     return; // Already resolved in Launch.
             }
 
             CheckForHits();
-        }
-
-        private void MoveLinear(float dt)
-        {
-            transform.position += (Vector3)(_direction * (_speed * dt));
-        }
-
-        // Turns toward the target at a limited rate while moving at constant speed. A slow
-        // turn rate means the shot sails past a dodging target and curves back for another pass.
-        private void MoveHoming(float dt)
-        {
-            if (!IsTargetAlive(_target))
-            {
-                _target = FindNearestTarget(transform.position, float.PositiveInfinity);
-            }
-
-            if (IsTargetAlive(_target))
-            {
-                Vector2 desired = ((Vector2)_target.Transform.position - (Vector2)transform.position).normalized;
-                float maxRadians = _turnRate * Mathf.Deg2Rad * dt;
-                _direction = ((Vector2)Vector3.RotateTowards(_direction, desired, maxRadians, 0f)).normalized;
-                FaceDirection(_direction);
-            }
-
-            transform.position += (Vector3)(_direction * (_speed * dt));
-        }
-
-        // Flies a parabola to a fixed landing point. Nothing in between is hit; the shot
-        // detonates where it lands, which is what makes mortars feel different from arrows.
-        private void MoveLobbed(float dt)
-        {
-            _arcProgress += dt / _arcDuration;
-
-            if (_arcProgress >= 1f)
-            {
-                transform.position = _landingPoint;
-                Detonate(_landingPoint, null);
-                return;
-            }
-
-            Vector2 flat = Vector2.Lerp(_launchPoint, _landingPoint, _arcProgress);
-            float height = _arcHeight * 4f * _arcProgress * (1f - _arcProgress);
-            var next = new Vector2(flat.x, flat.y + height);
-
-            FaceDirection(next - (Vector2)(Vector3)transform.position);
-            transform.position = next;
-        }
-
-        // Hovers for a moment, then commits to a target and accelerates into it.
-        private void MoveSeekAndDestroy(float dt)
-        {
-            if (!_isDiving)
-            {
-                if (_age < _loiterDuration)
-                {
-                    float bob = Mathf.Sin(_age * Mathf.PI * 2f) * _loiterBobAmplitude;
-                    transform.position = _loiterOrigin + new Vector2(0f, bob);
-                    return;
-                }
-
-                _target = IsTargetAlive(_target) ? _target : FindNearestTarget(transform.position, float.PositiveInfinity);
-                _isDiving = true;
-            }
-
-            if (IsTargetAlive(_target))
-            {
-                _direction = ((Vector2)_target.Transform.position - (Vector2)transform.position).normalized;
-                FaceDirection(_direction);
-            }
-
-            transform.position += (Vector3)(_direction * (_speed * _diveSpeedMultiplier * dt));
         }
 
         private void ResolveInstant(Vector2 origin, IDamageable target, Vector2 direction)
@@ -456,24 +357,7 @@ namespace HoldTheHill.Features.Combat
         /// <summary>Nearest live target within a radius, or null.</summary>
         protected IDamageable FindNearestTarget(Vector2 from, float radius)
         {
-            float searchRadius = float.IsPositiveInfinity(radius) ? 50f : radius;
-            CombatUtil.OverlapDamageables(from, searchRadius, _targetMask, _overlapBuffer);
-
-            IDamageable best = null;
-            float bestSqr = float.PositiveInfinity;
-
-            for (int i = 0; i < _overlapBuffer.Count; i++)
-            {
-                IDamageable candidate = _overlapBuffer[i];
-                float sqr = ((Vector2)candidate.Transform.position - from).sqrMagnitude;
-                if (sqr < bestSqr)
-                {
-                    bestSqr = sqr;
-                    best = candidate;
-                }
-            }
-
-            return best;
+            return CombatUtil.NearestDamageable(from, float.IsPositiveInfinity(radius) ? 50f : radius, _targetMask, _overlapBuffer);
         }
 
         /// <summary>True if the target still exists and has health left.</summary>
@@ -483,16 +367,16 @@ namespace HoldTheHill.Features.Combat
         }
 
         /// <summary>Current direction of travel.</summary>
-        protected Vector2 Direction => _direction;
+        protected Vector2 Direction => _flight.Direction;
 
         /// <summary>The target this shot is chasing, if any.</summary>
         protected IDamageable CurrentTarget => _target;
 
         /// <summary>Progress along a lobbed arc, 0 at launch and 1 on landing.</summary>
-        protected float ArcProgress => _arcProgress;
+        protected float ArcProgress => _flight.ArcProgress;
 
         /// <summary>Seconds since this shot was launched.</summary>
-        protected float Age => _age;
+        protected float Age => _flight.Age;
 
         /// <summary>True once the shot has been returned to its pool. Nothing should act on it after this.</summary>
         protected bool IsReleased => _isReleased;
