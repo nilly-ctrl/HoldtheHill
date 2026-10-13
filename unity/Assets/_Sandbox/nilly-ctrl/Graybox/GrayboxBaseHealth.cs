@@ -1,14 +1,15 @@
 using System;
-using HoldTheHill.Features.Enemies;
+using HoldTheHill.Features.GameFlow;
 using UnityEngine;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
     /// <summary>
-    /// Base Health tracking system monitoring ant breaches, applying breach damage to the Hill,
-    /// and driving Game Over (Defeat) / Hill Defended (Victory) UI states.
+    /// The graybox's hill: a <see cref="Queen"/> with the static <c>Instance</c> and events the
+    /// sandbox still reaches for, and the breach text. A shim until the scenes hold a reference to
+    /// the Queen themselves (step 3 of <c>docs/CODEBASE_CONVERGENCE.md</c>).
     /// </summary>
-    public class GrayboxBaseHealth : MonoBehaviour
+    public class GrayboxBaseHealth : Queen
     {
         public static GrayboxBaseHealth Instance { get; private set; }
 
@@ -23,42 +24,26 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             OnGameFinished = null;
         }
 
-        [Header("Hill Base Health")]
-        [SerializeField] private float _maxHealth = 100f;
-
-        public float CurrentHealth { get; private set; }
-        public float MaxHealth => _maxHealth;
-        public bool IsFinished { get; private set; }
-        public bool IsVictory { get; private set; }
-
-        private float _builtMaxHealth;
-
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             Instance = this;
-            _builtMaxHealth = _maxHealth;
-            CurrentHealth = _maxHealth;
         }
 
-        /// <summary>
-        /// Raises the hill's full health above what the scene was built with and refills it. Called
-        /// at the start of a run with the permanent "tougher hill" upgrade; 0 puts it back.
-        /// </summary>
-        public void SetBonusHealth(float bonus)
+        protected override void OnEnable()
         {
-            _maxHealth = _builtMaxHealth + Mathf.Max(0f, bonus);
-            CurrentHealth = _maxHealth;
-            OnBaseHealthChanged?.Invoke(CurrentHealth, _maxHealth);
+            base.OnEnable();
+            OnHealthChanged += ForwardHealthChanged;
+            Finished += ForwardFinished;
+            Breached += ShowBreach;
         }
 
-        private void OnEnable()
+        protected override void OnDisable()
         {
-            EnemyMover.ReachedEnd += OnAntBreachedBase;
-        }
-
-        private void OnDisable()
-        {
-            EnemyMover.ReachedEnd -= OnAntBreachedBase;
+            base.OnDisable();
+            OnHealthChanged -= ForwardHealthChanged;
+            Finished -= ForwardFinished;
+            Breached -= ShowBreach;
         }
 
         private void OnDestroy()
@@ -66,68 +51,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (Instance == this) Instance = null;
         }
 
-        private void OnAntBreachedBase(GameObject antObj)
+        private static void ForwardHealthChanged(float current, float max) => OnBaseHealthChanged?.Invoke(current, max);
+
+        private static void ForwardFinished(bool victory) => OnGameFinished?.Invoke(victory);
+
+        private static void ShowBreach(float damage, Vector3 position)
         {
-            if (IsFinished || antObj == null) return;
-
-            // One that stops at the hill instead of going in (the thief ant) does its own harm.
-            var mover = antObj.GetComponent<EnemyMover>();
-            if (mover != null && !mover.DespawnsAtEnd) return;
-
-            // The number lives on the enemy prefab (EnemyHealth), set by the graybox builders.
-            var health = antObj.GetComponent<EnemyHealth>();
-            float breachDamage = health != null ? health.BreachDamage : 0f;
-            if (breachDamage <= 0f) return;
-
-            TakeBaseDamage(breachDamage, antObj.transform.position);
-        }
-
-        public void TakeBaseDamage(float damage, Vector3 position)
-        {
-            if (IsFinished) return;
-
-            CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
-            OnBaseHealthChanged?.Invoke(CurrentHealth, _maxHealth);
-
             DamageNumberSpawner.ShowText($"BREACH! -{Mathf.RoundToInt(damage)} HP", DamageNumberKind.Fire, position);
-
-            if (CurrentHealth <= 0f)
-            {
-                TriggerDefeat();
-            }
         }
 
-        public void TriggerVictory()
-        {
-            if (IsFinished) return;
-            IsFinished = true;
-            IsVictory = true;
-            OnGameFinished?.Invoke(true);
-        }
+        /// <summary>The old name for <see cref="Queen.TakeDamage(float, Vector3)"/>.</summary>
+        public void TakeBaseDamage(float damage, Vector3 position) => TakeDamage(damage, position);
 
-        public void TriggerDefeat()
-        {
-            if (IsFinished) return;
-            IsFinished = true;
-            IsVictory = false;
-            OnGameFinished?.Invoke(false);
-        }
-
-        /// <summary>Puts the hill back to a saved health value and clears a finished game.</summary>
-        public void RestoreHealth(float health)
-        {
-            CurrentHealth = Mathf.Clamp(health, 0f, _maxHealth);
-            IsFinished = false;
-            IsVictory = false;
-            OnBaseHealthChanged?.Invoke(CurrentHealth, _maxHealth);
-        }
-
-        public void ResetBaseHealth()
-        {
-            CurrentHealth = _maxHealth;
-            IsFinished = false;
-            IsVictory = false;
-            OnBaseHealthChanged?.Invoke(CurrentHealth, _maxHealth);
-        }
+        /// <summary>The old name for <see cref="Queen.ResetHealth"/>.</summary>
+        public void ResetBaseHealth() => ResetHealth();
     }
 }

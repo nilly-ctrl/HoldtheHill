@@ -75,7 +75,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxBaseHealth hill = GrayboxBaseHealth.Instance;
             if (hill != null && !hill.IsFinished && hill.CurrentHealth < hill.MaxHealth)
             {
-                hill.RestoreHealth(hill.MaxHealth);
+                hill.Heal(hill.MaxHealth);
             }
         }
 

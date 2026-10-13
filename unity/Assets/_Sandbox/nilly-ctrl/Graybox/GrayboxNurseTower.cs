@@ -42,7 +42,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 return;
             }
 
-            hill.RestoreHealth(hill.CurrentHealth + _healAmount);
+            hill.Heal(_healAmount);
             Heals++;
             SpriteClipPlayer.SpawnOneShot(_library, "FxMelee", "Heal", transform.position, Quaternion.identity, 1f, FxOrder);
             if (_animator != null)
