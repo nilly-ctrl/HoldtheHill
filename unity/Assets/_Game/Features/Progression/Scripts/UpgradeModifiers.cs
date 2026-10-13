@@ -40,6 +40,7 @@ namespace HoldTheHill.Features.Progression
             public float FrostSlowBonus => 0f;
             public float KnockbackBonus => 0f;
             public float RefundPercentage => 0.75f;
+            public float BountyMultiplier => 1f;
         }
     }
 }
