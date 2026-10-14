@@ -10,7 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2239352594364015032}
   - component: {fileID: 2941078087699465489}
-  - component: {fileID: 2027045734501402937}
+  - component: {fileID: 5454216274534534843}
+  - component: {fileID: 3531946155340787088}
+  - component: {fileID: 8336796426136003638}
+  - component: {fileID: 5065060886395702078}
   m_Layer: 0
   m_Name: Triangle
   m_TagString: Untagged
@@ -93,7 +96,70 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!114 &2027045734501402937
+--- !u!58 &5454216274534534843
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5057799100556310380}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0.21133333}
+  m_Radius: 0.3
+--- !u!50 &3531946155340787088
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5057799100556310380}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &8336796426136003638
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -102,12 +168,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 5057799100556310380}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bdce61c669e8894bbf8b40f5969973b, type: 3}
+  m_Script: {fileID: 11500000, guid: fb87ea2ec7e769f4d85dea85dbfbd804, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: HoldTheHill.Runtime::HoldTheHill.Features.Enemies.BasicEnemy
+  m_EditorClassIdentifier: HoldTheHill.Runtime::HoldTheHill.Features.Enemies.EnemyHealth
   _maxHealth: 1
-  _damage: 1
-  _moveSpeed: 2
-  _waypointTolerance: 0.05
-  _pathCoordinates: []
-  _flipSpriteFacing: 1
+  _bountyValue: 10
+  _breachDamage: 1
+  _despawnDelay: 0
+  _deactivateInsteadOfDestroy: 0
+--- !u!114 &5065060886395702078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5057799100556310380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a85e5b327cebba447a479266397b20c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HoldTheHill.Runtime::HoldTheHill.Features.Enemies.EnemyMover
+  _path: {fileID: 0}
+  _speed: 2
+  _arriveDistance: 0.05
+  _faceTravelDirection: 0
+  _onReachEnd: 0
