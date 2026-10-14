@@ -1,7 +1,7 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 using HoldTheHill.Features.Economy;
 using HoldTheHill.Features.Progression;
-using HoldTheHill.Features.Warden;
+using HoldTheHill.Features.Hero;
 using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Enemies;
 using System;
@@ -18,7 +18,7 @@ namespace HoldTheHill.Features.DevTools
     /// <remarks>
     /// Ability uses, skill unlocks, wave starts and field resets come from the events those classes
     /// already raise. Tower placing, selling and upgrading come from the static events on
-    /// <see cref="GrayboxTowerPlacer"/>, so only what the player did is recorded. Towers removed or
+    /// <see cref="GameTowerPlacer"/>, so only what the player did is recorded. Towers removed or
     /// reset some other way (a field reset, a hornet) are not commands.
     ///
     /// Commands are accurate to one fixed step. Console commands are recorded as "dev" commands
@@ -71,14 +71,14 @@ namespace HoldTheHill.Features.DevTools
         }
 
         // The placer in the scene, found once when recording starts; its events are instance events.
-        private GrayboxGameFlow _flow;
+        private RunFlow _flow;
         private TowerPlacer _placer;
 
         private void OnEnable()
         {
             if (Instance != this) return;
 
-            GrayboxWardenAbility.Used += OnAbilityUsed;
+            WardenAbility.Used += OnAbilityUsed;
             _placer = FindAnyObjectByType<TowerPlacer>();
             if (_placer != null)
             {
@@ -86,8 +86,8 @@ namespace HoldTheHill.Features.DevTools
                 _placer.TowerUpgraded += OnTowerUpgraded;
                 _placer.TowerSold += OnTowerSold;
             }
-            GrayboxSkillTree.OnSkillUnlocked += OnSkillUnlocked;
-            _flow = FindAnyObjectByType<GrayboxGameFlow>();
+            SkillTree.OnSkillUnlocked += OnSkillUnlocked;
+            _flow = FindAnyObjectByType<RunFlow>();
             if (_flow != null)
             {
                 _flow.FieldReset += OnFieldReset;
@@ -99,14 +99,14 @@ namespace HoldTheHill.Features.DevTools
 
         private void OnDisable()
         {
-            GrayboxWardenAbility.Used -= OnAbilityUsed;
+            WardenAbility.Used -= OnAbilityUsed;
             if (_placer != null)
             {
                 _placer.TowerPlaced -= OnTowerPlaced;
                 _placer.TowerUpgraded -= OnTowerUpgraded;
                 _placer.TowerSold -= OnTowerSold;
             }
-            GrayboxSkillTree.OnSkillUnlocked -= OnSkillUnlocked;
+            SkillTree.OnSkillUnlocked -= OnSkillUnlocked;
             if (_flow != null)
             {
                 _flow.FieldReset -= OnFieldReset;
@@ -155,18 +155,18 @@ namespace HoldTheHill.Features.DevTools
             }
 
             HookSpawner();
-            GrayboxGameFlow flow = _flow;
+            RunFlow flow = _flow;
 
             int seed = unchecked((int)(DateTime.UtcNow.Ticks & 0x7FFFFFFF));
             UnityEngine.Random.InitState(seed);
 
             Tower.GetActive(_towers);
-            GrayboxEconomy economy = FindAnyObjectByType<GrayboxEconomy>();
+            FoodWallet economy = FindAnyObjectByType<FoodWallet>();
             _recording = new ReplayRecording
             {
                 unityVersion = Application.unityVersion,
                 mapId = flow != null ? flow.MapId : (_spawner != null ? _spawner.ActiveMapId : "Unknown"),
-                mode = flow != null ? flow.Mode.ToString() : GrayboxRunMode.Campaign.ToString(),
+                mode = flow != null ? flow.Mode.ToString() : RunMode.Campaign.ToString(),
                 seed = seed,
                 fixedDeltaTime = Time.fixedDeltaTime,
                 startWave = _spawner != null ? _spawner.CurrentWaveIndex : 0,
@@ -241,12 +241,12 @@ namespace HoldTheHill.Features.DevTools
 
         // ---------- events ----------
 
-        private void OnAbilityUsed(GrayboxWardenAbility ability)
+        private void OnAbilityUsed(WardenAbility ability)
         {
             if (_recording == null || ability == null) return;
 
             string id = ability.Data != null ? ability.Data.Id : ability.GetType().Name;
-            Vector3 at = GrayboxWarden.Instance != null ? GrayboxWarden.Instance.transform.position : Vector3.zero;
+            Vector3 at = Warden.Instance != null ? Warden.Instance.transform.position : Vector3.zero;
             _recording.Add(_tick, ReplayCommandType.Ability, id, at.x, at.y);
         }
 
@@ -259,16 +259,16 @@ namespace HoldTheHill.Features.DevTools
         {
             if (_recording == null) return;
 
-            // Endless waves are started by GrayboxEndlessMode itself and come back on their own.
-            GrayboxGameFlow flow = _flow;
-            if (flow != null && flow.Mode != GrayboxRunMode.Campaign) return;
+            // Endless waves are started by EndlessMode itself and come back on their own.
+            RunFlow flow = _flow;
+            if (flow != null && flow.Mode != RunMode.Campaign) return;
 
             _recording.Add(_tick, ReplayCommandType.Wave, null, 0f, 0f, waveNumber);
         }
 
         private void OnFieldReset()
         {
-            GrayboxGameFlow flow = _flow;
+            RunFlow flow = _flow;
             int retries = flow != null ? flow.Stats.WaveRetries : 0;
             bool retry = retries > _retries;
             _retries = retries;
@@ -287,7 +287,7 @@ namespace HoldTheHill.Features.DevTools
         {
             if (_recording != null && (current == GameFlowState.RunEnd || current == GameFlowState.Home || current == GameFlowState.Title))
             {
-                GrayboxGameFlow flow = _flow;
+                RunFlow flow = _flow;
                 string result = current == GameFlowState.RunEnd && flow != null
                     ? (flow.LastRunWasVictory ? "Victory" : "Defeat")
                     : "Stopped";
@@ -311,7 +311,7 @@ namespace HoldTheHill.Features.DevTools
             // A scene that starts straight into play has no field reset to start an automatic recording.
             if (AutoRecord && _recording == null && _frames >= 0 && ++_frames == 2)
             {
-                GrayboxGameFlow flow = _flow;
+                RunFlow flow = _flow;
                 if ((flow == null || flow.State == GameFlowState.Playing)
                     && (DevReplayPlayer.Instance == null || !DevReplayPlayer.Instance.IsPlaying))
                 {

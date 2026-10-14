@@ -13,7 +13,7 @@ namespace HoldTheHill.EditorTools.Authoring
     /// data asset, each made only when missing, so nothing already tuned is overwritten.
     /// </summary>
     /// <remarks>
-    /// Saving and field edits go through <see cref="GrayboxBuilder"/> (SavePrefab records the
+    /// Saving and field edits go through <see cref="CombatTestSceneBuilder"/> (SavePrefab records the
     /// instance's property modifications before saving the variant). Every Create method returns
     /// the paths it made, or throws before touching anything if a path is already taken.
     /// </remarks>
@@ -23,12 +23,12 @@ namespace HoldTheHill.EditorTools.Authoring
         internal const string PrefabRoot = GrayboxRoot + "/Enemies/Prefabs";
         internal const string DataRoot = GrayboxRoot;
 
-        public const string EnemyBasePath = PrefabRoot + "/GrayboxEnemyBase.prefab";
-        public const string BossBasePath = PrefabRoot + "/GrayboxBossBase.prefab";
+        public const string EnemyBasePath = PrefabRoot + "/EnemyBase.prefab";
+        public const string BossBasePath = PrefabRoot + "/BossBase.prefab";
 
         public static string TowerDataPath(string id) => $"{DataRoot}/Towers/Data/{id}Data.asset";
 
-        public static string EnemyPrefabPath(string id) => $"{PrefabRoot}/Graybox{id}.prefab";
+        public static string EnemyPrefabPath(string id) => $"{PrefabRoot}/{id}.prefab";
 
         public static string BossDataPath(string id) => $"{DataRoot}/Specials/Data/{id}Data.asset";
 

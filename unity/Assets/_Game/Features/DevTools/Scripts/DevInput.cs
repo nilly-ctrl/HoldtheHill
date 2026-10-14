@@ -8,7 +8,7 @@ namespace HoldTheHill.Features.DevTools
     /// <summary>
     /// Switches the game's input off while a dev text box has focus, so typing "n" or "3" into the
     /// console does not start a wave or pick a tower. It disables the action map that
-    /// <see cref="GrayboxControls"/> reads, through the map's own public API; the game scripts
+    /// <see cref="GameControls"/> reads, through the map's own public API; the game scripts
     /// are not touched. The dev tools read the keyboard device directly, so they still work.
     /// </summary>
     internal static class DevInput
@@ -37,7 +37,7 @@ namespace HoldTheHill.Features.DevTools
             {
                 if (!Locked) return; // nothing was disabled, so there is nothing to put back
 
-                InputAction action = GrayboxControls.Find(GrayboxControls.Pause);
+                InputAction action = GameControls.Find(GameControls.Pause);
                 s_map = action != null ? action.actionMap : null;
             }
 

@@ -26,10 +26,10 @@ namespace HoldTheHill.EditorTools.Validation
         private static readonly HashSet<string> KnownWeapons = new HashSet<string>
         {
             "ChainLightning", "ContinuousBeam", "FrostAuraTower", "KnockbackTower",
-            "MineLayerTower", "OrbitingDamageField", "GrayboxMeleeTower"
+            "MineLayerTower", "OrbitingDamageField", "SoldierTower"
         };
 
-        public static List<BalanceTower> BuildTowers(GrayboxTowerCatalog catalog, List<string> notes)
+        public static List<BalanceTower> BuildTowers(TowerCatalog catalog, List<string> notes)
         {
             var towers = new List<BalanceTower>();
             if (catalog == null)
@@ -222,7 +222,7 @@ namespace HoldTheHill.EditorTools.Validation
                         break;
                     }
 
-                    case "GrayboxMeleeTower":
+                    case "SoldierTower":
                     {
                         float damage = Float(so, "_damage");
                         dps += damage / interval;

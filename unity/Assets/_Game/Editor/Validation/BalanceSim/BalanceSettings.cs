@@ -5,11 +5,11 @@ namespace HoldTheHill.EditorTools.Validation
     {
         /// <summary>
         /// Length of the enemy route in world units. 30 is the gray-box route (the Route array in
-        /// GrayboxBuilder: 6 + 5 + 6 + 6 + 7 cells).
+        /// CombatTestSceneBuilder: 6 + 5 + 6 + 6 + 7 cells).
         /// </summary>
         public float PathLength = 30f;
 
-        /// <summary>Gold at the start of the run. 500 is GrayboxEconomy's default.</summary>
+        /// <summary>Gold at the start of the run. 500 is FoodWallet's default.</summary>
         public int StartingFood = 500;
 
         /// <summary>The most towers the model builds. Real maps have a limited number of build cells.</summary>
@@ -32,7 +32,7 @@ namespace HoldTheHill.EditorTools.Validation
         /// <summary>Scales every tower's damage (skill tree). 1 is unmodified.</summary>
         public float DamageMultiplier = 1f;
 
-        /// <summary>Hill health. 100 is GrayboxBaseHealth's default; the model notes the wave it would fall in.</summary>
+        /// <summary>Hill health. 100 is HillHealth's default; the model notes the wave it would fall in.</summary>
         public float HillHealth = 100f;
 
         /// <summary>Seconds per step of the wave simulation.</summary>

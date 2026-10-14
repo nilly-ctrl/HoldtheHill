@@ -15,7 +15,7 @@ namespace HoldTheHill.EditorTools.Validation
     /// slows and statuses, shields regenerating, healers, projectile travel time and misses,
     /// targeting priorities, tower upgrades, abilities, flyers and the Warden. Use it to see which
     /// waves are far from the mark and in which direction, not to predict exact kills.
-    /// The real combat is measured by the in-scene harness (GrayboxBalanceHarness).
+    /// The real combat is measured by the in-scene harness (BalanceHarness).
     /// </remarks>
     public static class BalanceSimulator
     {

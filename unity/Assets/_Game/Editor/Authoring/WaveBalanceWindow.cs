@@ -14,7 +14,7 @@ namespace HoldTheHill.EditorTools.Authoring
     /// All edits go through a SerializedObject on the asset, so Ctrl+Z works and the table is
     /// always the saved data. "DPS needed" is a deliberately crude figure: the wave's hit-point
     /// pool (health plus shield) divided by the seconds it takes to spawn plus the "time under
-    /// fire" you set. The endless preview asks GrayboxProceduralWaveGenerator for its waves
+    /// fire" you set. The endless preview asks ProceduralWaveGenerator for its waves
     /// (nothing is copied from it), and scales by its own health multiplier.
     /// </remarks>
     internal sealed class WaveBalanceWindow : EditorWindow
@@ -103,7 +103,7 @@ namespace HoldTheHill.EditorTools.Authoring
             if (current == null)
             {
                 // Prefer the graybox waves, the ones the graybox scene plays.
-                int graybox = _assets.FindIndex(a => a.name == "GrayboxWaves");
+                int graybox = _assets.FindIndex(a => a.name == "Waves");
                 _assetIndex = graybox >= 0 ? graybox : 0;
             }
 
@@ -451,7 +451,7 @@ namespace HoldTheHill.EditorTools.Authoring
         private void DrawEndless()
         {
             EditorGUILayout.Space();
-            _showEndless = EditorGUILayout.Foldout(_showEndless, "Endless waves (GrayboxProceduralWaveGenerator, read only)", true);
+            _showEndless = EditorGUILayout.Foldout(_showEndless, "Endless waves (ProceduralWaveGenerator, read only)", true);
             if (!_showEndless)
             {
                 return;
@@ -463,13 +463,13 @@ namespace HoldTheHill.EditorTools.Authoring
                 _endlessTo = Mathf.Clamp(EditorGUILayout.IntField("To wave", _endlessTo), _endlessFrom, _endlessFrom + 60);
             }
 
-            GameObject Load(string id) => AssetDatabase.LoadAssetAtPath<GameObject>($"{PrefabFolder}/Graybox{id}.prefab");
+            GameObject Load(string id) => AssetDatabase.LoadAssetAtPath<GameObject>($"{PrefabFolder}/{id}.prefab");
 
             GameObject temp = new GameObject("WaveBalancePreview") { hideFlags = HideFlags.HideAndDontSave };
             try
             {
                 // Awake does not run in edit mode, so this has no side effects.
-                var generator = temp.AddComponent<GrayboxProceduralWaveGenerator>();
+                var generator = temp.AddComponent<ProceduralWaveGenerator>();
                 for (int n = _endlessFrom; n <= _endlessTo; n++)
                 {
                     Wave wave = generator.GenerateWave(

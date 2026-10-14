@@ -2,7 +2,7 @@
 using HoldTheHill.Features.Economy;
 using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Progression;
-using HoldTheHill.Features.Warden;
+using HoldTheHill.Features.Hero;
 using HoldTheHill.Features.Enemies;
 using System;
 using System.Collections.Generic;
@@ -31,9 +31,9 @@ namespace HoldTheHill.Features.DevTools
         private readonly List<Tower> _towers = new List<Tower>();
         private readonly StringBuilder _problems = new StringBuilder();
         private ReplayRecording _recording;
-        private GrayboxTowerPlacer _placer;
-        private GrayboxGameFlow _flow;
-        private GrayboxEconomy _economy;
+        private GameTowerPlacer _placer;
+        private RunFlow _flow;
+        private FoodWallet _economy;
         private EnemySpawner _spawner;
         private int _tick;
         private int _next;
@@ -97,10 +97,10 @@ namespace HoldTheHill.Features.DevTools
                 return false;
             }
 
-            _placer = FindAnyObjectByType<GrayboxTowerPlacer>();
+            _placer = FindAnyObjectByType<GameTowerPlacer>();
             _spawner = FindAnyObjectByType<EnemySpawner>();
-            _economy = FindAnyObjectByType<GrayboxEconomy>();
-            _flow = FindAnyObjectByType<GrayboxGameFlow>();
+            _economy = FindAnyObjectByType<FoodWallet>();
+            _flow = FindAnyObjectByType<RunFlow>();
             if (_placer == null)
             {
                 message = "No tower placer in the scene; there is nothing to replay into.";
@@ -133,10 +133,10 @@ namespace HoldTheHill.Features.DevTools
             Desyncs = 0;
             _problems.Length = 0;
 
-            GrayboxGameFlow flow = _flow;
+            RunFlow flow = _flow;
             if (flow != null)
             {
-                GrayboxRunMode mode = GrayboxRunMode.Campaign;
+                RunMode mode = RunMode.Campaign;
                 if (!string.IsNullOrEmpty(recording.mode)) Enum.TryParse(recording.mode, out mode);
                 flow.StartNewRun(mode);
             }
@@ -223,7 +223,7 @@ namespace HoldTheHill.Features.DevTools
             if (!_placer.CanBuildAt(cell)) return "cell is blocked or occupied";
 
             int cost = _placer.CostOf(data);
-            GrayboxEconomy economy = _economy;
+            FoodWallet economy = _economy;
             if (economy != null && !economy.TrySpend(data.CostResource, cost)) return "cannot afford " + cost;
 
             _placer.Place(data, cell, cost);
@@ -235,7 +235,7 @@ namespace HoldTheHill.Features.DevTools
             Tower tower = FindTowerAt(c.x, c.y, c.name);
             if (tower == null) return "no tower on that cell";
 
-            GrayboxEconomy economy = _economy;
+            FoodWallet economy = _economy;
             if (economy != null) economy.EarnFood(tower.RefundValue);
             // Without the sell sound and puff the placer adds, which need its selection.
             Destroy(tower.gameObject);
@@ -249,7 +249,7 @@ namespace HoldTheHill.Features.DevTools
             if (!tower.CanUpgrade) return "tower is already at its top level";
 
             int cost = _placer.UpgradeCost(tower);
-            GrayboxEconomy economy = _economy;
+            FoodWallet economy = _economy;
             if (economy != null && !economy.TrySpendFood(cost)) return "cannot afford " + cost;
 
             tower.Upgrade();
@@ -259,11 +259,11 @@ namespace HoldTheHill.Features.DevTools
 
         private static string DoAbility(ReplayCommand c)
         {
-            GrayboxWarden warden = GrayboxWarden.Instance;
+            Warden warden = Warden.Instance;
             if (warden == null) return "no Warden in the scene";
             if (warden.Health != null && warden.Health.IsDowned) return "the Warden is down";
 
-            foreach (GrayboxWardenAbility ability in warden.Abilities)
+            foreach (WardenAbility ability in warden.Abilities)
             {
                 string id = ability.Data != null ? ability.Data.Id : ability.GetType().Name;
                 if (id != c.name) continue;
@@ -278,7 +278,7 @@ namespace HoldTheHill.Features.DevTools
 
         private static string DoSkill(ReplayCommand c)
         {
-            GrayboxSkillTree tree = GrayboxSkillTree.Instance;
+            SkillTree tree = SkillTree.Instance;
             if (tree == null) return "no skill tree";
             if (tree.IsUnlocked(c.name)) return null;
             return tree.TryUnlock(c.name) ? null : "cannot unlock (points or prerequisite)";
@@ -299,7 +299,7 @@ namespace HoldTheHill.Features.DevTools
 
         private static string DoReset(ReplayCommand c)
         {
-            GrayboxGameFlow flow = FindAnyObjectByType<GrayboxGameFlow>();
+            RunFlow flow = FindAnyObjectByType<RunFlow>();
             if (flow == null) return "no game flow";
 
             if (c.value == 1) flow.RetryWave();
@@ -325,7 +325,7 @@ namespace HoldTheHill.Features.DevTools
 
         private TowerData FindTowerData(string name)
         {
-            GrayboxTowerCatalog catalog = _placer.Catalog;
+            TowerCatalog catalog = _placer.Catalog;
             if (catalog == null) return null;
 
             for (int i = 0; i < catalog.Count; i++)

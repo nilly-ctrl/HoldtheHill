@@ -2,7 +2,7 @@ using HoldTheHill.Features.PowerUps;
 using HoldTheHill.Features.Progression;
 using HoldTheHill.Features.Specials;
 using HoldTheHill.Features.Species;
-using HoldTheHill.Features.Warden;
+using HoldTheHill.Features.Hero;
 using HoldTheHill.Features.Economy;
 using System.Collections.Generic;
 using System.IO;
@@ -28,15 +28,15 @@ namespace HoldTheHill.EditorTools.Validation
 
         public static void Run(string root, List<ValidationFinding> findings)
         {
-            foreach (var (path, tower) in GrayboxProjectValidator.FindAll<HoldTheHill.Features.Towers.TowerData>(root)) CheckTower(tower, path, findings);
-            foreach (var (path, boss) in GrayboxProjectValidator.FindAll<GrayboxBossData>(root)) CheckBoss(boss, path, findings);
-            foreach (var (path, resource) in GrayboxProjectValidator.FindAll<ResourceData>(root)) CheckResource(resource, path, findings);
-            foreach (var (path, powerUp) in GrayboxProjectValidator.FindAll<GrayboxPowerUpData>(root)) CheckPowerUp(powerUp, path, findings);
-            foreach (var (path, species) in GrayboxProjectValidator.FindAll<GrayboxSpeciesData>(root)) CheckSpecies(species, path, findings);
-            foreach (var (path, ability) in GrayboxProjectValidator.FindAll<GrayboxAbilityData>(root)) CheckAbility(ability, path, findings);
-            foreach (var (path, node) in GrayboxProjectValidator.FindAll<GrayboxSkillNodeData>(root)) CheckSkillNode(node, path, findings);
-            foreach (var (path, achievement) in GrayboxProjectValidator.FindAll<GrayboxAchievementData>(root)) CheckAchievement(achievement, path, findings);
-            foreach (var (path, waves) in GrayboxProjectValidator.FindAll<MapWaveDataSO>(root)) CheckWaves(waves, path, findings);
+            foreach (var (path, tower) in ProjectValidator.FindAll<HoldTheHill.Features.Towers.TowerData>(root)) CheckTower(tower, path, findings);
+            foreach (var (path, boss) in ProjectValidator.FindAll<BossData>(root)) CheckBoss(boss, path, findings);
+            foreach (var (path, resource) in ProjectValidator.FindAll<ResourceData>(root)) CheckResource(resource, path, findings);
+            foreach (var (path, powerUp) in ProjectValidator.FindAll<PowerUpData>(root)) CheckPowerUp(powerUp, path, findings);
+            foreach (var (path, species) in ProjectValidator.FindAll<SpeciesData>(root)) CheckSpecies(species, path, findings);
+            foreach (var (path, ability) in ProjectValidator.FindAll<AbilityData>(root)) CheckAbility(ability, path, findings);
+            foreach (var (path, node) in ProjectValidator.FindAll<SkillNodeData>(root)) CheckSkillNode(node, path, findings);
+            foreach (var (path, achievement) in ProjectValidator.FindAll<AchievementData>(root)) CheckAchievement(achievement, path, findings);
+            foreach (var (path, waves) in ProjectValidator.FindAll<MapWaveDataSO>(root)) CheckWaves(waves, path, findings);
         }
 
         private static void CheckTower(HoldTheHill.Features.Towers.TowerData data, string path, List<ValidationFinding> findings)
@@ -72,7 +72,7 @@ namespace HoldTheHill.EditorTools.Validation
             }
         }
 
-        private static void CheckBoss(GrayboxBossData data, string path, List<ValidationFinding> findings)
+        private static void CheckBoss(BossData data, string path, List<ValidationFinding> findings)
         {
             Empty(findings, data.Id, "id", path, ValidationSeverity.Error);
             Empty(findings, data.DisplayName, "display name", path, ValidationSeverity.Error);
@@ -87,7 +87,7 @@ namespace HoldTheHill.EditorTools.Validation
             CheckIcon(findings, data.IconName, path);
         }
 
-        private static void CheckPowerUp(GrayboxPowerUpData data, string path, List<ValidationFinding> findings)
+        private static void CheckPowerUp(PowerUpData data, string path, List<ValidationFinding> findings)
         {
             Empty(findings, data.Id, "id", path, ValidationSeverity.Error);
             Empty(findings, data.DisplayName, "display name", path, ValidationSeverity.Error);
@@ -109,7 +109,7 @@ namespace HoldTheHill.EditorTools.Validation
             }
         }
 
-        private static void CheckSpecies(GrayboxSpeciesData data, string path, List<ValidationFinding> findings)
+        private static void CheckSpecies(SpeciesData data, string path, List<ValidationFinding> findings)
         {
             Empty(findings, data.Id, "id", path, ValidationSeverity.Error);
             Empty(findings, data.DisplayName, "display name", path, ValidationSeverity.Error);
@@ -129,7 +129,7 @@ namespace HoldTheHill.EditorTools.Validation
             }
         }
 
-        private static void CheckAbility(GrayboxAbilityData data, string path, List<ValidationFinding> findings)
+        private static void CheckAbility(AbilityData data, string path, List<ValidationFinding> findings)
         {
             Empty(findings, data.Id, "id", path, ValidationSeverity.Error);
             Empty(findings, data.DisplayName, "display name", path, ValidationSeverity.Error);
@@ -141,14 +141,14 @@ namespace HoldTheHill.EditorTools.Validation
             }
         }
 
-        private static void CheckSkillNode(GrayboxSkillNodeData data, string path, List<ValidationFinding> findings)
+        private static void CheckSkillNode(SkillNodeData data, string path, List<ValidationFinding> findings)
         {
-            if (string.IsNullOrEmpty(GrayboxProjectValidator.RawString(data, "_id")))
+            if (string.IsNullOrEmpty(ProjectValidator.RawString(data, "_id")))
             {
                 Add(findings, ValidationSeverity.Warning, $"Id is empty; the asset name '{data.name}' is used instead.", path);
             }
 
-            if (string.IsNullOrEmpty(GrayboxProjectValidator.RawString(data, "_displayName")))
+            if (string.IsNullOrEmpty(ProjectValidator.RawString(data, "_displayName")))
             {
                 Add(findings, ValidationSeverity.Warning, "Display name is empty.", path);
             }
@@ -188,14 +188,14 @@ namespace HoldTheHill.EditorTools.Validation
             }
         }
 
-        private static void CheckAchievement(GrayboxAchievementData data, string path, List<ValidationFinding> findings)
+        private static void CheckAchievement(AchievementData data, string path, List<ValidationFinding> findings)
         {
-            if (string.IsNullOrEmpty(GrayboxProjectValidator.RawString(data, "_id")))
+            if (string.IsNullOrEmpty(ProjectValidator.RawString(data, "_id")))
             {
                 Add(findings, ValidationSeverity.Warning, $"Id is empty; the asset name '{data.name}' is used instead.", path);
             }
 
-            if (string.IsNullOrEmpty(GrayboxProjectValidator.RawString(data, "_title")))
+            if (string.IsNullOrEmpty(ProjectValidator.RawString(data, "_title")))
             {
                 Add(findings, ValidationSeverity.Warning, "Title is empty.", path);
             }
@@ -293,7 +293,7 @@ namespace HoldTheHill.EditorTools.Validation
 
             foreach (string folder in IconFolders)
             {
-                string assetPath = $"{GrayboxProjectValidator.SandboxRoot}/{folder}/{iconName}.png";
+                string assetPath = $"{ProjectValidator.SandboxRoot}/{folder}/{iconName}.png";
                 if (File.Exists(ProjectTextIndex.AbsolutePath(assetPath)))
                 {
                     return true;
@@ -313,7 +313,7 @@ namespace HoldTheHill.EditorTools.Validation
 
         private static void Add(List<ValidationFinding> findings, ValidationSeverity severity, string message, string path)
         {
-            GrayboxProjectValidator.Add(findings, severity, Name, message, path);
+            ProjectValidator.Add(findings, severity, Name, message, path);
         }
     }
 }

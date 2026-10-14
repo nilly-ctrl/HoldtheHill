@@ -24,26 +24,26 @@ namespace HoldTheHill.EditorTools.Authoring
     {
         public static List<string> CreateTower(TowerSpec spec)
         {
-            string prefabPath = GrayboxTowerBuilder.PrefabPath(spec.Id);
+            string prefabPath = TowerBuilder.PrefabPath(spec.Id);
             string dataPath = ContentWizardBuilder.TowerDataPath(spec.Id);
             ContentWizardBuilder.Refuse(prefabPath, dataPath);
 
             GameObject basePrefab = spec.BasePrefab != null
                 ? spec.BasePrefab
-                : AssetDatabase.LoadAssetAtPath<GameObject>(GrayboxTowerBuilder.PrefabPath("TowerBase"));
+                : AssetDatabase.LoadAssetAtPath<GameObject>(TowerBuilder.PrefabPath("TowerBase"));
             if (basePrefab == null)
             {
                 throw new InvalidOperationException("TowerBase.prefab is missing. Run Build Graybox Combat Test first.");
             }
 
-            GrayboxBuildKit.EnsureFolder(ContentWizardBuilder.GrayboxRoot + "/Towers/Prefabs");
-            GrayboxBuildKit.EnsureFolder(ContentWizardBuilder.DataRoot + "/Towers/Data");
+            BuildKit.EnsureFolder(ContentWizardBuilder.GrayboxRoot + "/Towers/Prefabs");
+            BuildKit.EnsureFolder(ContentWizardBuilder.DataRoot + "/Towers/Data");
 
             var go = (GameObject)PrefabUtility.InstantiatePrefab(basePrefab);
             go.name = spec.Id;
             go.GetComponent<SpriteRenderer>().color = spec.Color;
 
-            GrayboxBuildKit.Apply(go.GetComponent<Tower>(), so =>
+            BuildKit.Apply(go.GetComponent<Tower>(), so =>
             {
                 so.FindProperty("_range").floatValue = spec.Range;
                 so.FindProperty("_fireInterval").floatValue = spec.FireInterval;
@@ -54,11 +54,11 @@ namespace HoldTheHill.EditorTools.Authoring
                 }
             });
 
-            GameObject prefab = GrayboxBuildKit.SavePrefab(go, $"Towers/{spec.Id}");
+            GameObject prefab = BuildKit.SavePrefab(go, $"Towers/{spec.Id}");
 
             var data = ScriptableObject.CreateInstance<HoldTheHill.Features.Towers.TowerData>();
             AssetDatabase.CreateAsset(data, dataPath);
-            GrayboxBuildKit.Apply(data, so =>
+            BuildKit.Apply(data, so =>
             {
                 so.FindProperty("_displayName").stringValue = string.IsNullOrEmpty(spec.DisplayName) ? spec.Id : spec.DisplayName;
                 so.FindProperty("_archetype").enumValueIndex = (int)spec.Archetype;
@@ -71,7 +71,7 @@ namespace HoldTheHill.EditorTools.Authoring
             var made = new List<string> { prefabPath, dataPath };
             if (spec.AddToCatalog)
             {
-                var catalog = AssetDatabase.LoadAssetAtPath<GrayboxTowerCatalog>(GrayboxTowerBuilder.CatalogPath);
+                var catalog = AssetDatabase.LoadAssetAtPath<TowerCatalog>(TowerBuilder.CatalogPath);
                 if (catalog != null)
                 {
                     var so = new SerializedObject(catalog);
@@ -81,7 +81,7 @@ namespace HoldTheHill.EditorTools.Authoring
                     list.GetArrayElementAtIndex(at).objectReferenceValue = data;
                     so.ApplyModifiedProperties();
                     EditorUtility.SetDirty(catalog);
-                    made.Add(GrayboxTowerBuilder.CatalogPath + " (entry added)");
+                    made.Add(TowerBuilder.CatalogPath + " (entry added)");
                 }
             }
 
@@ -110,36 +110,36 @@ namespace HoldTheHill.EditorTools.Authoring
             }
 
             // The same helper the builders use: a variant with its own look and numbers.
-            GameObject go = GrayboxEnemyPrefabBuilder.BuildBaseEnemyObject(
+            GameObject go = EnemyPrefabBuilder.BuildBaseEnemyObject(
                 "Graybox" + spec.Id, null, spec.Health, spec.Speed, spec.Color, spec.Size, spec.Bounty, basePrefab);
 
-            GrayboxBuildKit.Apply(go.GetComponent<HoldTheHill.Features.Enemies.EnemyMover>(),
+            BuildKit.Apply(go.GetComponent<HoldTheHill.Features.Enemies.EnemyMover>(),
                 so => so.FindProperty("_faceTravelDirection").boolValue = spec.FaceTravelDirection);
 
             var made = new List<string> { prefabPath };
-            GrayboxBossData data = null;
+            BossData data = null;
             if (spec.Boss)
             {
-                GrayboxBuildKit.EnsureFolder(ContentWizardBuilder.DataRoot + "/Specials/Data");
-                data = ScriptableObject.CreateInstance<GrayboxBossData>();
+                BuildKit.EnsureFolder(ContentWizardBuilder.DataRoot + "/Specials/Data");
+                data = ScriptableObject.CreateInstance<BossData>();
                 AssetDatabase.CreateAsset(data, dataPath);
                 string label = string.IsNullOrEmpty(spec.DisplayName) ? spec.Id : spec.DisplayName;
-                GrayboxBuildKit.Apply(data, so =>
+                BuildKit.Apply(data, so =>
                 {
                     so.FindProperty("_id").stringValue = spec.Id;
                     so.FindProperty("_displayName").stringValue = label;
                     so.FindProperty("_bannerText").stringValue =
                         (string.IsNullOrEmpty(spec.BannerText) ? label : spec.BannerText).ToUpperInvariant();
                 });
-                GrayboxBuildKit.Apply(go.GetComponent<GrayboxBoss>(),
+                BuildKit.Apply(go.GetComponent<Boss>(),
                     so => so.FindProperty("_data").objectReferenceValue = data);
                 made.Add(dataPath);
             }
 
-            GameObject prefab = GrayboxBuildKit.SavePrefab(go, "Graybox" + spec.Id);
+            GameObject prefab = BuildKit.SavePrefab(go, "Graybox" + spec.Id);
             if (data != null)
             {
-                GrayboxBuildKit.Apply(data, so => so.FindProperty("_prefab").objectReferenceValue = prefab);
+                BuildKit.Apply(data, so => so.FindProperty("_prefab").objectReferenceValue = prefab);
                 EditorUtility.SetDirty(data);
             }
 

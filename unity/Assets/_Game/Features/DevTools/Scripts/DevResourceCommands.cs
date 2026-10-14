@@ -22,14 +22,14 @@ namespace HoldTheHill.Features.DevTools
             int amount = a.Int(0, "n");
             if (amount < 0) throw new DevCommandException("<n> cannot be negative.");
 
-            GrayboxEconomy economy = RequireEconomy();
+            FoodWallet economy = RequireEconomy();
             economy.ResetFood(amount);
             return "Gold is " + economy.CurrentFood + ".";
         }
 
-        internal static GrayboxEconomy RequireEconomy()
+        internal static FoodWallet RequireEconomy()
         {
-            GrayboxEconomy economy = UnityEngine.Object.FindAnyObjectByType<GrayboxEconomy>();
+            FoodWallet economy = UnityEngine.Object.FindAnyObjectByType<FoodWallet>();
             if (economy == null) throw new DevCommandException("No economy in the scene.");
             return economy;
         }
@@ -41,7 +41,7 @@ namespace HoldTheHill.Features.DevTools
             if (amount <= 0) throw new DevCommandException("<n> must be above zero.");
 
             string key = what.ToLowerInvariant();
-            GrayboxEconomy economy = UnityEngine.Object.FindAnyObjectByType<GrayboxEconomy>();
+            FoodWallet economy = UnityEngine.Object.FindAnyObjectByType<FoodWallet>();
 
             if (key == "gold" || key == "main" || (economy != null && economy.MainResource != null && MatchesResource(economy.MainResource, key)))
             {
@@ -51,14 +51,14 @@ namespace HoldTheHill.Features.DevTools
 
             if (key == "honeydew" || key == "hd")
             {
-                if (!GrayboxSave.IsOpen) throw new DevCommandException("No save file is open, so there is no honeydew balance.");
-                GrayboxMetaProgress.AddCurrency(amount);
-                return "Honeydew is " + GrayboxMetaProgress.Currency + ".";
+                if (!SaveStore.IsOpen) throw new DevCommandException("No save file is open, so there is no honeydew balance.");
+                MetaProgress.AddCurrency(amount);
+                return "Honeydew is " + MetaProgress.Currency + ".";
             }
 
             if (key == "skillpoints" || key == "sp" || key == "skill")
             {
-                GrayboxSkillTree tree = GrayboxSkillTree.Instance;
+                SkillTree tree = SkillTree.Instance;
                 if (tree == null) throw new DevCommandException("No skill tree in the scene.");
                 tree.AddSkillPoints(amount);
                 return "Skill points: " + tree.SkillPoints + ".";

@@ -9,7 +9,7 @@ namespace HoldTheHill.Features.Towers
     /// Visualizes tower range circles, target lock-on lines, and a priority and level label
     /// under the tower (a <see cref="PixelText"/> in the scene's Hud style) in PlayMode.
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Graybox/Tower Target Visualizer")]
+    [AddComponentMenu("Hold the Hill/Tower Target Visualizer")]
     [RequireComponent(typeof(Tower))]
     public class TowerTargetVisualizer : MonoBehaviour
     {
@@ -39,12 +39,12 @@ namespace HoldTheHill.Features.Towers
             ShowTowerLabels = true;
         }
 
-        private GrayboxGameFlow _flow;
+        private RunFlow _flow;
 
         private void Awake()
         {
             _tower = GetComponent<Tower>();
-            _flow = FindAnyObjectByType<GrayboxGameFlow>();
+            _flow = FindAnyObjectByType<RunFlow>();
 
             SetupLines();
         }

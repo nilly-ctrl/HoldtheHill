@@ -34,7 +34,7 @@ namespace HoldTheHill.Features.DevTools
 
             float x = a.Float(0, "x");
             if (x < 0.1f || x > 20f) throw new DevCommandException("<x> must be between 0.1 and 20.");
-            if (UnityEngine.Object.FindAnyObjectByType<GrayboxGameFlow>() == null) throw new DevCommandException("No flow controller in the scene; time scale is its job.");
+            if (UnityEngine.Object.FindAnyObjectByType<RunFlow>() == null) throw new DevCommandException("No flow controller in the scene; time scale is its job.");
 
             DevToolsCheats.SetSpeed(x);
             return "Speed x" + x.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)
@@ -82,7 +82,7 @@ namespace HoldTheHill.Features.DevTools
 
         internal static string UnlockSkills()
         {
-            GrayboxSkillTree tree = GrayboxSkillTree.Instance;
+            SkillTree tree = SkillTree.Instance;
             if (tree == null) return "No skill tree in the scene.";
 
             // Pay for everything that is locked, then unlock in passes so prerequisites go first.
@@ -114,7 +114,7 @@ namespace HoldTheHill.Features.DevTools
 
         internal static string UnlockAchievements()
         {
-            GrayboxAchievements achievements = GrayboxAchievements.Instance;
+            AchievementTracker achievements = AchievementTracker.Instance;
             if (achievements == null) return "No achievements in the scene.";
 
             var all = new List<Achievement>(achievements.Achievements);
@@ -127,7 +127,7 @@ namespace HoldTheHill.Features.DevTools
                 unlocked++;
             }
 
-            return "Achievements: unlocked " + unlocked + (GrayboxSave.IsOpen ? " (saved to the save file)." : ".");
+            return "Achievements: unlocked " + unlocked + (SaveStore.IsOpen ? " (saved to the save file)." : ".");
         }
 
         internal static bool ParseOnOff(string word)

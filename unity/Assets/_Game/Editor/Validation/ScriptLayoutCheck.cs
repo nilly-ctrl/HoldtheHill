@@ -51,13 +51,13 @@ namespace HoldTheHill.EditorTools.Validation
 
                 if (behaviours.Count > 1)
                 {
-                    GrayboxProjectValidator.Add(findings, ValidationSeverity.Error, Name,
+                    ProjectValidator.Add(findings, ValidationSeverity.Error, Name,
                         $"Defines {behaviours.Count} MonoBehaviours ({string.Join(", ", behaviours)}). " +
                         "Unity attaches only the one named like the file; give each its own file.", path);
                 }
                 else if (behaviours[0] != fileName)
                 {
-                    GrayboxProjectValidator.Add(findings, ValidationSeverity.Error, Name,
+                    ProjectValidator.Add(findings, ValidationSeverity.Error, Name,
                         $"MonoBehaviour '{behaviours[0]}' is in a file named '{fileName}.cs'. " +
                         "The file name must match the class name or prefabs lose the script.", path);
                 }

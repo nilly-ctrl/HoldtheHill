@@ -71,7 +71,7 @@ namespace HoldTheHill.EditorTools.Authoring
             {
                 Column = "boss",
                 ReadOnly = true,
-                Computed = r => r is GameObject go && go.GetComponent<GrayboxBoss>() != null ? "true" : "false",
+                Computed = r => r is GameObject go && go.GetComponent<Boss>() != null ? "true" : "false",
             });
             kind.Fields.Add(new Field { Column = "maxHealth", Property = "_maxHealth", Target = r => Part<EnemyHealth>(r) });
             kind.Fields.Add(new Field { Column = "bounty", Property = "_bountyValue", Target = r => Part<EnemyHealth>(r) });
@@ -82,13 +82,13 @@ namespace HoldTheHill.EditorTools.Authoring
             {
                 Column = "bossName",
                 Property = "_displayName",
-                Target = r => Follow(Part<GrayboxBoss>(r), "_data"),
+                Target = r => Follow(Part<Boss>(r), "_data"),
             });
             kind.Fields.Add(new Field
             {
                 Column = "bannerText",
                 Property = "_bannerText",
-                Target = r => Follow(Part<GrayboxBoss>(r), "_data"),
+                Target = r => Follow(Part<Boss>(r), "_data"),
             });
             return kind;
         }
@@ -99,8 +99,8 @@ namespace HoldTheHill.EditorTools.Authoring
             {
                 Name = "Power-ups",
                 FileName = "powerups.csv",
-                Accepts = o => o is GrayboxPowerUpData,
-                Roots = () => FindAssets<GrayboxPowerUpData>(),
+                Accepts = o => o is PowerUpData,
+                Roots = () => FindAssets<PowerUpData>(),
             };
             kind.Fields.Add(new Field { Column = "id", Property = "_id", ReadOnly = true, Target = r => r });
             kind.Fields.Add(new Field { Column = "displayName", Property = "_displayName", Target = r => r });

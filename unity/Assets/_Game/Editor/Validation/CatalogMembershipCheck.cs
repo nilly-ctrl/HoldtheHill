@@ -2,7 +2,7 @@ using HoldTheHill.Features.PowerUps;
 using HoldTheHill.Features.Progression;
 using HoldTheHill.Features.Specials;
 using HoldTheHill.Features.Species;
-using HoldTheHill.Features.Warden;
+using HoldTheHill.Features.Hero;
 using HoldTheHill.Features.Towers;
 using HoldTheHill.Features.Economy;
 using System.Collections.Generic;
@@ -26,17 +26,17 @@ namespace HoldTheHill.EditorTools.Validation
             CheckAchievements(root, findings);
             CheckSkillNodes(root, findings);
 
-            ReportUnreferenced<GrayboxBossData>(root, index, findings, "boss data");
-            ReportUnreferenced<GrayboxPowerUpData>(root, index, findings, "power-up data");
-            ReportUnreferenced<GrayboxSpeciesData>(root, index, findings, "species data");
+            ReportUnreferenced<BossData>(root, index, findings, "boss data");
+            ReportUnreferenced<PowerUpData>(root, index, findings, "power-up data");
+            ReportUnreferenced<SpeciesData>(root, index, findings, "species data");
             ReportUnreferenced<ResourceData>(root, index, findings, "resource data");
-            ReportUnreferenced<GrayboxAbilityData>(root, index, findings, "ability data");
+            ReportUnreferenced<AbilityData>(root, index, findings, "ability data");
         }
 
         private static void CheckTowers(string root, List<ValidationFinding> findings)
         {
             var listed = new HashSet<HoldTheHill.Features.Towers.TowerData>();
-            foreach (var (path, catalog) in GrayboxProjectValidator.FindAll<GrayboxTowerCatalog>(root))
+            foreach (var (path, catalog) in ProjectValidator.FindAll<TowerCatalog>(root))
             {
                 var inThisCatalog = new HashSet<HoldTheHill.Features.Towers.TowerData>();
                 for (int i = 0; i < catalog.Count; i++)
@@ -44,12 +44,12 @@ namespace HoldTheHill.EditorTools.Validation
                     HoldTheHill.Features.Towers.TowerData tower = catalog[i];
                     if (tower == null)
                     {
-                        GrayboxProjectValidator.Add(findings, ValidationSeverity.Error, Name,
+                        ProjectValidator.Add(findings, ValidationSeverity.Error, Name,
                             $"Slot {i} is empty (the build bar would break).", path);
                     }
                     else if (!inThisCatalog.Add(tower))
                     {
-                        GrayboxProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
+                        ProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
                             $"'{tower.name}' is listed twice (slot {i}).", path);
                     }
                     else
@@ -59,11 +59,11 @@ namespace HoldTheHill.EditorTools.Validation
                 }
             }
 
-            foreach (var (path, tower) in GrayboxProjectValidator.FindAll<HoldTheHill.Features.Towers.TowerData>(root))
+            foreach (var (path, tower) in ProjectValidator.FindAll<HoldTheHill.Features.Towers.TowerData>(root))
             {
                 if (!listed.Contains(tower))
                 {
-                    GrayboxProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
+                    ProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
                         $"Tower data '{tower.name}' is not listed in any tower catalog, so it can never be built.", path);
                 }
             }
@@ -71,29 +71,29 @@ namespace HoldTheHill.EditorTools.Validation
 
         private static void CheckAchievements(string root, List<ValidationFinding> findings)
         {
-            var listed = new HashSet<GrayboxAchievementData>();
-            foreach (var (path, catalog) in GrayboxProjectValidator.FindAll<GrayboxAchievementCatalog>(root))
+            var listed = new HashSet<AchievementData>();
+            foreach (var (path, catalog) in ProjectValidator.FindAll<AchievementCatalog>(root))
             {
                 for (int i = 0; i < catalog.Achievements.Count; i++)
                 {
-                    GrayboxAchievementData item = catalog.Achievements[i];
+                    AchievementData item = catalog.Achievements[i];
                     if (item == null)
                     {
-                        GrayboxProjectValidator.Add(findings, ValidationSeverity.Error, Name, $"Slot {i} is empty.", path);
+                        ProjectValidator.Add(findings, ValidationSeverity.Error, Name, $"Slot {i} is empty.", path);
                     }
                     else if (!listed.Add(item))
                     {
-                        GrayboxProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
+                        ProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
                             $"'{item.name}' is listed twice.", path);
                     }
                 }
             }
 
-            foreach (var (path, item) in GrayboxProjectValidator.FindAll<GrayboxAchievementData>(root))
+            foreach (var (path, item) in ProjectValidator.FindAll<AchievementData>(root))
             {
                 if (!listed.Contains(item))
                 {
-                    GrayboxProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
+                    ProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
                         $"Achievement '{item.name}' is not listed in any achievement catalog, so it is never shown.", path);
                 }
             }
@@ -101,29 +101,29 @@ namespace HoldTheHill.EditorTools.Validation
 
         private static void CheckSkillNodes(string root, List<ValidationFinding> findings)
         {
-            var listed = new HashSet<GrayboxSkillNodeData>();
-            foreach (var (path, tree) in GrayboxProjectValidator.FindAll<GrayboxSkillTreeData>(root))
+            var listed = new HashSet<SkillNodeData>();
+            foreach (var (path, tree) in ProjectValidator.FindAll<SkillTreeData>(root))
             {
                 for (int i = 0; i < tree.Nodes.Count; i++)
                 {
-                    GrayboxSkillNodeData node = tree.Nodes[i];
+                    SkillNodeData node = tree.Nodes[i];
                     if (node == null)
                     {
-                        GrayboxProjectValidator.Add(findings, ValidationSeverity.Error, Name, $"Slot {i} is empty.", path);
+                        ProjectValidator.Add(findings, ValidationSeverity.Error, Name, $"Slot {i} is empty.", path);
                     }
                     else if (!listed.Add(node))
                     {
-                        GrayboxProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
+                        ProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
                             $"'{node.name}' is listed twice.", path);
                     }
                 }
             }
 
-            foreach (var (path, node) in GrayboxProjectValidator.FindAll<GrayboxSkillNodeData>(root))
+            foreach (var (path, node) in ProjectValidator.FindAll<SkillNodeData>(root))
             {
                 if (!listed.Contains(node))
                 {
-                    GrayboxProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
+                    ProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
                         $"Skill node '{node.name}' is not listed in any skill tree, so it never appears.", path);
                 }
             }
@@ -132,12 +132,12 @@ namespace HoldTheHill.EditorTools.Validation
         private static void ReportUnreferenced<T>(string root, ProjectTextIndex index,
             List<ValidationFinding> findings, string kind) where T : Object
         {
-            foreach (var (path, asset) in GrayboxProjectValidator.FindAll<T>(root))
+            foreach (var (path, asset) in ProjectValidator.FindAll<T>(root))
             {
                 string guid = AssetDatabase.AssetPathToGUID(path);
                 if (index.ReferencedBy(guid).Count == 0)
                 {
-                    GrayboxProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
+                    ProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
                         $"The {kind} '{asset.name}' is not referenced by any prefab, scene or asset in the sandbox. " +
                         "If code or a builder looks it up by path, ignore this.", path);
                 }

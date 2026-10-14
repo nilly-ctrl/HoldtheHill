@@ -29,7 +29,7 @@ namespace HoldTheHill.Features.DevTools
 
         private readonly DevFrameStats _frames = new DevFrameStats(120);
         private readonly List<Tower> _towers = new List<Tower>();
-        private readonly List<GrayboxPickup> _pickups = new List<GrayboxPickup>();
+        private readonly List<Pickup> _pickups = new List<Pickup>();
         private ProfilerRecorder _gcRecorder;
         private float _nextCount;
         private string _text = string.Empty;
@@ -106,7 +106,7 @@ namespace HoldTheHill.Features.DevTools
 
             Tower.GetActive(_towers);
             _towerCount = _towers.Count;
-            GrayboxPickup.GetActive(_pickups);
+            Pickup.GetActive(_pickups);
             _pickupCount = _pickups.Count;
 
             string gc = _gcRecorder.Valid ? FormatBytes(_lastGc) : "n/a";

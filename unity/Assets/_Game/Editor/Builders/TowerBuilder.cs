@@ -1,0 +1,318 @@
+using HoldTheHill.Core.Animation;
+using System.Collections.Generic;
+using System.Linq;
+using HoldTheHill.Features.Combat;
+using HoldTheHill.Features.Towers;
+using UnityEditor;
+using UnityEngine;
+
+
+namespace HoldTheHill.EditorTools.Builders
+{
+    /// <summary>
+    /// The graybox towers: a base prefab, one prefab variant per tower, a
+    /// <see cref="HoldTheHill.Features.Towers.TowerData"/> asset for each and the <see cref="TowerCatalog"/>
+    /// the build bar reads. Called from <see cref="CombatTestSceneBuilder"/>.
+    /// </summary>
+    /// <remarks>
+    /// A prefab or data asset is only made when it is missing, so a tower's numbers, name, icon
+    /// and cost are tuned in the Inspector and survive a rebuild. The numbers here are the
+    /// starting values. To start one tower over, delete its prefab and rebuild; to start them all
+    /// over use Tools > Hold the Hill > Rebuild Graybox Tower Prefabs.
+    /// </remarks>
+    internal static class TowerBuilder
+    {
+        private const string GrayboxRoot = "Assets/_Game/Features/Towers";
+        private const string PrefabFolder = "Towers";
+        private const string DataRoot = GrayboxRoot + "/Data";
+        private const string TowerDataRoot = DataRoot;
+
+        public const string CatalogPath = DataRoot + "/TowerCatalog.asset";
+
+        private static readonly Color MeleeColor = new Color(0.75f, 0.55f, 0.35f);
+
+        /// <summary>True while every tower prefab is being remade from the numbers in this file.</summary>
+        public static bool Overwrite { get; private set; }
+
+        private static GameObject s_base;
+        private static SpriteAnimLibrary s_anim;
+
+        [MenuItem("Tools/Hold the Hill/Rebuild Graybox Tower Prefabs (resets tuning)")]
+        public static void RebuildAll()
+        {
+            Overwrite = true;
+            try
+            {
+                CombatTestSceneBuilder.Build();
+            }
+            finally
+            {
+                Overwrite = false;
+            }
+        }
+
+        public static string PrefabPath(string id) => $"{GrayboxRoot}/Prefabs/{id}.prefab";
+
+        /// <summary>Builds every tower prefab and data asset, and the catalog in build bar order.</summary>
+        public static void BuildPrefabs(
+            Sprite square,
+            GameObject bullet,
+            GameObject homing,
+            GameObject mortar,
+            GameObject ricochet,
+            GameObject mine,
+            Material lineMaterial,
+            SpriteAnimLibrary anim)
+        {
+            BuildKit.EnsureFolder(GrayboxRoot + "/Prefabs");
+            BuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+
+            s_anim = anim;
+            s_base = BuildBase(square);
+
+            // Fire intervals are tighter than a shipping game would want. In the first
+            // build nothing died for the opening six seconds, which reads as "the towers
+            // are broken" even though they were working. Enemy health goes up to
+            // compensate, so the defence is not made easier overall.
+            var towers = new List<HoldTheHill.Features.Towers.TowerData>
+            {
+                Build("TowerLinear", "Bullet Tower", 100, TargetingPriority.First, 3.6f, 0.45f, new Color(0.4f, 0.7f, 1f),
+                    go => SetProjectile(go, bullet)),
+                Build("TowerHoming", "Homing Tower", 150, TargetingPriority.Closest, 3.8f, 0.9f, new Color(0.4f, 1f, 0.6f),
+                    go => SetProjectile(go, homing)),
+                Build("TowerMortar", "Mortar Tower", 200, TargetingPriority.First, 4.2f, 1.6f, new Color(0.9f, 0.5f, 0.2f),
+                    go => SetProjectile(go, mortar)),
+                Build("TowerRicochet", "Ricochet Tower", 175, TargetingPriority.Strongest, 3.8f, 1f, new Color(0.6f, 0.8f, 1f),
+                    go => SetProjectile(go, ricochet)),
+                Build("TowerMineLayer", "Mine Layer", 250, TargetingPriority.Closest, 4.0f, 2.8f, new Color(0.9f, 0.9f, 0.3f),
+                    go => BuildKit.Apply(go.AddComponent<MineLayerTower>(),
+                        so => so.FindProperty("_minePrefab").objectReferenceValue = mine)),
+                Build("TowerFrostAura", "Frost Aura", 225, TargetingPriority.Closest, 3.5f, 1.5f, new Color(0.4f, 0.85f, 1f),
+                    go => go.AddComponent<FrostAuraTower>()),
+                Build("TowerKnockback", "Knockback Pulse", 200, TargetingPriority.Closest, 3.0f, 1.5f, new Color(1f, 0.6f, 0.2f),
+                    go => go.AddComponent<KnockbackTower>()),
+                Build("TowerChain", "Chain Lightning", 200, TargetingPriority.Weakest, 3.8f, 1.2f, new Color(0.5f, 0.85f, 1f),
+                    go => ProjectilePrefabBuilder.AddChainLightning(go, lineMaterial)),
+                Build("TowerBeam", "Beam Tower", 225, TargetingPriority.Closest, 4f, 1f, new Color(1f, 0.5f, 0.3f),
+                    go => ProjectilePrefabBuilder.AddBeam(go, lineMaterial)),
+                Build("TowerOrbit", "Swarm Nest", 175, TargetingPriority.Closest, 2.5f, 1f, new Color(0.7f, 0.6f, 1f),
+                    AddOrbit),
+                // The close-range castes. Range and interval come from SoldierTower.StatsFor.
+                // The Nurse has no reach: she never targets anything, she mends the hill.
+                BuildMelee("TowerWorker", "Worker", 75, SoldierTower.Caste.Worker),
+                BuildMelee("TowerSoldier", "Soldier", 125, SoldierTower.Caste.Soldier),
+                BuildMelee("TowerMajor", "Major", 200, SoldierTower.Caste.Major),
+                Build("TowerNurse", "Nurse", 150, TargetingPriority.Closest, 0.05f, 3f, MeleeColor,
+                    go => go.AddComponent<NurseTower>()),
+            };
+
+            // Roles in the same order as the list above. Only filled in where an asset has none, so a
+            // role changed in the Inspector survives a rebuild.
+            TowerArchetype[] roles =
+            {
+                TowerArchetype.Gunner, TowerArchetype.Gunner, TowerArchetype.Artillery, TowerArchetype.Gunner,
+                TowerArchetype.Artillery, TowerArchetype.Controller, TowerArchetype.Controller,
+                TowerArchetype.Arc, TowerArchetype.Arc, TowerArchetype.Summoner,
+                TowerArchetype.Brawler, TowerArchetype.Brawler, TowerArchetype.Brawler, TowerArchetype.Support,
+            };
+            for (int i = 0; i < towers.Count && i < roles.Length; i++)
+            {
+                int at = i;
+                BuildKit.Apply(towers[i], so =>
+                {
+                    SerializedProperty role = so.FindProperty("_archetype");
+                    if (role.enumValueIndex == (int)TowerArchetype.Unspecified)
+                    {
+                        role.enumValueIndex = (int)roles[at];
+                    }
+                });
+                EditorUtility.SetDirty(towers[i]);
+            }
+
+            // Towers made some other way (the content wizard) are kept: any data asset in the tower
+            // folder that this list did not make is appended, so a rebuild does not drop it.
+            // Subfolders belong to other catalogs (Towers/FireAnt is the sample species'), so only
+            // assets sitting directly in the folder count.
+            foreach (string guid in AssetDatabase.FindAssets("t:HoldTheHill.Features.Towers.TowerData", new[] { TowerDataRoot }))
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                if (path.LastIndexOf('/') != TowerDataRoot.Length) continue;
+
+                var extra = AssetDatabase.LoadAssetAtPath<HoldTheHill.Features.Towers.TowerData>(path);
+                if (extra != null && !towers.Contains(extra))
+                {
+                    towers.Add(extra);
+                }
+            }
+
+            // The build bar lists towers of one archetype together (and hotkeys follow that order).
+            // OrderBy is stable, so towers of a kind keep the order above.
+            towers = towers.OrderBy(t => (int)t.Archetype).ToList();
+
+            var catalog = LoadOrCreate<TowerCatalog>(CatalogPath, out _);
+            BuildKit.Apply(catalog, so =>
+            {
+                SerializedProperty list = so.FindProperty("_towers");
+                list.arraySize = towers.Count;
+                for (int i = 0; i < towers.Count; i++)
+                {
+                    list.GetArrayElementAtIndex(i).objectReferenceValue = towers[i];
+                }
+            });
+            EditorUtility.SetDirty(catalog);
+            // Written out now: CombatTestSceneBuilder opens a new scene next and reloads the catalog by path.
+            AssetDatabase.SaveAssets();
+
+            s_base = null;
+            s_anim = null;
+        }
+
+        /// <summary>The graybox scene's showcase towers: one of each ranged type, already standing.</summary>
+        public static void BuildSceneTowers()
+        {
+            // Positions are all at least 2 units clear of the road so TowerPlacer would
+            // also consider them buildable.
+            PlaceInScene("TowerLinear", "Tower_Linear_First", new Vector2(-7f, 4.5f));
+            PlaceInScene("TowerHoming", "Tower_Homing_Closest", new Vector2(-6f, 0.5f));
+            PlaceInScene("TowerMortar", "Tower_Mortar_First", new Vector2(-1.5f, 0f));
+            PlaceInScene("TowerRicochet", "Tower_Ricochet_Strongest", new Vector2(-1.5f, -5f));
+            PlaceInScene("TowerChain", "Tower_Chain_Weakest", new Vector2(5f, 1f));
+            PlaceInScene("TowerBeam", "Tower_Beam_Closest", new Vector2(6f, 5.5f));
+
+            // The orbiting field hurts things by touching them, so what matters is whether
+            // the wisps physically overlap the road — the tower's own range is irrelevant.
+            // At the old spot (-1.5,-5) the path was 2.5 away and the wisps orbited at 1.5,
+            // so they fell a full unit short and this tower could never hit anything.
+            // 1.5 out from the road, with a 1.6 orbit, puts them just over it.
+            PlaceInScene("TowerOrbit", "Tower_Orbit", new Vector2(0f, -4f));
+
+            PlaceInScene("TowerFrostAura", "Tower_Frost_Closest", new Vector2(-4f, 4.5f));
+            PlaceInScene("TowerKnockback", "Tower_Knockback_Closest", new Vector2(2f, -5.5f));
+            PlaceInScene("TowerMineLayer", "Tower_MineLayer", new Vector2(0f, 5f));
+        }
+
+        private static void PlaceInScene(string id, string name, Vector2 position)
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(id));
+            if (prefab == null)
+            {
+                throw new System.InvalidOperationException($"[Graybox] Tower prefab missing at {PrefabPath(id)}.");
+            }
+
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            go.name = name;
+            go.transform.position = position;
+        }
+
+        // What every tower shares. A change here reaches all of them through the variants.
+        private static GameObject BuildBase(Sprite square)
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath("TowerBase"));
+            if (existing != null && !Overwrite)
+            {
+                return existing;
+            }
+
+            var go = new GameObject("TowerBase");
+            BuildKit.AddSprite(go, square, Color.white, 0.8f, sortingOrder: 1);
+            go.AddComponent<Tower>();
+            go.AddComponent<TowerTargetVisualizer>();
+            return BuildKit.SavePrefab(go, $"{PrefabFolder}/TowerBase");
+        }
+
+        private static HoldTheHill.Features.Towers.TowerData Build(
+            string id,
+            string label,
+            int cost,
+            TargetingPriority priority,
+            float range,
+            float fireInterval,
+            Color color,
+            System.Action<GameObject> addWeapon)
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(id));
+            if (existing != null && !Overwrite)
+            {
+                return BuildData(id, label, cost, existing);
+            }
+
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(s_base);
+            go.name = id;
+            go.GetComponent<SpriteRenderer>().color = color;
+
+            BuildKit.Apply(go.GetComponent<Tower>(), so =>
+            {
+                so.FindProperty("_range").floatValue = range;
+                so.FindProperty("_fireInterval").floatValue = fireInterval;
+                so.FindProperty("_priority").enumValueIndex = (int)priority;
+            });
+
+            addWeapon?.Invoke(go);
+            TowerAnimator.Attach(go, s_anim, id);
+
+            GameObject prefab = BuildKit.SavePrefab(go, $"{PrefabFolder}/{id}");
+            return BuildData(id, label, cost, prefab);
+        }
+
+        private static HoldTheHill.Features.Towers.TowerData BuildMelee(string id, string label, int cost, SoldierTower.Caste caste)
+        {
+            SoldierTower.Stats stats = SoldierTower.StatsFor(caste);
+            return Build(id, label, cost, TargetingPriority.Closest, stats.Range, stats.Interval, MeleeColor,
+                go => go.AddComponent<SoldierTower>().Configure(caste));
+        }
+
+        private static void SetProjectile(GameObject tower, GameObject projectile)
+        {
+            BuildKit.Apply(tower.GetComponent<Tower>(),
+                so => so.FindProperty("_projectilePrefab").objectReferenceValue = projectile.GetComponent<Projectile>());
+        }
+
+        private static void AddOrbit(GameObject tower)
+        {
+            BuildKit.Apply(tower.AddComponent<OrbitingDamageField>(), so =>
+            {
+                so.FindProperty("_radius").floatValue = 1.6f;
+                so.FindProperty("_orbiterCount").intValue = 3;
+                so.FindProperty("_angularSpeed").floatValue = 150f;
+                so.FindProperty("_contactDamage").floatValue = 6f;
+                so.FindProperty("_hitCooldown").floatValue = 0.4f;
+                so.FindProperty("_orbiterRadius").floatValue = 0.35f;
+            });
+        }
+
+        private static HoldTheHill.Features.Towers.TowerData BuildData(string id, string label, int cost, GameObject prefab)
+        {
+            var data = LoadOrCreate<HoldTheHill.Features.Towers.TowerData>($"{TowerDataRoot}/{id}Data.asset", out bool created);
+            SpriteAnimClip idle = s_anim != null ? s_anim.Find(id)?.Find("Idle") : null;
+
+            BuildKit.Apply(data, so =>
+            {
+                if (created)
+                {
+                    so.FindProperty("_displayName").stringValue = label;
+                    so.FindProperty("_iconName").stringValue = id + "Icon";
+                    so.FindProperty("_baseCost").intValue = cost;
+                }
+
+                so.FindProperty("_prefab").objectReferenceValue = prefab.GetComponent<Tower>();
+                so.FindProperty("_ghostSprite").objectReferenceValue =
+                    idle != null && idle.Frames.Length > 0 ? idle.Frames[0] : null;
+            });
+            EditorUtility.SetDirty(data);
+            return data;
+        }
+
+        private static T LoadOrCreate<T>(string path, out bool created) where T : ScriptableObject
+        {
+            var asset = AssetDatabase.LoadAssetAtPath<T>(path);
+            created = asset == null;
+            if (created)
+            {
+                asset = ScriptableObject.CreateInstance<T>();
+                AssetDatabase.CreateAsset(asset, path);
+            }
+
+            return asset;
+        }
+    }
+}

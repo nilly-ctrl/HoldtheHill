@@ -29,13 +29,13 @@ namespace HoldTheHill.EditorTools.Authoring
                 throw new InvalidOperationException("Pick the resource this pickup pays.");
             }
 
-            var pickupBase = AssetDatabase.LoadAssetAtPath<GameObject>(GrayboxPickupBuilder.PrefabPath("PickupBase"));
+            var pickupBase = AssetDatabase.LoadAssetAtPath<GameObject>(PickupBuilder.PrefabPath("PickupBase"));
             if (pickupBase == null)
             {
                 throw new InvalidOperationException("PickupBase.prefab is missing. Run Build Graybox Combat Test first.");
             }
 
-            GrayboxBuildKit.EnsureFolder(ContentWizardBuilder.GrayboxRoot + "/Economy/Prefabs");
+            BuildKit.EnsureFolder(ContentWizardBuilder.GrayboxRoot + "/Economy/Prefabs");
 
             var go = (GameObject)PrefabUtility.InstantiatePrefab(pickupBase);
             go.name = spec.Id;
@@ -44,19 +44,19 @@ namespace HoldTheHill.EditorTools.Authoring
             renderer.color = spec.Color;
             renderer.size = new Vector2(spec.Size, spec.Size);
 
-            GrayboxBuildKit.Apply(go.GetComponent<GrayboxPickup>(), so =>
+            BuildKit.Apply(go.GetComponent<Pickup>(), so =>
             {
                 so.FindProperty("_reach").floatValue = Mathf.Max(0.35f, spec.Size);
                 so.FindProperty("_lifetime").floatValue = spec.Lifetime;
             });
 
-            GrayboxBuildKit.Apply(go.AddComponent<GrayboxResourceGain>(), so =>
+            BuildKit.Apply(go.AddComponent<ResourceGain>(), so =>
             {
                 so.FindProperty("_resource").objectReferenceValue = spec.Resource;
                 so.FindProperty("_amount").intValue = spec.Amount;
             });
 
-            GameObject prefab = GrayboxBuildKit.SavePrefab(go, $"Pickups/{spec.Id}");
+            GameObject prefab = BuildKit.SavePrefab(go, $"Pickups/{spec.Id}");
             ContentWizardBuilder.Finish(prefab);
             return new List<string> { path };
         }
@@ -65,7 +65,7 @@ namespace HoldTheHill.EditorTools.Authoring
         public static List<Type> EffectTypes()
         {
             var found = new List<Type>();
-            foreach (Type type in TypeCache.GetTypesDerivedFrom<GrayboxPowerUpEffect>())
+            foreach (Type type in TypeCache.GetTypesDerivedFrom<PowerUpEffect>())
             {
                 if (!type.IsAbstract && !type.IsGenericType)
                 {
@@ -79,7 +79,7 @@ namespace HoldTheHill.EditorTools.Authoring
 
         public static List<string> CreatePowerUp(PowerUpSpec spec)
         {
-            string dataPath = GrayboxPowerUpBuilder.DataPath(spec.Id);
+            string dataPath = PowerUpBuilder.DataPath(spec.Id);
             string effectPath = ContentWizardBuilder.PowerUpEffectPath(spec.Id);
             string pickupPath = ContentWizardBuilder.PowerUpPickupPath(spec.Id);
             ContentWizardBuilder.Refuse(dataPath, effectPath, pickupPath);
@@ -88,18 +88,18 @@ namespace HoldTheHill.EditorTools.Authoring
                 throw new InvalidOperationException("Pick the effect component the power-up runs.");
             }
 
-            var pickupBase = AssetDatabase.LoadAssetAtPath<GameObject>(GrayboxPickupBuilder.PrefabPath("PickupBase"));
+            var pickupBase = AssetDatabase.LoadAssetAtPath<GameObject>(PickupBuilder.PrefabPath("PickupBase"));
             if (pickupBase == null)
             {
                 throw new InvalidOperationException("PickupBase.prefab is missing. Run Build Graybox Combat Test first.");
             }
 
-            GrayboxBuildKit.EnsureFolder(ContentWizardBuilder.GrayboxRoot + "/PowerUps/Prefabs");
-            GrayboxBuildKit.EnsureFolder(ContentWizardBuilder.DataRoot + "/PowerUps/Data");
+            BuildKit.EnsureFolder(ContentWizardBuilder.GrayboxRoot + "/PowerUps/Prefabs");
+            BuildKit.EnsureFolder(ContentWizardBuilder.DataRoot + "/PowerUps/Data");
 
-            var data = ScriptableObject.CreateInstance<GrayboxPowerUpData>();
+            var data = ScriptableObject.CreateInstance<PowerUpData>();
             AssetDatabase.CreateAsset(data, dataPath);
-            GrayboxBuildKit.Apply(data, so =>
+            BuildKit.Apply(data, so =>
             {
                 so.FindProperty("_id").stringValue = spec.Id;
                 so.FindProperty("_displayName").stringValue = string.IsNullOrEmpty(spec.DisplayName) ? spec.Id : spec.DisplayName;
@@ -110,33 +110,33 @@ namespace HoldTheHill.EditorTools.Authoring
 
             var effectObject = new GameObject("Effect" + spec.Id);
             effectObject.AddComponent(spec.EffectType);
-            GameObject effect = GrayboxBuildKit.SavePrefab(effectObject, $"PowerUps/Effect{spec.Id}");
+            GameObject effect = BuildKit.SavePrefab(effectObject, $"PowerUps/Effect{spec.Id}");
 
             var pickupObject = (GameObject)PrefabUtility.InstantiatePrefab(pickupBase);
             pickupObject.name = spec.Id;
             var renderer = pickupObject.GetComponent<SpriteRenderer>();
             renderer.color = spec.Color;
             renderer.size = new Vector2(0.5f, 0.5f);
-            GrayboxBuildKit.Apply(pickupObject.GetComponent<GrayboxPickup>(), so =>
+            BuildKit.Apply(pickupObject.GetComponent<Pickup>(), so =>
             {
                 so.FindProperty("_reach").floatValue = 0.5f;
                 so.FindProperty("_lifetime").floatValue = 25f;
             });
-            GrayboxBuildKit.Apply(pickupObject.AddComponent<GrayboxPowerUpGain>(),
+            BuildKit.Apply(pickupObject.AddComponent<PowerUpGain>(),
                 so => so.FindProperty("_powerUp").objectReferenceValue = data);
-            GameObject pickup = GrayboxBuildKit.SavePrefab(pickupObject, $"PowerUps/{spec.Id}");
+            GameObject pickup = BuildKit.SavePrefab(pickupObject, $"PowerUps/{spec.Id}");
 
-            GrayboxBuildKit.Apply(data, so =>
+            BuildKit.Apply(data, so =>
             {
                 so.FindProperty("_pickupPrefab").objectReferenceValue = pickup;
-                so.FindProperty("_effectPrefab").objectReferenceValue = effect.GetComponent<GrayboxPowerUpEffect>();
+                so.FindProperty("_effectPrefab").objectReferenceValue = effect.GetComponent<PowerUpEffect>();
             });
             EditorUtility.SetDirty(data);
 
             var made = new List<string> { dataPath, effectPath, pickupPath };
             if (spec.AddToSceneSpawner)
             {
-                var spawner = UnityEngine.Object.FindAnyObjectByType<GrayboxPowerUpSpawner>();
+                var spawner = UnityEngine.Object.FindAnyObjectByType<PowerUpSpawner>();
                 if (spawner != null)
                 {
                     var so = new SerializedObject(spawner);

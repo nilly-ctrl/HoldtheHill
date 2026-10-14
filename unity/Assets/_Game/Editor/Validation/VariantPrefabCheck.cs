@@ -21,7 +21,7 @@ namespace HoldTheHill.EditorTools.Validation
                 var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
                 if (prefab == null)
                 {
-                    GrayboxProjectValidator.Add(findings, ValidationSeverity.Error, Name,
+                    ProjectValidator.Add(findings, ValidationSeverity.Error, Name,
                         "The prefab could not be loaded.", path);
                     continue;
                 }
@@ -29,7 +29,7 @@ namespace HoldTheHill.EditorTools.Validation
                 PrefabAssetType type = PrefabUtility.GetPrefabAssetType(prefab);
                 if (type == PrefabAssetType.MissingAsset)
                 {
-                    GrayboxProjectValidator.Add(findings, ValidationSeverity.Error, Name,
+                    ProjectValidator.Add(findings, ValidationSeverity.Error, Name,
                         "The prefab is a variant of a prefab that no longer exists.", path);
                     continue;
                 }
@@ -48,7 +48,7 @@ namespace HoldTheHill.EditorTools.Validation
             GameObject baseRoot = PrefabUtility.GetCorrespondingObjectFromSource(variant);
             if (baseRoot == null)
             {
-                GrayboxProjectValidator.Add(findings, ValidationSeverity.Error, Name,
+                ProjectValidator.Add(findings, ValidationSeverity.Error, Name,
                     "Variant whose base prefab is missing.", path);
                 return;
             }
@@ -67,7 +67,7 @@ namespace HoldTheHill.EditorTools.Validation
                 GameObject baseObject = PrefabUtility.GetCorrespondingObjectFromSource(copy.gameObject);
                 if (baseObject != null && baseObject.GetComponent(copy.GetType()) != null)
                 {
-                    GrayboxProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
+                    ProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
                         $"Variant adds its own '{copy.GetType().Name}' on '{copy.gameObject.name}', " +
                         $"but its base '{AssetDatabase.GetAssetPath(baseRoot)}' already has one. " +
                         "Override the base's component instead of copying it.", path);
@@ -81,7 +81,7 @@ namespace HoldTheHill.EditorTools.Validation
             {
                 if (child.gameObject != prefab && PrefabUtility.IsPrefabAssetMissing(child.gameObject))
                 {
-                    GrayboxProjectValidator.Add(findings, ValidationSeverity.Error, Name,
+                    ProjectValidator.Add(findings, ValidationSeverity.Error, Name,
                         $"'{child.name}' is an instance of a prefab that no longer exists.", path);
                 }
             }

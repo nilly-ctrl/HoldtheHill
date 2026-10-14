@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 namespace HoldTheHill.EditorTools.Validation
 {
     /// <summary>
-    /// Reads the per-wave lines GrayboxBalanceHarness writes to the console, e.g.
+    /// Reads the per-wave lines BalanceHarness writes to the console, e.g.
     /// <c>wave 2: spawned 12, killed 11, leaked 1, 8.4s wall</c>, so a measured run can sit next to the estimate.
     /// </summary>
     public static class HarnessLogParser

@@ -10,10 +10,10 @@ namespace HoldTheHill.Features.Hud
     /// an <see cref="EnemyShield"/>. Drawn with sprites in the world, not with IMGUI.
     /// </summary>
     /// <remarks>
-    /// Slow, burn and poison are shown by <see cref="GrayboxStatusVisuals"/> (a tint and an icon),
+    /// Slow, burn and poison are shown by <see cref="StatusVisuals"/> (a tint and an icon),
     /// so the bar carries no status badge of its own.
     /// </remarks>
-    [AddComponentMenu("Hold the Hill/Graybox/Enemy Health Bar")]
+    [AddComponentMenu("Hold the Hill/Enemy Health Bar")]
     public class EnemyHealthBar : MonoBehaviour
     {
         private const int Order = 20; // above the enemy (2) and its status icon, below popups
@@ -61,13 +61,13 @@ namespace HoldTheHill.Features.Hud
             }
         }
 
-        private GrayboxGameFlow _flow;
+        private RunFlow _flow;
 
         private void Awake()
         {
             _health = GetComponent<EnemyHealth>();
             _shield = GetComponent<EnemyShield>();
-            _flow = FindAnyObjectByType<GrayboxGameFlow>();
+            _flow = FindAnyObjectByType<RunFlow>();
             Build();
         }
 

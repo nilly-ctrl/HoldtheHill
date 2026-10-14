@@ -56,7 +56,7 @@ namespace HoldTheHill.EditorTools.Validation
                             if (!missing.ContainsKey(key))
                             {
                                 missing[key] = 1;
-                                GrayboxProjectValidator.Add(findings, ValidationSeverity.Error, Name, problem, entry.AssetPath);
+                                ProjectValidator.Add(findings, ValidationSeverity.Error, Name, problem, entry.AssetPath);
                             }
                         }
                     }
@@ -72,13 +72,13 @@ namespace HoldTheHill.EditorTools.Validation
                     int bar = pair.Key.IndexOf('|');
                     string property = pair.Key.Substring(0, bar);
                     string guid = pair.Key.Substring(bar + 1);
-                    GrayboxProjectValidator.Add(findings, ValidationSeverity.Error, Name,
+                    ProjectValidator.Add(findings, ValidationSeverity.Error, Name,
                         Describe(property, guid, pair.Value), entry.AssetPath);
                 }
 
                 if (danglingLocal > 0)
                 {
-                    GrayboxProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
+                    ProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
                         $"{danglingLocal} reference(s) inside the file point at an object that is not in it " +
                         "(a deleted component or game object)", entry.AssetPath);
                 }

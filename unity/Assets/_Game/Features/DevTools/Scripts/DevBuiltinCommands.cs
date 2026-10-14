@@ -74,7 +74,7 @@ namespace HoldTheHill.Features.DevTools
                     break;
 
                 case "towers":
-                    GrayboxTowerPlacer placer = UnityEngine.Object.FindAnyObjectByType<GrayboxTowerPlacer>();
+                    GameTowerPlacer placer = UnityEngine.Object.FindAnyObjectByType<GameTowerPlacer>();
                     if (placer == null || placer.Catalog == null) throw new DevCommandException("No tower catalog in the scene.");
                     for (int i = 0; i < placer.Catalog.Count; i++)
                     {
@@ -86,7 +86,7 @@ namespace HoldTheHill.Features.DevTools
 
                 case "resources":
                     text.Append("gold  honeydew  skillpoints");
-                    GrayboxEconomy economy = UnityEngine.Object.FindAnyObjectByType<GrayboxEconomy>();
+                    FoodWallet economy = UnityEngine.Object.FindAnyObjectByType<FoodWallet>();
                     if (economy != null && economy.MainResource != null)
                     {
                         text.Append("  ").Append(economy.MainResource.Id).Append(" (main)");
@@ -100,7 +100,7 @@ namespace HoldTheHill.Features.DevTools
                     break;
 
                 case "skills":
-                    GrayboxSkillTree tree = GrayboxSkillTree.Instance;
+                    SkillTree tree = SkillTree.Instance;
                     if (tree == null) throw new DevCommandException("No skill tree in the scene.");
                     foreach (SkillNode node in tree.GetAllNodes())
                     {
@@ -110,7 +110,7 @@ namespace HoldTheHill.Features.DevTools
                     break;
 
                 case "achievements":
-                    GrayboxAchievements achievements = GrayboxAchievements.Instance;
+                    AchievementTracker achievements = AchievementTracker.Instance;
                     if (achievements == null) throw new DevCommandException("No achievements in the scene.");
                     foreach (Achievement ach in achievements.Achievements)
                     {

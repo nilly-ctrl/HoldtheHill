@@ -52,7 +52,7 @@ namespace HoldTheHill.EditorTools.Authoring
             _effectNames = _effectTypes.ConvertAll(t => t.Name).ToArray();
             if (_pickup.Resource == null)
             {
-                _pickup.Resource = AssetDatabase.LoadAssetAtPath<ResourceData>(GrayboxPickupBuilder.FoodPath);
+                _pickup.Resource = AssetDatabase.LoadAssetAtPath<ResourceData>(PickupBuilder.FoodPath);
             }
         }
 
@@ -97,7 +97,7 @@ namespace HoldTheHill.EditorTools.Authoring
             _tower.DisplayName = EditorGUILayout.TextField("Display name", _tower.DisplayName);
             _tower.Archetype = (TowerArchetype)EditorGUILayout.EnumPopup("Archetype", _tower.Archetype);
             _tower.Cost = Mathf.Max(0, EditorGUILayout.IntField("Base cost", _tower.Cost));
-            _tower.IconName = EditorGUILayout.TextField(new GUIContent("Icon name", "A GrayboxIcons name. Empty uses <Id>Icon."), _tower.IconName);
+            _tower.IconName = EditorGUILayout.TextField(new GUIContent("Icon name", "A IconLibrary name. Empty uses <Id>Icon."), _tower.IconName);
             _tower.Color = EditorGUILayout.ColorField("Colour", _tower.Color);
             EditorGUILayout.Space();
             _tower.BasePrefab = (GameObject)EditorGUILayout.ObjectField(
@@ -112,7 +112,7 @@ namespace HoldTheHill.EditorTools.Authoring
             string error = ContentWizardBuilder.CheckId(_tower.Id);
             List<string> taken = error == null
                 ? ContentWizardBuilder.Collisions(
-                    GrayboxTowerBuilder.PrefabPath(_tower.Id), ContentWizardBuilder.TowerDataPath(_tower.Id))
+                    TowerBuilder.PrefabPath(_tower.Id), ContentWizardBuilder.TowerDataPath(_tower.Id))
                 : new List<string>();
             if (_tower.BasePrefab != null && _tower.BasePrefab.GetComponent<Tower>() == null)
             {
@@ -190,8 +190,8 @@ namespace HoldTheHill.EditorTools.Authoring
         private void PowerUpForm()
         {
             EditorGUILayout.HelpBox(
-                "Makes a GrayboxPowerUpData, an effect prefab running the effect component you pick, and a pickup " +
-                "that is a variant of PickupBase. A new effect needs its own GrayboxPowerUpEffect subclass first.",
+                "Makes a PowerUpData, an effect prefab running the effect component you pick, and a pickup " +
+                "that is a variant of PickupBase. A new effect needs its own PowerUpEffect subclass first.",
                 MessageType.None);
 
             _powerUp.Id = EditorGUILayout.TextField("Id", _powerUp.Id);
@@ -202,7 +202,7 @@ namespace HoldTheHill.EditorTools.Authoring
 
             if (_effectNames.Length == 0)
             {
-                EditorGUILayout.HelpBox("No concrete GrayboxPowerUpEffect classes were found.", MessageType.Warning);
+                EditorGUILayout.HelpBox("No concrete PowerUpEffect classes were found.", MessageType.Warning);
             }
             else
             {
@@ -211,7 +211,7 @@ namespace HoldTheHill.EditorTools.Authoring
             }
 
             _powerUp.AddToSceneSpawner = EditorGUILayout.Toggle(
-                new GUIContent("Add to open scene's spawner", "Adds it to the GrayboxPowerUpSpawner in the open scene. Save the scene afterwards."),
+                new GUIContent("Add to open scene's spawner", "Adds it to the PowerUpSpawner in the open scene. Save the scene afterwards."),
                 _powerUp.AddToSceneSpawner);
 
             string error = ContentWizardBuilder.CheckId(_powerUp.Id);
@@ -222,7 +222,7 @@ namespace HoldTheHill.EditorTools.Authoring
 
             List<string> taken = ContentWizardBuilder.CheckId(_powerUp.Id) == null
                 ? ContentWizardBuilder.Collisions(
-                    GrayboxPowerUpBuilder.DataPath(_powerUp.Id),
+                    PowerUpBuilder.DataPath(_powerUp.Id),
                     ContentWizardBuilder.PowerUpEffectPath(_powerUp.Id),
                     ContentWizardBuilder.PowerUpPickupPath(_powerUp.Id))
                 : new List<string>();

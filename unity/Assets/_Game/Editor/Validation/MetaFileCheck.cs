@@ -32,7 +32,7 @@ namespace HoldTheHill.EditorTools.Validation
                     string owner = MetaFileRules.AssetPathForMeta(entry);
                     if (!File.Exists(owner) && !Directory.Exists(owner))
                     {
-                        GrayboxProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
+                        ProjectValidator.Add(findings, ValidationSeverity.Warning, Name,
                             "Orphan .meta: the asset it belongs to is gone.", relative);
                     }
 
@@ -50,7 +50,7 @@ namespace HoldTheHill.EditorTools.Validation
                     : ValidationSeverity.Warning;
 
                 string what = isFolder ? "Folder" : MetaFileRules.IsSpriteLike(entry) ? "Sprite or icon file" : "File";
-                GrayboxProjectValidator.Add(findings, severity, Name,
+                ProjectValidator.Add(findings, severity, Name,
                     $"{what} has no .meta file, so Unity will give it a new GUID on import.", relative);
             }
         }

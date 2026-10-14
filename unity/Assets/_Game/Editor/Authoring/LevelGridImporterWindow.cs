@@ -12,12 +12,12 @@ namespace HoldTheHill.EditorTools.Authoring
 {
     /// <summary>
     /// Pick a hand-drawn text-grid map, check it, see what it will look like, and hand it to the
-    /// existing <see cref="GrayboxLevelBuilder"/>.
+    /// existing <see cref="LevelBuilder"/>.
     /// </summary>
     /// <remarks>
     /// The map is checked here in C# with the rules of <c>level_grid.py</c>. The floor picture and
     /// the route json still come from <c>build_level.py --install</c>, which this window can start
-    /// (it needs python and Pillow on the PATH). Building the scene is GrayboxLevelBuilder.Build,
+    /// (it needs python and Pillow on the PATH). Building the scene is LevelBuilder.Build,
     /// unchanged: it rebuilds the graybox scene first and saves the level as its own scene.
     /// </remarks>
     internal sealed class LevelGridImporterWindow : EditorWindow
@@ -240,13 +240,13 @@ namespace HoldTheHill.EditorTools.Authoring
             bool hasJson = AssetDatabase.LoadAssetAtPath<TextAsset>($"{folder}/{name}.json") != null;
             bool hasGround = AssetDatabase.LoadAssetAtPath<Sprite>($"{folder}/{name}_Ground.png") != null;
             bool hasScene = File.Exists(Path.Combine(
-                Path.GetDirectoryName(Application.dataPath) ?? string.Empty, GrayboxLevelBuilder.ScenePath(name)));
+                Path.GetDirectoryName(Application.dataPath) ?? string.Empty, LevelBuilder.ScenePath(name)));
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Build", EditorStyles.boldLabel);
             EditorGUILayout.LabelField("Floor picture", hasGround ? "present" : "missing");
             EditorGUILayout.LabelField("Route json", hasJson ? "present" : "missing");
-            EditorGUILayout.LabelField("Scene", hasScene ? GrayboxLevelBuilder.ScenePath(name) : "not built yet");
+            EditorGUILayout.LabelField("Scene", hasScene ? LevelBuilder.ScenePath(name) : "not built yet");
 
             if (!hasJson || !hasGround)
             {
@@ -263,7 +263,7 @@ namespace HoldTheHill.EditorTools.Authoring
 
             using (new EditorGUI.DisabledScope(!hasJson || !hasGround))
             {
-                if (GUILayout.Button("Build level scene (GrayboxLevelBuilder)"))
+                if (GUILayout.Button("Build level scene (LevelBuilder)"))
                 {
                     BuildScene(name);
                 }
@@ -327,7 +327,7 @@ namespace HoldTheHill.EditorTools.Authoring
         {
             if (!EditorUtility.DisplayDialog(
                     "Build level scene",
-                    $"This rebuilds the graybox scene and saves {GrayboxLevelBuilder.ScenePath(name)}.\n\n" +
+                    $"This rebuilds the graybox scene and saves {LevelBuilder.ScenePath(name)}.\n\n" +
                     "Other AI sessions or a running Play mode will clash with it. Continue?",
                     "Build", "Cancel"))
             {
@@ -345,7 +345,7 @@ namespace HoldTheHill.EditorTools.Authoring
                 return;
             }
 
-            GrayboxLevelBuilder.Build(name);
+            LevelBuilder.Build(name);
         }
 
         private void EnsureStyles()

@@ -39,7 +39,7 @@ namespace HoldTheHill.Features.DevTools
         {
             if (!AutoCreate || Instance != null) return;
             if (FindAnyObjectByType<DevToolsBootstrap>() != null) return;
-            if (FindAnyObjectByType<GrayboxGameFlow>() == null) return;
+            if (FindAnyObjectByType<RunFlow>() == null) return;
 
             var holder = new GameObject("DevTools (auto)");
             holder.AddComponent<DevToolsBootstrap>();

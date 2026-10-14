@@ -1,5 +1,5 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-using HoldTheHill.Features.Warden;
+using HoldTheHill.Features.Hero;
 using HoldTheHill.Features.GameFlow;
 using UnityEngine;
 
@@ -14,8 +14,8 @@ namespace HoldTheHill.Features.DevTools
     /// from inside that event. The hill raises the event before it checks for defeat, so the
     /// refill is what the defeat check sees. Nothing in the game scripts is changed.
     ///
-    /// <see cref="GrayboxGameFlow"/> is the only thing that writes <see cref="Time.timeScale"/>.
-    /// The speed command hands it an override (<see cref="GrayboxGameFlow.SetSpeedOverride"/>),
+    /// <see cref="RunFlow"/> is the only thing that writes <see cref="Time.timeScale"/>.
+    /// The speed command hands it an override (<see cref="RunFlow.SetSpeedOverride"/>),
     /// which it applies while playing and drops while paused. Without a flow in the scene the
     /// command has nothing to talk to and does nothing.
     /// </remarks>
@@ -23,7 +23,7 @@ namespace HoldTheHill.Features.DevTools
     public class DevToolsCheats : MonoBehaviour
     {
         private static float s_speed;
-        private GrayboxWardenHealth _wardenHealth;
+        private WardenHealth _wardenHealth;
 
         public static DevToolsCheats Instance { get; private set; }
 
@@ -39,7 +39,7 @@ namespace HoldTheHill.Features.DevTools
         public static void SetSpeed(float scale)
         {
             s_speed = Mathf.Clamp(scale, 0f, 20f);
-            GrayboxGameFlow flow = FindAnyObjectByType<GrayboxGameFlow>();
+            RunFlow flow = FindAnyObjectByType<RunFlow>();
             if (flow != null) flow.SetSpeedOverride(s_speed);
         }
 
@@ -101,7 +101,7 @@ namespace HoldTheHill.Features.DevTools
         {
             if (!God) return;
 
-            if (_wardenHealth == null && GrayboxWarden.Instance != null) _wardenHealth = GrayboxWarden.Instance.Health;
+            if (_wardenHealth == null && Warden.Instance != null) _wardenHealth = Warden.Instance.Health;
             if (_wardenHealth != null && !_wardenHealth.IsDowned && _wardenHealth.CurrentHealth < _wardenHealth.MaxHealth)
             {
                 _wardenHealth.Heal(_wardenHealth.MaxHealth);
@@ -114,7 +114,7 @@ namespace HoldTheHill.Features.DevTools
             if (s_speed > 0f)
             {
                 s_speed = 0f;
-                GrayboxGameFlow flow = FindAnyObjectByType<GrayboxGameFlow>();
+                RunFlow flow = FindAnyObjectByType<RunFlow>();
                 if (flow != null) flow.SetSpeedOverride(0f);
             }
         }

@@ -21,20 +21,20 @@ namespace HoldTheHill.Features.DevTools
         internal static List<string> EnemyIds()
         {
             var ids = new List<string>();
-            GrayboxSpecials specials = GrayboxSpecials.Instance;
+            SpecialEvents specials = SpecialEvents.Instance;
             if (specials != null)
             {
-                foreach (GrayboxSpecials.Entry entry in specials.Entries)
+                foreach (SpecialEvents.Entry entry in specials.Entries)
                 {
                     if (entry != null && entry.Prefab != null && !ids.Contains(entry.Id)) ids.Add(entry.Id);
                 }
             }
 
-            GrayboxCustomSpawner custom = UnityEngine.Object.FindAnyObjectByType<GrayboxCustomSpawner>();
-            var entries = DevReflect.Get<List<GrayboxCustomSpawner.Entry>>(custom, "_enemies");
+            CustomSpawner custom = UnityEngine.Object.FindAnyObjectByType<CustomSpawner>();
+            var entries = DevReflect.Get<List<CustomSpawner.Entry>>(custom, "_enemies");
             if (entries != null)
             {
-                foreach (GrayboxCustomSpawner.Entry entry in entries)
+                foreach (CustomSpawner.Entry entry in entries)
                 {
                     if (entry != null && entry.Prefab != null && !ids.Contains(entry.Id)) ids.Add(entry.Id);
                 }
@@ -67,8 +67,8 @@ namespace HoldTheHill.Features.DevTools
 
             if (id == null) throw new DevCommandException("No enemy '" + wanted + "'. Try: list enemies");
 
-            GrayboxSpecials specials = GrayboxSpecials.Instance;
-            GrayboxCustomSpawner custom = UnityEngine.Object.FindAnyObjectByType<GrayboxCustomSpawner>();
+            SpecialEvents specials = SpecialEvents.Instance;
+            CustomSpawner custom = UnityEngine.Object.FindAnyObjectByType<CustomSpawner>();
             Func<GameObject> spawnOne;
             if (specials != null && specials.Find(id) != null)
             {
