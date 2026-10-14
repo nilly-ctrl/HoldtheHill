@@ -12,7 +12,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// </summary>
     /// <remarks>
     /// This proves the scenes are in the build and the flow reaches the win screen. It does not play
-    /// the waves: the win is forced with <see cref="GrayboxBaseHealth.TriggerVictory"/>. Without the
+    /// the waves: the win is forced with <see cref="Queen.TriggerVictory"/>. Without the
     /// flag it does nothing.
     /// </remarks>
     public static class GrayboxPlayerSmoke
@@ -58,10 +58,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             while (Time.realtimeSinceStartup < until
                    && !(SceneManager.GetActiveScene().name == kitchen.SceneName
                         && GrayboxGameFlow.Instance != null && GrayboxGameFlow.Instance != flow
-                        && GrayboxBaseHealth.Instance != null)) yield return null;
+                        && Object.FindAnyObjectByType<Queen>() != null)) yield return null;
 
             flow = GrayboxGameFlow.Instance;
-            if (SceneManager.GetActiveScene().name != kitchen.SceneName || flow == null || GrayboxBaseHealth.Instance == null)
+            if (SceneManager.GetActiveScene().name != kitchen.SceneName || flow == null || Object.FindAnyObjectByType<Queen>() == null)
             {
                 Finish(false, $"Kitchen Floor did not come up (scene '{SceneManager.GetActiveScene().name}')");
                 yield break;
@@ -69,7 +69,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Debug.Log($"[Smoke] In '{SceneManager.GetActiveScene().name}': state {flow.State}, map {flow.MapId}");
 
             yield return new WaitForSeconds(2f);
-            GrayboxBaseHealth.Instance.TriggerVictory();
+            Object.FindAnyObjectByType<Queen>().TriggerVictory();
 
             until = Time.realtimeSinceStartup + StepTimeout;
             while (flow.State != GameFlowState.RunEnd && Time.realtimeSinceStartup < until) yield return null;

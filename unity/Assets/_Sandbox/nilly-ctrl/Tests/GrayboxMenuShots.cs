@@ -103,7 +103,8 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
 
             spawner.StartNextWave();
             yield return null;
-            GrayboxBaseHealth.Instance.TakeBaseDamage(GrayboxBaseHealth.Instance.MaxHealth, Vector3.zero);
+            Queen hill = Object.FindAnyObjectByType<Queen>();
+            hill.TakeDamage(hill.MaxHealth, Vector3.zero);
             yield return Shot("19-defeat-banner-first");
             yield return new WaitForSecondsRealtime(2f);
             yield return Shot("19-run-end-defeat");

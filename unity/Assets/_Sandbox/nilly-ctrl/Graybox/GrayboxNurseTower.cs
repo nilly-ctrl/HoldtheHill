@@ -1,3 +1,4 @@
+using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Combat;
 using UnityEngine;
 
@@ -20,6 +21,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private GrayboxTowerAnimator _animator;
         private SpriteAnimLibrary _library;
+        private Queen _hill;
 
         /// <summary>Pulses that mended the hill so far.</summary>
         public int Heals { get; private set; }
@@ -29,6 +31,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private void Start()
         {
             _animator = GetComponent<GrayboxTowerAnimator>();
+            _hill = FindAnyObjectByType<Queen>();
             var player = GetComponent<SpriteClipPlayer>();
             _library = player != null ? player.Library : null;
             ResetCooldown(); // she has just arrived: the first pulse comes a full interval later
@@ -36,7 +39,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         protected override void Trigger()
         {
-            GrayboxBaseHealth hill = GrayboxBaseHealth.Instance;
+            Queen hill = _hill;
             if (hill == null || hill.IsFinished || hill.CurrentHealth >= hill.MaxHealth)
             {
                 return;

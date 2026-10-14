@@ -1,3 +1,4 @@
+using HoldTheHill.Features.GameFlow;
 using System;
 using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;
@@ -228,7 +229,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             if (data.RequireFullBaseHealth)
             {
-                GrayboxBaseHealth hill = GrayboxBaseHealth.Instance;
+                Queen hill = FindAnyObjectByType<Queen>();
                 return hill != null && hill.CurrentHealth >= hill.MaxHealth;
             }
 

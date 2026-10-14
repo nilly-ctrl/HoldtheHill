@@ -1,4 +1,5 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+using HoldTheHill.Features.GameFlow;
 using UnityEngine;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
@@ -8,7 +9,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// god mode (hill and Warden cannot be hurt) and a custom time speed.
     /// </summary>
     /// <remarks>
-    /// God mode watches <see cref="GrayboxBaseHealth.OnBaseHealthChanged"/> and refills the hill
+    /// God mode watches <see cref="Queen.OnHealthChanged"/> and refills the hill
     /// from inside that event. The hill raises the event before it checks for defeat, so the
     /// refill is what the defeat check sees. Nothing in the game scripts is changed.
     ///
@@ -60,19 +61,35 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Instance = this;
         }
 
-        private void OnEnable() => GrayboxBaseHealth.OnBaseHealthChanged += OnHillHealthChanged;
+        // The hill, found once; god mode listens to its instance event (no static on the shim).
+        private Queen _hill;
+        private bool _listening;
+
+        private void OnEnable() => Listen();
+
+        private void Start() => Listen();
+
+        private void Listen()
+        {
+            if (_listening) return;
+            if (_hill == null) _hill = FindAnyObjectByType<Queen>();
+            if (_hill == null) return;
+            _hill.OnHealthChanged += OnHillHealthChanged;
+            _listening = true;
+        }
 
         private void OnDisable()
         {
-            GrayboxBaseHealth.OnBaseHealthChanged -= OnHillHealthChanged;
+            if (_listening) _hill.OnHealthChanged -= OnHillHealthChanged;
+            _listening = false;
             if (Instance == this) Instance = null;
         }
 
-        private static void OnHillHealthChanged(float current, float max)
+        private void OnHillHealthChanged(float current, float max)
         {
             if (!God) return;
 
-            GrayboxBaseHealth hill = GrayboxBaseHealth.Instance;
+            Queen hill = _hill;
             if (hill != null && !hill.IsFinished && hill.CurrentHealth < hill.MaxHealth)
             {
                 hill.Heal(hill.MaxHealth);

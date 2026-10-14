@@ -1,4 +1,5 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+using HoldTheHill.Features.GameFlow;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         internal static string Win(DevCommandArgs a)
         {
-            GrayboxBaseHealth hill = GrayboxBaseHealth.Instance;
+            Queen hill = UnityEngine.Object.FindAnyObjectByType<Queen>();
             if (hill == null) throw new DevCommandException("No hill in the scene.");
             if (hill.IsFinished) throw new DevCommandException("The run is already over.");
 
@@ -50,7 +51,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         internal static string Lose(DevCommandArgs a)
         {
-            GrayboxBaseHealth hill = GrayboxBaseHealth.Instance;
+            Queen hill = UnityEngine.Object.FindAnyObjectByType<Queen>();
             if (hill == null) throw new DevCommandException("No hill in the scene.");
             if (hill.IsFinished) throw new DevCommandException("The run is already over.");
 

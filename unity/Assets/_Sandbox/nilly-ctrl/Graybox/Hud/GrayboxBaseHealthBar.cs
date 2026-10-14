@@ -1,3 +1,4 @@
+using HoldTheHill.Features.GameFlow;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,11 +32,22 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private int _shownCurrent = -1;
         private int _shownMax = -1;
 
-        public override bool WantsToShow => GrayboxBaseHealth.Instance != null;
+        private Queen _hill;
+
+        private Queen Hill
+        {
+            get
+            {
+                if (_hill == null) _hill = FindAnyObjectByType<Queen>();
+                return _hill;
+            }
+        }
+
+        public override bool WantsToShow => Hill != null;
 
         public override void Refresh()
         {
-            GrayboxBaseHealth hill = GrayboxBaseHealth.Instance;
+            Queen hill = Hill;
             float fraction = hill.MaxHealth > 0f ? Mathf.Clamp01(hill.CurrentHealth / hill.MaxHealth) : 0f;
 
             _fill.anchorMax = new Vector2(fraction, 1f);

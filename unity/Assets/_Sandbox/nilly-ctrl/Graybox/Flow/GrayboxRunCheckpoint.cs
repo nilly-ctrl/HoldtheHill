@@ -1,3 +1,4 @@
+using HoldTheHill.Features.GameFlow;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
@@ -49,11 +50,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <param name="storeParent">Where the inactive tower copies are kept.</param>
         public static GrayboxRunCheckpoint Capture(int waveIndex, GrayboxRunStats stats, Transform storeParent)
         {
+            Queen hill = Object.FindAnyObjectByType<Queen>();
             var checkpoint = new GrayboxRunCheckpoint
             {
                 WaveIndex = Mathf.Max(0, waveIndex),
                 Food = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentFood : 0,
-                HillHealth = GrayboxBaseHealth.Instance != null ? GrayboxBaseHealth.Instance.CurrentHealth : 0f,
+                HillHealth = hill != null ? hill.CurrentHealth : 0f,
                 SkillPoints = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.SkillPoints : 0,
                 UnlockedSkills = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.GetUnlockedIds() : new List<string>(),
                 Stats = stats != null ? stats.Clone() : new GrayboxRunStats(),
@@ -101,7 +103,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             if (GrayboxEconomy.Instance != null) GrayboxEconomy.Instance.ResetFood(Food);
             if (GrayboxSkillTree.Instance != null) GrayboxSkillTree.Instance.RestoreState(SkillPoints, UnlockedSkills);
-            if (GrayboxBaseHealth.Instance != null) GrayboxBaseHealth.Instance.RestoreHealth(HillHealth);
+            Queen hill = Object.FindAnyObjectByType<Queen>();
+            if (hill != null) hill.RestoreHealth(HillHealth);
         }
 
         /// <summary>Frees the stored tower copies. The checkpoint cannot be restored afterwards.</summary>

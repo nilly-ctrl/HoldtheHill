@@ -1,3 +1,4 @@
+using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 {
     /// <summary>
     /// The two set pieces at the ends of the trail: the hill being defended, which looks more
-    /// battered as <see cref="GrayboxBaseHealth"/> drops, and the burrow the enemy comes out of,
+    /// battered as the <see cref="Queen"/> drops, and the burrow the enemy comes out of,
     /// which kicks up dirt on each spawn.
     /// </summary>
     [RequireComponent(typeof(SpriteClipPlayer))]
@@ -19,6 +20,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private SpriteClipPlayer _player;
         private EnemySpawner _spawner;
+        private Queen _hill;
+        private bool _listening;
         private Vector3 _home;
         private float _shakeUntil;
 
@@ -38,16 +41,20 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _home = transform.position;
         }
 
-        private void OnEnable()
+        private void OnEnable() => ListenToHill();
+
+        private void ListenToHill()
         {
-            if (_kind == Kind.Hill)
-            {
-                GrayboxBaseHealth.OnBaseHealthChanged += OnHillHealthChanged;
-            }
+            if (_kind != Kind.Hill || _listening) return;
+            if (_hill == null) _hill = FindAnyObjectByType<Queen>();
+            if (_hill == null) return;
+            _hill.OnHealthChanged += OnHillHealthChanged;
+            _listening = true;
         }
 
         private void Start()
         {
+            ListenToHill();
             if (_kind == Kind.Burrow)
             {
                 _spawner = FindAnyObjectByType<EnemySpawner>();
@@ -60,7 +67,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void OnDisable()
         {
-            GrayboxBaseHealth.OnBaseHealthChanged -= OnHillHealthChanged;
+            if (_listening) _hill.OnHealthChanged -= OnHillHealthChanged;
+            _listening = false;
             if (_spawner != null)
             {
                 _spawner.onEnemySpawned?.RemoveListener(OnEnemySpawned);

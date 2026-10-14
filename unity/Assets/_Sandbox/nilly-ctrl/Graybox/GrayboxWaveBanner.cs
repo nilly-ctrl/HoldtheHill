@@ -1,3 +1,4 @@
+using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private const float ClearCheckSeconds = 0.5f;
 
         private EnemySpawner _spawner;
+        private Queen _hill;
         private PixelFontTheme _theme;
         private PixelText _text;
         private float _age;
@@ -44,7 +46,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 _spawner.onWaveCompleted.AddListener(OnWaveCompleted);
             }
 
-            GrayboxBaseHealth.OnGameFinished += OnGameFinished;
+            _hill = FindAnyObjectByType<Queen>();
+            if (_hill != null) _hill.Finished += OnGameFinished;
         }
 
         private void OnDisable()
@@ -55,7 +58,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 _spawner.onWaveCompleted.RemoveListener(OnWaveCompleted);
             }
 
-            GrayboxBaseHealth.OnGameFinished -= OnGameFinished;
+            if (_hill != null) _hill.Finished -= OnGameFinished;
         }
 
         /// <summary>How long the VICTORY or DEFEAT banner plays. The run-end panel waits for it.</summary>

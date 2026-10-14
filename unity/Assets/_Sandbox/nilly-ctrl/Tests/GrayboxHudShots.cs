@@ -65,7 +65,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             placer.CancelInteraction();
 
             Object.FindAnyObjectByType<EnemySpawner>().StartNextWave();
-            GrayboxBaseHealth.Instance.TakeBaseDamage(40f, Vector3.zero);
+            Object.FindAnyObjectByType<Queen>().TakeDamage(40f, Vector3.zero);
             GrayboxWarden.Instance.Health.TakeDamage(new HoldTheHill.Features.Combat.DamageInfo(6f, null, Vector2.zero));
             yield return new WaitForSeconds(2f);
             yield return Shot("hud-5-wave-running");

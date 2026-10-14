@@ -65,6 +65,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private EnemySpawner _spawner;
         private GrayboxTowerPlacer _placer;
+        private Queen _hill;
         private readonly List<Tower> _towers = new List<Tower>();
         private GrayboxCustomSpawner _custom;
         private float _autoStartTimer;
@@ -118,6 +119,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _spawner = FindAnyObjectByType<EnemySpawner>();
             _placer = FindAnyObjectByType<GrayboxTowerPlacer>();
             _custom = FindAnyObjectByType<GrayboxCustomSpawner>();
+            _hill = FindAnyObjectByType<Queen>();
             base.Awake();
 
             // Home loaded this scene to play it (GrayboxLevels.LoadAndPlay): skip the menus.
@@ -134,7 +136,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             base.StateChanged += ForwardStateChanged;
             EnemyHealth.Defeated += OnEnemyDefeated;
             GrayboxEconomy.OnBountyPaid += OnBountyPaid;
-            GrayboxBaseHealth.OnGameFinished += OnGameFinished;
+            if (_hill == null) _hill = FindAnyObjectByType<Queen>();
+            if (_hill != null) _hill.Finished += OnGameFinished;
             if (_spawner != null) _spawner.onWaveStarted.AddListener(OnWaveStarted);
         }
 
@@ -143,7 +146,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             base.StateChanged -= ForwardStateChanged;
             EnemyHealth.Defeated -= OnEnemyDefeated;
             GrayboxEconomy.OnBountyPaid -= OnBountyPaid;
-            GrayboxBaseHealth.OnGameFinished -= OnGameFinished;
+            if (_hill != null) _hill.Finished -= OnGameFinished;
             if (_spawner != null) _spawner.onWaveStarted.RemoveListener(OnWaveStarted);
         }
 
@@ -307,9 +310,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         // The permanent upgrades bought at Home, handed out on top of the scene's own numbers.
-        private static void ApplyRunStartBonuses()
+        private void ApplyRunStartBonuses()
         {
-            if (GrayboxBaseHealth.Instance != null) GrayboxBaseHealth.Instance.SetBonusHealth(GrayboxUpgrades.HillHealthBonus);
+            if (_hill != null) _hill.SetBonusHealth(GrayboxUpgrades.HillHealthBonus);
 
             GrayboxEconomy economy = GrayboxEconomy.Instance;
             int food = GrayboxUpgrades.StartingFoodBonus;
@@ -364,10 +367,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (_spawner == null || _spawner.CurrentState != EnemySpawner.SpawnerState.Completed) return;
             if (_spawner.LivingEnemyCount > 0) return;
 
-            GrayboxBaseHealth hill = GrayboxBaseHealth.Instance;
-            if (hill == null || hill.IsFinished) return;
+            if (_hill == null || _hill.IsFinished) return;
 
-            hill.TriggerVictory();
+            _hill.TriggerVictory();
         }
 
         private void OnGameFinished(bool victory)
