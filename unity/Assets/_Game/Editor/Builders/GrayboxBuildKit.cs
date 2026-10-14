@@ -18,11 +18,41 @@ namespace HoldTheHill.EditorTools.Builders
     /// </summary>
     internal static class GrayboxBuildKit
     {
-        internal const string SandboxRoot = "Assets/_Sandbox/nilly-ctrl";
+        internal const string GameRoot = "Assets/_Game";
 
-        internal const string GrayboxRoot = SandboxRoot + "/Graybox";
+        internal const string FeaturesRoot = GameRoot + "/Features";
 
-        internal const string PrefabRoot = GrayboxRoot + "/Prefabs";
+        internal const string DevScenesRoot = GameRoot + "/Scenes/Dev";
+
+        /// <summary>
+        /// Where a generated prefab lives: the first folder of its name picks the feature
+        /// (Towers, PowerUps, Warden, Hud, Combat, Enemies; Pickups belong to Economy), the rest is
+        /// the path inside that feature's Prefabs folder. A bare name is an enemy.
+        /// </summary>
+        internal static string PrefabPath(string fileName)
+        {
+            int slash = fileName.IndexOf('/');
+            string kind = slash < 0 ? "Enemies" : fileName.Substring(0, slash);
+            string rest = slash < 0 ? fileName : fileName.Substring(slash + 1);
+            string feature = kind == "Pickups" ? "Economy" : kind;
+            string folder = $"{FeaturesRoot}/{feature}/Prefabs";
+            int sub = rest.LastIndexOf('/');
+            EnsureFolder(sub < 0 ? folder : $"{folder}/{rest.Substring(0, sub)}");
+            return $"{folder}/{rest}.prefab";
+        }
+
+        /// <summary>Creates a folder and its parents under Assets if they are missing.</summary>
+        internal static void EnsureFolder(string path)
+        {
+            if (AssetDatabase.IsValidFolder(path))
+            {
+                return;
+            }
+
+            int slash = path.LastIndexOf('/');
+            EnsureFolder(path.Substring(0, slash));
+            AssetDatabase.CreateFolder(path.Substring(0, slash), path.Substring(slash + 1));
+        }
 
         internal static void CreateFolderIfMissing(string parent, string child)
         {
@@ -63,7 +93,7 @@ namespace HoldTheHill.EditorTools.Builders
                 }
             }
 
-            string path = $"{PrefabRoot}/{fileName}.prefab";
+            string path = PrefabPath(fileName);
             GameObject asset = PrefabUtility.SaveAsPrefabAsset(instance, path);
             Object.DestroyImmediate(instance);
             return asset;

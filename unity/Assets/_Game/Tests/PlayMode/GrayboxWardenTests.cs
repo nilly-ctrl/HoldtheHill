@@ -19,7 +19,7 @@ namespace HoldTheHill.Tests
     /// </summary>
     public class GrayboxWardenTests
     {
-        private const string Root = "Assets/_Sandbox/nilly-ctrl/Graybox";
+        private const string Root = "Assets/_Game/Features";
 
         private readonly List<GameObject> _made = new List<GameObject>();
         private GrayboxWarden _warden;
@@ -27,7 +27,7 @@ namespace HoldTheHill.Tests
         [SetUp]
         public void SetUp()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Warden/Warden.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Warden/Prefabs/Warden.prefab");
             Assert.IsNotNull(prefab, "Run Tools > Hold the Hill > Build Graybox Combat Test.");
             GameObject go = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
             _made.Add(go);
@@ -72,7 +72,7 @@ namespace HoldTheHill.Tests
                 Assert.IsFalse(string.IsNullOrEmpty(ability.Data.DisplayName), ability.name);
                 CollectionAssert.Contains(ids, ability.Data.ControlId, ability.name);
                 Assert.IsTrue(PrefabUtility.IsPartOfAnyPrefab(
-                    AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Warden/{ability.name}.prefab")), ability.name);
+                    AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Warden/Prefabs/{ability.name}.prefab")), ability.name);
             }
         }
 

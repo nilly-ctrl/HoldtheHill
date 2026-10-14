@@ -12,14 +12,14 @@ namespace HoldTheHill.Tests
     /// </summary>
     public class GrayboxResourceTests
     {
-        private const string Root = "Assets/_Sandbox/nilly-ctrl/Graybox";
+        private const string Root = "Assets/_Game/Features";
 
         private GameObject _holder;
         private GameObject _pickup;
         private ResourceData _jelly;
 
         private static GameObject Pickup(string name) =>
-            AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Pickups/{name}.prefab");
+            AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Economy/Prefabs/{name}.prefab");
 
         [SetUp]
         public void SetUp()
@@ -82,7 +82,7 @@ namespace HoldTheHill.Tests
         {
             GameObject pickupBase = Pickup("PickupBase");
             Assert.IsNotNull(pickupBase, "Run Tools > Hold the Hill > Build Graybox Combat Test.");
-            var food = AssetDatabase.LoadAssetAtPath<ResourceData>($"{Root}/Data/Economy/Food.asset");
+            var food = AssetDatabase.LoadAssetAtPath<ResourceData>($"{Root}/Economy/Data/Food.asset");
             Assert.IsNotNull(food);
 
             int last = 0;
@@ -106,7 +106,7 @@ namespace HoldTheHill.Tests
             var economy = _holder.AddComponent<GrayboxEconomy>();
             var wallet = new SerializedObject(economy);
             wallet.FindProperty("_mainResource").objectReferenceValue =
-                AssetDatabase.LoadAssetAtPath<ResourceData>($"{Root}/Data/Economy/Food.asset");
+                AssetDatabase.LoadAssetAtPath<ResourceData>($"{Root}/Economy/Data/Food.asset");
             wallet.ApplyModifiedPropertiesWithoutUndo();
             _pickup = Object.Instantiate(Pickup("CrumbBig"));
             var pickup = _pickup.GetComponent<GrayboxPickup>();
@@ -132,7 +132,7 @@ namespace HoldTheHill.Tests
         [Test]
         public void BossBase_DropsTheGoldenCrumb()
         {
-            var bossBase = AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/GrayboxBossBase.prefab");
+            var bossBase = AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Enemies/Prefabs/GrayboxBossBase.prefab");
             Object drop = new SerializedObject(bossBase.GetComponent<GrayboxBoss>()).FindProperty("_dropPrefab").objectReferenceValue;
             Assert.AreEqual(Pickup("CrumbGolden"), drop);
         }

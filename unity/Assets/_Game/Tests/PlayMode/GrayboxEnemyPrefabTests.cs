@@ -14,7 +14,7 @@ namespace HoldTheHill.Tests
     /// </summary>
     public class GrayboxEnemyPrefabTests
     {
-        private const string PrefabRoot = "Assets/_Sandbox/nilly-ctrl/Graybox/Prefabs";
+        private const string PrefabRoot = "Assets/_Game/Features/Enemies/Prefabs";
 
         private static readonly string[] Regular =
         {

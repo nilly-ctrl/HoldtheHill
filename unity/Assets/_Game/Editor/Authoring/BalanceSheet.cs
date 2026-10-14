@@ -20,11 +20,11 @@ namespace HoldTheHill.EditorTools.Authoring
     /// </remarks>
     internal static class BalanceSheet
     {
-        internal const string SandboxRoot = "Assets/_Sandbox/nilly-ctrl";
+        internal const string SandboxRoot = "Assets/_Game";
         internal const string EnemyPrefabFolder = SandboxRoot + "/Graybox/Prefabs";
 
         public static string DefaultFolder =>
-            Path.GetFullPath(Path.Combine(Application.dataPath, "_Sandbox/nilly-ctrl/Balance~"));
+            Path.GetFullPath(Path.Combine(Application.dataPath, "_Game/Balance~"));
 
         public sealed class Field
         {

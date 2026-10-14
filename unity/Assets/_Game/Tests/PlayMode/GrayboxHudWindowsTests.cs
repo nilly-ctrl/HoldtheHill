@@ -20,7 +20,7 @@ namespace HoldTheHill.Tests
     /// </summary>
     public class GrayboxHudWindowsTests
     {
-        private const string HudPath = "Assets/_Sandbox/nilly-ctrl/Graybox/Prefabs/GrayboxHud.prefab";
+        private const string HudPath = "Assets/_Game/Features/Hud/Prefabs/GrayboxHud.prefab";
 
         private readonly List<Object> _made = new List<Object>();
 

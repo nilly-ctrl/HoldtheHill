@@ -13,7 +13,7 @@ namespace HoldTheHill.EditorTools.Builders
     internal static class GrayboxAnimLibraryBuilder
     {
         private const string AsepriteRoot = "Assets/_Game/Shared/Art/Animations/Aseprite";
-        internal const string LibraryPath = "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxAnimLibrary.asset";
+        internal const string LibraryPath = "Assets/_Game/Core/Animation/Data/GrayboxAnimLibrary.asset";
 
         [MenuItem("Tools/Hold the Hill/Rebuild Graybox Animation Library")]
         public static SpriteAnimLibrary Build()

@@ -43,7 +43,7 @@ namespace HoldTheHill.EditorTools.Builders
             go.AddComponent<AudioListener>();
         }
 
-        internal const string TileRoot = GrayboxBuildKit.SandboxRoot + "/Tiles";
+        internal const string TileRoot = "Assets/_Game/Shared/Art/Tilesets";
 
         /// <summary>
         /// Grass under everything and a dirt trail along the route. EnemyPath still draws its

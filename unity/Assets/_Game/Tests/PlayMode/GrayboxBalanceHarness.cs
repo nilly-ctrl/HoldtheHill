@@ -34,7 +34,7 @@ namespace HoldTheHill.Tests
     public class GrayboxBalanceHarness
     {
         private const string ScenePath =
-            "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxCombatTest.unity";
+            "Assets/_Game/Scenes/Dev/GrayboxCombatTest.unity";
 
         // Wall-clock ceiling per wave so a stall fails loudly instead of hanging.
         private const float WaveTimeoutSeconds = 150f;

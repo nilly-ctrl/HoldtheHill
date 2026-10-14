@@ -16,8 +16,8 @@ namespace HoldTheHill.EditorTools.Builders
     /// </summary>
     public class GrayboxDashboard : EditorWindow
     {
-        private const string ScenePath = "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxCombatTest.unity";
-        private const string WaveAssetPath = "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxWaves.asset";
+        private const string ScenePath = "Assets/_Game/Scenes/Dev/GrayboxCombatTest.unity";
+        private const string WaveAssetPath = "Assets/_Game/Features/Enemies/Data/GrayboxWaves.asset";
 
         private Vector2 _scrollPos;
         private string _lastTestReport = "No balance test run yet. Click 'Run Balance Simulation' to execute.";

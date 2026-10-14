@@ -22,7 +22,7 @@ namespace HoldTheHill.EditorTools.Pipeline
     /// </summary>
     public static class TileSetBuilder
     {
-        internal const string Root = "Assets/_Sandbox/nilly-ctrl/Tiles/Sets";
+        internal const string Root = "Assets/_Game/Shared/Art/Tilesets/Sets";
         internal const float PixelsPerUnit = 32f;
 
         // Bit of the neighbour mask for each direction (y up), matching build_tile_sets.py.

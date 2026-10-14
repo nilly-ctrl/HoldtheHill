@@ -151,7 +151,7 @@ namespace HoldTheHill.Tests
         [Test]
         public void MetaRules_TellWhichPathsUnityIgnores()
         {
-            Assert.IsTrue(MetaFileRules.IsIgnoredByUnity("Assets/_Sandbox/nilly-ctrl/Balance~/sim-report.csv"));
+            Assert.IsTrue(MetaFileRules.IsIgnoredByUnity("Assets/_Game/Balance~/sim-report.csv"));
             Assert.IsTrue(MetaFileRules.IsIgnoredByUnity("Assets/Foo/.hidden/file.png"));
             Assert.IsTrue(MetaFileRules.IsIgnoredByUnity("Assets/Foo/scratch.tmp"));
             Assert.IsFalse(MetaFileRules.IsIgnoredByUnity("Assets/Foo/Icon.png"));

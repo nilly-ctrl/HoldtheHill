@@ -26,7 +26,7 @@ namespace HoldTheHill.Tests
     /// </summary>
     public class GrayboxHudShots
     {
-        private const string ScenePath = "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxCombatTest.unity";
+        private const string ScenePath = "Assets/_Game/Scenes/Dev/GrayboxCombatTest.unity";
         private string _dir;
 
         [UnityTest, Explicit, Category("Screenshots")]
@@ -102,7 +102,7 @@ namespace HoldTheHill.Tests
             }
 
             // The first hand-drawn level, as the Editor would open it.
-            string[] levels = UnityEditor.AssetDatabase.FindAssets("t:Scene", new[] { "Assets/_Sandbox/nilly-ctrl/Levels" });
+            string[] levels = UnityEditor.AssetDatabase.FindAssets("t:Scene", new[] { "Assets/_Game/Scenes/Levels/KitchenFloor" });
             if (levels.Length > 0)
             {
                 string levelPath = UnityEditor.AssetDatabase.GUIDToAssetPath(levels[0]);

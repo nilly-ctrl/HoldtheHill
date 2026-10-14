@@ -19,7 +19,7 @@ namespace HoldTheHill.EditorTools.Builders
         internal static GameObject BuildEnemyPrefab(
             string name, Sprite sprite, float health, float speed, Color color, float size, int bounty = 10, float breach = 0f)
         {
-            return GrayboxBuildKit.SavePrefab(BuildBaseEnemyObject(name, sprite, health, speed, color, size, bounty, breach: breach), name);
+            return GrayboxBuildKit.SavePrefab(BuildBaseEnemyObject(name, sprite, health, speed, color, size, bounty, breach: breach), "Enemies/" + name);
         }
 
         internal static GameObject BuildShieldedEnemyPrefab(
@@ -33,7 +33,7 @@ namespace HoldTheHill.EditorTools.Builders
                 so.FindProperty("_regenRate").floatValue = 12f;
                 so.FindProperty("_regenDelay").floatValue = 4.0f;
             });
-            return GrayboxBuildKit.SavePrefab(go, name);
+            return GrayboxBuildKit.SavePrefab(go, "Enemies/" + name);
         }
 
         internal static GameObject BuildSplitterEnemyPrefab(
@@ -46,7 +46,7 @@ namespace HoldTheHill.EditorTools.Builders
                 so.FindProperty("_miniAntPrefab").objectReferenceValue = swarmPrefab;
                 so.FindProperty("_splitCount").intValue = 3;
             });
-            return GrayboxBuildKit.SavePrefab(go, name);
+            return GrayboxBuildKit.SavePrefab(go, "Enemies/" + name);
         }
 
         internal static GameObject BuildHealerEnemyPrefab(
@@ -60,7 +60,7 @@ namespace HoldTheHill.EditorTools.Builders
                 so.FindProperty("_healInterval").floatValue = 1.4f;
                 so.FindProperty("_healAmount").floatValue = 20f;
             });
-            return GrayboxBuildKit.SavePrefab(go, name);
+            return GrayboxBuildKit.SavePrefab(go, "Enemies/" + name);
         }
 
         internal const string EnemyBaseName = "GrayboxEnemyBase";
@@ -93,7 +93,7 @@ namespace HoldTheHill.EditorTools.Builders
                 so => so.FindProperty("_onReachEnd").enumValueIndex = (int)EnemyMover.EndBehaviour.Despawn);
             go.AddComponent<EnemyHealthBar>();
 
-            s_enemyBase = GrayboxBuildKit.SavePrefab(go, EnemyBaseName);
+            s_enemyBase = GrayboxBuildKit.SavePrefab(go, "Enemies/" + EnemyBaseName);
             return s_enemyBase;
         }
 

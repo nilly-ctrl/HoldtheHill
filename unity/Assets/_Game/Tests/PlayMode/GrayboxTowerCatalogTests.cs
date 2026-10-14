@@ -12,16 +12,16 @@ namespace HoldTheHill.Tests
     /// </summary>
     public class GrayboxTowerCatalogTests
     {
-        private const string Root = "Assets/_Sandbox/nilly-ctrl/Graybox";
+        private const string Root = "Assets/_Game/Features";
 
         private GameObject _placerObject;
         private Tower _placed;
 
         private static GrayboxTowerCatalog Catalog =>
-            AssetDatabase.LoadAssetAtPath<GrayboxTowerCatalog>($"{Root}/Data/GrayboxTowerCatalog.asset");
+            AssetDatabase.LoadAssetAtPath<GrayboxTowerCatalog>($"{Root}/Towers/Data/GrayboxTowerCatalog.asset");
 
         private static GameObject Prefab(string id) =>
-            AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Towers/{id}.prefab");
+            AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Towers/Prefabs/{id}.prefab");
 
         [TearDown]
         public void TearDown()

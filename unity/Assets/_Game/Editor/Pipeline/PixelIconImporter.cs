@@ -12,10 +12,10 @@ namespace HoldTheHill.EditorTools.Pipeline
     /// </summary>
     public class PixelIconImporter : AssetPostprocessor
     {
-        private const string IconFolder = "Assets/_Sandbox/nilly-ctrl/Icons/PNG/";
+        private const string IconFolder = "Assets/_Game/Shared/Art/Icons/PNG/";
         private const string FontAtlasFolder = "Assets/_Game/Shared/Fonts/Pixel/Atlases/";
-        private const string HudFolder = "Assets/_Sandbox/nilly-ctrl/Ui/Hud/";
-        private const string MarkerFolder = "Assets/_Sandbox/nilly-ctrl/Ui/Markers/";
+        private const string HudFolder = "Assets/_Game/Shared/Art/Ui/Hud/";
+        private const string MarkerFolder = "Assets/_Game/Shared/Art/Ui/Markers/";
 
         // Slice borders as (left, bottom, right, top). Keep in step with Ui/Hud/Source~/borders.json.
         private static readonly Dictionary<string, Vector4> HudBorders = new Dictionary<string, Vector4>

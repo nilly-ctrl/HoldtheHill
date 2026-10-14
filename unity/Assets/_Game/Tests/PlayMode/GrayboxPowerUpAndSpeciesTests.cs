@@ -17,15 +17,15 @@ namespace HoldTheHill.Tests
     /// </summary>
     public class GrayboxPowerUpAndSpeciesTests
     {
-        private const string Root = "Assets/_Sandbox/nilly-ctrl/Graybox";
+        private const string Root = "Assets/_Game/Features";
 
         private readonly List<GameObject> _made = new List<GameObject>();
 
         private static GrayboxPowerUpData PowerUp(string id) =>
-            AssetDatabase.LoadAssetAtPath<GrayboxPowerUpData>($"{Root}/Data/PowerUps/{id}Data.asset");
+            AssetDatabase.LoadAssetAtPath<GrayboxPowerUpData>($"{Root}/PowerUps/Data/{id}Data.asset");
 
         private static GrayboxSpeciesData Species(string id) =>
-            AssetDatabase.LoadAssetAtPath<GrayboxSpeciesData>($"{Root}/Data/Species/{id}.asset");
+            AssetDatabase.LoadAssetAtPath<GrayboxSpeciesData>($"{Root}/Species/Data/{id}.asset");
 
         [TearDown]
         public void TearDown()
@@ -61,7 +61,7 @@ namespace HoldTheHill.Tests
         [Test]
         public void PowerUps_HaveAPickupVariantAndAnEffectPrefab()
         {
-            var pickupBase = AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Pickups/PickupBase.prefab");
+            var pickupBase = AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Economy/Prefabs/PickupBase.prefab");
             foreach (string id in new[] { "HoneyDrop", "BerserkBerry" })
             {
                 GrayboxPowerUpData data = PowerUp(id);
@@ -150,7 +150,7 @@ namespace HoldTheHill.Tests
             GrayboxSpeciesData garden = Species("GardenAnt");
             Assert.IsNotNull(garden, "Run Tools > Hold the Hill > Build Graybox Combat Test.");
             Assert.AreEqual(
-                AssetDatabase.LoadAssetAtPath<GrayboxTowerCatalog>($"{Root}/Data/GrayboxTowerCatalog.asset"), garden.TowerCatalog);
+                AssetDatabase.LoadAssetAtPath<GrayboxTowerCatalog>($"{Root}/Towers/Data/GrayboxTowerCatalog.asset"), garden.TowerCatalog);
             Assert.AreEqual(14, garden.TowerCatalog.Count);
             Assert.IsNotNull(garden.WardenPrefab);
         }

@@ -19,7 +19,7 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     internal static class GrayboxSpecialsBuilder
     {
-        private const string PrefabRoot = "Assets/_Sandbox/nilly-ctrl/Graybox/Prefabs";
+        private const string PrefabRoot = "Assets/_Game/Features/Enemies/Prefabs";
 
         // Order is the order of the spawn panel: bosses first.
         private static readonly (string Id, string Label, bool Boss)[] Catalog =
@@ -37,7 +37,7 @@ namespace HoldTheHill.EditorTools.Builders
             ("Bombardier", "Bombardier Beetle", false),
         };
 
-        private const string BossDataRoot = "Assets/_Sandbox/nilly-ctrl/Graybox/Data/Bosses";
+        private const string BossDataRoot = "Assets/_Game/Features/Specials/Data";
         private const string BossBaseName = "GrayboxBossBase";
 
         private static GameObject s_bossBase;
@@ -55,15 +55,14 @@ namespace HoldTheHill.EditorTools.Builders
             go.name = BossBaseName;
             GrayboxBuildKit.Apply(go.AddComponent<GrayboxBoss>(),
                 so => so.FindProperty("_dropPrefab").objectReferenceValue = s_bossDrop);
-            s_bossBase = GrayboxBuildKit.SavePrefab(go, BossBaseName);
+            s_bossBase = GrayboxBuildKit.SavePrefab(go, "Enemies/" + BossBaseName);
             return s_bossBase;
         }
 
         // Made once: the texts can then be edited in the Inspector and survive a rebuild.
         private static GrayboxBossData BossData(string id, string label)
         {
-            GrayboxBuildKit.CreateFolderIfMissing("Assets/_Sandbox/nilly-ctrl/Graybox", "Data");
-            GrayboxBuildKit.CreateFolderIfMissing("Assets/_Sandbox/nilly-ctrl/Graybox/Data", "Bosses");
+            GrayboxBuildKit.EnsureFolder(BossDataRoot);
 
             string path = $"{BossDataRoot}/{id}Data.asset";
             var data = AssetDatabase.LoadAssetAtPath<GrayboxBossData>(path);
@@ -152,7 +151,7 @@ namespace HoldTheHill.EditorTools.Builders
             T behaviour = go.AddComponent<T>();
             if (extra != null) GrayboxBuildKit.Apply(behaviour, extra);
 
-            GameObject prefab = GrayboxBuildKit.SavePrefab(go, name);
+            GameObject prefab = GrayboxBuildKit.SavePrefab(go, "Enemies/" + name);
             if (boss)
             {
                 GrayboxBuildKit.Apply(data, so => so.FindProperty("_prefab").objectReferenceValue = prefab);
@@ -185,7 +184,7 @@ namespace HoldTheHill.EditorTools.Builders
             go.AddComponent<EnemyHealthBar>();
             GrayboxBuildKit.Apply(go.AddComponent<GrayboxEggSac>(), so => so.FindProperty("_hatchPrefab").objectReferenceValue = hatchling);
 
-            return GrayboxBuildKit.SavePrefab(go, "GrayboxEggSac");
+            return GrayboxBuildKit.SavePrefab(go, "Enemies/GrayboxEggSac");
         }
 
         /// <summary>Adds one wave per boss, and a mixed wave of the regular specials, after the waves already in the asset.</summary>

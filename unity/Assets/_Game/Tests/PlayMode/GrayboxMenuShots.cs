@@ -30,7 +30,7 @@ namespace HoldTheHill.Tests
     /// </remarks>
     public class GrayboxMenuShots
     {
-        private const string ScenePath = "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxCombatTest.unity";
+        private const string ScenePath = "Assets/_Game/Scenes/Dev/GrayboxCombatTest.unity";
         private string _dir;
 
         [UnityTest, Explicit, Category("Screenshots")]

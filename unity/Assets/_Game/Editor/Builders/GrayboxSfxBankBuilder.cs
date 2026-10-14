@@ -11,14 +11,14 @@ using UnityEngine;
 namespace HoldTheHill.EditorTools.Builders
 {
     /// <summary>
-    /// Fills <see cref="GrayboxSfxBank"/> from _Sandbox/nilly-ctrl/Audio/Sfx. Each cue names a
+    /// Fills <see cref="GrayboxSfxBank"/> from _Game/Shared/Audio/Sfx. Each cue names a
     /// sound family; every numbered variant of it (Name01, Name02...) goes in, in order.
     /// Change a pick here and rebuild the graybox to hear a different family.
     /// </summary>
     internal static class GrayboxSfxBankBuilder
     {
-        private const string SfxRoot = "Assets/_Sandbox/nilly-ctrl/Audio/Sfx";
-        private const string BankPath = "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxSfxBank.asset";
+        private const string SfxRoot = "Assets/_Game/Shared/Audio/Sfx";
+        private const string BankPath = "Assets/_Game/Core/Audio/Data/GrayboxSfxBank.asset";
 
         // id, family path under Sfx/, volume, cooldown (s)
         private static readonly (string Id, string Family, float Volume, float Cooldown)[] Cues =

@@ -16,7 +16,7 @@ namespace HoldTheHill.Core.Audio
     }
 
     /// <summary>
-    /// The graybox's sound cues, filled from _Sandbox/nilly-ctrl/Audio/Sfx by GrayboxBuilder.
+    /// The graybox's sound cues, filled from _Game/Shared/Audio/Sfx by GrayboxBuilder.
     /// Cue ids: Fire_&lt;TowerKey&gt;, Death_&lt;EnemyKey&gt;, Hit, Upgrade, Place, Sell, ShieldBreak,
     /// Heal, MineExplode, Burn, Poison, WaveStart, WaveClear, Victory, and the loops BeamLoop,
     /// OrbitLoop and HazardLoop.

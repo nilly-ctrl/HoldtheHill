@@ -16,9 +16,9 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     internal static class GrayboxPowerUpBuilder
     {
-        private const string GrayboxRoot = "Assets/_Sandbox/nilly-ctrl/Graybox";
+        private const string GrayboxRoot = "Assets/_Game/Features/PowerUps";
         private const string PrefabFolder = "PowerUps";
-        private const string DataRoot = GrayboxRoot + "/Data/PowerUps";
+        private const string DataRoot = GrayboxRoot + "/Data";
 
         private static readonly string[] Ids = { "HoneyDrop", "BerserkBerry" };
 
@@ -26,9 +26,8 @@ namespace HoldTheHill.EditorTools.Builders
 
         public static void BuildPrefabs()
         {
-            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PrefabFolder);
+            GrayboxBuildKit.EnsureFolder(GrayboxRoot + "/Prefabs");
             GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
-            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Data", "PowerUps");
 
             var pickupBase = AssetDatabase.LoadAssetAtPath<GameObject>(GrayboxPickupBuilder.PrefabPath("PickupBase"));
 

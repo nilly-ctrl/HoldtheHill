@@ -25,8 +25,8 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     internal static class GrayboxLevelBuilder
     {
-        private const string LevelRoot = "Assets/_Sandbox/nilly-ctrl/Levels";
-        private const string GrayboxScene = "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxCombatTest.unity";
+        private const string LevelRoot = "Assets/_Game/Scenes/Levels";
+        private const string GrayboxScene = "Assets/_Game/Scenes/Dev/GrayboxCombatTest.unity";
         private static readonly string[] Required =
         {
             "Enemy Path", "Enemy Spawner", "Main Camera", "Tower Placer & Inspector", GrayboxSystemsBuilder.RootName,

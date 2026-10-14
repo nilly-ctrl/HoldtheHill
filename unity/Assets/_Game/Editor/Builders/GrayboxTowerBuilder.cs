@@ -22,10 +22,10 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     internal static class GrayboxTowerBuilder
     {
-        private const string GrayboxRoot = "Assets/_Sandbox/nilly-ctrl/Graybox";
+        private const string GrayboxRoot = "Assets/_Game/Features/Towers";
         private const string PrefabFolder = "Towers";
         private const string DataRoot = GrayboxRoot + "/Data";
-        private const string TowerDataRoot = DataRoot + "/Towers";
+        private const string TowerDataRoot = DataRoot;
 
         public const string CatalogPath = DataRoot + "/GrayboxTowerCatalog.asset";
 
@@ -64,9 +64,8 @@ namespace HoldTheHill.EditorTools.Builders
             Material lineMaterial,
             SpriteAnimLibrary anim)
         {
-            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PrefabFolder);
+            GrayboxBuildKit.EnsureFolder(GrayboxRoot + "/Prefabs");
             GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
-            GrayboxBuildKit.CreateFolderIfMissing(DataRoot, "Towers");
 
             s_anim = anim;
             s_base = BuildBase(square);

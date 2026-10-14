@@ -31,7 +31,7 @@ namespace HoldTheHill.Tests
     /// </remarks>
     public partial class GrayboxMenusTests
     {
-        private const string MenusPrefab = "Assets/_Sandbox/nilly-ctrl/Graybox/Prefabs/GrayboxMenus.prefab";
+        private const string MenusPrefab = "Assets/_Game/Features/Menus/Prefabs/GrayboxMenus.prefab";
         private const string EventSystemPrefab = "Assets/_Game/Core/UiKit/Prefabs/UiEventSystem.prefab";
 
         private readonly List<Object> _made = new List<Object>();

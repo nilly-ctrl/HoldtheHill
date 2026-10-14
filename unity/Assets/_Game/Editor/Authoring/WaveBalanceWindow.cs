@@ -19,7 +19,7 @@ namespace HoldTheHill.EditorTools.Authoring
     /// </remarks>
     internal sealed class WaveBalanceWindow : EditorWindow
     {
-        private const string PrefabFolder = "Assets/_Sandbox/nilly-ctrl/Graybox/Prefabs";
+        private const string PrefabFolder = "Assets/_Game/Features/Enemies/Prefabs";
 
         private struct EnemyInfo
         {

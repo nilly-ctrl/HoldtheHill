@@ -13,7 +13,7 @@ namespace HoldTheHill.EditorTools.Builders
     /// </summary>
     internal static class GrayboxWeaponPickerBuilder
     {
-        internal const string ScenePath = "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxWeaponPicker.unity";
+        internal const string ScenePath = "Assets/_Game/Scenes/Dev/GrayboxWeaponPicker.unity";
 
         [MenuItem("Tools/Hold the Hill/Open Weapon Picker")]
         public static void Open()

@@ -27,15 +27,15 @@ namespace HoldTheHill.EditorTools.Builders
     /// from scratch after a change instead of being repaired by hand, and so it can be
     /// produced in batch mode without the editor UI.
     ///
-    /// This lives in <c>_Sandbox/nilly-ctrl/Editor/</c> rather than <c>_Game/Editor/</c>
+    /// This lived in the sandbox rather than <c>_Game/Editor/</c>
     /// on purpose. <c>_Game/Editor/</c> is the <c>HoldTheHill.Editor</c> assembly, which
     /// cannot see <c>EnemySpawner</c> (that compiles into <c>Assembly-CSharp</c>). A script
     /// here has no asmdef, so it lands in <c>Assembly-CSharp-Editor</c> and can reach both.
     /// </remarks>
     internal static class GrayboxBuilder
     {
-        private const string ScenePath = GrayboxBuildKit.GrayboxRoot + "/GrayboxCombatTest.unity";
-        internal const string WaveAssetPath = GrayboxBuildKit.GrayboxRoot + "/GrayboxWaves.asset";
+        private const string ScenePath = GrayboxBuildKit.DevScenesRoot + "/GrayboxCombatTest.unity";
+        internal const string WaveAssetPath = GrayboxBuildKit.FeaturesRoot + "/Enemies/Data/GrayboxWaves.asset";
 
         /// <summary>Opens the gray-box scene, building it first if it is not there yet.</summary>
         [MenuItem("Tools/Hold the Hill/Open Graybox Combat Test")]
@@ -208,7 +208,7 @@ namespace HoldTheHill.EditorTools.Builders
 
         // 2 font pixels per art pixel: at 1 the numbers are too small to read at this camera size.
         private const int DamageNumberPixelScale = 2;
-        private const string IconRoot = GrayboxBuildKit.SandboxRoot + "/Icons/PNG";
+        private const string IconRoot = "Assets/_Game/Shared/Art/Icons/PNG";
 
         /// <summary>Every icon in Icons/PNG, held by the scene so the HUD can use them in a build too.</summary>
         private static void BuildIcons()
@@ -247,14 +247,14 @@ namespace HoldTheHill.EditorTools.Builders
 
         private static void EnsureFolders()
         {
-            GrayboxBuildKit.CreateFolderIfMissing(GrayboxBuildKit.SandboxRoot, "Graybox");
-            GrayboxBuildKit.CreateFolderIfMissing(GrayboxBuildKit.GrayboxRoot, "Prefabs");
+            GrayboxBuildKit.EnsureFolder(GrayboxBuildKit.DevScenesRoot);
+            GrayboxBuildKit.EnsureFolder(GrayboxBuildKit.FeaturesRoot + "/Enemies/Data");
         }
 
         // ---------- prefabs ----------
 
-        private const string UiRoot = GrayboxBuildKit.SandboxRoot + "/Ui";
-        private const string FontPath = GrayboxBuildKit.SandboxRoot + "/Fonts/TTF/HoldTheHillPixel-Regular.ttf";
+        private const string UiRoot = "Assets/_Game/Shared/Art/Ui";
+        private const string FontPath = "Assets/_Game/Shared/Fonts/Pixel/TTF/HoldTheHillPixel-Regular.ttf";
 
         /// <summary>The pixel skin every HUD script switches to (see GrayboxUi).</summary>
         internal static void BuildUi()

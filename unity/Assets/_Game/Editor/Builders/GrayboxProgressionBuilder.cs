@@ -17,7 +17,7 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     internal static class GrayboxProgressionBuilder
     {
-        private const string GrayboxRoot = "Assets/_Sandbox/nilly-ctrl/Graybox";
+        private const string GrayboxRoot = "Assets/_Game/Features/Progression";
         private const string DataRoot = GrayboxRoot + "/Data";
         private const string SkillFolder = "Skills";
         private const string AchievementFolder = "Achievements";

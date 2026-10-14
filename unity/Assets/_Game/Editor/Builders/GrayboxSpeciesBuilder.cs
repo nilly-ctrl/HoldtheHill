@@ -23,8 +23,8 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     internal static class GrayboxSpeciesBuilder
     {
-        private const string GrayboxRoot = "Assets/_Sandbox/nilly-ctrl/Graybox";
-        private const string DataRoot = GrayboxRoot + "/Data/Species";
+        private const string GrayboxRoot = "Assets/_Game/Features/Species";
+        private const string DataRoot = GrayboxRoot + "/Data";
 
         public const string DefaultSpeciesPath = DataRoot + "/GardenAnt.asset";
         public const string SampleSpeciesPath = DataRoot + "/FireAnt.asset";
@@ -32,7 +32,6 @@ namespace HoldTheHill.EditorTools.Builders
         public static void BuildAssets()
         {
             GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
-            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Data", "Species");
 
             var catalog = AssetDatabase.LoadAssetAtPath<GrayboxTowerCatalog>(GrayboxTowerBuilder.CatalogPath);
             var warden = AssetDatabase.LoadAssetAtPath<GameObject>(GrayboxWardenBuilder.PrefabPath("Warden"));
@@ -93,8 +92,8 @@ namespace HoldTheHill.EditorTools.Builders
         // Worker, Soldier and Bullet Tower, each as a variant of the shared prefab.
         private static GrayboxTowerCatalog BuildSampleCatalog(GrayboxTowerCatalog shared)
         {
-            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs/Towers", "FireAnt");
-            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Data/Towers", "FireAnt");
+            GrayboxBuildKit.EnsureFolder("Assets/_Game/Features/Towers/Prefabs/FireAnt");
+            GrayboxBuildKit.EnsureFolder("Assets/_Game/Features/Towers/Data/FireAnt");
 
             var towers = new List<HoldTheHill.Features.Towers.TowerData>();
             foreach (string id in new[] { "TowerWorker", "TowerSoldier", "TowerLinear" })
@@ -120,7 +119,7 @@ namespace HoldTheHill.EditorTools.Builders
                 GameObject prefab = GrayboxBuildKit.SavePrefab(go, $"Towers/FireAnt/{id}_FireAnt");
 
                 var data = ScriptableObject.CreateInstance<HoldTheHill.Features.Towers.TowerData>();
-                AssetDatabase.CreateAsset(data, $"{GrayboxRoot}/Data/Towers/FireAnt/{id}_FireAntData.asset");
+                AssetDatabase.CreateAsset(data, $"Assets/_Game/Features/Towers/Data/FireAnt/{id}_FireAntData.asset");
                 GrayboxBuildKit.Apply(data, so =>
                 {
                     so.FindProperty("_displayName").stringValue = "Fire " + source.DisplayName;

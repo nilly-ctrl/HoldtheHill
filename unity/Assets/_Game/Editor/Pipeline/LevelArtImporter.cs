@@ -10,7 +10,7 @@ namespace HoldTheHill.EditorTools.Pipeline
     /// </summary>
     public class LevelArtImporter : AssetPostprocessor
     {
-        private const string LevelFolder = "Assets/_Sandbox/nilly-ctrl/Levels/";
+        private const string LevelFolder = "Assets/_Game/Scenes/Levels/";
 
         private void OnPreprocessTexture()
         {

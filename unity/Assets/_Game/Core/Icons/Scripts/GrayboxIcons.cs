@@ -44,7 +44,7 @@ namespace HoldTheHill.Core.Icons
             foreach (string folder in EditorFolders)
             {
                 var found = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>(
-                    $"Assets/_Sandbox/nilly-ctrl/{folder}/{iconName}.png");
+                    $"Assets/_Game/Shared/Art/{folder}/{iconName}.png");
                 if (found != null)
                 {
                     return found;

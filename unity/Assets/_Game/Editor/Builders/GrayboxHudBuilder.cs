@@ -22,11 +22,11 @@ namespace HoldTheHill.EditorTools.Builders
     {
         public const string PrefabPath = GrayboxRoot + "/Prefabs/GrayboxHud.prefab";
 
-        internal const string GrayboxRoot = "Assets/_Sandbox/nilly-ctrl/Graybox";
-        internal const string PartsFolder = "Hud";
-        internal const string HudSprites = "Assets/_Sandbox/nilly-ctrl/Ui/Hud";
+        internal const string GrayboxRoot = "Assets/_Game/Features/Hud";
+        internal const string PartsFolder = "Parts";
+        internal const string HudSprites = "Assets/_Game/Shared/Art/Ui/Hud";
         internal const string KitSprites = UiKitBuilder.Root + "/Sprites";
-        internal const string IconSprites = "Assets/_Sandbox/nilly-ctrl/Icons/PNG";
+        internal const string IconSprites = "Assets/_Game/Shared/Art/Icons/PNG";
 
         // Below the menus, which sit at 100.
         internal const int SortingOrder = 90;

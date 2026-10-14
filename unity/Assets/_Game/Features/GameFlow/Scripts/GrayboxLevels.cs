@@ -27,11 +27,11 @@ namespace HoldTheHill.Features.GameFlow
             public string SceneName => System.IO.Path.GetFileNameWithoutExtension(ScenePath);
         }
 
-        private const string Root = "Assets/_Sandbox/nilly-ctrl";
+        private const string Root = "Assets/_Game/Scenes";
 
         private static readonly List<Level> s_all = new List<Level>
         {
-            new Level { Id = "Graybox", Name = "Meadow road", ScenePath = Root + "/Graybox/GrayboxCombatTest.unity" },
+            new Level { Id = "Graybox", Name = "Meadow road", ScenePath = Root + "/Dev/GrayboxCombatTest.unity" },
             new Level { Id = "KitchenFloor", Name = "Kitchen floor", ScenePath = Root + "/Levels/KitchenFloor/KitchenFloor.unity" },
         };
 

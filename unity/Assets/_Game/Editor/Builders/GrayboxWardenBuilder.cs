@@ -17,9 +17,9 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     internal static class GrayboxWardenBuilder
     {
-        private const string GrayboxRoot = "Assets/_Sandbox/nilly-ctrl/Graybox";
+        private const string GrayboxRoot = "Assets/_Game/Features/Warden";
         private const string PrefabFolder = "Warden";
-        private const string DataRoot = GrayboxRoot + "/Data/Abilities";
+        private const string DataRoot = GrayboxRoot + "/Data";
 
         private static bool s_madeAnAbility;
 
@@ -27,9 +27,8 @@ namespace HoldTheHill.EditorTools.Builders
 
         public static void BuildPrefabs(Sprite square)
         {
-            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PrefabFolder);
+            GrayboxBuildKit.EnsureFolder(GrayboxRoot + "/Prefabs");
             GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
-            GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Data", "Abilities");
             s_madeAnAbility = false;
 
             var crumb = AssetDatabase.LoadAssetAtPath<GameObject>(GrayboxPickupBuilder.PrefabPath("CrumbSmall"));

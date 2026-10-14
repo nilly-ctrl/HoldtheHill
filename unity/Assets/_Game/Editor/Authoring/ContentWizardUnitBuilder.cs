@@ -36,9 +36,8 @@ namespace HoldTheHill.EditorTools.Authoring
                 throw new InvalidOperationException("TowerBase.prefab is missing. Run Build Graybox Combat Test first.");
             }
 
-            GrayboxBuildKit.CreateFolderIfMissing(ContentWizardBuilder.GrayboxRoot + "/Prefabs", "Towers");
-            GrayboxBuildKit.CreateFolderIfMissing(ContentWizardBuilder.GrayboxRoot, "Data");
-            GrayboxBuildKit.CreateFolderIfMissing(ContentWizardBuilder.DataRoot, "Towers");
+            GrayboxBuildKit.EnsureFolder(ContentWizardBuilder.GrayboxRoot + "/Towers/Prefabs");
+            GrayboxBuildKit.EnsureFolder(ContentWizardBuilder.DataRoot + "/Towers/Data");
 
             var go = (GameObject)PrefabUtility.InstantiatePrefab(basePrefab);
             go.name = spec.Id;
@@ -121,8 +120,7 @@ namespace HoldTheHill.EditorTools.Authoring
             GrayboxBossData data = null;
             if (spec.Boss)
             {
-                GrayboxBuildKit.CreateFolderIfMissing(ContentWizardBuilder.GrayboxRoot, "Data");
-                GrayboxBuildKit.CreateFolderIfMissing(ContentWizardBuilder.DataRoot, "Bosses");
+                GrayboxBuildKit.EnsureFolder(ContentWizardBuilder.DataRoot + "/Specials/Data");
                 data = ScriptableObject.CreateInstance<GrayboxBossData>();
                 AssetDatabase.CreateAsset(data, dataPath);
                 string label = string.IsNullOrEmpty(spec.DisplayName) ? spec.Id : spec.DisplayName;

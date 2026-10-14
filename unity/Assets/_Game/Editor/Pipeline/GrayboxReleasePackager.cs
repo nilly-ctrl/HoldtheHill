@@ -25,7 +25,7 @@ namespace HoldTheHill.EditorTools.Pipeline
     /// </remarks>
     public static class GrayboxReleasePackager
     {
-        private const string VersionFileRelative = "Assets/_Sandbox/nilly-ctrl/Pipeline~/VERSION";
+        private const string VersionFileRelative = "Assets/_Game/Pipeline~/VERSION";
         private const int MaxChangelogCommits = 300;
 
         [MenuItem("Tools/Hold the Hill/Pipeline/Build Release Package (Windows)")]

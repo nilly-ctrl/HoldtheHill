@@ -24,10 +24,10 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     public static class GrayboxMenusBuilder
     {
-        public const string PrefabPath = "Assets/_Sandbox/nilly-ctrl/Graybox/Prefabs/GrayboxMenus.prefab";
+        public const string PrefabPath = "Assets/_Game/Features/Menus/Prefabs/GrayboxMenus.prefab";
 
-        internal const string TitleBackgroundPath = "Assets/_Sandbox/nilly-ctrl/Ui/Title/TitleBackground.png";
-        internal const string TitleLogoPath = "Assets/_Sandbox/nilly-ctrl/Icons/PNG/TitleLogo.png";
+        internal const string TitleBackgroundPath = "Assets/_Game/Shared/Art/Ui/Title/TitleBackground.png";
+        internal const string TitleLogoPath = "Assets/_Game/Shared/Art/Icons/PNG/TitleLogo.png";
 
         // More than the game has, so a new achievement shows without rebuilding the prefab.
         internal const int AwardRows = 12;
@@ -70,7 +70,7 @@ namespace HoldTheHill.EditorTools.Builders
             UiKitBuilder.Wire(menus, "_controls", controls);
             UiKitBuilder.Wire(menus, "_dialog", dialog);
 
-            EnsureFolder("Assets/_Sandbox/nilly-ctrl/Graybox", "Prefabs");
+            EnsureFolder("Assets/_Game/Features/Menus", "Prefabs");
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             Object.DestroyImmediate(root);
             return prefab;

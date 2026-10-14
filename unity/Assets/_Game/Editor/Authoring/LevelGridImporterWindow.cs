@@ -22,7 +22,7 @@ namespace HoldTheHill.EditorTools.Authoring
     /// </remarks>
     internal sealed class LevelGridImporterWindow : EditorWindow
     {
-        private const string LevelsRoot = "Assets/_Sandbox/nilly-ctrl/Levels";
+        private const string LevelsRoot = "Assets/_Game/Scenes/Levels";
 
         private string[] _mapPaths = new string[0];
         private string[] _mapLabels = new string[0];
@@ -43,10 +43,10 @@ namespace HoldTheHill.EditorTools.Authoring
         }
 
         private static string MapsFolder =>
-            Path.GetFullPath(Path.Combine(Application.dataPath, "_Sandbox/nilly-ctrl/Levels/Source~/maps"));
+            Path.GetFullPath(Path.Combine(Application.dataPath, "_Game/Scenes/Levels/Source~/maps"));
 
         private static string SourceFolder =>
-            Path.GetFullPath(Path.Combine(Application.dataPath, "_Sandbox/nilly-ctrl/Levels/Source~"));
+            Path.GetFullPath(Path.Combine(Application.dataPath, "_Game/Scenes/Levels/Source~"));
 
         private void OnEnable()
         {

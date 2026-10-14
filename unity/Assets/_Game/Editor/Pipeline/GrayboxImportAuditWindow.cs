@@ -35,7 +35,7 @@ namespace HoldTheHill.EditorTools.Pipeline
         {
             _rows.Clear();
             _scanned = 0;
-            string[] guids = AssetDatabase.FindAssets("t:Texture2D", new[] { "Assets/_Sandbox/nilly-ctrl" });
+            string[] guids = AssetDatabase.FindAssets("t:Texture2D", new[] { "Assets/_Game" });
             foreach (string guid in guids)
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
@@ -107,7 +107,7 @@ namespace HoldTheHill.EditorTools.Pipeline
                 {
                     using (new EditorGUILayout.HorizontalScope())
                     {
-                        if (GUILayout.Button(row.Path.Replace("Assets/_Sandbox/nilly-ctrl/", string.Empty), EditorStyles.linkLabel))
+                        if (GUILayout.Button(row.Path.Replace("Assets/_Game/", string.Empty), EditorStyles.linkLabel))
                         {
                             Selection.activeObject = AssetDatabase.LoadMainAssetAtPath(row.Path);
                             EditorGUIUtility.PingObject(Selection.activeObject);

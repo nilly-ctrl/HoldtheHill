@@ -18,7 +18,7 @@ namespace HoldTheHill.Tests
     /// </summary>
     public class GrayboxSystemsPrefabTests
     {
-        private const string PrefabPath = "Assets/_Sandbox/nilly-ctrl/Graybox/Prefabs/GrayboxSystems.prefab";
+        private const string PrefabPath = "Assets/_Game/Features/GameFlow/Prefabs/GrayboxSystems.prefab";
         // Mirrors GrayboxSystemsBuilder.Members (an editor-assembly type the tests cannot see).
         private static readonly string[] Members =
         {
@@ -29,8 +29,8 @@ namespace HoldTheHill.Tests
 
         private static readonly string[] Scenes =
         {
-            "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxCombatTest.unity",
-            "Assets/_Sandbox/nilly-ctrl/Levels/KitchenFloor/KitchenFloor.unity",
+            "Assets/_Game/Scenes/Dev/GrayboxCombatTest.unity",
+            "Assets/_Game/Scenes/Levels/KitchenFloor/KitchenFloor.unity",
         };
 
         [Test]

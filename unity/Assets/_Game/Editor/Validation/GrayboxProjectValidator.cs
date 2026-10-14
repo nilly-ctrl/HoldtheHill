@@ -14,7 +14,7 @@ namespace HoldTheHill.EditorTools.Validation
     public static class GrayboxProjectValidator
     {
         /// <summary>The folder every check is limited to.</summary>
-        public const string SandboxRoot = "Assets/_Sandbox/nilly-ctrl";
+        public const string SandboxRoot = "Assets/_Game";
 
         /// <summary>Runs every check and returns the findings, worst first within each check.</summary>
         public static List<ValidationFinding> Run()

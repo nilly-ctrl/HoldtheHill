@@ -16,7 +16,7 @@ namespace HoldTheHill.EditorTools.Builders
     /// </summary>
     internal static class GrayboxProjectilePrefabBuilder
     {
-        internal const string LineMaterialPath = GrayboxBuildKit.GrayboxRoot + "/GrayboxLine.mat";
+        internal const string LineMaterialPath = "Assets/_Game/Shared/Materials/GrayboxLine.mat";
 
         internal static GameObject BuildBulletPrefab(Sprite sprite)
         {
@@ -34,7 +34,7 @@ namespace HoldTheHill.EditorTools.Builders
                 so.FindProperty("_hitRadius").floatValue = 0.28f;
             });
 
-            return GrayboxBuildKit.SavePrefab(go, "GrayboxBullet");
+            return GrayboxBuildKit.SavePrefab(go, "Combat/GrayboxBullet");
         }
 
         internal static GameObject BuildHomingPrefab(Sprite sprite)
@@ -55,7 +55,7 @@ namespace HoldTheHill.EditorTools.Builders
                 so.FindProperty("_hitRadius").floatValue = 0.3f;
             });
 
-            return GrayboxBuildKit.SavePrefab(go, "GrayboxHomingBullet");
+            return GrayboxBuildKit.SavePrefab(go, "Combat/GrayboxHomingBullet");
         }
 
         internal static GameObject BuildFragmentPrefab(Sprite sprite)
@@ -74,7 +74,7 @@ namespace HoldTheHill.EditorTools.Builders
                 so.FindProperty("_hitRadius").floatValue = 0.22f;
             });
 
-            return GrayboxBuildKit.SavePrefab(go, "GrayboxFragment");
+            return GrayboxBuildKit.SavePrefab(go, "Combat/GrayboxFragment");
         }
 
         internal static GameObject BuildMortarPrefab(Sprite sprite, GameObject fragment, GameObject hazard)
@@ -104,7 +104,7 @@ namespace HoldTheHill.EditorTools.Builders
                 so.FindProperty("_groundHazardDamagePerTick").floatValue = 2f;
             });
 
-            return GrayboxBuildKit.SavePrefab(go, "GrayboxMortar");
+            return GrayboxBuildKit.SavePrefab(go, "Combat/GrayboxMortar");
         }
 
         internal static GameObject BuildRicochetPrefab(Sprite sprite)
@@ -126,7 +126,7 @@ namespace HoldTheHill.EditorTools.Builders
                 so.FindProperty("_damageFalloff").floatValue = 0.75f;
             });
 
-            return GrayboxBuildKit.SavePrefab(go, "GrayboxRicochet");
+            return GrayboxBuildKit.SavePrefab(go, "Combat/GrayboxRicochet");
         }
 
         internal static GameObject BuildHazardPrefab(Sprite sprite)
@@ -146,7 +146,7 @@ namespace HoldTheHill.EditorTools.Builders
                 so.FindProperty("_duration").floatValue = 4f;
             });
 
-            return GrayboxBuildKit.SavePrefab(go, "GrayboxHazard");
+            return GrayboxBuildKit.SavePrefab(go, "Combat/GrayboxHazard");
         }
 
         internal static GameObject BuildMinePrefab(Sprite sprite)
@@ -168,7 +168,7 @@ namespace HoldTheHill.EditorTools.Builders
                 so.FindProperty("_armDelay").floatValue = 0.4f;
             });
 
-            return GrayboxBuildKit.SavePrefab(go, "GrayboxMine");
+            return GrayboxBuildKit.SavePrefab(go, "Combat/GrayboxMine");
         }
 
         internal static void AddChainLightning(GameObject tower, Material lineMaterial)
@@ -206,7 +206,7 @@ namespace HoldTheHill.EditorTools.Builders
         /// </summary>
         internal static Material LineMaterial(string materialName, string textureName)
         {
-            string path = $"{GrayboxBuildKit.GrayboxRoot}/{materialName}.mat";
+            string path = $"Assets/_Game/Shared/Materials/{materialName}.mat";
             var texture = AssetDatabase.LoadAssetAtPath<Texture2D>($"{GrayboxSceneDressingBuilder.TileRoot}/{textureName}.png");
             if (texture == null)
             {

@@ -77,7 +77,7 @@ namespace HoldTheHill.EditorTools.Pipeline
             {
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    if (GUILayout.Button($"{finding.Path.Replace("Assets/_Sandbox/nilly-ctrl/", string.Empty)}:{finding.Line}",
+                    if (GUILayout.Button($"{finding.Path.Replace("Assets/_Game/", string.Empty)}:{finding.Line}",
                             EditorStyles.linkLabel, GUILayout.Width(300)))
                     {
                         Object asset = AssetDatabase.LoadMainAssetAtPath(finding.Path);
@@ -186,7 +186,7 @@ namespace HoldTheHill.EditorTools.Pipeline
             {
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    if (GUILayout.Button($"{usage.Path.Replace("Assets/_Sandbox/nilly-ctrl/", string.Empty)}:{usage.Line}",
+                    if (GUILayout.Button($"{usage.Path.Replace("Assets/_Game/", string.Empty)}:{usage.Line}",
                             EditorStyles.linkLabel, GUILayout.Width(300)))
                     {
                         Object asset = AssetDatabase.LoadMainAssetAtPath(usage.Path);

@@ -28,7 +28,7 @@ namespace HoldTheHill.EditorTools.Builders
     internal static class GrayboxSystemsBuilder
     {
         public const string RootName = "GrayboxSystems";
-        public const string PrefabPath = "Assets/_Sandbox/nilly-ctrl/Graybox/Prefabs/GrayboxSystems.prefab";
+        public const string PrefabPath = "Assets/_Game/Features/GameFlow/Prefabs/GrayboxSystems.prefab";
 
         /// <summary>Root objects that hold managers with no reference to anything in the scene.</summary>
         public static readonly string[] Members =
@@ -66,7 +66,7 @@ namespace HoldTheHill.EditorTools.Builders
                 }
             }
 
-            GrayboxBuildKit.CreateFolderIfMissing("Assets/_Sandbox/nilly-ctrl/Graybox", "Prefabs");
+            GrayboxBuildKit.EnsureFolder("Assets/_Game/Features/GameFlow/Prefabs");
             return PrefabUtility.SaveAsPrefabAssetAndConnect(systems, PrefabPath, InteractionMode.AutomatedAction);
         }
     }

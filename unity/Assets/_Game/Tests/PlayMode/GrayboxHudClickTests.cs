@@ -26,7 +26,7 @@ namespace HoldTheHill.Tests
     /// </summary>
     public class GrayboxHudClickTests
     {
-        private const string KitchenPath = "Assets/_Sandbox/nilly-ctrl/Levels/KitchenFloor/KitchenFloor.unity";
+        private const string KitchenPath = "Assets/_Game/Scenes/Levels/KitchenFloor/KitchenFloor.unity";
 
         private InputSettings.BackgroundBehavior _backgroundBehavior;
         private InputSettings.EditorInputBehaviorInPlayMode _editorInputBehavior;
