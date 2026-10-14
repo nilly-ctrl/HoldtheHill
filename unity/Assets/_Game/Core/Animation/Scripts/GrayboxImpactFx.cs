@@ -3,7 +3,7 @@ using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Animation
 {
     /// <summary>
     /// Leaves a small hit effect wherever a weapon damages an enemy: an acid splash, a spark,

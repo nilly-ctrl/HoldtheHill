@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Animation
 {
     /// <summary>One animation: the sprites in order and how long each one shows.</summary>
     [Serializable]

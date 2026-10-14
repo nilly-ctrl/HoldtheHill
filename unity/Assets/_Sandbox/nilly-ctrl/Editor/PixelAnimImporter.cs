@@ -12,8 +12,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// </summary>
     public class PixelAnimImporter : AssetPostprocessor
     {
-        private const string AsepriteFolder = "Assets/_Sandbox/nilly-ctrl/Animations/Aseprite/";
-        private const string SheetFolder = "Assets/_Sandbox/nilly-ctrl/Animations/Sheets/";
+        private const string AsepriteFolder = "Assets/_Game/Shared/Art/Animations/Aseprite/";
+        private const string SheetFolder = "Assets/_Game/Shared/Art/Animations/Sheets/";
         private const string TileFolder = "Assets/_Sandbox/nilly-ctrl/Tiles/";
         private const string UiFolder = "Assets/_Sandbox/nilly-ctrl/Ui/";
         private const float PixelsPerUnit = 32f;

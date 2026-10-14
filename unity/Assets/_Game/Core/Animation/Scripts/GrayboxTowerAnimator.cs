@@ -2,7 +2,7 @@ using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Animation
 {
     /// <summary>
     /// Drives a tower's Idle / Attack / Upgrade clips from what the tower is doing.

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Animation
 {
     /// <summary>
     /// Slides a tiled texture along a LineRenderer so the beam flows and the lightning crackles.

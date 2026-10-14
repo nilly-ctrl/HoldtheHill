@@ -1,3 +1,4 @@
+using HoldTheHill.Core.Animation;
 using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;

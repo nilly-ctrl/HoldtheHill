@@ -1,7 +1,7 @@
 using HoldTheHill.Features.Combat;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Animation
 {
     /// <summary>
     /// Turns the Swarm Nest's orbiting damage wisps into running soldier ants.

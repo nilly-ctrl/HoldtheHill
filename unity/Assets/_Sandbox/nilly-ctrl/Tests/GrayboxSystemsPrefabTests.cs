@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using HoldTheHill.Core.Animation;
 using HoldTheHill.Sandbox.NillyCtrl;
 using NUnit.Framework;
 using UnityEditor;

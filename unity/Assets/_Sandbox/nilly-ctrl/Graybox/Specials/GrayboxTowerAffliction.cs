@@ -1,3 +1,4 @@
+using HoldTheHill.Core.Animation;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Towers;

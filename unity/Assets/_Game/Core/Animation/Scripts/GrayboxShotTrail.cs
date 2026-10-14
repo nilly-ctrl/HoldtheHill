@@ -2,7 +2,7 @@ using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Animation
 {
     /// <summary>
     /// Rides on a projectile: leaves the tower's Trail effect behind it as it flies, and its

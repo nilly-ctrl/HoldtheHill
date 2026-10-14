@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Animation
 {
     /// <summary>
     /// Plays clips from a <see cref="SpriteAnimLibrary"/> on this object's SpriteRenderer.

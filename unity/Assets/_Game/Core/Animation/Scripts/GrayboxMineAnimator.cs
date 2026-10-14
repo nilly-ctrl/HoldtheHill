@@ -1,7 +1,7 @@
 using HoldTheHill.Features.Combat;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Animation
 {
     /// <summary>
     /// Blinks the mine while it waits, and leaves an explosion behind when it detonates

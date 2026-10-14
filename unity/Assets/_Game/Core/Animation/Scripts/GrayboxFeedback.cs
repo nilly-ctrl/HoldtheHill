@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Animation
 {
     /// <summary>
     /// Game-feel moments the graybox animators already detect, re-announced so other feedback

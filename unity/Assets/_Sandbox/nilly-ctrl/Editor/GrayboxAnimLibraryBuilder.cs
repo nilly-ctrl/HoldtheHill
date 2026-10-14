@@ -1,3 +1,4 @@
+using HoldTheHill.Core.Animation;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -11,7 +12,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// </summary>
     internal static class GrayboxAnimLibraryBuilder
     {
-        private const string AsepriteRoot = "Assets/_Sandbox/nilly-ctrl/Animations/Aseprite";
+        private const string AsepriteRoot = "Assets/_Game/Shared/Art/Animations/Aseprite";
         internal const string LibraryPath = "Assets/_Sandbox/nilly-ctrl/Graybox/GrayboxAnimLibrary.asset";
 
         [MenuItem("Tools/Hold the Hill/Rebuild Graybox Animation Library")]

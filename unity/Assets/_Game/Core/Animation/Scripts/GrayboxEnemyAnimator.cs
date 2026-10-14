@@ -2,7 +2,7 @@ using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Animation
 {
     /// <summary>
     /// Drives an enemy's Walk / Hurt / Death clips, plus the shield clips on Shielded and

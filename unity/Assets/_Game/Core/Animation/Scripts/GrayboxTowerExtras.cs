@@ -2,7 +2,7 @@ using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Animation
 {
     /// <summary>
     /// The smaller effects around a tower's attack, from its FxTower file: a muzzle puff toward

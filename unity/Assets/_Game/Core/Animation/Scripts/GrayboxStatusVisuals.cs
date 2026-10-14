@@ -2,7 +2,7 @@ using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Animation
 {
     /// <summary>
     /// Tints an enemy and floats an icon over it while it is slowed, burning or poisoned.

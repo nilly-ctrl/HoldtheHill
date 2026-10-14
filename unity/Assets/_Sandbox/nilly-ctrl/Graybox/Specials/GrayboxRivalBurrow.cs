@@ -1,3 +1,4 @@
+using HoldTheHill.Core.Animation;
 using UnityEngine;
 
 namespace HoldTheHill.Sandbox.NillyCtrl
