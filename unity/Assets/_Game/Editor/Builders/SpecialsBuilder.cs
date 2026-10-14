@@ -120,7 +120,7 @@ namespace HoldTheHill.EditorTools.Builders
             System.Action<SerializedObject> extra = null)
             where T : SpecialEnemy
         {
-            string name = "Graybox" + id;
+            string name = id;
             string label = null;
             bool boss = false;
             foreach ((string entryId, string entryLabel, bool entryBoss) in Catalog)

@@ -114,7 +114,7 @@ namespace HoldTheHill.Tests
             GameObject handler = ExecuteEvents.GetEventHandler<IPointerClickHandler>(top);
             Assert.IsNotNull(handler, "nothing under the pointer handles a click: " + report);
 
-            var placer = Object.FindAnyObjectByType<GameTowerPlacer>();
+            var placer = Object.FindAnyObjectByType<TowerPlacer>();
             Assert.IsNotNull(placer, "no placer in the scene");
             int index = IndexOf(placer, slot.name);
             Assert.IsTrue(index >= 0, "the slot '" + slot.name + "' names no tower in the placer's catalog");
@@ -183,7 +183,7 @@ namespace HoldTheHill.Tests
             }
         }
 
-        private static int IndexOf(GameTowerPlacer placer, string towerName)
+        private static int IndexOf(TowerPlacer placer, string towerName)
         {
             for (int i = 0; i < placer.TowerCount; i++)
             {

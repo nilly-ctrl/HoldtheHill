@@ -31,7 +31,7 @@ namespace HoldTheHill.Features.DevTools
         private readonly List<Tower> _towers = new List<Tower>();
         private readonly StringBuilder _problems = new StringBuilder();
         private ReplayRecording _recording;
-        private GameTowerPlacer _placer;
+        private TowerPlacer _placer;
         private RunFlow _flow;
         private WalletBehaviour _economy;
         private EnemySpawner _spawner;
@@ -97,7 +97,7 @@ namespace HoldTheHill.Features.DevTools
                 return false;
             }
 
-            _placer = FindAnyObjectByType<GameTowerPlacer>();
+            _placer = FindAnyObjectByType<TowerPlacer>();
             _spawner = FindAnyObjectByType<EnemySpawner>();
             _economy = FindAnyObjectByType<WalletBehaviour>();
             _flow = FindAnyObjectByType<RunFlow>();

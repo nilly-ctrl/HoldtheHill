@@ -5,7 +5,6 @@ using HoldTheHill.Features.Economy;
 using HoldTheHill.Features.GameFlow;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 namespace HoldTheHill.Features.Towers
 {
@@ -19,14 +18,17 @@ namespace HoldTheHill.Features.Towers
     /// and a placement label are UI that read the state here and call the commands here. The
     /// rules are elsewhere: <see cref="BuildRules"/> says where a tower may stand,
     /// <see cref="TowerCommands"/> pays for it. With no flow it is always active; with no wallet
-    /// everything is free; with no actions assigned it reads no input, so a UI can still drive it.
+    /// everything is free; with no actions assigned it reads the game controls.
     /// </remarks>
     [AddComponentMenu("Hold the Hill/Towers/Tower Placer")]
     public class TowerPlacer : MonoBehaviour
     {
         [Header("Towers")]
-        [Tooltip("The towers that can be built, in build bar order.")]
+        [Tooltip("The towers that can be built, in build bar order, when no catalog is assigned.")]
         [SerializeField] private List<TowerData> _towers = new List<TowerData>();
+
+        [Tooltip("A catalog of towers. Set, it replaces the list above; a species swaps it at run time.")]
+        [SerializeField] private TowerCatalog _catalog;
 
         [Tooltip("What upgrading a tower costs, by the level it is at: the first for level 1 to 2, and so on. Before discounts.")]
         [SerializeField] private int[] _upgradeCosts = { 150, 300 };
@@ -35,24 +37,17 @@ namespace HoldTheHill.Features.Towers
         [SerializeField, Min(0f)] private float _towerSpacing = 0.8f;
 
         [Header("Scene")]
-        [Tooltip("Pays for towers. Empty means everything is free.")]
+        [Tooltip("Pays for towers. Empty: the wallet in the scene, found once; none means everything is free.")]
         [SerializeField] private WalletBehaviour _wallet;
 
-        [Tooltip("Gates input on the game playing. Empty means always active.")]
+        [Tooltip("Gates input on the game playing. Empty: the flow in the scene, found once; none means always active.")]
         [SerializeField] private GameFlowController _flow;
 
         [Tooltip("Material for the placement ghost's range ring.")]
         [SerializeField] private Material _lineMaterial;
 
         [Header("Input")]
-        [Tooltip("The pointer position on screen (the UI map's Point).")]
-        [SerializeField] private InputActionReference _point;
-
-        [Tooltip("Confirms a cell or picks a tower (the UI map's Click).")]
-        [SerializeField] private InputActionReference _confirm;
-
-        [Tooltip("Drops the selection, build menu or placement (the UI map's Cancel).")]
-        [SerializeField] private InputActionReference _cancel;
+        [SerializeField] private PlacerInput _input = new PlacerInput();
 
         private readonly List<Tower> _standing = new List<Tower>();
         private TowerCommands _commands;
@@ -62,6 +57,8 @@ namespace HoldTheHill.Features.Towers
         private bool _showBuildMenu;
         private Vector3 _buildWorldPos;
         private int _activePlacementIndex = -1;
+        private bool _walletSought;
+        private bool _flowSought;
 
         /// <summary>Raised after a tower is placed by the placer (including <see cref="Place"/> calls from tools).</summary>
         public event Action<Tower> TowerPlaced;
@@ -98,56 +95,54 @@ namespace HoldTheHill.Features.Towers
         /// <summary>The centre of the grid cell a world position falls in.</summary>
         public static Vector3 Snap(Vector3 position) => BuildGrid.Snap(position);
 
-        // ---------- what a subclass may swap ----------
+        // ---------- the scene around the placer ----------
 
-        /// <summary>The towers on offer, in build bar order. The serialized list by default.</summary>
-        protected virtual IReadOnlyList<TowerData> Towers => _towers;
+        /// <summary>The towers on offer. A species swaps the catalog for its own.</summary>
+        public TowerCatalog Catalog => _catalog;
 
-        /// <summary>The wallet to pay from right now, or null for free.</summary>
-        protected virtual Wallet WalletNow => _wallet != null ? _wallet.Wallet : null;
-
-        /// <summary>True while the game is on screen and running, so input is read.</summary>
-        protected virtual bool GameplayActive => _flow == null || _flow.IsPlaying;
-
-        /// <summary>The pointer position on screen, if there is a pointer.</summary>
-        protected virtual bool TryReadPointer(out Vector2 position)
+        /// <summary>Changes the towers on offer and drops any placement in progress.</summary>
+        public void SetCatalog(TowerCatalog catalog)
         {
-            if (_point != null && _point.action != null && _point.action.enabled)
+            _catalog = catalog;
+            ClosePlacement();
+        }
+
+        /// <summary>The towers on offer, in build bar order: the catalog when there is one, else the list.</summary>
+        private IReadOnlyList<TowerData> Towers => _catalog != null ? _catalog.Towers : _towers;
+
+        /// <summary>The wallet to pay from right now, or null for free. Found once when none is assigned.</summary>
+        private Wallet WalletNow
+        {
+            get
             {
-                position = _point.action.ReadValue<Vector2>();
-                return true;
+                if (_wallet == null && !_walletSought)
+                {
+                    _wallet = FindAnyObjectByType<WalletBehaviour>();
+                    _walletSought = true;
+                }
+
+                return _wallet != null ? _wallet.Wallet : null;
             }
-
-            position = default;
-            return false;
         }
 
-        /// <summary>True on the frame the confirm action was pressed.</summary>
-        protected virtual bool ConfirmPressed() => _confirm != null && _confirm.action != null && _confirm.action.WasPressedThisFrame();
-
-        /// <summary>True on the frame the cancel action was pressed.</summary>
-        protected virtual bool CancelPressed() => _cancel != null && _cancel.action != null && _cancel.action.WasPressedThisFrame();
-
-        /// <summary>The catalog index whose build key was pressed this frame, or -1. None by default.</summary>
-        protected virtual int BuildKeyPressed() => -1;
-
-        /// <summary>After a tower is placed: a sound, an effect. The selection and events are already handled.</summary>
-        protected virtual void OnPlaced(Tower tower)
+        /// <summary>True while the game is on screen and running. No flow in the scene counts as playing.</summary>
+        private bool GameplayActive
         {
-        }
+            get
+            {
+                if (_flow == null && !_flowSought)
+                {
+                    _flow = FindAnyObjectByType<GameFlowController>();
+                    _flowSought = true;
+                }
 
-        protected virtual void OnUpgraded(Tower tower)
-        {
-        }
-
-        /// <summary>Just before a sold tower is destroyed.</summary>
-        protected virtual void OnSold(Tower tower)
-        {
+                return _flow == null || _flow.IsPlaying;
+            }
         }
 
         // ---------- lifecycle ----------
 
-        protected virtual void Awake()
+        private void Awake()
         {
             _mainCamera = Camera.main;
             // The wallet may wake after the placer, so it is asked for each time.
@@ -158,19 +153,9 @@ namespace HoldTheHill.Features.Towers
             _ghost = new PlacementGhost(_lineMaterial);
         }
 
-        protected virtual void OnEnable()
+        private void OnEnable()
         {
-            Enable(_point);
-            Enable(_confirm);
-            Enable(_cancel);
-        }
-
-        private static void Enable(InputActionReference reference)
-        {
-            if (reference != null && reference.action != null)
-            {
-                reference.action.Enable();
-            }
+            _input.Enable();
         }
 
         private void HandlePlaced(Tower tower)
@@ -178,19 +163,16 @@ namespace HoldTheHill.Features.Towers
             tower.Cell = BuildGrid.CellOf(tower.transform.position);
             _showBuildMenu = false;
             _selectedTower = tower;
-            OnPlaced(tower);
             TowerPlaced?.Invoke(tower);
         }
 
         private void HandleUpgraded(Tower tower)
         {
-            OnUpgraded(tower);
             TowerUpgraded?.Invoke(tower);
         }
 
         private void HandleSold(Tower tower)
         {
-            OnSold(tower);
             TowerSold?.Invoke(tower);
         }
 
@@ -310,21 +292,21 @@ namespace HoldTheHill.Features.Towers
                 }
             }
 
-            bool hasPointer = TryReadPointer(out Vector2 pointer);
+            bool hasPointer = _input.TryReadPointer(out Vector2 pointer);
             UpdateGhost(hasPointer, pointer);
 
-            int key = BuildKeyPressed();
+            int key = _input.BuildKeyPressed(Towers.Count);
             if (key >= 0)
             {
                 TogglePlacement(key);
             }
 
-            if (CancelPressed())
+            if (_input.CancelPressed())
             {
                 CancelInteraction();
             }
 
-            if (!hasPointer || !ConfirmPressed() || PointerOverUi())
+            if (!hasPointer || !_input.ConfirmPressed() || PointerOverUi())
             {
                 return; // a click on a UI panel is the panel's, not the field's
             }

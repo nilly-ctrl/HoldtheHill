@@ -48,7 +48,7 @@ namespace HoldTheHill.Features.GameFlow
         [SerializeField, Min(0f)] private float _autoStartDelay = 3f;
 
         private EnemySpawner _spawner;
-        private GameTowerPlacer _placer;
+        private TowerPlacer _placer;
         private Queen _hill;
         private WalletBehaviour _economy;
         private readonly List<Tower> _towers = new List<Tower>();
@@ -95,7 +95,7 @@ namespace HoldTheHill.Features.GameFlow
         protected override void Awake()
         {
             _spawner = FindAnyObjectByType<EnemySpawner>();
-            _placer = FindAnyObjectByType<GameTowerPlacer>();
+            _placer = FindAnyObjectByType<TowerPlacer>();
             _custom = FindAnyObjectByType<CustomSpawner>();
             _hill = FindAnyObjectByType<Queen>();
             _economy = FindAnyObjectByType<WalletBehaviour>();

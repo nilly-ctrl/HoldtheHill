@@ -320,13 +320,13 @@ namespace HoldTheHill.EditorTools.Builders
             }
 
             var go = new GameObject("Tower Placer & Inspector");
-            GameTowerPlacer placer = go.AddComponent<GameTowerPlacer>();
+            TowerPlacer placer = go.AddComponent<TowerPlacer>();
             BuildKit.Apply(placer, so =>
             {
                 so.FindProperty("_catalog").objectReferenceValue = catalog;
                 so.FindProperty("_lineMaterial").objectReferenceValue = lineMaterial;
-                so.FindProperty("_animLibrary").objectReferenceValue = BuildKit.Anim;
             });
+            BuildKit.Apply(go.AddComponent<TowerPlacerFeedback>(), so => so.FindProperty("_animLibrary").objectReferenceValue = BuildKit.Anim);
         }
 
         private static void BuildReadmeLabel()

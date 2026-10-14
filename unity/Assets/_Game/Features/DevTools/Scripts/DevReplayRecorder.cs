@@ -18,7 +18,7 @@ namespace HoldTheHill.Features.DevTools
     /// <remarks>
     /// Ability uses, skill unlocks, wave starts and field resets come from the events those classes
     /// already raise. Tower placing, selling and upgrading come from the static events on
-    /// <see cref="GameTowerPlacer"/>, so only what the player did is recorded. Towers removed or
+    /// <see cref="TowerPlacer"/>, so only what the player did is recorded. Towers removed or
     /// reset some other way (a field reset, a hornet) are not commands.
     ///
     /// Commands are accurate to one fixed step. Console commands are recorded as "dev" commands

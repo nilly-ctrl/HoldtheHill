@@ -51,7 +51,7 @@ namespace HoldTheHill.Tests
             yield return null;
             Assert.AreEqual(GameFlowState.Playing, flow.State);
 
-            var placer = Object.FindAnyObjectByType<GameTowerPlacer>();
+            var placer = Object.FindAnyObjectByType<TowerPlacer>();
             yield return Shot("hud-1-idle");
 
             placer.TogglePlacement(0);

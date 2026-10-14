@@ -111,7 +111,7 @@ namespace HoldTheHill.EditorTools.Authoring
 
             // The same helper the builders use: a variant with its own look and numbers.
             GameObject go = EnemyPrefabBuilder.BuildBaseEnemyObject(
-                "Graybox" + spec.Id, null, spec.Health, spec.Speed, spec.Color, spec.Size, spec.Bounty, basePrefab);
+                spec.Id, null, spec.Health, spec.Speed, spec.Color, spec.Size, spec.Bounty, basePrefab);
 
             BuildKit.Apply(go.GetComponent<HoldTheHill.Features.Enemies.EnemyMover>(),
                 so => so.FindProperty("_faceTravelDirection").boolValue = spec.FaceTravelDirection);
@@ -136,7 +136,7 @@ namespace HoldTheHill.EditorTools.Authoring
                 made.Add(dataPath);
             }
 
-            GameObject prefab = BuildKit.SavePrefab(go, "Graybox" + spec.Id);
+            GameObject prefab = BuildKit.SavePrefab(go, spec.Id);
             if (data != null)
             {
                 BuildKit.Apply(data, so => so.FindProperty("_prefab").objectReferenceValue = prefab);

@@ -19,7 +19,7 @@ namespace HoldTheHill.Features.Hero
 
         private readonly List<Tower> _towers = new List<Tower>();
         private readonly List<Behaviour> _switchedOff = new List<Behaviour>();
-        private GameTowerPlacer _placer;
+        private TowerPlacer _placer;
 
         /// <summary>The tower being carried, or null.</summary>
         public Tower Carried { get; private set; }
@@ -137,11 +137,11 @@ namespace HoldTheHill.Features.Hero
             return best;
         }
 
-        private GameTowerPlacer Placer()
+        private TowerPlacer Placer()
         {
             if (_placer == null)
             {
-                _placer = FindAnyObjectByType<GameTowerPlacer>();
+                _placer = FindAnyObjectByType<TowerPlacer>();
             }
 
             return _placer;

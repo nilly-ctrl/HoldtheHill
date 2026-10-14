@@ -33,7 +33,7 @@ namespace HoldTheHill.Features.DevTools
         }
 
         private Mode _mode = Mode.Tower;
-        private GameTowerPlacer _placer;
+        private TowerPlacer _placer;
         private GameObject _target;
         private List<DevTunedField> _fields = new List<DevTunedField>();
         private Vector2 _scroll;
@@ -82,7 +82,7 @@ namespace HoldTheHill.Features.DevTools
                 return;
             }
 
-            if (_placer == null) _placer = FindAnyObjectByType<GameTowerPlacer>();
+            if (_placer == null) _placer = FindAnyObjectByType<TowerPlacer>();
 
             if (_mode == Mode.Tower && _placer != null)
             {

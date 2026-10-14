@@ -26,7 +26,7 @@ namespace HoldTheHill.Features.Hud
         [SerializeField] private UiButton _close;
 
         private readonly TargetingPriority[] _priorities = (TargetingPriority[])Enum.GetValues(typeof(TargetingPriority));
-        private GameTowerPlacer _placer;
+        private TowerPlacer _placer;
 
         // What the texts were last built from, so a frame with nothing new allocates nothing.
         private Tower _shownTower;
@@ -137,11 +137,11 @@ namespace HoldTheHill.Features.Hud
             }
         }
 
-        private GameTowerPlacer FindPlacer()
+        private TowerPlacer FindPlacer()
         {
             if (_placer == null)
             {
-                _placer = FindAnyObjectByType<GameTowerPlacer>();
+                _placer = FindAnyObjectByType<TowerPlacer>();
             }
 
             return _placer;

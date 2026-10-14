@@ -55,7 +55,7 @@ namespace HoldTheHill.Core.Animation
     /// </summary>
     /// <remarks>
     /// Baked into plain sprite arrays rather than used through Animator controllers, so
-    /// objects created at runtime (towers from GameTowerPlacer, death and blast effects)
+    /// objects created at runtime (towers from TowerPlacer, death and blast effects)
     /// can play any clip from one reference, without an AnimatorController per sprite.
     /// </remarks>
     public class SpriteAnimLibrary : ScriptableObject

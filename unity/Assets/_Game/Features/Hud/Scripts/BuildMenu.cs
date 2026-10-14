@@ -25,7 +25,7 @@ namespace HoldTheHill.Features.Hud
         [SerializeField] private RectTransform _frame;
 
         private readonly List<BuildOption> _options = new List<BuildOption>();
-        private GameTowerPlacer _placer;
+        private TowerPlacer _placer;
         private TowerCatalog _builtFor;
         private Vector3 _cellShown = new Vector3(float.NaN, 0f, 0f);
 
@@ -76,11 +76,11 @@ namespace HoldTheHill.Features.Hud
             _frame.anchoredPosition = position;
         }
 
-        private GameTowerPlacer FindPlacer()
+        private TowerPlacer FindPlacer()
         {
             if (_placer == null)
             {
-                _placer = FindAnyObjectByType<GameTowerPlacer>();
+                _placer = FindAnyObjectByType<TowerPlacer>();
             }
 
             return _placer;

@@ -114,7 +114,7 @@ namespace HoldTheHill.Tests
         public void Place_InstantiatesThePrefab_AndSelectsIt()
         {
             _placerObject = new GameObject("Placer");
-            var placer = _placerObject.AddComponent<GameTowerPlacer>();
+            var placer = _placerObject.AddComponent<TowerPlacer>();
             TowerData frost = null;
             for (int i = 0; i < Catalog.Count; i++)
             {
@@ -136,7 +136,7 @@ namespace HoldTheHill.Tests
         public void PlacerCommands_PickAndDropATower_AndPriceAnUpgrade()
         {
             _placerObject = new GameObject("Placer");
-            var placer = _placerObject.AddComponent<GameTowerPlacer>();
+            var placer = _placerObject.AddComponent<TowerPlacer>();
             placer.SetCatalog(Catalog);
 
             placer.TogglePlacement(1);
@@ -174,7 +174,7 @@ namespace HoldTheHill.Tests
         public void Placer_ReportsATowersArchetype_FromItsWeaponOrItsCatalogEntry()
         {
             _placerObject = new GameObject("Placer");
-            var placer = _placerObject.AddComponent<GameTowerPlacer>();
+            var placer = _placerObject.AddComponent<TowerPlacer>();
             placer.SetCatalog(Catalog);
             for (int i = 0; i < Catalog.Count; i++)
             {

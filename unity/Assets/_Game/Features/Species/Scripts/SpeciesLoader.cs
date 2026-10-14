@@ -57,7 +57,7 @@ namespace HoldTheHill.Features.Species
             _species = species;
             Current = species;
 
-            var placer = FindAnyObjectByType<GameTowerPlacer>();
+            var placer = FindAnyObjectByType<TowerPlacer>();
             if (placer != null && species.TowerCatalog != null)
             {
                 placer.SetCatalog(species.TowerCatalog);

@@ -23,7 +23,7 @@ namespace HoldTheHill.Features.Hud
 
         private readonly List<BuildSlot> _slots = new List<BuildSlot>();
         private readonly List<GameObject> _gaps = new List<GameObject>();
-        private GameTowerPlacer _placer;
+        private TowerPlacer _placer;
         private TowerCatalog _builtFor;
 
         public override bool WantsToShow => FindPlacer() != null && _placer.Catalog != null && _placer.Catalog.Count > 0;
@@ -44,11 +44,11 @@ namespace HoldTheHill.Features.Hud
             }
         }
 
-        private GameTowerPlacer FindPlacer()
+        private TowerPlacer FindPlacer()
         {
             if (_placer == null)
             {
-                _placer = FindAnyObjectByType<GameTowerPlacer>();
+                _placer = FindAnyObjectByType<TowerPlacer>();
             }
 
             return _placer;

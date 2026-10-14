@@ -74,7 +74,7 @@ namespace HoldTheHill.Features.DevTools
                     break;
 
                 case "towers":
-                    GameTowerPlacer placer = UnityEngine.Object.FindAnyObjectByType<GameTowerPlacer>();
+                    TowerPlacer placer = UnityEngine.Object.FindAnyObjectByType<TowerPlacer>();
                     if (placer == null || placer.Catalog == null) throw new DevCommandException("No tower catalog in the scene.");
                     for (int i = 0; i < placer.Catalog.Count; i++)
                     {

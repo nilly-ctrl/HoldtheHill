@@ -73,7 +73,7 @@ namespace HoldTheHill.Features.DevTools
         // ---------- keeping clicks on a panel from reaching the field ----------
 
         private static readonly List<Rect> s_rects = new List<Rect>();
-        private static GameTowerPlacer s_placer;
+        private static TowerPlacer s_placer;
         private static bool s_disabledPlacer;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -113,7 +113,7 @@ namespace HoldTheHill.Features.DevTools
 
             if (over)
             {
-                if (s_placer == null) s_placer = Object.FindAnyObjectByType<GameTowerPlacer>();
+                if (s_placer == null) s_placer = Object.FindAnyObjectByType<TowerPlacer>();
                 if (s_placer != null && s_placer.enabled)
                 {
                     s_placer.enabled = false;

@@ -73,7 +73,7 @@ namespace HoldTheHill.Core.Animation
             _tower = GetComponent<Tower>();
         }
 
-        // Start rather than Awake: GameTowerPlacer adds the weapon component after this one.
+        // Start rather than Awake: TowerPlacer adds the weapon component after this one.
         private void Start()
         {
             _frost = GetComponent<FrostAuraTower>();

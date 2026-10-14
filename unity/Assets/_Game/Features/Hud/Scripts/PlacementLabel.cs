@@ -19,7 +19,7 @@ namespace HoldTheHill.Features.Hud
         [Tooltip("Canvas units above the cell.")]
         [SerializeField] private float _lift = 16f;
 
-        private GameTowerPlacer _placer;
+        private TowerPlacer _placer;
         private TowerData _shownTower;
         private int _shownCost = -1;
         private int _shownState = -1;
@@ -44,11 +44,11 @@ namespace HoldTheHill.Features.Hud
             PlaceAtWorld((RectTransform)transform, preview.Cell, new Vector2(0f, _lift));
         }
 
-        private GameTowerPlacer FindPlacer()
+        private TowerPlacer FindPlacer()
         {
             if (_placer == null)
             {
-                _placer = FindAnyObjectByType<GameTowerPlacer>();
+                _placer = FindAnyObjectByType<TowerPlacer>();
             }
 
             return _placer;

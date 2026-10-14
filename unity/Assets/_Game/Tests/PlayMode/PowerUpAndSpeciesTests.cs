@@ -182,7 +182,7 @@ namespace HoldTheHill.Tests
         [Test]
         public void Loader_GivesThePlacerTheCatalog_AndFieldsTheWarden()
         {
-            var placer = Make("Placer").AddComponent<GameTowerPlacer>();
+            var placer = Make("Placer").AddComponent<TowerPlacer>();
             var loader = Make("Species").AddComponent<SpeciesLoader>();
             Assert.IsNull(placer.Catalog);
 
