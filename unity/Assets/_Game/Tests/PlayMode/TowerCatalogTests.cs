@@ -34,7 +34,7 @@ namespace HoldTheHill.Tests
         public void Catalog_HasEveryTower_EachWithAPrefabVariant()
         {
             TowerCatalog catalog = Catalog;
-            Assert.IsNotNull(catalog, "Run Tools > Hold the Hill > Build Graybox Combat Test.");
+            Assert.IsNotNull(catalog, "Run Tools > Hold the Hill > Build Combat Test Scene.");
             Assert.AreEqual(14, catalog.Count);
 
             for (int i = 0; i < catalog.Count; i++)

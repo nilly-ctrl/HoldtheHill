@@ -7,7 +7,7 @@ namespace HoldTheHill.Features.Progression
     /// The nodes of a skill tree, in display order. The tree draws one column per branch name,
     /// in the order the branches first appear here.
     /// </summary>
-    [CreateAssetMenu(menuName = "Hold the Hill/Sandbox/Graybox Skill Tree Data", fileName = "SkillTreeData")]
+    [CreateAssetMenu(menuName = "Hold the Hill/Skill Tree Data", fileName = "SkillTreeData")]
     public class SkillTreeData : ScriptableObject
     {
         [SerializeField] private List<SkillNodeData> _nodes = new List<SkillNodeData>();

@@ -12,7 +12,7 @@ namespace HoldTheHill.Features.Hud
     /// nothing and the HUD draws exactly as before. The font is pixel-exact at sizes 10, 20, 30…
     /// (one font pixel per 1/10 em), so HUD styles should stick to those sizes.
     /// </remarks>
-    [AddComponentMenu("Hold the Hill/Graybox UI Skin")]
+    [AddComponentMenu("Hold the Hill/UI Skin")]
     public class ImguiSkin : MonoBehaviour
     {
         public const int BodySize = 10;

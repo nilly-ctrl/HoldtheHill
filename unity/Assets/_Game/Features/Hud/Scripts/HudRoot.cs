@@ -11,7 +11,7 @@ namespace HoldTheHill.Features.Hud
     /// steps aside whenever the game flow is not Playing.
     /// </summary>
     [DefaultExecutionOrder(100)]
-    [AddComponentMenu("Hold the Hill/Graybox HUD Root")]
+    [AddComponentMenu("Hold the Hill/HUD Root")]
     public class HudRoot : MonoBehaviour
     {
         private readonly List<HudPanel> _panels = new List<HudPanel>();

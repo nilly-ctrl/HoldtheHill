@@ -15,7 +15,7 @@ namespace HoldTheHill.EditorTools.Builders
 {
     /// <summary>
     /// Gathers the graybox's manager objects (flow, economy, skill tree, sounds, icons, species,
-    /// power-ups and the rest) into one <c>GrayboxSystems</c> prefab, so a level scene carries
+    /// power-ups and the rest) into one <c>Systems</c> prefab, so a level scene carries
     /// one prefab instance instead of its own copy of every manager.
     /// </summary>
     /// <remarks>
@@ -39,7 +39,7 @@ namespace HoldTheHill.EditorTools.Builders
         };
 
         /// <summary>
-        /// Moves the member roots of the open scene under one <c>GrayboxSystems</c> object and saves it
+        /// Moves the member roots of the open scene under one <c>Systems</c> object and saves it
         /// as the prefab, leaving the scene with a connected instance. Members that are not in the
         /// scene (an optional system that did not build) are skipped.
         /// </summary>

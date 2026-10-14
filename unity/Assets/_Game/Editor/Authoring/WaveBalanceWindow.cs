@@ -124,7 +124,7 @@ namespace HoldTheHill.EditorTools.Authoring
             }
 
             _enemyPrefabs.Sort((a, b) => string.CompareOrdinal(a.name, b.name));
-            _enemyNames = _enemyPrefabs.ConvertAll(p => p.name.Replace("Graybox", string.Empty)).ToArray();
+            _enemyNames = _enemyPrefabs.ConvertAll(p => p.name).ToArray();
             _info.Clear();
             BindAsset();
         }
@@ -378,7 +378,7 @@ namespace HoldTheHill.EditorTools.Authoring
             for (int i = 0; i < enemies.arraySize; i++)
             {
                 var prefab = enemies.GetArrayElementAtIndex(i).FindPropertyRelative("enemyPrefab").objectReferenceValue;
-                string key = prefab != null ? prefab.name.Replace("Graybox", string.Empty) : "(missing)";
+                string key = prefab != null ? prefab.name : "(missing)";
                 counts[key] = counts.TryGetValue(key, out int n) ? n + 1 : 1;
             }
 

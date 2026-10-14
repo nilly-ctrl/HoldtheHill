@@ -7,7 +7,7 @@ namespace HoldTheHill.Features.Towers
     /// <summary>
     /// The towers the player can build, in build bar order. Slot i uses build hotkey i.
     /// </summary>
-    [CreateAssetMenu(menuName = "Hold the Hill/Sandbox/Graybox Tower Catalog", fileName = "TowerCatalog")]
+    [CreateAssetMenu(menuName = "Hold the Hill/Tower Catalog", fileName = "TowerCatalog")]
     public class TowerCatalog : ScriptableObject
     {
         [SerializeField] private List<TowerData> _towers = new List<TowerData>();

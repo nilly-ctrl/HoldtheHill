@@ -6,7 +6,7 @@ using UnityEngine;
 namespace HoldTheHill.EditorTools.DevTools
 {
     /// <summary>
-    /// Editor menu for the runtime dev tools (<c>Graybox/DevTools</c>): add them to the open scene,
+    /// Editor menu for the runtime dev tools (<c>Features/DevTools</c>): add them to the open scene,
     /// or have them created on Play so they survive a rebuild of the generated scene.
     /// </summary>
     [InitializeOnLoad]

@@ -14,7 +14,7 @@ namespace HoldTheHill.Features.GameFlow
     /// screen can rebind it, and every action is handed to the flow controller or the spawner.
     /// </summary>
     /// <remarks>
-    /// Was the other half of <c>GrayboxHud</c>. Speed and restart need a <see cref="RunFlow"/>
+    /// Was the other half of <c>GrayboxHud</c> (now RunCounters and RunHotkeys). Speed and restart need a <see cref="RunFlow"/>
     /// in the scene; without one those keys do nothing, because nothing else may own time.
     /// </remarks>
     [AddComponentMenu("Hold the Hill/Run Hotkeys")]

@@ -13,7 +13,7 @@ using UnityEngine;
 namespace HoldTheHill.Tests
 {
     /// <summary>
-    /// The managers live in one GrayboxSystems prefab, and each generated scene holds one
+    /// The managers live in one Systems prefab, and each generated scene holds one
     /// instance of it rather than its own copies.
     /// </summary>
     public class SystemsPrefabTests
@@ -37,7 +37,7 @@ namespace HoldTheHill.Tests
         public void SystemsPrefab_HoldsTheFlowEconomyAndSkillTree()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
-            Assert.IsNotNull(prefab, "Run Tools > Hold the Hill > Build Graybox Combat Test.");
+            Assert.IsNotNull(prefab, "Run Tools > Hold the Hill > Build Combat Test Scene.");
             Assert.IsNotNull(prefab.GetComponentInChildren<RunFlow>(true), "flow");
             Assert.IsNotNull(prefab.GetComponentInChildren<WalletBehaviour>(true), "economy");
             Assert.IsNotNull(prefab.GetComponentInChildren<SkillTree>(true), "skill tree");
@@ -48,7 +48,7 @@ namespace HoldTheHill.Tests
         public void EveryGeneratedScene_UsesTheSystemsPrefab_NotItsOwnManagers()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
-            Assert.IsNotNull(prefab, "Run Tools > Hold the Hill > Build Graybox Combat Test.");
+            Assert.IsNotNull(prefab, "Run Tools > Hold the Hill > Build Combat Test Scene.");
             string prefabGuid = AssetDatabase.AssetPathToGUID(PrefabPath);
 
             foreach (string path in Scenes)
@@ -56,7 +56,7 @@ namespace HoldTheHill.Tests
                 if (AssetDatabase.LoadAssetAtPath<SceneAsset>(path) == null) continue; // level not built on this machine
 
                 string text = System.IO.File.ReadAllText(path);
-                StringAssert.Contains(prefabGuid, text, $"{path} should hold a GrayboxSystems instance");
+                StringAssert.Contains(prefabGuid, text, $"{path} should hold a Systems instance");
 
                 foreach (string member in Members)
                 {

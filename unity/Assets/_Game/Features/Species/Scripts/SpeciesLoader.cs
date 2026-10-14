@@ -14,7 +14,7 @@ namespace HoldTheHill.Features.Species
     /// The species is the one assigned here in the Inspector. There is no picker yet;
     /// <see cref="Load"/> is what a species screen would call.
     /// </remarks>
-    [AddComponentMenu("Hold the Hill/Graybox Species Loader")]
+    [AddComponentMenu("Hold the Hill/Species Loader")]
     public class SpeciesLoader : MonoBehaviour
     {
         [Tooltip("The species this scene is played as.")]

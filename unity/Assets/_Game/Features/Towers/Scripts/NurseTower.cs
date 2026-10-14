@@ -10,7 +10,7 @@ namespace HoldTheHill.Features.Towers
     /// while it is hurt. Her <see cref="HoldTheHill.Features.Towers.Tower"/> has no reach, so it
     /// never targets anything.
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Graybox Nurse Tower")]
+    [AddComponentMenu("Hold the Hill/Nurse Tower")]
     public class NurseTower : SupportTower
     {
         private const int FxOrder = 4;

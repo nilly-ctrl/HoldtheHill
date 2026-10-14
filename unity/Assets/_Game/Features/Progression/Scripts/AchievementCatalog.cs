@@ -4,7 +4,7 @@ using UnityEngine;
 namespace HoldTheHill.Features.Progression
 {
     /// <summary>The achievements in the game, in the order they are listed to the player.</summary>
-    [CreateAssetMenu(menuName = "Hold the Hill/Sandbox/Graybox Achievement Catalog", fileName = "AchievementCatalog")]
+    [CreateAssetMenu(menuName = "Hold the Hill/Achievement Catalog", fileName = "AchievementCatalog")]
     public class AchievementCatalog : ScriptableObject
     {
         [SerializeField] private List<AchievementData> _achievements = new List<AchievementData>();

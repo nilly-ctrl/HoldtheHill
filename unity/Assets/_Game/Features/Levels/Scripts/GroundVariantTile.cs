@@ -9,7 +9,7 @@ namespace HoldTheHill.Features.Levels
     /// With <see cref="odd"/> filled in, cells alternate between the two lists like a
     /// chessboard (the kitchen's two tile colours).
     /// </summary>
-    [CreateAssetMenu(menuName = "Hold the Hill/Sandbox/Ground Variant Tile")]
+    [CreateAssetMenu(menuName = "Hold the Hill/Ground Variant Tile")]
     public class GroundVariantTile : TileBase
     {
         [Tooltip("Sprites for every cell, or for the cells where x + y is even when Odd is filled in.")]

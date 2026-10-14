@@ -23,10 +23,10 @@ namespace HoldTheHill.Tests
     /// <summary>
     /// Checks the menu screens against the flow controller: they open and close with its state,
     /// their buttons drive it, and the destructive ones ask first. Title, home, settings and
-    /// controls are in GrayboxMenuScreensTests.cs (the same class, split by file).
+    /// controls are in MenuScreensTests.cs (the same class, split by file).
     /// </summary>
     /// <remarks>
-    /// Uses the generated MenuScreens prefab (Tools > Hold the Hill > Build Graybox Menus) with a
+    /// Uses the generated MenuScreens prefab (Tools > Hold the Hill > Build Menus) with a
     /// spawner and hill built in code, so it does not depend on the graybox scene.
     /// </remarks>
     public partial class MenusTests
@@ -343,7 +343,7 @@ namespace HoldTheHill.Tests
         private GameObject Spawn(string path)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            Assert.IsNotNull(prefab, $"Missing {path}: run Tools > Hold the Hill > Build UI Kit, then Build Graybox Menus.");
+            Assert.IsNotNull(prefab, $"Missing {path}: run Tools > Hold the Hill > Build UI Kit, then Build Menus.");
             GameObject instance = Object.Instantiate(prefab);
             _made.Add(instance);
             return instance;

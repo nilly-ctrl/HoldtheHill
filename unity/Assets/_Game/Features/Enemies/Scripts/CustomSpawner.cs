@@ -9,7 +9,7 @@ namespace HoldTheHill.Features.Enemies
     /// Custom horde spawner for stress-testing tower defense setups on demand.
     /// Allows spawning custom enemy hordes (e.g. Swarm Rush, Brute Parade, Hydra Splitters, 100-enemy Mega Horde).
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Graybox Custom Spawner")]
+    [AddComponentMenu("Hold the Hill/Custom Spawner")]
     public class CustomSpawner : MonoBehaviour
     {
         /// <summary>One enemy the presets and endless waves can use, looked up by id.</summary>

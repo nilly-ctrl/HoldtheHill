@@ -10,7 +10,7 @@ namespace HoldTheHill.Features.DamageNumbers
     /// </summary>
     [ExecuteAlways]
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-    [AddComponentMenu("Hold the Hill/Sandbox/Pixel Text")]
+    [AddComponentMenu("Hold the Hill/Pixel Text")]
     public class PixelText : MonoBehaviour
     {
         public enum Anchor

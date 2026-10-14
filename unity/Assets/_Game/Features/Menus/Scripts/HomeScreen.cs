@@ -17,7 +17,7 @@ namespace HoldTheHill.Features.Menus
     /// paid in Honeydew), Awards (achievements) and Records.
     /// </summary>
     [RequireComponent(typeof(UiScreen))]
-    [AddComponentMenu("Hold the Hill/Graybox Home Screen")]
+    [AddComponentMenu("Hold the Hill/Home Screen")]
     public class HomeScreen : MonoBehaviour
     {
         [Serializable]

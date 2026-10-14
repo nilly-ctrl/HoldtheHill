@@ -7,7 +7,7 @@ namespace HoldTheHill.Features.Hero
     /// One Warden ability as the HUD and the controls screen see it: its name, its key and
     /// its timing. What it does is the <see cref="WardenAbility"/> on its prefab.
     /// </summary>
-    [CreateAssetMenu(menuName = "Hold the Hill/Sandbox/Graybox Ability Data", fileName = "AbilityData")]
+    [CreateAssetMenu(menuName = "Hold the Hill/Ability Data", fileName = "AbilityData")]
     public class AbilityData : ScriptableObject
     {
         [Tooltip("Short id, e.g. Shove.")]

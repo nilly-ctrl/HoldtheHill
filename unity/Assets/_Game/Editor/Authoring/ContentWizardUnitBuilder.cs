@@ -36,7 +36,7 @@ namespace HoldTheHill.EditorTools.Authoring
                 throw new InvalidOperationException("TowerBase.prefab is missing. Run Build Graybox Combat Test first.");
             }
 
-            BuildKit.EnsureFolder(ContentWizardBuilder.GrayboxRoot + "/Towers/Prefabs");
+            BuildKit.EnsureFolder(ContentWizardBuilder.FeatureRoot + "/Towers/Prefabs");
             BuildKit.EnsureFolder(ContentWizardBuilder.DataRoot + "/Towers/Data");
 
             var go = (GameObject)PrefabUtility.InstantiatePrefab(basePrefab);

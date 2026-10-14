@@ -35,7 +35,7 @@ namespace HoldTheHill.Features.GameFlow
     /// tower placer still has something to cancel, before the placer cancels it.
     /// </remarks>
     [DefaultExecutionOrder(-100)]
-    [AddComponentMenu("Hold the Hill/Graybox Game Flow")]
+    [AddComponentMenu("Hold the Hill/Game Flow")]
     public class RunFlow : GameFlowController
     {
         /// <summary>Raised after the field has been rewound to a checkpoint (new run or wave retry).</summary>

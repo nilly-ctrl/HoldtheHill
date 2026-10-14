@@ -65,7 +65,7 @@ namespace HoldTheHill.Tests
             foreach (string id in new[] { "HoneyDrop", "BerserkBerry" })
             {
                 PowerUpData data = PowerUp(id);
-                Assert.IsNotNull(data, id + ": run Tools > Hold the Hill > Build Graybox Combat Test.");
+                Assert.IsNotNull(data, id + ": run Tools > Hold the Hill > Build Combat Test Scene.");
                 Assert.Greater(data.Duration, 0f, id);
                 Assert.IsNotNull(data.EffectPrefab, id);
                 Assert.IsNotNull(data.PickupPrefab, id);
@@ -148,7 +148,7 @@ namespace HoldTheHill.Tests
         public void GardenAnt_IsTheWholeGame()
         {
             SpeciesData garden = Species("GardenAnt");
-            Assert.IsNotNull(garden, "Run Tools > Hold the Hill > Build Graybox Combat Test.");
+            Assert.IsNotNull(garden, "Run Tools > Hold the Hill > Build Combat Test Scene.");
             Assert.AreEqual(
                 AssetDatabase.LoadAssetAtPath<TowerCatalog>($"{Root}/Towers/Data/TowerCatalog.asset"), garden.TowerCatalog);
             Assert.AreEqual(14, garden.TowerCatalog.Count);

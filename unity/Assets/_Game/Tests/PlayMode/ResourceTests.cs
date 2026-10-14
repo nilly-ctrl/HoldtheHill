@@ -81,7 +81,7 @@ namespace HoldTheHill.Tests
         public void Crumbs_AreVariantsOfThePickupBase_AndPayFood()
         {
             GameObject pickupBase = LoadPickup("PickupBase");
-            Assert.IsNotNull(pickupBase, "Run Tools > Hold the Hill > Build Graybox Combat Test.");
+            Assert.IsNotNull(pickupBase, "Run Tools > Hold the Hill > Build Combat Test Scene.");
             var food = AssetDatabase.LoadAssetAtPath<ResourceData>($"{Root}/Economy/Data/Food.asset");
             Assert.IsNotNull(food);
 

@@ -12,7 +12,7 @@ namespace HoldTheHill.EditorTools.Builders
     /// <summary>
     /// Builds the in-game HUD as a prefab (a variant of the UI kit's UiRoot canvas) from small part
     /// prefabs: a build slot, a build option, a wave marker and a chip. Called from
-    /// <see cref="CombatTestSceneBuilder"/> and from Tools > Hold the Hill > Build Graybox HUD.
+    /// <see cref="CombatTestSceneBuilder"/> and from Tools > Hold the Hill > Build HUD.
     /// </summary>
     /// <remarks>
     /// Everything is regenerated on each build, so layout is changed here rather than by hand on
@@ -20,9 +20,9 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     public static class HudBuilder
     {
-        public const string PrefabPath = GrayboxRoot + "/Prefabs/Hud.prefab";
+        public const string PrefabPath = FeatureRoot + "/Prefabs/Hud.prefab";
 
-        internal const string GrayboxRoot = "Assets/_Game/Features/Hud";
+        internal const string FeatureRoot = "Assets/_Game/Features/Hud";
         internal const string PartsFolder = "Parts";
         internal const string HudSprites = "Assets/_Game/Shared/Art/Ui/Hud";
         internal const string KitSprites = UiKitBuilder.Root + "/Sprites";
@@ -38,11 +38,11 @@ namespace HoldTheHill.EditorTools.Builders
         // Columns sit this far in from the screen edge, in canvas units.
         internal const float Edge = 6f;
 
-        [MenuItem("Tools/Hold the Hill/Build Graybox HUD")]
+        [MenuItem("Tools/Hold the Hill/Build HUD")]
         public static GameObject BuildPrefab()
         {
-            BuildKit.CreateFolderIfMissing(GrayboxRoot, "Prefabs");
-            BuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs", PartsFolder);
+            BuildKit.CreateFolderIfMissing(FeatureRoot, "Prefabs");
+            BuildKit.CreateFolderIfMissing(FeatureRoot + "/Prefabs", PartsFolder);
 
             BuildSlot slot = HudPartsBuilder.BuildSlot();
             BuildOption option = HudPartsBuilder.BuildOption();
@@ -91,7 +91,7 @@ namespace HoldTheHill.EditorTools.Builders
 
             if (prefab == null)
             {
-                Debug.LogError("[Graybox] No HUD: build the UI kit first (Tools > Hold the Hill > Build UI Kit).");
+                Debug.LogError("[Build] No HUD: build the UI kit first (Tools > Hold the Hill > Build UI Kit).");
                 return;
             }
 

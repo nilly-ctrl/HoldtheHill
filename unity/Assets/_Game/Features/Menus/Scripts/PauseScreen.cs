@@ -12,7 +12,7 @@ namespace HoldTheHill.Features.Menus
     /// first, because both throw the run away.
     /// </summary>
     [RequireComponent(typeof(UiScreen))]
-    [AddComponentMenu("Hold the Hill/Graybox Pause Screen")]
+    [AddComponentMenu("Hold the Hill/Pause Screen")]
     public class PauseScreen : MonoBehaviour
     {
         [SerializeField] private TMP_Text _subtitle;

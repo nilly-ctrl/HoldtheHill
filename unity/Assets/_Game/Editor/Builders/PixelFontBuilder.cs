@@ -31,7 +31,7 @@ namespace HoldTheHill.EditorTools.Builders
         }
 #pragma warning restore 0649
 
-        [MenuItem("Hold the Hill/Sandbox/Build Pixel Fonts")]
+        [MenuItem("Hold the Hill/Build Pixel Fonts")]
         public static void Build()
         {
             if (!AssetDatabase.IsValidFolder(OutputFolder))
@@ -96,7 +96,7 @@ namespace HoldTheHill.EditorTools.Builders
             Debug.Log($"PixelFontBuilder: built {built} pixel font styles in {OutputFolder}");
         }
 
-        [MenuItem("Hold the Hill/Sandbox/Add Damage Numbers To Scene")]
+        [MenuItem("Hold the Hill/Add Damage Numbers To Scene")]
         public static void AddSpawnerToScene()
         {
             Build();
@@ -155,7 +155,7 @@ namespace HoldTheHill.EditorTools.Builders
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        [MenuItem("Hold the Hill/Sandbox/Add Pixel Font Theme Switch To Scene")]
+        [MenuItem("Hold the Hill/Add Pixel Font Theme Switch To Scene")]
         public static void AddThemeSwitchToScene()
         {
             Build();

@@ -67,7 +67,7 @@ namespace HoldTheHill.EditorTools.Builders
                 }
             }
 
-            Debug.Log($"[Graybox] Built {ScenePath} with {weapons} weapons. Open it and press Play.");
+            Debug.Log($"[Build] Built {ScenePath} with {weapons} weapons. Open it and press Play.");
         }
     }
 }

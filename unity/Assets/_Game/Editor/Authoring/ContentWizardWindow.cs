@@ -127,7 +127,7 @@ namespace HoldTheHill.EditorTools.Authoring
         private void EnemyForm()
         {
             EditorGUILayout.HelpBox(
-                "Makes a variant of GrayboxEnemyBase (or GrayboxBossBase for a boss). Special behaviour " +
+                "Makes a variant of EnemyBase (or BossBase for a boss). Special behaviour " +
                 "(shield, healer, splitter, ...) is added by hand afterwards. Waves still have to be told to spawn it.",
                 MessageType.None);
 

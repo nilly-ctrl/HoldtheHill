@@ -10,7 +10,7 @@ namespace HoldTheHill.Features.Hud
     /// rides above it until it dies. It listens for <see cref="Boss.Appeared"/>, so it works
     /// for bosses from a wave and from the spawn panel alike, and a new boss needs no change here.
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Graybox Boss Banner")]
+    [AddComponentMenu("Hold the Hill/Boss Banner")]
     public class BossBanner : MonoBehaviour
     {
         [SerializeField, Min(0.5f)] private float _bannerSeconds = 2.6f;

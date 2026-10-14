@@ -8,7 +8,7 @@ namespace HoldTheHill.Features.Menus
 {
     /// <summary>The title screen: Play (to Home), Settings, Controls, Quit.</summary>
     [RequireComponent(typeof(UiScreen))]
-    [AddComponentMenu("Hold the Hill/Graybox Title Screen")]
+    [AddComponentMenu("Hold the Hill/Title Screen")]
     public class TitleScreen : MonoBehaviour
     {
         [SerializeField] private UiButton _play;

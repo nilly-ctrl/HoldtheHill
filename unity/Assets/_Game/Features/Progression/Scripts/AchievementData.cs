@@ -34,7 +34,7 @@ namespace HoldTheHill.Features.Progression
     /// One achievement: its text, how far it goes and what moves it. Add an achievement by
     /// making one of these and listing it in the achievement catalog.
     /// </summary>
-    [CreateAssetMenu(menuName = "Hold the Hill/Sandbox/Graybox Achievement Data", fileName = "AchievementData")]
+    [CreateAssetMenu(menuName = "Hold the Hill/Achievement Data", fileName = "AchievementData")]
     public class AchievementData : ScriptableObject
     {
         [Tooltip("Short unique id, e.g. first_blood. Saved with the player's progress, so don't rename it later.")]

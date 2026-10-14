@@ -18,13 +18,13 @@ namespace HoldTheHill.EditorTools.Builders
     /// A prefab or data asset is only made when it is missing, so a tower's numbers, name, icon
     /// and cost are tuned in the Inspector and survive a rebuild. The numbers here are the
     /// starting values. To start one tower over, delete its prefab and rebuild; to start them all
-    /// over use Tools > Hold the Hill > Rebuild Graybox Tower Prefabs.
+    /// over use Tools > Hold the Hill > Rebuild Tower Prefabs.
     /// </remarks>
     internal static class TowerBuilder
     {
-        private const string GrayboxRoot = "Assets/_Game/Features/Towers";
+        private const string FeatureRoot = "Assets/_Game/Features/Towers";
         private const string PrefabFolder = "Towers";
-        private const string DataRoot = GrayboxRoot + "/Data";
+        private const string DataRoot = FeatureRoot + "/Data";
         private const string TowerDataRoot = DataRoot;
 
         public const string CatalogPath = DataRoot + "/TowerCatalog.asset";
@@ -37,7 +37,7 @@ namespace HoldTheHill.EditorTools.Builders
         private static GameObject s_base;
         private static SpriteAnimLibrary s_anim;
 
-        [MenuItem("Tools/Hold the Hill/Rebuild Graybox Tower Prefabs (resets tuning)")]
+        [MenuItem("Tools/Hold the Hill/Rebuild Tower Prefabs (resets tuning)")]
         public static void RebuildAll()
         {
             Overwrite = true;
@@ -51,7 +51,7 @@ namespace HoldTheHill.EditorTools.Builders
             }
         }
 
-        public static string PrefabPath(string id) => $"{GrayboxRoot}/Prefabs/{id}.prefab";
+        public static string PrefabPath(string id) => $"{FeatureRoot}/Prefabs/{id}.prefab";
 
         /// <summary>Builds every tower prefab and data asset, and the catalog in build bar order.</summary>
         public static void BuildPrefabs(
@@ -64,8 +64,8 @@ namespace HoldTheHill.EditorTools.Builders
             Material lineMaterial,
             SpriteAnimLibrary anim)
         {
-            BuildKit.EnsureFolder(GrayboxRoot + "/Prefabs");
-            BuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            BuildKit.EnsureFolder(FeatureRoot + "/Prefabs");
+            BuildKit.CreateFolderIfMissing(FeatureRoot, "Data");
 
             s_anim = anim;
             s_base = BuildBase(square);
@@ -196,7 +196,7 @@ namespace HoldTheHill.EditorTools.Builders
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(id));
             if (prefab == null)
             {
-                throw new System.InvalidOperationException($"[Graybox] Tower prefab missing at {PrefabPath(id)}.");
+                throw new System.InvalidOperationException($"[Build] Tower prefab missing at {PrefabPath(id)}.");
             }
 
             var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);

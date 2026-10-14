@@ -12,7 +12,7 @@ namespace HoldTheHill.Core.Icons
     /// IconLibrary in the scene, the Editor falls back to loading straight from the Icons folder,
     /// which keeps older scenes working until they are rebuilt.
     /// </remarks>
-    [AddComponentMenu("Hold the Hill/Graybox Icons")]
+    [AddComponentMenu("Hold the Hill/Icons")]
     public class IconLibrary : MonoBehaviour
     {
         /// <summary>Icons are drawn at this size (their native size) to stay pixel-sharp.</summary>

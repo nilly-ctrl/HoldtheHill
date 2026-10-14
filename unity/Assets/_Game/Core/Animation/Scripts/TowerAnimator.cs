@@ -43,7 +43,7 @@ namespace HoldTheHill.Core.Animation
         {
             if (library == null || library.Find(key) == null)
             {
-                Debug.LogWarning($"[Graybox] No animation set '{key}' in the library; {tower.name} keeps its placeholder.");
+                Debug.LogWarning($"[Game] No animation set '{key}' in the library; {tower.name} keeps its placeholder.");
                 return null;
             }
 

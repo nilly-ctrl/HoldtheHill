@@ -156,7 +156,7 @@ namespace HoldTheHill.Tests
         private GameObject Hud()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(HudPath);
-            Assert.IsNotNull(prefab, "Run Tools > Hold the Hill > Build Graybox HUD.");
+            Assert.IsNotNull(prefab, "Run Tools > Hold the Hill > Build HUD.");
             GameObject hud = Object.Instantiate(prefab);
             _made.Add(hud);
             return hud;

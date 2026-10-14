@@ -23,15 +23,15 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     internal static class SpeciesBuilder
     {
-        private const string GrayboxRoot = "Assets/_Game/Features/Species";
-        private const string DataRoot = GrayboxRoot + "/Data";
+        private const string FeatureRoot = "Assets/_Game/Features/Species";
+        private const string DataRoot = FeatureRoot + "/Data";
 
         public const string DefaultSpeciesPath = DataRoot + "/GardenAnt.asset";
         public const string SampleSpeciesPath = DataRoot + "/FireAnt.asset";
 
         public static void BuildAssets()
         {
-            BuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            BuildKit.CreateFolderIfMissing(FeatureRoot, "Data");
 
             var catalog = AssetDatabase.LoadAssetAtPath<TowerCatalog>(TowerBuilder.CatalogPath);
             var warden = AssetDatabase.LoadAssetAtPath<GameObject>(WardenBuilder.PrefabPath("Warden"));
@@ -58,7 +58,7 @@ namespace HoldTheHill.EditorTools.Builders
             var species = AssetDatabase.LoadAssetAtPath<SpeciesData>(DefaultSpeciesPath);
             if (species == null)
             {
-                throw new System.InvalidOperationException($"[Graybox] Species asset missing at {DefaultSpeciesPath}.");
+                throw new System.InvalidOperationException($"[Build] Species asset missing at {DefaultSpeciesPath}.");
             }
 
             var go = new GameObject("Species");

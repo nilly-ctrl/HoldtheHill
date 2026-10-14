@@ -52,7 +52,7 @@ namespace HoldTheHill.Tests
 
             RunFlow flow = Object.FindAnyObjectByType<RunFlow>();
             var menus = Object.FindAnyObjectByType<MenuScreens>();
-            Assert.IsNotNull(flow, "the scene has no flow controller: rebuild it (Tools > Hold the Hill > Build Graybox Combat Test)");
+            Assert.IsNotNull(flow, "the scene has no flow controller: rebuild it (Tools > Hold the Hill > Build Combat Test)");
             Assert.IsNotNull(menus, "the scene has no menus: rebuild it");
 
             Assert.AreEqual(GameFlowState.Title, flow.State, "the game opens on the title screen");

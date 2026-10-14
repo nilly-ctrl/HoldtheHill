@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HoldTheHill.Features.PowerUps
 {
     /// <summary>A pickup effect that starts a power-up when the pickup is collected.</summary>
-    [AddComponentMenu("Hold the Hill/Graybox Power-Up Gain")]
+    [AddComponentMenu("Hold the Hill/Power-Up Gain")]
     public class PowerUpGain : PickupEffect
     {
         [SerializeField] private PowerUpData _powerUp;

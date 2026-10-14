@@ -16,7 +16,7 @@ namespace HoldTheHill.Features.Hero
     /// Its health is a <see cref="WardenHealth"/> on the same prefab. What hurts the Warden
     /// is still an open design question (docs/level-up-plan, W3), so nothing does yet.
     /// </remarks>
-    [AddComponentMenu("Hold the Hill/Graybox Warden")]
+    [AddComponentMenu("Hold the Hill/Warden")]
     public class Warden : MonoBehaviour
     {
         [Tooltip("World units per second.")]

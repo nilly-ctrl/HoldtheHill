@@ -13,7 +13,7 @@ namespace HoldTheHill.Features.DamageNumbers
     /// assigns the styles). It listens to <see cref="EnemyHealth"/> on its own; anything else can call
     /// <see cref="Show(float, DamageNumberKind, Vector3)"/> or <see cref="ShowText"/>.
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Sandbox/Damage Number Spawner")]
+    [AddComponentMenu("Hold the Hill/Damage Number Spawner")]
     public class DamageNumberSpawner : MonoBehaviour
     {
         public static DamageNumberSpawner Instance { get; private set; }

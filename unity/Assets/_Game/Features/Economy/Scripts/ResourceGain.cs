@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HoldTheHill.Features.Economy
 {
     /// <summary>A pickup effect that pays a resource into the wallet: a crumb of Food.</summary>
-    [AddComponentMenu("Hold the Hill/Graybox Resource Gain")]
+    [AddComponentMenu("Hold the Hill/Resource Gain")]
     public class ResourceGain : PickupEffect
     {
         [Tooltip("What is gained. Empty means the run's main resource.")]

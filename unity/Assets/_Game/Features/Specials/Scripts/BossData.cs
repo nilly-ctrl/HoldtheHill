@@ -5,7 +5,7 @@ namespace HoldTheHill.Features.Specials
     /// <summary>
     /// One boss: what the announcement and its name label say, and the prefab that is spawned.
     /// </summary>
-    [CreateAssetMenu(menuName = "Hold the Hill/Sandbox/Graybox Boss Data", fileName = "BossData")]
+    [CreateAssetMenu(menuName = "Hold the Hill/Boss Data", fileName = "BossData")]
     public class BossData : ScriptableObject
     {
         [Tooltip("Short id used by the spawn panel and waves, e.g. TitanBeetle.")]

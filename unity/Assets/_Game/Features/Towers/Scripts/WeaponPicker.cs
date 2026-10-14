@@ -21,7 +21,7 @@ namespace HoldTheHill.Features.Towers
     /// Keys: Up / Down change weapon, 1 2 3 change tier, K ticks the weapon, M changes where
     /// the shot lands.
     /// </remarks>
-    [AddComponentMenu("Hold the Hill/Graybox Weapon Picker")]
+    [AddComponentMenu("Hold the Hill/Weapon Picker")]
     public class WeaponPicker : MonoBehaviour
     {
         public enum Landing
@@ -121,7 +121,7 @@ namespace HoldTheHill.Features.Towers
 
             if (_weapons.Count == 0)
             {
-                Debug.LogWarning("[Graybox] Weapon picker: the library has no Wpn* sets. Rebuild the animation library.");
+                Debug.LogWarning("[Game] Weapon picker: the library has no Wpn* sets. Rebuild the animation library.");
                 return;
             }
 
@@ -415,7 +415,7 @@ namespace HoldTheHill.Features.Towers
             {
                 string list = string.Join(", ", _kept.OrderBy(k => k));
                 GUIUtility.systemCopyBuffer = list;
-                Debug.Log($"[Graybox] Weapons kept: {list}");
+                Debug.Log($"[Game] Weapons kept: {list}");
             }
 
             GUILayout.EndArea();

@@ -14,7 +14,7 @@ namespace HoldTheHill.Features.Menus
     /// and what to do next. Victory uses the same layout without "retry wave".
     /// </summary>
     [RequireComponent(typeof(UiScreen))]
-    [AddComponentMenu("Hold the Hill/Graybox Run End Screen")]
+    [AddComponentMenu("Hold the Hill/Run End Screen")]
     public class RunEndScreen : MonoBehaviour
     {
         private static readonly Color32 DefeatColour = new Color32(0xff, 0x6b, 0x5a, 0xff);

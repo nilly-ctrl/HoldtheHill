@@ -8,7 +8,7 @@ namespace HoldTheHill.Features.DamageNumbers
     /// One baked pixel-font style: the atlas PNG and the glyph JSON written by
     /// Fonts/Source~/build_pixel_fonts.py. Hold the Hill > Sandbox > Build Pixel Fonts creates these.
     /// </summary>
-    [CreateAssetMenu(menuName = "Hold the Hill/Sandbox/Pixel Font Style", fileName = "PixelFontStyle")]
+    [CreateAssetMenu(menuName = "Hold the Hill/Pixel Font Style", fileName = "PixelFontStyle")]
     public class PixelFontStyle : ScriptableObject
     {
         [SerializeField] private Texture2D _atlas;

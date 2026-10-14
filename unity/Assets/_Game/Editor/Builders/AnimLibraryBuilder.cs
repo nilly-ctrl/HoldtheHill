@@ -15,7 +15,7 @@ namespace HoldTheHill.EditorTools.Builders
         private const string AsepriteRoot = "Assets/_Game/Shared/Art/Animations/Aseprite";
         internal const string LibraryPath = "Assets/_Game/Core/Animation/Data/AnimLibrary.asset";
 
-        [MenuItem("Tools/Hold the Hill/Rebuild Graybox Animation Library")]
+        [MenuItem("Tools/Hold the Hill/Rebuild Animation Library")]
         public static SpriteAnimLibrary Build()
         {
             var sets = new List<SpriteAnimSet>();
@@ -40,7 +40,7 @@ namespace HoldTheHill.EditorTools.Builders
 
                 if (set.Clips.Count == 0)
                 {
-                    Debug.LogWarning($"[Graybox] {path} produced no animation clips. Is it imported with Generate Animation Clips on?");
+                    Debug.LogWarning($"[Build] {path} produced no animation clips. Is it imported with Generate Animation Clips on?");
                     continue;
                 }
 
@@ -81,7 +81,7 @@ namespace HoldTheHill.EditorTools.Builders
             EditorUtility.SetDirty(library);
             AssetDatabase.SaveAssets();
 
-            Debug.Log($"[Graybox] Animation library: {sets.Count} sprites, {sets.Sum(s => s.Clips.Count)} clips -> {LibraryPath}");
+            Debug.Log($"[Build] Animation library: {sets.Count} sprites, {sets.Sum(s => s.Clips.Count)} clips -> {LibraryPath}");
             return AssetDatabase.LoadAssetAtPath<SpriteAnimLibrary>(LibraryPath);
         }
 

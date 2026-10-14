@@ -15,7 +15,7 @@ namespace HoldTheHill.Core.Animation
     /// from what the source is. Splash weapons damage several enemies in one frame from one
     /// point; those are limited to one effect per source per frame.
     /// </remarks>
-    [AddComponentMenu("Hold the Hill/Graybox Impact Fx")]
+    [AddComponentMenu("Hold the Hill/Impact Fx")]
     public class ImpactFx : MonoBehaviour
     {
         private const int SortingOrder = 4;

@@ -13,7 +13,7 @@ namespace HoldTheHill.Features.Hud
     /// While it is showing, <see cref="RunCounters"/> leaves those three readouts out of its panel.
     /// Without a font theme in the scene it shows nothing and the old readouts stay.
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Graybox Pixel HUD")]
+    [AddComponentMenu("Hold the Hill/Pixel HUD")]
     public class PixelHud : MonoBehaviour
     {
         [Tooltip("Whole-number multiplier on font pixels.")]

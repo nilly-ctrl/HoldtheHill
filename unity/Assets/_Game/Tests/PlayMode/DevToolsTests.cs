@@ -8,7 +8,7 @@ using UnityEngine;
 namespace HoldTheHill.Tests
 {
     /// <summary>
-    /// The pure logic of the dev tools (Graybox/DevTools): command parsing and the registry, the
+    /// The pure logic of the dev tools (Features/DevTools): command parsing and the registry, the
     /// replay file format and the frame statistics. Nothing here needs a scene.
     /// </summary>
     public class DevToolsTests

@@ -68,7 +68,7 @@ namespace HoldTheHill.EditorTools.Builders
             if (loaded == null)
             {
                 throw new System.InvalidOperationException(
-                    $"[Graybox] Could not load the wave asset back from {CombatTestSceneBuilder.WaveAssetPath}. " +
+                    $"[Build] Could not load the wave asset back from {CombatTestSceneBuilder.WaveAssetPath}. " +
                     "Refusing to build a scene whose spawner would be silently empty.");
             }
 
@@ -93,7 +93,7 @@ namespace HoldTheHill.EditorTools.Builders
             if (waves == null)
             {
                 throw new System.InvalidOperationException(
-                    $"[Graybox] Wave asset missing at {CombatTestSceneBuilder.WaveAssetPath} when wiring the spawner.");
+                    $"[Build] Wave asset missing at {CombatTestSceneBuilder.WaveAssetPath} when wiring the spawner.");
             }
 
             var go = new GameObject("Enemy Spawner");
@@ -119,7 +119,7 @@ namespace HoldTheHill.EditorTools.Builders
             if (check.FindProperty("activeMapConfigOverride").objectReferenceValue == null)
             {
                 throw new System.InvalidOperationException(
-                    "[Graybox] The wave asset did not survive assignment to the spawner. " +
+                    "[Build] The wave asset did not survive assignment to the spawner. " +
                     "The scene would spawn no enemies.");
             }
 

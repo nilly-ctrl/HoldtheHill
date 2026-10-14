@@ -19,9 +19,9 @@ namespace HoldTheHill.EditorTools.Authoring
     /// </remarks>
     internal static class ContentWizardBuilder
     {
-        internal const string GrayboxRoot = "Assets/_Game/Features";
-        internal const string PrefabRoot = GrayboxRoot + "/Enemies/Prefabs";
-        internal const string DataRoot = GrayboxRoot;
+        internal const string FeatureRoot = "Assets/_Game/Features";
+        internal const string PrefabRoot = FeatureRoot + "/Enemies/Prefabs";
+        internal const string DataRoot = FeatureRoot;
 
         public const string EnemyBasePath = PrefabRoot + "/EnemyBase.prefab";
         public const string BossBasePath = PrefabRoot + "/BossBase.prefab";
@@ -32,11 +32,11 @@ namespace HoldTheHill.EditorTools.Authoring
 
         public static string BossDataPath(string id) => $"{DataRoot}/Specials/Data/{id}Data.asset";
 
-        public static string PickupPrefabPath(string id) => $"{GrayboxRoot}/Economy/Prefabs/{id}.prefab";
+        public static string PickupPrefabPath(string id) => $"{FeatureRoot}/Economy/Prefabs/{id}.prefab";
 
-        public static string PowerUpEffectPath(string id) => $"{GrayboxRoot}/PowerUps/Prefabs/Effect{id}.prefab";
+        public static string PowerUpEffectPath(string id) => $"{FeatureRoot}/PowerUps/Prefabs/Effect{id}.prefab";
 
-        public static string PowerUpPickupPath(string id) => $"{GrayboxRoot}/PowerUps/Prefabs/{id}.prefab";
+        public static string PowerUpPickupPath(string id) => $"{FeatureRoot}/PowerUps/Prefabs/{id}.prefab";
 
         public sealed class TowerSpec
         {

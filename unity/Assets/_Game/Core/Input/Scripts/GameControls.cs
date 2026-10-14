@@ -283,7 +283,7 @@ namespace HoldTheHill.Core.Input
         {
             if (s_map != null) return;
 
-            s_map = new InputActionMap("Graybox");
+            s_map = new InputActionMap("Game");
             foreach (Entry entry in s_entries)
             {
                 InputAction action = s_map.AddAction(entry.Id, InputActionType.Button);

@@ -8,7 +8,7 @@ namespace HoldTheHill.Features.PowerUps
     /// Puts a power-up on the map at the start of every few waves, beside the trail and away
     /// from the hill, so fetching it means leaving the line. Takes the power-ups in turn.
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Graybox Power-Up Spawner")]
+    [AddComponentMenu("Hold the Hill/Power-Up Spawner")]
     public class PowerUpSpawner : MonoBehaviour
     {
         [Tooltip("Offered in this order, one each time.")]

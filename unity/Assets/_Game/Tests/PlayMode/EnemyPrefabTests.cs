@@ -42,7 +42,7 @@ namespace HoldTheHill.Tests
         public void EveryEnemy_IsAVariantOfTheEnemyBase()
         {
             GameObject enemyBase = Prefab("EnemyBase");
-            Assert.IsNotNull(enemyBase, "Run Tools > Hold the Hill > Build Graybox Combat Test.");
+            Assert.IsNotNull(enemyBase, "Run Tools > Hold the Hill > Build Combat Test Scene.");
 
             foreach (string name in Regular)
             {

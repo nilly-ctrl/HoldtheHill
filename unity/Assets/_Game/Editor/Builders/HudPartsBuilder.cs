@@ -128,7 +128,7 @@ namespace HoldTheHill.EditorTools.Builders
         // Saves the object as a prefab asset and hands back the component of that name on the asset.
         internal static T SavePart<T>(GameObject instance, string name) where T : Component
         {
-            string path = $"{HudBuilder.GrayboxRoot}/Prefabs/{HudBuilder.PartsFolder}/{name}.prefab";
+            string path = $"{HudBuilder.FeatureRoot}/Prefabs/{HudBuilder.PartsFolder}/{name}.prefab";
             GameObject saved = PrefabUtility.SaveAsPrefabAsset(instance, path);
             Object.DestroyImmediate(instance);
             return saved.GetComponent<T>();

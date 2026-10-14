@@ -6,7 +6,7 @@ namespace HoldTheHill.Features.PowerUps
     /// One power-up: what it is called, how long it lasts, the pickup that lies on the map and
     /// the effect prefab that runs while it is active.
     /// </summary>
-    [CreateAssetMenu(menuName = "Hold the Hill/Sandbox/Graybox Power-Up Data", fileName = "PowerUpData")]
+    [CreateAssetMenu(menuName = "Hold the Hill/Power-Up Data", fileName = "PowerUpData")]
     public class PowerUpData : ScriptableObject
     {
         [Tooltip("Short id, e.g. BerserkBerry.")]

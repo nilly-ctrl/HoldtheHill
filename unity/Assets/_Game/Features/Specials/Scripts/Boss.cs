@@ -8,7 +8,7 @@ namespace HoldTheHill.Features.Specials
     /// Marks an enemy as a boss and says which one. Sits on the boss base prefab, so every
     /// boss variant has it; <see cref="BossBanner"/> listens for <see cref="Appeared"/>.
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Graybox Boss")]
+    [AddComponentMenu("Hold the Hill/Boss")]
     public class Boss : MonoBehaviour
     {
         [SerializeField] private BossData _data;

@@ -9,7 +9,7 @@ namespace HoldTheHill.Features.Hud
     /// chain it shows "x3", "x4"... in the Combo style of the scene's <see cref="PixelFontTheme"/>,
     /// punching on each kill and fading when the chain runs out. Cosmetic only: it changes no numbers.
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Graybox Kill Combo")]
+    [AddComponentMenu("Hold the Hill/Kill Combo")]
     public class KillCombo : MonoBehaviour
     {
         [Tooltip("Seconds a chain survives without another kill.")]

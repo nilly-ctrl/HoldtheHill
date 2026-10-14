@@ -14,17 +14,17 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     internal static class PickupBuilder
     {
-        private const string GrayboxRoot = "Assets/_Game/Features/Economy";
+        private const string FeatureRoot = "Assets/_Game/Features/Economy";
         private const string PrefabFolder = "Pickups";
 
-        public const string FoodPath = GrayboxRoot + "/Data/Food.asset";
+        public const string FoodPath = FeatureRoot + "/Data/Food.asset";
 
-        public static string PrefabPath(string name) => $"{GrayboxRoot}/Prefabs/{name}.prefab";
+        public static string PrefabPath(string name) => $"{FeatureRoot}/Prefabs/{name}.prefab";
 
         /// <summary>The run's main resource. Made on first use.</summary>
         public static ResourceData Food()
         {
-            BuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            BuildKit.CreateFolderIfMissing(FeatureRoot, "Data");
 
             var food = AssetDatabase.LoadAssetAtPath<ResourceData>(FoodPath);
             if (food == null)
@@ -47,7 +47,7 @@ namespace HoldTheHill.EditorTools.Builders
         /// <summary>Builds the pickup base and the three crumbs. Returns the golden crumb, which bosses drop.</summary>
         public static GameObject BuildPrefabs(Sprite circle)
         {
-            BuildKit.EnsureFolder(GrayboxRoot + "/Prefabs");
+            BuildKit.EnsureFolder(FeatureRoot + "/Prefabs");
             ResourceData food = Food();
 
             // What every pickup shares: something to see, and the component that collects it.

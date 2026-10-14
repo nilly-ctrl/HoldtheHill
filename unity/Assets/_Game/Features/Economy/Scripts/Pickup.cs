@@ -18,7 +18,7 @@ namespace HoldTheHill.Features.Economy
     /// Sits on the pickup base prefab. A new pickup is a variant of that prefab with one or more
     /// effects added, not a new subclass of this.
     /// </remarks>
-    [AddComponentMenu("Hold the Hill/Graybox Pickup")]
+    [AddComponentMenu("Hold the Hill/Pickup")]
     public class Pickup : MonoBehaviour
     {
         [Tooltip("How close the mouse has to come, in world units.")]

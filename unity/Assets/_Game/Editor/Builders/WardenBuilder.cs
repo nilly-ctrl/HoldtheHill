@@ -17,18 +17,18 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     internal static class WardenBuilder
     {
-        private const string GrayboxRoot = "Assets/_Game/Features/Hero";
+        private const string FeatureRoot = "Assets/_Game/Features/Hero";
         private const string PrefabFolder = "Warden";
-        private const string DataRoot = GrayboxRoot + "/Data";
+        private const string DataRoot = FeatureRoot + "/Data";
 
         private static bool s_madeAnAbility;
 
-        public static string PrefabPath(string name) => $"{GrayboxRoot}/Prefabs/{name}.prefab";
+        public static string PrefabPath(string name) => $"{FeatureRoot}/Prefabs/{name}.prefab";
 
         public static void BuildPrefabs(Sprite square)
         {
-            BuildKit.EnsureFolder(GrayboxRoot + "/Prefabs");
-            BuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            BuildKit.EnsureFolder(FeatureRoot + "/Prefabs");
+            BuildKit.CreateFolderIfMissing(FeatureRoot, "Data");
             s_madeAnAbility = false;
 
             var crumb = AssetDatabase.LoadAssetAtPath<GameObject>(PickupBuilder.PrefabPath("CrumbSmall"));
@@ -99,7 +99,7 @@ namespace HoldTheHill.EditorTools.Builders
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath("Warden"));
             if (prefab == null)
             {
-                throw new System.InvalidOperationException($"[Graybox] Warden prefab missing at {PrefabPath("Warden")}.");
+                throw new System.InvalidOperationException($"[Build] Warden prefab missing at {PrefabPath("Warden")}.");
             }
 
             PrefabUtility.InstantiatePrefab(prefab);

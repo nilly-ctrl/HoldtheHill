@@ -13,7 +13,7 @@ namespace HoldTheHill.Features.Hud
     /// in the matching colour style and follow the font theme. An effect that is refreshed on the
     /// same enemy does not repeat its word until the quiet time has passed.
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Graybox Status Popups")]
+    [AddComponentMenu("Hold the Hill/Status Popups")]
     public class StatusPopups : MonoBehaviour
     {
         [Tooltip("Seconds before the same status on the same enemy shows its word again.")]

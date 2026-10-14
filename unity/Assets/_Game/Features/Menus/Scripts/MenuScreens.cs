@@ -11,7 +11,7 @@ namespace HoldTheHill.Features.Menus
     /// decides the state; this only shows it. Settings and Controls open over whichever screen
     /// asked for them and close with it.
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Graybox Menus")]
+    [AddComponentMenu("Hold the Hill/Menus")]
     public class MenuScreens : MonoBehaviour
     {
         [SerializeField] private TitleScreen _title;

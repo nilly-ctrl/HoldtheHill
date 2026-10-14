@@ -35,7 +35,7 @@ namespace HoldTheHill.EditorTools.Authoring
                 throw new InvalidOperationException("PickupBase.prefab is missing. Run Build Graybox Combat Test first.");
             }
 
-            BuildKit.EnsureFolder(ContentWizardBuilder.GrayboxRoot + "/Economy/Prefabs");
+            BuildKit.EnsureFolder(ContentWizardBuilder.FeatureRoot + "/Economy/Prefabs");
 
             var go = (GameObject)PrefabUtility.InstantiatePrefab(pickupBase);
             go.name = spec.Id;
@@ -94,7 +94,7 @@ namespace HoldTheHill.EditorTools.Authoring
                 throw new InvalidOperationException("PickupBase.prefab is missing. Run Build Graybox Combat Test first.");
             }
 
-            BuildKit.EnsureFolder(ContentWizardBuilder.GrayboxRoot + "/PowerUps/Prefabs");
+            BuildKit.EnsureFolder(ContentWizardBuilder.FeatureRoot + "/PowerUps/Prefabs");
             BuildKit.EnsureFolder(ContentWizardBuilder.DataRoot + "/PowerUps/Data");
 
             var data = ScriptableObject.CreateInstance<PowerUpData>();

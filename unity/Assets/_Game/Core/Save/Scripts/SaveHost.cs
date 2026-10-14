@@ -10,7 +10,7 @@ namespace HoldTheHill.Core.Save
     /// Runs before everything else so other scripts can read saved values in their own Awake.
     /// </remarks>
     [DefaultExecutionOrder(-200)]
-    [AddComponentMenu("Hold the Hill/Graybox Save Host")]
+    [AddComponentMenu("Hold the Hill/Save Host")]
     public class SaveHost : MonoBehaviour
     {
         private void Awake()

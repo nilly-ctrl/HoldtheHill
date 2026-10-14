@@ -23,7 +23,7 @@ namespace HoldTheHill.EditorTools.Builders
         private string _lastTestReport = "No balance test run yet. Click 'Run Balance Simulation' to execute.";
         private bool _isTestRunning;
 
-        [MenuItem("Tools/Hold the Hill/Graybox Dashboard", false, 1)]
+        [MenuItem("Tools/Hold the Hill/Dashboard", false, 1)]
         public static void ShowWindow()
         {
             var window = GetWindow<Dashboard>("Combat Greybox");
@@ -31,7 +31,7 @@ namespace HoldTheHill.EditorTools.Builders
             window.Show();
         }
 
-        [MenuItem("Tools/Hold the Hill/Run Graybox Balance Simulation", false, 10)]
+        [MenuItem("Tools/Hold the Hill/Run Balance Simulation", false, 10)]
         public static void RunBalanceSimulationFromMenu()
         {
             ShowWindow();

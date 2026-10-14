@@ -12,7 +12,7 @@ namespace HoldTheHill.Features.Hud
     /// (Banner, BannerVictory, BannerDefeat), so they follow the chosen art theme; without one in
     /// the scene this does nothing.
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Graybox Wave Banner")]
+    [AddComponentMenu("Hold the Hill/Wave Banner")]
     public class WaveBanner : MonoBehaviour
     {
         [Tooltip("Whole-number multiplier on font pixels.")]

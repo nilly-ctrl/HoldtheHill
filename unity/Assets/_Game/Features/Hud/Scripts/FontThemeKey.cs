@@ -11,7 +11,7 @@ namespace HoldTheHill.Features.Hud
     /// for a moment in its own title style if the scene has a <see cref="WaveBanner"/>.
     /// Fonts only; sprites do not change. Needs a <see cref="PixelFontTheme"/> in the scene.
     /// </summary>
-    [AddComponentMenu("Hold the Hill/Graybox Font Theme Key")]
+    [AddComponentMenu("Hold the Hill/Font Theme Key")]
     public class FontThemeKey : MonoBehaviour
     {
         [SerializeField, Min(0.2f)] private float _nameSeconds = 1.4f;

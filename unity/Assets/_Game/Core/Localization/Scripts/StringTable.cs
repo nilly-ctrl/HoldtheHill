@@ -11,7 +11,7 @@ namespace HoldTheHill.Core.Localization
     /// <c>Tools > Hold the Hill > Pipeline > Localization Tools</c>. Game code reads it through
     /// <see cref="Loc"/>, never directly.
     /// </remarks>
-    [CreateAssetMenu(fileName = "Strings", menuName = "Hold the Hill/Graybox String Table")]
+    [CreateAssetMenu(fileName = "Strings", menuName = "Hold the Hill/String Table")]
     public class StringTable : ScriptableObject
     {
         /// <summary>The language every key should have, and the fallback for the others.</summary>

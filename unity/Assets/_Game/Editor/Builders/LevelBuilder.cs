@@ -26,7 +26,7 @@ namespace HoldTheHill.EditorTools.Builders
     internal static class LevelBuilder
     {
         private const string LevelRoot = "Assets/_Game/Scenes/Levels";
-        private const string GrayboxScene = "Assets/_Game/Scenes/Dev/CombatTest.unity";
+        private const string CombatTestScene = "Assets/_Game/Scenes/Dev/CombatTest.unity";
         private static readonly string[] Required =
         {
             "Enemy Path", "Enemy Spawner", "Main Camera", "Tower Placer & Inspector", SystemsBuilder.RootName,
@@ -83,7 +83,7 @@ namespace HoldTheHill.EditorTools.Builders
             // graybox scene can be older than the scripts (it once lacked the game flow object).
             CombatTestSceneBuilder.Build();
 
-            Scene scene = EditorSceneManager.OpenScene(GrayboxScene, OpenSceneMode.Single);
+            Scene scene = EditorSceneManager.OpenScene(CombatTestScene, OpenSceneMode.Single);
             Dictionary<string, GameObject> roots = scene.GetRootGameObjects()
                 .GroupBy(go => go.name).ToDictionary(g => g.Key, g => g.First());
 

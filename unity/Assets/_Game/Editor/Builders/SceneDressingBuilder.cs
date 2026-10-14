@@ -56,7 +56,7 @@ namespace HoldTheHill.EditorTools.Builders
             var fill = AssetDatabase.LoadAssetAtPath<Sprite>(TileRoot + "/RoadDirtFill.png");
             if (grass == null || road == null || fill == null)
             {
-                Debug.LogWarning($"[Graybox] Ground tiles missing in {TileRoot}; keeping the plain background.");
+                Debug.LogWarning($"[Build] Ground tiles missing in {TileRoot}; keeping the plain background.");
                 return;
             }
 

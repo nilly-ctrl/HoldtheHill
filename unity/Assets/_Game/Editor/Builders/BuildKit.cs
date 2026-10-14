@@ -79,7 +79,7 @@ namespace HoldTheHill.EditorTools.Builders
                 if (group.Count() > 1)
                 {
                     throw new System.InvalidOperationException(
-                        $"[Graybox] {fileName} has {group.Count()} {group.Key.Name} components. One was probably auto-added by a [RequireComponent].");
+                        $"[Build] {fileName} has {group.Count()} {group.Key.Name} components. One was probably auto-added by a [RequireComponent].");
                 }
             }
 

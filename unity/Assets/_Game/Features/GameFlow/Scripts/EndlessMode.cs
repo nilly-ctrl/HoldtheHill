@@ -14,7 +14,7 @@ namespace HoldTheHill.Features.GameFlow
     /// team's <c>EnemySpawner</c>, so an endless run has no wave checkpoint and no "retry wave"
     /// (docs/PLAN_MENUS_AND_FLOW.md, notes from theme 1).
     /// </remarks>
-    [AddComponentMenu("Hold the Hill/Graybox Endless Mode")]
+    [AddComponentMenu("Hold the Hill/Endless Mode")]
     public class EndlessMode : MonoBehaviour
     {
         [Tooltip("Seconds of calm between a cleared field and the next wave.")]

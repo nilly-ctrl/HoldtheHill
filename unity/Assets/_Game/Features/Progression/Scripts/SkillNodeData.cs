@@ -44,7 +44,7 @@ namespace HoldTheHill.Features.Progression
     /// One node of the skill tree: its name, price, the node it needs first, and the stats it
     /// changes. Add a node by making one of these and listing it in the tree's catalog.
     /// </summary>
-    [CreateAssetMenu(menuName = "Hold the Hill/Sandbox/Graybox Skill Node Data", fileName = "SkillNodeData")]
+    [CreateAssetMenu(menuName = "Hold the Hill/Skill Node Data", fileName = "SkillNodeData")]
     public class SkillNodeData : ScriptableObject
     {
         [Tooltip("Short unique id, e.g. Ballistics_HeavyCaliber. Saved with a run, so don't rename it later.")]

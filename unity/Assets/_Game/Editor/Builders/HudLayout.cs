@@ -156,7 +156,7 @@ namespace HoldTheHill.EditorTools.Builders
             var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
             if (sprite == null)
             {
-                Debug.LogError($"[Graybox] Missing HUD sprite {path}.");
+                Debug.LogError($"[Build] Missing HUD sprite {path}.");
             }
 
             return sprite;

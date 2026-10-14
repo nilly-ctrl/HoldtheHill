@@ -8,7 +8,7 @@ namespace HoldTheHill.Features.GameFlow
     /// seconds played. Read by <see cref="StatsPanel"/> and <see cref="PixelHud"/>.
     /// </summary>
     /// <remarks>
-    /// Was half of <c>GrayboxHud</c>; the keys it also read live in <see cref="RunHotkeys"/>.
+    /// Was half of <c>GrayboxHud</c> (now RunCounters and RunHotkeys); the keys it also read live in <see cref="RunHotkeys"/>.
     /// It draws nothing and sets nothing: the flow controller owns time and the run.
     /// </remarks>
     [AddComponentMenu("Hold the Hill/Run Counters")]

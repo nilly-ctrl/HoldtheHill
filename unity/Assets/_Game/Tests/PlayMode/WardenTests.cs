@@ -28,7 +28,7 @@ namespace HoldTheHill.Tests
         public void SetUp()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Hero/Prefabs/Warden.prefab");
-            Assert.IsNotNull(prefab, "Run Tools > Hold the Hill > Build Graybox Combat Test.");
+            Assert.IsNotNull(prefab, "Run Tools > Hold the Hill > Build Combat Test Scene.");
             GameObject go = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
             _made.Add(go);
             _warden = go.GetComponent<Warden>();

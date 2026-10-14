@@ -17,8 +17,8 @@ namespace HoldTheHill.EditorTools.Builders
     /// </remarks>
     internal static class ProgressionBuilder
     {
-        private const string GrayboxRoot = "Assets/_Game/Features/Progression";
-        private const string DataRoot = GrayboxRoot + "/Data";
+        private const string FeatureRoot = "Assets/_Game/Features/Progression";
+        private const string DataRoot = FeatureRoot + "/Data";
         private const string SkillFolder = "Skills";
         private const string AchievementFolder = "Achievements";
 
@@ -85,7 +85,7 @@ namespace HoldTheHill.EditorTools.Builders
         /// <summary>Makes any missing data assets and catalogs. Safe to run on every build.</summary>
         public static void BuildAssets()
         {
-            BuildKit.CreateFolderIfMissing(GrayboxRoot, "Data");
+            BuildKit.CreateFolderIfMissing(FeatureRoot, "Data");
             BuildKit.CreateFolderIfMissing(DataRoot, SkillFolder);
             BuildKit.CreateFolderIfMissing(DataRoot, AchievementFolder);
 

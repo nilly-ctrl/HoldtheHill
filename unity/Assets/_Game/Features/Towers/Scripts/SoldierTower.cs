@@ -20,7 +20,7 @@ namespace HoldTheHill.Features.Towers
     /// Damage names this tower as its source, so kills and damage are credited to it.
     /// Numbers are first guesses for the graybox, not balanced.
     /// </remarks>
-    [AddComponentMenu("Hold the Hill/Graybox Melee Tower")]
+    [AddComponentMenu("Hold the Hill/Melee Tower")]
     public class SoldierTower : MeleeTower
     {
         public enum Caste

@@ -13,7 +13,7 @@ namespace HoldTheHill.Features.Species
     /// A species' castes are prefab variants of the shared tower prefabs (a Fire Ant Soldier is
     /// a variant of TowerSoldier), so they override only what is different about them.
     /// </remarks>
-    [CreateAssetMenu(menuName = "Hold the Hill/Sandbox/Graybox Species Data", fileName = "SpeciesData")]
+    [CreateAssetMenu(menuName = "Hold the Hill/Species Data", fileName = "SpeciesData")]
     public class SpeciesData : ScriptableObject
     {
         [Tooltip("Short id used in code and saves, e.g. GardenAnt.")]

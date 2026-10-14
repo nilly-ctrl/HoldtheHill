@@ -8,7 +8,7 @@ namespace HoldTheHill.EditorTools.Builders
 {
     /// <summary>
     /// Builds the graybox scene as a Windows game for teammates to try without Unity.
-    /// Menu: Tools > Hold the Hill > Build Graybox Player (Windows).
+    /// Menu: Tools > Hold the Hill > Build Player (Windows).
     /// </summary>
     /// <remarks>
     /// The level scenes are passed to the build directly, so the project's Build Settings scene list is
@@ -38,7 +38,7 @@ namespace HoldTheHill.EditorTools.Builders
         /// <summary>Full path of the player exe the build writes.</summary>
         public static string ExePath => Path.Combine(OutputFolder, ExeName);
 
-        [MenuItem("Tools/Hold the Hill/Build Graybox Player (Windows)")]
+        [MenuItem("Tools/Hold the Hill/Build Player (Windows)")]
         public static void Build()
         {
             if (!TryBuild() && Application.isBatchMode)
@@ -68,11 +68,11 @@ namespace HoldTheHill.EditorTools.Builders
             BuildSummary summary = report.summary;
             if (summary.result == BuildResult.Succeeded)
             {
-                Debug.Log($"[Graybox] Player built: {summary.outputPath} ({summary.totalSize / (1024 * 1024)} MB)");
+                Debug.Log($"[Build] Player built: {summary.outputPath} ({summary.totalSize / (1024 * 1024)} MB)");
                 return true;
             }
 
-            Debug.LogError($"[Graybox] Player build {summary.result}: {summary.totalErrors} errors.");
+            Debug.LogError($"[Build] Player build {summary.result}: {summary.totalErrors} errors.");
             return false;
         }
     }

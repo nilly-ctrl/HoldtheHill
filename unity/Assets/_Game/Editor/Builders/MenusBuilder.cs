@@ -16,7 +16,7 @@ namespace HoldTheHill.EditorTools.Builders
     /// <summary>
     /// Generates every menu screen (title, home, pause, run end, settings, controls) from the UI
     /// kit as one prefab, and drops it into the graybox scene.
-    /// Menu: Tools > Hold the Hill > Build Graybox Menus.
+    /// Menu: Tools > Hold the Hill > Build Menus.
     /// </summary>
     /// <remarks>
     /// Kept apart from <see cref="CombatTestSceneBuilder"/> so menu layout changes do not touch the scene
@@ -32,7 +32,7 @@ namespace HoldTheHill.EditorTools.Builders
         // More than the game has, so a new achievement shows without rebuilding the prefab.
         internal const int AwardRows = 12;
 
-        [MenuItem("Tools/Hold the Hill/Build Graybox Menus")]
+        [MenuItem("Tools/Hold the Hill/Build Menus")]
         public static GameObject BuildPrefab()
         {
             GameObject root = UiKitBuilder.InstantiatePrefab("UiRoot", null);
@@ -87,7 +87,7 @@ namespace HoldTheHill.EditorTools.Builders
 
             if (prefab == null)
             {
-                Debug.LogError("[Graybox] No menus: build the UI kit first (Tools > Hold the Hill > Build UI Kit).");
+                Debug.LogError("[Build] No menus: build the UI kit first (Tools > Hold the Hill > Build UI Kit).");
                 return;
             }
 
@@ -356,7 +356,7 @@ namespace HoldTheHill.EditorTools.Builders
             var importer = AssetImporter.GetAtPath(path) as TextureImporter;
             if (importer == null)
             {
-                Debug.LogError($"[Graybox] Menu art not found at {path}.");
+                Debug.LogError($"[Build] Menu art not found at {path}.");
                 return null;
             }
 

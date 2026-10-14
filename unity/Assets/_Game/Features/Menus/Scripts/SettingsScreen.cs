@@ -11,7 +11,7 @@ namespace HoldTheHill.Features.Menus
     /// or pause menu, applies every change at once and writes the save file when it closes.
     /// </summary>
     [RequireComponent(typeof(UiScreen))]
-    [AddComponentMenu("Hold the Hill/Graybox Settings Screen")]
+    [AddComponentMenu("Hold the Hill/Settings Screen")]
     public class SettingsScreen : MonoBehaviour
     {
         [Header("Audio")]

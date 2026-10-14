@@ -8,7 +8,7 @@ namespace HoldTheHill.Features.DamageNumbers
     /// style. Leave the theme empty for the base (meadow) set.
     /// </summary>
     [ExecuteAlways]
-    [AddComponentMenu("Hold the Hill/Sandbox/Pixel Font Theme")]
+    [AddComponentMenu("Hold the Hill/Pixel Font Theme")]
     public class PixelFontTheme : MonoBehaviour
     {
         [SerializeField] private PixelFontThemeLibrary _library;

@@ -67,7 +67,7 @@ namespace HoldTheHill.EditorTools.Validation
                 if (GUILayout.Button("Run real harness (Play Mode)", GUILayout.Height(28f)))
                 {
                     // The existing dashboard entry; it opens the scene and enters Play Mode.
-                    EditorApplication.ExecuteMenuItem("Tools/Hold the Hill/Run Graybox Balance Simulation");
+                    EditorApplication.ExecuteMenuItem("Tools/Hold the Hill/Run Balance Simulation");
                 }
             }
 

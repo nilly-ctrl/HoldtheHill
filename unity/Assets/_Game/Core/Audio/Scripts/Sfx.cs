@@ -16,7 +16,7 @@ namespace HoldTheHill.Core.Audio
     /// Sounds are panned by x position rather than played in 3D, since the camera is top-down.
     /// Loops (beam, orbit, fire puddle) get their own AudioSource on the object that makes them.
     /// </remarks>
-    [AddComponentMenu("Hold the Hill/Graybox Sfx")]
+    [AddComponentMenu("Hold the Hill/Sfx")]
     [DefaultExecutionOrder(-100)] // subscribe before EnemySpawner auto-starts wave 1 in its Start
     public class Sfx : MonoBehaviour
     {

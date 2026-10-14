@@ -55,7 +55,7 @@ namespace HoldTheHill.EditorTools.Builders
             ("HazardLoop", "GroundHazardLoop", 0.3f, 0f),
         };
 
-        [MenuItem("Tools/Hold the Hill/Rebuild Graybox Sfx Bank")]
+        [MenuItem("Tools/Hold the Hill/Rebuild Sfx Bank")]
         public static SfxBank Build()
         {
             var bank = AssetDatabase.LoadAssetAtPath<SfxBank>(BankPath);
@@ -71,7 +71,7 @@ namespace HoldTheHill.EditorTools.Builders
                 AudioClip[] clips = Variants(family);
                 if (clips.Length == 0)
                 {
-                    Debug.LogWarning($"[Graybox] No sound files for cue {id} ({SfxRoot}/{family}*.wav).");
+                    Debug.LogWarning($"[Build] No sound files for cue {id} ({SfxRoot}/{family}*.wav).");
                 }
 
                 bank.Cues.Add(new SfxCue { Id = id, Clips = clips, Volume = volume, Cooldown = cooldown });
@@ -79,7 +79,7 @@ namespace HoldTheHill.EditorTools.Builders
 
             EditorUtility.SetDirty(bank);
             AssetDatabase.SaveAssets();
-            Debug.Log($"[Graybox] Sfx bank: {bank.Cues.Count} cues, {bank.Cues.Sum(c => c.Clips.Length)} clips -> {BankPath}");
+            Debug.Log($"[Build] Sfx bank: {bank.Cues.Count} cues, {bank.Cues.Sum(c => c.Clips.Length)} clips -> {BankPath}");
             return AssetDatabase.LoadAssetAtPath<SfxBank>(BankPath);
         }
 

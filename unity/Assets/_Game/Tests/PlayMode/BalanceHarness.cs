@@ -83,7 +83,7 @@ namespace HoldTheHill.Tests
         }
 
         [UnityTest]
-        public IEnumerator Graybox_PlayAllWaves_AndReportBalance()
+        public IEnumerator Harness_PlayAllWaves_AndReportBalance()
         {
             // The scene's save host attaches the player's own file unless one is already attached.
             // Give it a throwaway, so this run does not land in anyone's records.

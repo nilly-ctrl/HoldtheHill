@@ -22,7 +22,7 @@ namespace HoldTheHill.Features.Menus
     /// Two actions on one key is allowed but called out, since swapping two keys passes through it.
     /// </remarks>
     [RequireComponent(typeof(UiScreen))]
-    [AddComponentMenu("Hold the Hill/Graybox Controls Screen")]
+    [AddComponentMenu("Hold the Hill/Controls Screen")]
     public class ControlsScreen : MonoBehaviour
     {
         private static readonly Color32 Clash = new Color32(0xff, 0x9a, 0x5a, 0xff);
