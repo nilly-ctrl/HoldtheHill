@@ -35,6 +35,24 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Showing = false;
 
+        private GrayboxGameFlow _flow;
+        private bool _flowSought;
+
+        // Found once, kept: no flow in the scene (a bare test scene) counts as playing.
+        private bool GameplayActive
+        {
+            get
+            {
+                if (!_flowSought)
+                {
+                    _flow = FindAnyObjectByType<GrayboxGameFlow>();
+                    _flowSought = true;
+                }
+
+                return _flow == null || _flow.IsPlaying;
+            }
+        }
+
         private void OnDisable()
         {
             Showing = false;
@@ -42,7 +60,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void LateUpdate()
         {
-            if (!EnsureTexts() || !GrayboxGameFlow.GameplayActive)
+            if (!EnsureTexts() || !GameplayActive)
             {
                 SetVisible(false);
                 return;

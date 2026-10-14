@@ -59,16 +59,19 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public Transform Transform => transform;
 
+        private GrayboxGameFlow _flow;
+
         private void Awake()
         {
             _warden = GetComponent<GrayboxWarden>();
+            _flow = FindAnyObjectByType<GrayboxGameFlow>();
             _renderer = GetComponent<SpriteRenderer>();
             _health = _maxHealth;
         }
 
         private void Update()
         {
-            if (!GrayboxGameFlow.GameplayActive)
+            if (_flow != null && !_flow.IsPlaying)
             {
                 return;
             }

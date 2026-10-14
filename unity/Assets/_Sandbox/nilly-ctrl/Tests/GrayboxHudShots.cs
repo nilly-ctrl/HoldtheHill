@@ -39,7 +39,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             yield return null;
             yield return null;
 
-            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            GrayboxGameFlow flow = Object.FindAnyObjectByType<GrayboxGameFlow>();
             var menus = Object.FindAnyObjectByType<GrayboxMenus>();
             menus.Title.PlayButton.Clicked.Invoke();
             menus.Home.StartButton.Clicked.Invoke();

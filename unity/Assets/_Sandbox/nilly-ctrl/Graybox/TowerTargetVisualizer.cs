@@ -37,9 +37,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             ShowTowerLabels = true;
         }
 
+        private GrayboxGameFlow _flow;
+
         private void Awake()
         {
             _tower = GetComponent<Tower>();
+            _flow = FindAnyObjectByType<GrayboxGameFlow>();
 
             SetupLines();
         }
@@ -140,7 +143,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         // "Closest  LVL 2  TARGET" under the tower. Only when the scene has a font theme with a Hud style.
         private void UpdateLabel(bool hasTarget)
         {
-            bool show = ShowTowerLabels && GrayboxGameFlow.GameplayActive;
+            bool show = ShowTowerLabels && (_flow == null || _flow.IsPlaying);
             if (!show)
             {
                 if (_label != null && _label.gameObject.activeSelf) _label.gameObject.SetActive(false);

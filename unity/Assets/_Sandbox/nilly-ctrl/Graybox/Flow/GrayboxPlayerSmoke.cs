@@ -44,8 +44,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (kitchen == null || !GrayboxLevels.CanLoad(kitchen)) { Finish(false, "Kitchen Floor cannot be loaded in this build"); yield break; }
 
             float until = Time.realtimeSinceStartup + StepTimeout;
-            while (GrayboxGameFlow.Instance == null && Time.realtimeSinceStartup < until) yield return null;
-            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            while (Object.FindAnyObjectByType<GrayboxGameFlow>() == null && Time.realtimeSinceStartup < until) yield return null;
+            GrayboxGameFlow flow = Object.FindAnyObjectByType<GrayboxGameFlow>();
             if (flow == null) { Finish(false, "no game flow in the first scene"); yield break; }
             Debug.Log($"[Smoke] First scene '{SceneManager.GetActiveScene().name}', state {flow.State}");
 
@@ -57,10 +57,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             until = Time.realtimeSinceStartup + StepTimeout;
             while (Time.realtimeSinceStartup < until
                    && !(SceneManager.GetActiveScene().name == kitchen.SceneName
-                        && GrayboxGameFlow.Instance != null && GrayboxGameFlow.Instance != flow
+                        && Object.FindAnyObjectByType<GrayboxGameFlow>() != null && Object.FindAnyObjectByType<GrayboxGameFlow>() != flow
                         && Object.FindAnyObjectByType<Queen>() != null)) yield return null;
 
-            flow = GrayboxGameFlow.Instance;
+            flow = Object.FindAnyObjectByType<GrayboxGameFlow>();
             if (SceneManager.GetActiveScene().name != kitchen.SceneName || flow == null || Object.FindAnyObjectByType<Queen>() == null)
             {
                 Finish(false, $"Kitchen Floor did not come up (scene '{SceneManager.GetActiveScene().name}')");

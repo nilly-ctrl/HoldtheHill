@@ -18,14 +18,18 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         [Tooltip("The spawner the next-wave key prompts. Found automatically if left empty.")]
         [SerializeField] private EnemySpawner _spawner;
 
+        private GrayboxGameFlow _flow;
+
         private void Awake()
         {
             if (_spawner == null) _spawner = FindAnyObjectByType<EnemySpawner>();
+            _flow = GetComponent<GrayboxGameFlow>();
+            if (_flow == null) _flow = FindAnyObjectByType<GrayboxGameFlow>();
         }
 
         private void Update()
         {
-            if (!GrayboxGameFlow.GameplayActive) return; // paused or on a menu
+            if (_flow != null && !_flow.IsPlaying) return; // paused or on a menu
 
             if (GrayboxControls.Pressed(GrayboxControls.NextWave) && _spawner != null)
             {
@@ -33,7 +37,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 GrayboxSfx.PlayCue("WaveStart", Vector3.zero);
             }
 
-            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            GrayboxGameFlow flow = _flow;
             if (GrayboxControls.Pressed(GrayboxControls.Speed) && flow != null) flow.CycleSpeed();
             if (GrayboxControls.Pressed(GrayboxControls.Restart) && flow != null) flow.StartNewRun();
 

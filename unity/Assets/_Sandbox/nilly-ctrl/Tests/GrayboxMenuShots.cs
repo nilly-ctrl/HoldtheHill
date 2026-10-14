@@ -48,7 +48,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             yield return null;
 
 
-            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            GrayboxGameFlow flow = Object.FindAnyObjectByType<GrayboxGameFlow>();
             var menus = Object.FindAnyObjectByType<GrayboxMenus>();
             Assert.IsNotNull(flow, "the scene has no flow controller: rebuild it (Tools > Hold the Hill > Build Graybox Combat Test)");
             Assert.IsNotNull(menus, "the scene has no menus: rebuild it");
@@ -122,7 +122,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
                 menus.Home.StartButton.Clicked.Invoke();
                 yield return new WaitForSecondsRealtime(1.5f);
 
-                flow = GrayboxGameFlow.Instance;
+                flow = Object.FindAnyObjectByType<GrayboxGameFlow>();
                 Assert.AreEqual("KitchenFloor", flow.MapId, "the kitchen scene is the one loaded");
                 Assert.AreEqual(GameFlowState.Playing, flow.State, "and its run has started");
                 Object.FindAnyObjectByType<EnemySpawner>().StartNextWave();

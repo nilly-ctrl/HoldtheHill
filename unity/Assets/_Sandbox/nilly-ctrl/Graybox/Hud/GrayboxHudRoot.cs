@@ -15,14 +15,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     {
         private readonly List<GrayboxHudPanel> _panels = new List<GrayboxHudPanel>();
 
+        private GrayboxGameFlow _flow;
+
         private void Awake()
         {
             GetComponentsInChildren(true, _panels);
+            _flow = FindAnyObjectByType<GrayboxGameFlow>();
         }
 
         private void LateUpdate()
         {
-            bool playing = GrayboxGameFlow.GameplayActive;
+            bool playing = _flow == null || _flow.IsPlaying;
             foreach (GrayboxHudPanel panel in _panels)
             {
                 bool show = playing && panel.WantsToShow;

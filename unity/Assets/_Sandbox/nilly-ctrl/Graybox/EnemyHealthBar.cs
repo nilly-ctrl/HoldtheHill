@@ -59,10 +59,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
         }
 
+        private GrayboxGameFlow _flow;
+
         private void Awake()
         {
             _health = GetComponent<EnemyHealth>();
             _shield = GetComponent<EnemyShield>();
+            _flow = FindAnyObjectByType<GrayboxGameFlow>();
             Build();
         }
 
@@ -99,7 +102,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Update()
         {
-            bool show = ShowHealthBars && GrayboxGameFlow.GameplayActive && _health != null && !_health.IsDead
+            bool show = ShowHealthBars && (_flow == null || _flow.IsPlaying) && _health != null && !_health.IsDead
                         && (!_showOnlyWhenDamaged || _health.HealthFraction < 0.999f);
             if (_root.activeSelf != show)
             {

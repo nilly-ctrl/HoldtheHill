@@ -72,7 +72,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public IReadOnlyList<TextRow> Awards => _awards;
         public TMP_Text BestCampaign => _bestCampaign;
 
-        private static GrayboxGameFlow Flow => GrayboxGameFlow.Instance;
+        private GrayboxGameFlow _flow;
+
+        private GrayboxGameFlow Flow
+        {
+            get
+            {
+                if (_flow == null) _flow = FindAnyObjectByType<GrayboxGameFlow>();
+                return _flow;
+            }
+        }
 
         private GrayboxRunMode SelectedMode => _mode.Index == 1 ? GrayboxRunMode.Endless : GrayboxRunMode.Campaign;
 
@@ -264,7 +273,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return GrayboxLoc.Get("wave {0} ({1} retries)", record.bestWave, record.bestWaveRetries);
         }
 
-        private static void GoToTitle()
+        private void GoToTitle()
         {
             if (Flow != null) Flow.GoToTitle();
         }

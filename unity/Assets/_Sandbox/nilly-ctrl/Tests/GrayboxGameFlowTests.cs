@@ -137,7 +137,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             _flow.Pause();
             Assert.AreEqual(GameFlowState.Paused, _flow.State);
             Assert.AreEqual(0f, Time.timeScale);
-            Assert.IsFalse(GrayboxGameFlow.GameplayActive);
+            Assert.IsFalse(_flow.IsPlaying);
 
             _flow.CycleSpeed(); // changing speed on a menu must not restart time
             Assert.AreEqual(0f, Time.timeScale);
@@ -145,7 +145,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             _flow.Resume();
             Assert.AreEqual(GameFlowState.Playing, _flow.State);
             Assert.AreEqual(4f, Time.timeScale);
-            Assert.IsTrue(GrayboxGameFlow.GameplayActive);
+            Assert.IsTrue(_flow.IsPlaying);
         }
 
         [UnityTest]
@@ -156,7 +156,6 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Object.DestroyImmediate(_flow.gameObject);
 
             Assert.AreEqual(1f, Time.timeScale);
-            Assert.IsTrue(GrayboxGameFlow.GameplayActive, "scenes without a flow controller play as before");
         }
 
         [UnityTest]

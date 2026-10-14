@@ -33,22 +33,26 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>Enemies that got past the towers: spawned, and neither killed nor still alive.</summary>
         public int Leaked => _spawner != null ? Mathf.Max(0, _spawned - _killed - _spawner.LivingEnemyCount) : 0;
 
+        private GrayboxGameFlow _flow;
+
         private void Awake()
         {
             if (_spawner == null) _spawner = FindAnyObjectByType<EnemySpawner>();
+            _flow = GetComponent<GrayboxGameFlow>();
+            if (_flow == null) _flow = FindAnyObjectByType<GrayboxGameFlow>();
         }
 
         private void OnEnable()
         {
             EnemyHealth.Defeated += OnEnemyDefeated;
-            GrayboxGameFlow.FieldReset += OnFieldReset;
+            if (_flow != null) _flow.FieldReset += OnFieldReset;
             if (_spawner != null) _spawner.onEnemySpawned.AddListener(OnEnemySpawned);
         }
 
         private void OnDisable()
         {
             EnemyHealth.Defeated -= OnEnemyDefeated;
-            GrayboxGameFlow.FieldReset -= OnFieldReset;
+            if (_flow != null) _flow.FieldReset -= OnFieldReset;
             if (_spawner != null) _spawner.onEnemySpawned.RemoveListener(OnEnemySpawned);
         }
 
@@ -66,7 +70,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Update()
         {
-            if (GrayboxGameFlow.GameplayActive) _elapsed += Time.unscaledDeltaTime;
+            if (_flow == null || _flow.IsPlaying) _elapsed += Time.unscaledDeltaTime;
         }
     }
 }

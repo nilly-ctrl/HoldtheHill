@@ -38,7 +38,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static void SetSpeed(float scale)
         {
             s_speed = Mathf.Clamp(scale, 0f, 20f);
-            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            GrayboxGameFlow flow = FindAnyObjectByType<GrayboxGameFlow>();
             if (flow != null) flow.SetSpeedOverride(s_speed);
         }
 
@@ -113,7 +113,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (s_speed > 0f)
             {
                 s_speed = 0f;
-                GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+                GrayboxGameFlow flow = FindAnyObjectByType<GrayboxGameFlow>();
                 if (flow != null) flow.SetSpeedOverride(0f);
             }
         }

@@ -42,7 +42,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public TMP_Text Best => _best;
         public TMP_Text Honeydew => _honeydew;
 
-        private static GrayboxGameFlow Flow => GrayboxGameFlow.Instance;
+        private GrayboxGameFlow _flow;
+
+        private GrayboxGameFlow Flow
+        {
+            get
+            {
+                if (_flow == null) _flow = FindAnyObjectByType<GrayboxGameFlow>();
+                return _flow;
+            }
+        }
 
         /// <summary>Fills the screen from the run that just ended. Call before showing it.</summary>
         public void Populate(GrayboxGameFlow flow)

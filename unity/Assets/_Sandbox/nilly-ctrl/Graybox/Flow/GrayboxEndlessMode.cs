@@ -27,11 +27,24 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>The wave in progress, 1-based. Zero before the first.</summary>
         public int Wave => _wave;
 
-        private void Awake() => _custom = FindAnyObjectByType<GrayboxCustomSpawner>();
+        private GrayboxGameFlow _flow;
 
-        private void OnEnable() => GrayboxGameFlow.FieldReset += OnFieldReset;
+        private void Awake()
+        {
+            _custom = FindAnyObjectByType<GrayboxCustomSpawner>();
+            _flow = GetComponent<GrayboxGameFlow>();
+            if (_flow == null) _flow = FindAnyObjectByType<GrayboxGameFlow>();
+        }
 
-        private void OnDisable() => GrayboxGameFlow.FieldReset -= OnFieldReset;
+        private void OnEnable()
+        {
+            if (_flow != null) _flow.FieldReset += OnFieldReset;
+        }
+
+        private void OnDisable()
+        {
+            if (_flow != null) _flow.FieldReset -= OnFieldReset;
+        }
 
         private void OnFieldReset()
         {
@@ -41,7 +54,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Update()
         {
-            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            GrayboxGameFlow flow = _flow;
             if (flow == null || _custom == null || flow.Mode != GrayboxRunMode.Endless || flow.State != GameFlowState.Playing) return;
             if (GrayboxProceduralWaveGenerator.Instance == null) return; // nothing to make waves from
 

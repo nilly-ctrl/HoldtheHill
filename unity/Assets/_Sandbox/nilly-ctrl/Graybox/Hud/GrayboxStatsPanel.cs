@@ -27,6 +27,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private float _nextKeysRefresh;
 
         // The last numbers shown, so a frame where nothing moved builds no strings.
+        private GrayboxGameFlow _flow;
         private GrayboxEconomy _economy;
         private int _foodShown = -1;
         private int _waveShown = -1;
@@ -96,7 +97,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Set(_alive, "Alive  ", _spawner.LivingEnemyCount, ref _aliveShown, null);
 
             // With the pixel HUD up the clock is already on screen; only the speed is added here.
-            float speed = GrayboxGameFlow.Instance != null ? GrayboxGameFlow.Instance.Speed : Time.timeScale;
+            if (_flow == null) _flow = FindAnyObjectByType<GrayboxGameFlow>();
+            float speed = _flow != null ? _flow.Speed : Time.timeScale;
             int seconds = Mathf.FloorToInt(_hud.ElapsedSeconds);
             if (seconds != _secondsShown || !Mathf.Approximately(speed, _speedShown))
             {

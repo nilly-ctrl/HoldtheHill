@@ -32,7 +32,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public UiButton ControlsButton => _controls;
         public UiButton QuitButton => _quit;
 
-        private static GrayboxGameFlow Flow => GrayboxGameFlow.Instance;
+        private GrayboxGameFlow _flow;
+
+        private GrayboxGameFlow Flow
+        {
+            get
+            {
+                if (_flow == null) _flow = FindAnyObjectByType<GrayboxGameFlow>();
+                return _flow;
+            }
+        }
 
         private void Awake() => Hook();
 
@@ -71,7 +80,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 () => { if (Flow != null) Flow.QuitToHome(); }));
         }
 
-        private static void Resume()
+        private void Resume()
         {
             if (Flow != null) Flow.Resume();
         }

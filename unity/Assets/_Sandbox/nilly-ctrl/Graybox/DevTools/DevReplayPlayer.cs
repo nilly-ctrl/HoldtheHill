@@ -28,6 +28,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private readonly StringBuilder _problems = new StringBuilder();
         private ReplayRecording _recording;
         private GrayboxTowerPlacer _placer;
+        private GrayboxGameFlow _flow;
         private GrayboxEconomy _economy;
         private EnemySpawner _spawner;
         private int _tick;
@@ -95,6 +96,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _placer = FindAnyObjectByType<GrayboxTowerPlacer>();
             _spawner = FindAnyObjectByType<EnemySpawner>();
             _economy = FindAnyObjectByType<GrayboxEconomy>();
+            _flow = FindAnyObjectByType<GrayboxGameFlow>();
             if (_placer == null)
             {
                 message = "No tower placer in the scene; there is nothing to replay into.";
@@ -114,7 +116,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     .Append(recording.fixedDeltaTime).Append("s when recorded.");
             }
 
-            string mapNow = GrayboxGameFlow.Instance != null ? GrayboxGameFlow.Instance.MapId : (_spawner != null ? _spawner.ActiveMapId : null);
+            string mapNow = _flow != null ? _flow.MapId : (_spawner != null ? _spawner.ActiveMapId : null);
             if (!string.IsNullOrEmpty(recording.mapId) && !string.IsNullOrEmpty(mapNow) && recording.mapId != mapNow)
             {
                 notes.Append(" Recorded on map ").Append(recording.mapId).Append(", this is ").Append(mapNow).Append('.');
@@ -127,7 +129,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Desyncs = 0;
             _problems.Length = 0;
 
-            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            GrayboxGameFlow flow = _flow;
             if (flow != null)
             {
                 GrayboxRunMode mode = GrayboxRunMode.Campaign;
@@ -293,7 +295,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private static string DoReset(ReplayCommand c)
         {
-            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            GrayboxGameFlow flow = FindAnyObjectByType<GrayboxGameFlow>();
             if (flow == null) return "no game flow";
 
             if (c.value == 1) flow.RetryWave();

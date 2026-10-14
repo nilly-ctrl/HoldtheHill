@@ -39,7 +39,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             _play.Clicked.AddListener(() =>
             {
-                GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+                GrayboxGameFlow flow = FindAnyObjectByType<GrayboxGameFlow>();
                 if (flow != null) flow.QuitToHome();
             });
             _settings.Clicked.AddListener(_settingsScreen.Show);

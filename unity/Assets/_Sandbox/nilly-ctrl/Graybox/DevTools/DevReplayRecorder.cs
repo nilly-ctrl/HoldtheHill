@@ -68,6 +68,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         }
 
         // The placer in the scene, found once when recording starts; its events are instance events.
+        private GrayboxGameFlow _flow;
         private TowerPlacer _placer;
 
         private void OnEnable()
@@ -83,8 +84,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 _placer.TowerSold += OnTowerSold;
             }
             GrayboxSkillTree.OnSkillUnlocked += OnSkillUnlocked;
-            GrayboxGameFlow.FieldReset += OnFieldReset;
-            GrayboxGameFlow.StateChanged += OnStateChanged;
+            _flow = FindAnyObjectByType<GrayboxGameFlow>();
+            if (_flow != null)
+            {
+                _flow.FieldReset += OnFieldReset;
+                _flow.StateChanged += OnStateChanged;
+            }
             DevCommandRegistry.Default.Executed += OnConsoleCommand;
             HookSpawner();
         }
@@ -99,8 +104,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 _placer.TowerSold -= OnTowerSold;
             }
             GrayboxSkillTree.OnSkillUnlocked -= OnSkillUnlocked;
-            GrayboxGameFlow.FieldReset -= OnFieldReset;
-            GrayboxGameFlow.StateChanged -= OnStateChanged;
+            if (_flow != null)
+            {
+                _flow.FieldReset -= OnFieldReset;
+                _flow.StateChanged -= OnStateChanged;
+            }
             DevCommandRegistry.Default.Executed -= OnConsoleCommand;
             if (_spawner != null) _spawner.onWaveStarted.RemoveListener(OnWaveStarted);
             _spawner = null;
@@ -144,7 +152,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
 
             HookSpawner();
-            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            GrayboxGameFlow flow = _flow;
 
             int seed = unchecked((int)(DateTime.UtcNow.Ticks & 0x7FFFFFFF));
             UnityEngine.Random.InitState(seed);
@@ -249,7 +257,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (_recording == null) return;
 
             // Endless waves are started by GrayboxEndlessMode itself and come back on their own.
-            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            GrayboxGameFlow flow = _flow;
             if (flow != null && flow.Mode != GrayboxRunMode.Campaign) return;
 
             _recording.Add(_tick, ReplayCommandType.Wave, null, 0f, 0f, waveNumber);
@@ -257,7 +265,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void OnFieldReset()
         {
-            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            GrayboxGameFlow flow = _flow;
             int retries = flow != null ? flow.Stats.WaveRetries : 0;
             bool retry = retries > _retries;
             _retries = retries;
@@ -276,7 +284,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             if (_recording != null && (current == GameFlowState.RunEnd || current == GameFlowState.Home || current == GameFlowState.Title))
             {
-                GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+                GrayboxGameFlow flow = _flow;
                 string result = current == GameFlowState.RunEnd && flow != null
                     ? (flow.LastRunWasVictory ? "Victory" : "Defeat")
                     : "Stopped";
@@ -300,7 +308,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // A scene that starts straight into play has no field reset to start an automatic recording.
             if (AutoRecord && _recording == null && _frames >= 0 && ++_frames == 2)
             {
-                GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+                GrayboxGameFlow flow = _flow;
                 if ((flow == null || flow.State == GameFlowState.Playing)
                     && (DevReplayPlayer.Instance == null || !DevReplayPlayer.Instance.IsPlaying))
                 {

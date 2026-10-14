@@ -35,20 +35,32 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private GrayboxWaveBanner _banner;
         private Coroutine _runEndWait;
 
-        private void OnEnable()
-        {
-            GrayboxGameFlow.StateChanged += OnStateChanged;
-        }
+        private GrayboxGameFlow _flow;
+        private bool _listening;
+
+        private void OnEnable() => Listen();
 
         private void OnDisable()
         {
-            GrayboxGameFlow.StateChanged -= OnStateChanged;
+            if (_listening) _flow.StateChanged -= OnStateChanged;
+            _listening = false;
+        }
+
+        // The flow may be built after this object in a test; Start tries again.
+        private void Listen()
+        {
+            if (_listening) return;
+            if (_flow == null) _flow = FindAnyObjectByType<GrayboxGameFlow>();
+            if (_flow == null) return;
+            _flow.StateChanged += OnStateChanged;
+            _listening = true;
         }
 
         private void Start()
         {
             _banner = FindAnyObjectByType<GrayboxWaveBanner>();
-            if (GrayboxGameFlow.Instance != null) Sync(GrayboxGameFlow.Instance.State);
+            Listen();
+            if (_flow != null) Sync(_flow.State);
         }
 
         private void OnStateChanged(GameFlowState previous, GameFlowState next) => Sync(next);
@@ -98,7 +110,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void OpenRunEnd()
         {
-            _runEnd.Populate(GrayboxGameFlow.Instance);
+            _runEnd.Populate(_flow);
             SetOpen(_runEnd.Screen, true);
         }
 

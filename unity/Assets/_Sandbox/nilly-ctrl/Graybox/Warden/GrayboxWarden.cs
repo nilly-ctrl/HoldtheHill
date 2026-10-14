@@ -45,9 +45,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         /// <summary>The way it last walked.</summary>
         public Vector2 Facing { get; private set; } = Vector2.right;
 
+        private GrayboxGameFlow _flow;
+
         private void Awake()
         {
             Instance = this;
+            _flow = FindAnyObjectByType<GrayboxGameFlow>();
             GetComponentsInChildren(_abilities);
             Health = GetComponent<GrayboxWardenHealth>();
         }
@@ -86,7 +89,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void Update()
         {
-            if (!GrayboxGameFlow.GameplayActive || (Health != null && Health.IsDowned))
+            if ((_flow != null && !_flow.IsPlaying) || (Health != null && Health.IsDowned))
             {
                 return;
             }

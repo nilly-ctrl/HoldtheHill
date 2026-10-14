@@ -118,7 +118,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
 
             // The scene opens on the title screen with time stopped. Start a run the way Home
             // does; after that every wave, the first included, waits to be prompted.
-            GrayboxGameFlow flow = GrayboxGameFlow.Instance;
+            GrayboxGameFlow flow = UnityEngine.Object.FindAnyObjectByType<GrayboxGameFlow>();
             bool promptFirstWave = false;
             if (flow != null && flow.State != GameFlowState.Playing)
             {
@@ -207,7 +207,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
                 bool stillSpawning = GetBool(spawner, "IsSpawning");
                 int alive = CountAlive();
 
-                bool runOver = GrayboxGameFlow.Instance != null && GrayboxGameFlow.Instance.State == GameFlowState.RunEnd;
+                bool runOver = UnityEngine.Object.FindAnyObjectByType<GrayboxGameFlow>() != null && UnityEngine.Object.FindAnyObjectByType<GrayboxGameFlow>().State == GameFlowState.RunEnd;
                 if ((!stillSpawning && alive == 0) || runOver)
                 {
                     // One more frame so the last death is recorded before moving on.

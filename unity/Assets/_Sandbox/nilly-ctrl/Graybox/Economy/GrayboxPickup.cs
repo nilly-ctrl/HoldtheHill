@@ -59,14 +59,17 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             s_active.Remove(this);
         }
 
+        private GrayboxGameFlow _flow;
+
         private void Start()
         {
             _home = transform.position;
+            _flow = FindAnyObjectByType<GrayboxGameFlow>();
         }
 
         private void Update()
         {
-            if (IsCollected || !GrayboxGameFlow.GameplayActive)
+            if (IsCollected || (_flow != null && !_flow.IsPlaying))
             {
                 return;
             }

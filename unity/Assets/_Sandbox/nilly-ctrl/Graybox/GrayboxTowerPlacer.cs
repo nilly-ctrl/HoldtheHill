@@ -43,7 +43,23 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
         }
 
-        protected override bool GameplayActive => GrayboxGameFlow.GameplayActive;
+        private GrayboxGameFlow _flow;
+        private bool _flowSought;
+
+        // Found once, kept: no flow in the scene (a bare test scene) counts as playing.
+        protected override bool GameplayActive
+        {
+            get
+            {
+                if (!_flowSought)
+                {
+                    _flow = FindAnyObjectByType<GrayboxGameFlow>();
+                    _flowSought = true;
+                }
+
+                return _flow == null || _flow.IsPlaying;
+            }
+        }
 
         protected override bool TryReadPointer(out Vector2 position) => GrayboxControls.TryPointerPosition(out position);
 

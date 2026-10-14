@@ -25,7 +25,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// wave" rewind to, records and honeydew.
     /// </summary>
     /// <remarks>
-    /// Gameplay scripts ask <see cref="GameplayActive"/> before reading input or drawing IMGUI,
+    /// Gameplay scripts ask <see cref="GameFlowController.IsPlaying"/> before reading input or drawing IMGUI,
     /// because IMGUI always draws over a Canvas and would cover the menus.
     ///
     /// Runs before other scripts so that on the frame Escape is pressed it can see whether the
@@ -35,27 +35,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Game Flow")]
     public class GrayboxGameFlow : GameFlowController
     {
-        public static GrayboxGameFlow Instance { get; private set; }
-
-        /// <summary>Raised after every state change with (previous, current). The static twin of the base event, for the sandbox.</summary>
-        public static new event Action<GameFlowState, GameFlowState> StateChanged;
-
         /// <summary>Raised after the field has been rewound to a checkpoint (new run or wave retry).</summary>
-        public static event Action FieldReset;
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetStatics()
-        {
-            Instance = null;
-            StateChanged = null;
-            FieldReset = null;
-        }
-
-        /// <summary>
-        /// True while the game itself is on screen and running. Also true in a scene with no flow
-        /// controller, so gameplay scripts behave as before there.
-        /// </summary>
-        public static bool GameplayActive => Instance == null || Instance.State == GameFlowState.Playing;
+        public event Action FieldReset;
 
         // Pause is GrayboxControls.Pause (Esc, or Start on a gamepad). The key first cancels a tower
         // placement or selection if there is any.
@@ -110,13 +91,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         protected override void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(this);
-                return;
-            }
-
-            Instance = this;
             _spawner = FindAnyObjectByType<EnemySpawner>();
             _placer = FindAnyObjectByType<GrayboxTowerPlacer>();
             _custom = FindAnyObjectByType<GrayboxCustomSpawner>();
@@ -135,7 +109,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void OnEnable()
         {
-            base.StateChanged += ForwardStateChanged;
             EnemyHealth.Defeated += OnEnemyDefeated;
             if (_economy == null) _economy = FindAnyObjectByType<GrayboxEconomy>();
             if (_economy != null) _economy.BountyPaid += OnBountyPaid;
@@ -146,7 +119,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private void OnDisable()
         {
-            base.StateChanged -= ForwardStateChanged;
             EnemyHealth.Defeated -= OnEnemyDefeated;
             if (_economy != null) _economy.BountyPaid -= OnBountyPaid;
             if (_hill != null) _hill.Finished -= OnGameFinished;
@@ -171,13 +143,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         protected override void OnDestroy()
         {
-            if (Instance != this) return;
-
-            Instance = null;
             base.OnDestroy();
         }
-
-        private static void ForwardStateChanged(GameFlowState previous, GameFlowState next) => StateChanged?.Invoke(previous, next);
 
         private void Update()
         {

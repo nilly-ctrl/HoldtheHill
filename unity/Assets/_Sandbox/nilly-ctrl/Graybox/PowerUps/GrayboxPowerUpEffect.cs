@@ -78,9 +78,27 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
         }
 
+        private GrayboxGameFlow _flow;
+        private bool _flowSought;
+
+        // Found once, kept: no flow in the scene (a bare test scene) counts as playing.
+        private bool GameplayActive
+        {
+            get
+            {
+                if (!_flowSought)
+                {
+                    _flow = FindAnyObjectByType<GrayboxGameFlow>();
+                    _flowSought = true;
+                }
+
+                return _flow == null || _flow.IsPlaying;
+            }
+        }
+
         private void Update()
         {
-            if (_ended || !GrayboxGameFlow.GameplayActive)
+            if (_ended || !GameplayActive)
             {
                 return;
             }
