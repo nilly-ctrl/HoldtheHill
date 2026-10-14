@@ -8,7 +8,7 @@ using UnityEngine;
 namespace HoldTheHill.Tests
 {
     /// <summary>
-    /// The wallet in <see cref="FoodWallet"/>, pickups and the generated crumb prefabs.
+    /// The wallet in <see cref="Wallet"/>, pickups and the generated crumb prefabs.
     /// </summary>
     public class ResourceTests
     {
@@ -39,7 +39,7 @@ namespace HoldTheHill.Tests
         [Test]
         public void Wallet_TreatsNoResourceAsTheMainOne()
         {
-            var economy = _holder.AddComponent<FoodWallet>();
+            var economy = _holder.AddComponent<WalletBehaviour>();
 
             economy.Earn(null, 25);
             Assert.AreEqual(525, economy.CurrentFood);
@@ -52,7 +52,7 @@ namespace HoldTheHill.Tests
         [Test]
         public void Wallet_KeepsOtherResourcesApartFromTheMainOne()
         {
-            var economy = _holder.AddComponent<FoodWallet>();
+            var economy = _holder.AddComponent<WalletBehaviour>();
             ResourceData changed = null;
             int amount = -1;
             System.Action<ResourceData, int> listen = (r, a) => { changed = r; amount = a; };
@@ -103,7 +103,7 @@ namespace HoldTheHill.Tests
         [Test]
         public void CollectingACrumb_PaysItsAmountOnce()
         {
-            var economy = _holder.AddComponent<FoodWallet>();
+            var economy = _holder.AddComponent<WalletBehaviour>();
             var wallet = new SerializedObject(economy);
             wallet.FindProperty("_mainResource").objectReferenceValue =
                 AssetDatabase.LoadAssetAtPath<ResourceData>($"{Root}/Economy/Data/Food.asset");

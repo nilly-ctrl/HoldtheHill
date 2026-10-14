@@ -524,7 +524,7 @@ namespace HoldTheHill.Tests
         public IEnumerator ThiefAnt_TakesFood_AndKillingItGivesTheFoodBack()
         {
             MakePath(new Vector2(0, 0), new Vector2(6, 0));
-            var economy = Make("Economy", Vector2.zero).AddComponent<FoodWallet>();
+            var economy = Make("Economy", Vector2.zero).AddComponent<WalletBehaviour>();
             int start = economy.CurrentFood;
 
             ThiefAnt thief = MakeSpecial<ThiefAnt>("Thief", Vector2.zero, 1000f,

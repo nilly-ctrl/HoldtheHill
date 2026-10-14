@@ -41,7 +41,7 @@ namespace HoldTheHill.Features.Hud
 
         public override bool WantsToShow => FindPlacer() != null && _placer.SelectedTower != null;
 
-        private FoodWallet _economy;
+        private WalletBehaviour _economy;
 
 
         private void Awake()
@@ -118,7 +118,7 @@ namespace HoldTheHill.Features.Hud
         private void RefreshButtons(Tower tower)
         {
             int upgradeCost = _placer.UpgradeCost(tower);
-            if (_economy == null) _economy = FindAnyObjectByType<FoodWallet>();
+            if (_economy == null) _economy = FindAnyObjectByType<WalletBehaviour>();
             bool canAfford = _economy == null || _economy.CanAfford(upgradeCost);
             bool canUpgrade = tower.CanUpgrade;
 

@@ -31,8 +31,8 @@ namespace HoldTheHill.Tests
         private readonly List<GameObject> _spawnedEnemies = new List<GameObject>();
         private EnemySpawner _spawner;
         private GameObject _template;
-        private FoodWallet _economy;
-        private HillHealth _hill;
+        private WalletBehaviour _economy;
+        private Queen _hill;
         private SkillTree _skills;
         private RunFlow _flow;
 
@@ -56,8 +56,8 @@ namespace HoldTheHill.Tests
 
             var systems = new GameObject("TestSystems");
             _made.Add(systems);
-            _economy = systems.AddComponent<FoodWallet>();
-            _hill = systems.AddComponent<HillHealth>();
+            _economy = systems.AddComponent<WalletBehaviour>();
+            _hill = systems.AddComponent<Queen>();
             _skills = systems.AddComponent<SkillTree>();
             _skills.Configure(TestContent.SkillTree());
 
@@ -203,7 +203,7 @@ namespace HoldTheHill.Tests
             _spawner.StartNextWave();
             yield return null;
 
-            _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
+            _hill.TakeDamage(_hill.MaxHealth, Vector3.zero);
 
             Assert.AreEqual(GameFlowState.RunEnd, _flow.State);
             Assert.IsFalse(_flow.LastRunWasVictory);
@@ -250,7 +250,7 @@ namespace HoldTheHill.Tests
                 _spawner.StartNextWave(); // wave 2
                 yield return null;
 
-                _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
+                _hill.TakeDamage(_hill.MaxHealth, Vector3.zero);
 
                 Assert.IsTrue(_flow.LastRunResult.NewBestWave);
                 Assert.AreEqual(2, _flow.LastRunResult.BestWave);
@@ -260,7 +260,7 @@ namespace HoldTheHill.Tests
                 yield return null;
                 _spawner.StartNextWave();
                 yield return null;
-                _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
+                _hill.TakeDamage(_hill.MaxHealth, Vector3.zero);
                 Assert.IsFalse(_flow.LastRunResult.NewBestWave, "same wave, one more retry");
 
                 SaveStore.Close();
@@ -274,7 +274,7 @@ namespace HoldTheHill.Tests
                 yield return null;
                 _spawner.StartNextWave();
                 yield return null;
-                _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
+                _hill.TakeDamage(_hill.MaxHealth, Vector3.zero);
                 Assert.AreEqual(2, SaveStore.Data.records.runsFinished);
             }
             finally
@@ -296,7 +296,7 @@ namespace HoldTheHill.Tests
             _economy.TrySpendFood(200);
             _skills.TryUnlock("Ballistics_HeavyCaliber");
             int pointsAtWave2 = _skills.SkillPoints;
-            _hill.TakeBaseDamage(30f, Vector3.zero);
+            _hill.TakeDamage(30f, Vector3.zero);
 
             _spawner.StartNextWave(); // wave 2: checkpoint taken here
             yield return null;
@@ -305,7 +305,7 @@ namespace HoldTheHill.Tests
 
             _economy.TrySpendFood(100);
             _skills.AddSkillPoints(7);
-            _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
+            _hill.TakeDamage(_hill.MaxHealth, Vector3.zero);
             Assert.AreEqual(GameFlowState.RunEnd, _flow.State);
 
             _flow.RetryWave();
@@ -341,7 +341,7 @@ namespace HoldTheHill.Tests
             yield return null;
             _economy.TrySpendFood(400);
             _skills.TryUnlock("Ballistics_HeavyCaliber");
-            _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
+            _hill.TakeDamage(_hill.MaxHealth, Vector3.zero);
             _flow.RetryWave();
 
             _flow.StartNewRun();
@@ -378,7 +378,7 @@ namespace HoldTheHill.Tests
             MakeTower("Tower_BuiltLater", new Vector3(5f, 5f, 0f));
             yield return null;
 
-            _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
+            _hill.TakeDamage(_hill.MaxHealth, Vector3.zero);
             _flow.RetryWave();
             yield return null;
             yield return null;

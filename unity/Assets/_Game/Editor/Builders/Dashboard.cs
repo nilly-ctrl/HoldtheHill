@@ -212,7 +212,7 @@ namespace HoldTheHill.EditorTools.Builders
             EditorGUILayout.LabelField("5. Economy & Dev Gold Controls", EditorStyles.boldLabel);
             using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
             {
-                var economy = FindAnyObjectByType<FoodWallet>();
+                var economy = FindAnyObjectByType<WalletBehaviour>();
                 int currentFood = economy != null ? economy.CurrentFood : 0;
                 EditorGUILayout.LabelField($"Current Gold Pool: ${currentFood}", EditorStyles.boldLabel);
 

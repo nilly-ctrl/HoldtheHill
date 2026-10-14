@@ -45,7 +45,7 @@ namespace HoldTheHill.Features.Specials
 
         private IEnumerator StealAndRun()
         {
-            FoodWallet economy = FindAnyObjectByType<FoodWallet>();
+            WalletBehaviour economy = FindAnyObjectByType<WalletBehaviour>();
             if (economy != null)
             {
                 _stolen = Mathf.Min(_stealAmount, economy.CurrentFood);
@@ -102,7 +102,7 @@ namespace HoldTheHill.Features.Specials
                 return;
             }
 
-            FoodWallet economy = FindAnyObjectByType<FoodWallet>();
+            WalletBehaviour economy = FindAnyObjectByType<WalletBehaviour>();
             if (economy != null)
             {
                 economy.EarnFood(_stolen);

@@ -26,7 +26,7 @@ namespace HoldTheHill.Features.Hud
 
         private EnemySpawner _spawner;
         private RunCounters _hud;
-        private FoodWallet _economy;
+        private WalletBehaviour _economy;
         private PixelFontTheme _theme;
         private PixelText _food;
         private PixelText _wave;
@@ -82,7 +82,7 @@ namespace HoldTheHill.Features.Hud
 
             if (_economy == null)
             {
-                _economy = FindAnyObjectByType<FoodWallet>();
+                _economy = FindAnyObjectByType<WalletBehaviour>();
             }
 
             int gold = _economy != null ? _economy.CurrentFood : 0;

@@ -161,7 +161,7 @@ namespace HoldTheHill.Features.DevTools
             UnityEngine.Random.InitState(seed);
 
             Tower.GetActive(_towers);
-            FoodWallet economy = FindAnyObjectByType<FoodWallet>();
+            WalletBehaviour economy = FindAnyObjectByType<WalletBehaviour>();
             _recording = new ReplayRecording
             {
                 unityVersion = Application.unityVersion,

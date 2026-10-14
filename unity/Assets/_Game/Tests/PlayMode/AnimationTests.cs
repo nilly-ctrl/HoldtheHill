@@ -409,10 +409,10 @@ namespace HoldTheHill.Tests
         public IEnumerator Melee_NurseMendsAHurtHillAndLeavesEnemiesAlone()
         {
             GameObject hillObject = Track(new GameObject("Hill"));
-            var hill = hillObject.AddComponent<HillHealth>();
+            var hill = hillObject.AddComponent<Queen>();
             EnemyHealth enemy = MakeEnemy(new Vector2(0.5f, 0f), 1000f);
             yield return null;
-            hill.TakeBaseDamage(20f, Vector3.zero);
+            hill.TakeDamage(20f, Vector3.zero);
             float hurt = hill.CurrentHealth;
 
             GameObject go = Track(new GameObject("Nurse"));

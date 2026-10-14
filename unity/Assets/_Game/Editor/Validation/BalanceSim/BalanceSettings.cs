@@ -9,7 +9,7 @@ namespace HoldTheHill.EditorTools.Validation
         /// </summary>
         public float PathLength = 30f;
 
-        /// <summary>Gold at the start of the run. 500 is FoodWallet's default.</summary>
+        /// <summary>Gold at the start of the run. 500 is WalletBehaviour's default.</summary>
         public int StartingFood = 500;
 
         /// <summary>The most towers the model builds. Real maps have a limited number of build cells.</summary>

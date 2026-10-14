@@ -86,7 +86,7 @@ namespace HoldTheHill.Features.DevTools
 
                 case "resources":
                     text.Append("gold  honeydew  skillpoints");
-                    FoodWallet economy = UnityEngine.Object.FindAnyObjectByType<FoodWallet>();
+                    WalletBehaviour economy = UnityEngine.Object.FindAnyObjectByType<WalletBehaviour>();
                     if (economy != null && economy.MainResource != null)
                     {
                         text.Append("  ").Append(economy.MainResource.Id).Append(" (main)");

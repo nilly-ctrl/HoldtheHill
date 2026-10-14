@@ -37,7 +37,7 @@ namespace HoldTheHill.Tests
         private readonly List<Object> _made = new List<Object>();
         private readonly List<GameObject> _spawnedEnemies = new List<GameObject>();
         private EnemySpawner _spawner;
-        private HillHealth _hill;
+        private Queen _hill;
         private RunFlow _flow;
         private MenuScreens _menus;
         private EventSystem _events;
@@ -60,8 +60,8 @@ namespace HoldTheHill.Tests
 
             var systems = new GameObject("TestSystems");
             _made.Add(systems);
-            systems.AddComponent<FoodWallet>();
-            _hill = systems.AddComponent<HillHealth>();
+            systems.AddComponent<WalletBehaviour>();
+            _hill = systems.AddComponent<Queen>();
             systems.AddComponent<SkillTree>();
 
             var spawnerObject = new GameObject("TestSpawner");
@@ -268,7 +268,7 @@ namespace HoldTheHill.Tests
             _spawner.StartNextWave(); // wave 2
             yield return null;
 
-            _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
+            _hill.TakeDamage(_hill.MaxHealth, Vector3.zero);
             yield return null;
             yield return null;
 
@@ -297,7 +297,7 @@ namespace HoldTheHill.Tests
             // Losing again on the same wave is not a new best, and shows the retry.
             _spawner.StartNextWave();
             yield return null;
-            _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
+            _hill.TakeDamage(_hill.MaxHealth, Vector3.zero);
             yield return null;
             Assert.IsFalse(screen.NewBest.gameObject.activeSelf);
             Assert.AreEqual("1", screen.transform.Find("Panel/WaveretriesusedRow/Value").GetComponent<TMPro.TMP_Text>().text);

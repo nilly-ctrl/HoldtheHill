@@ -75,7 +75,7 @@ namespace HoldTheHill.Features.Species
                 _warden.name = species.WardenPrefab.name;
             }
 
-            FoodWallet economy = FindAnyObjectByType<FoodWallet>();
+            WalletBehaviour economy = FindAnyObjectByType<WalletBehaviour>();
             if (species.StartingFood > 0 && economy != null)
             {
                 economy.ResetFood(species.StartingFood);

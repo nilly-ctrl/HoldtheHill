@@ -33,7 +33,7 @@ namespace HoldTheHill.Features.Hud
 
         // The last numbers shown, so a frame where nothing moved builds no strings.
         private RunFlow _flow;
-        private FoodWallet _economy;
+        private WalletBehaviour _economy;
         private int _foodShown = -1;
         private int _waveShown = -1;
         private int _totalShown = -1;
@@ -72,7 +72,7 @@ namespace HoldTheHill.Features.Hud
 
             if (!pixelHud)
             {
-                if (_economy == null) _economy = FindAnyObjectByType<FoodWallet>();
+                if (_economy == null) _economy = FindAnyObjectByType<WalletBehaviour>();
                 int gold = _economy != null ? _economy.CurrentFood : 500;
                 if (gold != _foodShown || _spawner.CurrentWaveNumber != _waveShown || _spawner.TotalWaves != _totalShown)
                 {

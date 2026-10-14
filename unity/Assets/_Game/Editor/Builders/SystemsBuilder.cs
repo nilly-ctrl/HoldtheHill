@@ -33,7 +33,7 @@ namespace HoldTheHill.EditorTools.Builders
         /// <summary>Root objects that hold managers with no reference to anything in the scene.</summary>
         public static readonly string[] Members =
         {
-            "FoodWallet", "SkillTree", "CombatSystems", "ProceduralWaveGenerator",
+            "Wallet", "SkillTree", "CombatSystems", "ProceduralWaveGenerator",
             "Sfx", "IconLibrary", "ImpactFx", "Species", "PowerUps",
             "RunFlow",
         };

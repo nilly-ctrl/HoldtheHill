@@ -50,7 +50,7 @@ namespace HoldTheHill.Features.GameFlow
         private EnemySpawner _spawner;
         private GameTowerPlacer _placer;
         private Queen _hill;
-        private FoodWallet _economy;
+        private WalletBehaviour _economy;
         private readonly List<Tower> _towers = new List<Tower>();
         private CustomSpawner _custom;
         private float _autoStartTimer;
@@ -98,7 +98,7 @@ namespace HoldTheHill.Features.GameFlow
             _placer = FindAnyObjectByType<GameTowerPlacer>();
             _custom = FindAnyObjectByType<CustomSpawner>();
             _hill = FindAnyObjectByType<Queen>();
-            _economy = FindAnyObjectByType<FoodWallet>();
+            _economy = FindAnyObjectByType<WalletBehaviour>();
             base.Awake();
 
             // Home loaded this scene to play it (LevelList.LoadAndPlay): skip the menus.
@@ -113,7 +113,7 @@ namespace HoldTheHill.Features.GameFlow
         private void OnEnable()
         {
             EnemyHealth.Defeated += OnEnemyDefeated;
-            if (_economy == null) _economy = FindAnyObjectByType<FoodWallet>();
+            if (_economy == null) _economy = FindAnyObjectByType<WalletBehaviour>();
             if (_economy != null) _economy.BountyPaid += OnBountyPaid;
             if (_hill == null) _hill = FindAnyObjectByType<Queen>();
             if (_hill != null) _hill.Finished += OnGameFinished;
@@ -287,7 +287,7 @@ namespace HoldTheHill.Features.GameFlow
         {
             if (_hill != null) _hill.SetBonusHealth(PermanentUpgrades.HillHealthBonus);
 
-            FoodWallet economy = _economy;
+            WalletBehaviour economy = _economy;
             int food = PermanentUpgrades.StartingFoodBonus;
             if (economy != null && food > 0) economy.ResetFood(economy.CurrentFood + food);
         }

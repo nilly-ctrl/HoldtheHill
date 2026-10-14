@@ -54,7 +54,7 @@ namespace HoldTheHill.Features.GameFlow
         public static RunCheckpoint Capture(int waveIndex, RunStats stats, Transform storeParent)
         {
             Queen hill = Object.FindAnyObjectByType<Queen>();
-            FoodWallet economy = Object.FindAnyObjectByType<FoodWallet>();
+            WalletBehaviour economy = Object.FindAnyObjectByType<WalletBehaviour>();
             var checkpoint = new RunCheckpoint
             {
                 WaveIndex = Mathf.Max(0, waveIndex),
@@ -105,7 +105,7 @@ namespace HoldTheHill.Features.GameFlow
                 tower.name = stored.Copy.name;
             }
 
-            FoodWallet economy = Object.FindAnyObjectByType<FoodWallet>();
+            WalletBehaviour economy = Object.FindAnyObjectByType<WalletBehaviour>();
             if (economy != null) economy.ResetFood(Food);
             if (SkillTree.Instance != null) SkillTree.Instance.RestoreState(SkillPoints, UnlockedSkills);
             Queen hill = Object.FindAnyObjectByType<Queen>();

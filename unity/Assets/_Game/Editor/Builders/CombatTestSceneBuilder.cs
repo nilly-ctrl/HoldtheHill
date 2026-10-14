@@ -174,9 +174,9 @@ namespace HoldTheHill.EditorTools.Builders
 
         private static void BuildEconomy()
         {
-            var go = new GameObject("FoodWallet");
+            var go = new GameObject("Wallet");
             ResourceData food = PickupBuilder.Food();
-            BuildKit.Apply(go.AddComponent<FoodWallet>(), so => so.FindProperty("_mainResource").objectReferenceValue = food);
+            BuildKit.Apply(go.AddComponent<WalletBehaviour>(), so => so.FindProperty("_mainResource").objectReferenceValue = food);
         }
 
         private static void BuildSkillTree()
@@ -203,7 +203,8 @@ namespace HoldTheHill.EditorTools.Builders
             go.AddComponent<StatusPopups>();
             go.AddComponent<BossBanner>();
             go.AddComponent<StatusCombos>();
-            go.AddComponent<HillHealth>();
+            go.AddComponent<Queen>();
+            go.AddComponent<BreachText>();
         }
 
         // 2 font pixels per art pixel: at 1 the numbers are too small to read at this camera size.

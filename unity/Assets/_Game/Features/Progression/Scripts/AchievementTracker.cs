@@ -168,7 +168,7 @@ namespace HoldTheHill.Features.Progression
 
         public void ReportFoodEarned(int amount)
         {
-            FoodWallet economy = FindAnyObjectByType<FoodWallet>();
+            WalletBehaviour economy = FindAnyObjectByType<WalletBehaviour>();
             int currentFood = economy != null ? economy.CurrentFood : 0;
             Report(AchievementTrigger.FoodHeld, currentFood);
         }

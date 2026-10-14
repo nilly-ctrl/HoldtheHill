@@ -19,7 +19,7 @@ namespace HoldTheHill.Features.Economy
 
         public override void Apply(Pickup pickup)
         {
-            FoodWallet economy = UnityEngine.Object.FindAnyObjectByType<FoodWallet>();
+            WalletBehaviour economy = UnityEngine.Object.FindAnyObjectByType<WalletBehaviour>();
             if (economy != null)
             {
                 economy.Earn(_resource, _amount);

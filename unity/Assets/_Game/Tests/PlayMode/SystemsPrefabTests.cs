@@ -22,7 +22,7 @@ namespace HoldTheHill.Tests
         // Mirrors SystemsBuilder.Members (an editor-assembly type the tests cannot see).
         private static readonly string[] Members =
         {
-            "FoodWallet", "SkillTree", "CombatSystems", "ProceduralWaveGenerator",
+            "Wallet", "SkillTree", "CombatSystems", "ProceduralWaveGenerator",
             "Sfx", "IconLibrary", "ImpactFx", "Species", "PowerUps",
             "RunFlow",
         };
@@ -39,9 +39,9 @@ namespace HoldTheHill.Tests
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
             Assert.IsNotNull(prefab, "Run Tools > Hold the Hill > Build Graybox Combat Test.");
             Assert.IsNotNull(prefab.GetComponentInChildren<RunFlow>(true), "flow");
-            Assert.IsNotNull(prefab.GetComponentInChildren<FoodWallet>(true), "economy");
+            Assert.IsNotNull(prefab.GetComponentInChildren<WalletBehaviour>(true), "economy");
             Assert.IsNotNull(prefab.GetComponentInChildren<SkillTree>(true), "skill tree");
-            Assert.IsNotNull(prefab.GetComponentInChildren<HillHealth>(true), "hill health");
+            Assert.IsNotNull(prefab.GetComponentInChildren<Queen>(true), "hill health");
         }
 
         [Test]

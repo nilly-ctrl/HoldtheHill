@@ -56,6 +56,26 @@ namespace HoldTheHill.Features.Economy
         /// <summary>The main resource, or null when none is assigned.</summary>
         public ResourceData MainResource => _mainResource;
 
+        /// <summary>How much of the main resource (Food) the player holds.</summary>
+        public int CurrentFood => Wallet.MainAmount;
+
+        /// <summary>How much of a resource the player holds. Null means the main resource.</summary>
+        public int Get(ResourceData resource) => Wallet.Get(resource);
+
+        public void Earn(ResourceData resource, int amount) => Wallet.Earn(resource, amount);
+
+        public bool CanAfford(ResourceData resource, int amount) => Wallet.CanAfford(resource, amount);
+
+        public bool TrySpend(ResourceData resource, int amount) => Wallet.TrySpend(resource, amount);
+
+        public void EarnFood(int amount) => Wallet.Earn(null, amount);
+
+        public bool CanAfford(int amount) => Wallet.CanAfford(null, amount);
+
+        public bool TrySpendFood(int amount) => Wallet.TrySpend(null, amount);
+
+        public void ResetFood(int amount = 500) => Wallet.Set(null, amount);
+
         protected virtual void OnEnable()
         {
             EnemyHealth.Defeated += OnEnemyDefeated;

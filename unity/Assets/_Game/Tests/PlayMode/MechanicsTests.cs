@@ -39,14 +39,14 @@ namespace HoldTheHill.Tests
         [Test]
         public void Economy_StartingGold_Is500()
         {
-            var economy = _holder.AddComponent<FoodWallet>();
+            var economy = _holder.AddComponent<WalletBehaviour>();
             Assert.AreEqual(500, economy.CurrentFood);
         }
 
         [Test]
         public void Economy_TrySpendFood_DeductsBalance()
         {
-            var economy = _holder.AddComponent<FoodWallet>();
+            var economy = _holder.AddComponent<WalletBehaviour>();
             bool success = economy.TrySpendFood(200);
 
             Assert.IsTrue(success);
@@ -56,7 +56,7 @@ namespace HoldTheHill.Tests
         [Test]
         public void Economy_TrySpendFood_FailsWhenOverspending()
         {
-            var economy = _holder.AddComponent<FoodWallet>();
+            var economy = _holder.AddComponent<WalletBehaviour>();
             bool success = economy.TrySpendFood(600);
 
             Assert.IsFalse(success);
@@ -66,7 +66,7 @@ namespace HoldTheHill.Tests
         [Test]
         public void Economy_EarnFood_AddsToBalance()
         {
-            var economy = _holder.AddComponent<FoodWallet>();
+            var economy = _holder.AddComponent<WalletBehaviour>();
             economy.EarnFood(150);
 
             Assert.AreEqual(650, economy.CurrentFood);
@@ -123,7 +123,7 @@ namespace HoldTheHill.Tests
         [Test]
         public void BaseHealth_StartingHP_Is100()
         {
-            var baseHp = _holder.AddComponent<HillHealth>();
+            var baseHp = _holder.AddComponent<Queen>();
             Assert.AreEqual(100f, baseHp.CurrentHealth);
             Assert.IsFalse(baseHp.IsFinished);
         }
@@ -131,8 +131,8 @@ namespace HoldTheHill.Tests
         [Test]
         public void BaseHealth_TakeBaseDamage_DeductsHP()
         {
-            var baseHp = _holder.AddComponent<HillHealth>();
-            baseHp.TakeBaseDamage(25f, Vector3.zero);
+            var baseHp = _holder.AddComponent<Queen>();
+            baseHp.TakeDamage(25f, Vector3.zero);
 
             Assert.AreEqual(75f, baseHp.CurrentHealth);
             Assert.IsFalse(baseHp.IsFinished);
@@ -141,8 +141,8 @@ namespace HoldTheHill.Tests
         [Test]
         public void BaseHealth_ZeroHP_TriggersDefeat()
         {
-            var baseHp = _holder.AddComponent<HillHealth>();
-            baseHp.TakeBaseDamage(100f, Vector3.zero);
+            var baseHp = _holder.AddComponent<Queen>();
+            baseHp.TakeDamage(100f, Vector3.zero);
 
             Assert.AreEqual(0f, baseHp.CurrentHealth);
             Assert.IsTrue(baseHp.IsFinished);

@@ -22,14 +22,14 @@ namespace HoldTheHill.Features.DevTools
             int amount = a.Int(0, "n");
             if (amount < 0) throw new DevCommandException("<n> cannot be negative.");
 
-            FoodWallet economy = RequireEconomy();
+            WalletBehaviour economy = RequireEconomy();
             economy.ResetFood(amount);
             return "Gold is " + economy.CurrentFood + ".";
         }
 
-        internal static FoodWallet RequireEconomy()
+        internal static WalletBehaviour RequireEconomy()
         {
-            FoodWallet economy = UnityEngine.Object.FindAnyObjectByType<FoodWallet>();
+            WalletBehaviour economy = UnityEngine.Object.FindAnyObjectByType<WalletBehaviour>();
             if (economy == null) throw new DevCommandException("No economy in the scene.");
             return economy;
         }
@@ -41,7 +41,7 @@ namespace HoldTheHill.Features.DevTools
             if (amount <= 0) throw new DevCommandException("<n> must be above zero.");
 
             string key = what.ToLowerInvariant();
-            FoodWallet economy = UnityEngine.Object.FindAnyObjectByType<FoodWallet>();
+            WalletBehaviour economy = UnityEngine.Object.FindAnyObjectByType<WalletBehaviour>();
 
             if (key == "gold" || key == "main" || (economy != null && economy.MainResource != null && MatchesResource(economy.MainResource, key)))
             {

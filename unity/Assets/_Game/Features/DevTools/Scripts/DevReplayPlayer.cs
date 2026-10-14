@@ -33,7 +33,7 @@ namespace HoldTheHill.Features.DevTools
         private ReplayRecording _recording;
         private GameTowerPlacer _placer;
         private RunFlow _flow;
-        private FoodWallet _economy;
+        private WalletBehaviour _economy;
         private EnemySpawner _spawner;
         private int _tick;
         private int _next;
@@ -99,7 +99,7 @@ namespace HoldTheHill.Features.DevTools
 
             _placer = FindAnyObjectByType<GameTowerPlacer>();
             _spawner = FindAnyObjectByType<EnemySpawner>();
-            _economy = FindAnyObjectByType<FoodWallet>();
+            _economy = FindAnyObjectByType<WalletBehaviour>();
             _flow = FindAnyObjectByType<RunFlow>();
             if (_placer == null)
             {
@@ -223,7 +223,7 @@ namespace HoldTheHill.Features.DevTools
             if (!_placer.CanBuildAt(cell)) return "cell is blocked or occupied";
 
             int cost = _placer.CostOf(data);
-            FoodWallet economy = _economy;
+            WalletBehaviour economy = _economy;
             if (economy != null && !economy.TrySpend(data.CostResource, cost)) return "cannot afford " + cost;
 
             _placer.Place(data, cell, cost);
@@ -235,7 +235,7 @@ namespace HoldTheHill.Features.DevTools
             Tower tower = FindTowerAt(c.x, c.y, c.name);
             if (tower == null) return "no tower on that cell";
 
-            FoodWallet economy = _economy;
+            WalletBehaviour economy = _economy;
             if (economy != null) economy.EarnFood(tower.RefundValue);
             // Without the sell sound and puff the placer adds, which need its selection.
             Destroy(tower.gameObject);
@@ -249,7 +249,7 @@ namespace HoldTheHill.Features.DevTools
             if (!tower.CanUpgrade) return "tower is already at its top level";
 
             int cost = _placer.UpgradeCost(tower);
-            FoodWallet economy = _economy;
+            WalletBehaviour economy = _economy;
             if (economy != null && !economy.TrySpendFood(cost)) return "cannot afford " + cost;
 
             tower.Upgrade();

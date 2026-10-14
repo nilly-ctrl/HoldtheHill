@@ -113,7 +113,7 @@ namespace HoldTheHill.Tests
         {
             yield return null;
             float builtHealth = _hill.MaxHealth;
-            int builtFood = UnityEngine.Object.FindAnyObjectByType<FoodWallet>().CurrentFood;
+            int builtFood = UnityEngine.Object.FindAnyObjectByType<WalletBehaviour>().CurrentFood;
 
             _flow.QuitToHome();
             yield return null;
@@ -139,12 +139,12 @@ namespace HoldTheHill.Tests
             yield return null;
             Assert.AreEqual(builtHealth + 10f, _hill.MaxHealth);
             Assert.AreEqual(_hill.MaxHealth, _hill.CurrentHealth);
-            Assert.AreEqual(builtFood + 50, UnityEngine.Object.FindAnyObjectByType<FoodWallet>().CurrentFood);
+            Assert.AreEqual(builtFood + 50, UnityEngine.Object.FindAnyObjectByType<WalletBehaviour>().CurrentFood);
 
             // A restart hands the bonus out once, not on top of the last one.
             _flow.StartNewRun();
             yield return null;
-            Assert.AreEqual(builtFood + 50, UnityEngine.Object.FindAnyObjectByType<FoodWallet>().CurrentFood);
+            Assert.AreEqual(builtFood + 50, UnityEngine.Object.FindAnyObjectByType<WalletBehaviour>().CurrentFood);
             Assert.AreEqual(builtHealth + 10f, _hill.MaxHealth);
         }
 
@@ -157,7 +157,7 @@ namespace HoldTheHill.Tests
             _spawner.StartNextWave(); // wave 2: one wave cleared
             yield return null;
 
-            _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
+            _hill.TakeDamage(_hill.MaxHealth, Vector3.zero);
             yield return null;
             Assert.AreEqual(1, MetaProgress.Currency);
             StringAssert.Contains("1", _menus.RunEnd.Honeydew.text);
@@ -166,7 +166,7 @@ namespace HoldTheHill.Tests
             yield return null;
             _spawner.StartNextWave();
             yield return null;
-            _hill.TakeBaseDamage(_hill.MaxHealth, Vector3.zero);
+            _hill.TakeDamage(_hill.MaxHealth, Vector3.zero);
             yield return null;
             Assert.AreEqual(1, MetaProgress.Currency, "the same wave lost again pays nothing more");
 
