@@ -118,6 +118,25 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             Debug.Log($"[GrayboxHudShots] Pictures saved in {_dir}");
         }
 
+        // Each shot loads a scene in Single mode and attaches a throwaway save, and Unity runs this
+        // fixture in a full assembly run despite Explicit. Leave an empty scene and no save behind,
+        // or every fixture after this one plays inside the Kitchen Floor.
+        [UnityTearDown]
+        public IEnumerator LeaveAnEmptyScene()
+        {
+            GrayboxSave.Close();
+            Scene empty = SceneManager.CreateScene("ShotsTeardown");
+            SceneManager.SetActiveScene(empty);
+            for (int i = SceneManager.sceneCount - 1; i >= 0; i--)
+            {
+                Scene scene = SceneManager.GetSceneAt(i);
+                if (scene != empty && scene.isLoaded)
+                {
+                    yield return SceneManager.UnloadSceneAsync(scene);
+                }
+            }
+        }
+
         private IEnumerator Shot(string name)
         {
             yield return null;
