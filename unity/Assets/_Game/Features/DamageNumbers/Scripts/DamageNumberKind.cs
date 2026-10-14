@@ -1,4 +1,4 @@
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DamageNumbers
 {
     /// <summary>Which font style and motion a popup uses.</summary>
     public enum DamageNumberKind

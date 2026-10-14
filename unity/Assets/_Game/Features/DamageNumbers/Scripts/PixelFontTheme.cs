@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DamageNumbers
 {
     /// <summary>
     /// The one setting that picks which art theme's fonts the scene uses. It points the damage

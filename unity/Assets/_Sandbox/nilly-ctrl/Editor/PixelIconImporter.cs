@@ -13,7 +13,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     public class PixelIconImporter : AssetPostprocessor
     {
         private const string IconFolder = "Assets/_Sandbox/nilly-ctrl/Icons/PNG/";
-        private const string FontAtlasFolder = "Assets/_Sandbox/nilly-ctrl/Fonts/Atlases/";
+        private const string FontAtlasFolder = "Assets/_Game/Shared/Fonts/Pixel/Atlases/";
         private const string HudFolder = "Assets/_Sandbox/nilly-ctrl/Ui/Hud/";
         private const string MarkerFolder = "Assets/_Sandbox/nilly-ctrl/Ui/Markers/";
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DamageNumbers
 {
     /// <summary>
     /// Every baked font style, by art theme and style name, so a theme can be chosen at run time

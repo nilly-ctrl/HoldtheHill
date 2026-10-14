@@ -1,3 +1,4 @@
+using HoldTheHill.Features.DamageNumbers;
 using UnityEngine;
 
 namespace HoldTheHill.Sandbox.NillyCtrl

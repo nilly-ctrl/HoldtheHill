@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DamageNumbers
 {
     /// <summary>
     /// One floating popup. Builds a quad per glyph from a <see cref="PixelFontStyle"/> atlas into a

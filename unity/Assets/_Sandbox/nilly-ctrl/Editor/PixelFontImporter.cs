@@ -8,7 +8,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// </summary>
     public class PixelFontImporter : AssetPostprocessor
     {
-        private const string TtfFolder = "Assets/_Sandbox/nilly-ctrl/Fonts/TTF/";
+        private const string TtfFolder = "Assets/_Game/Shared/Fonts/Pixel/TTF/";
 
         private void OnPreprocessAsset()
         {

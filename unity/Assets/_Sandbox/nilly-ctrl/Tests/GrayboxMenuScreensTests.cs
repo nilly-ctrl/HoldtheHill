@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using HoldTheHill.Features.DamageNumbers;
 using HoldTheHill.Features.GameFlow;
 using System.Collections;
 using System.IO;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DamageNumbers
 {
     /// <summary>
     /// A line of text drawn with a baked <see cref="PixelFontStyle"/>: banners, titles, labels,

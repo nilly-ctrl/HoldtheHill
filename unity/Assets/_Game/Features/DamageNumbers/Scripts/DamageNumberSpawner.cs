@@ -5,7 +5,7 @@ using HoldTheHill.Features.Enemies;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DamageNumbers
 {
     /// <summary>
     /// Floating pixel-art numbers for hits, crits, damage-over-time ticks, heals and bounties.

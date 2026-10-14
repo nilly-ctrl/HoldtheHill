@@ -1,3 +1,4 @@
+using HoldTheHill.Features.DamageNumbers;
 using System;
 using System.Collections.Generic;
 using HoldTheHill.Core.UiKit;

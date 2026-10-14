@@ -1,3 +1,4 @@
+using HoldTheHill.Features.DamageNumbers;
 using System.Collections.Generic;
 using System.Linq;
 using HoldTheHill.Core.UiKit;
@@ -19,7 +20,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// </summary>
     internal static class UiKitPrefabBuilder
     {
-        internal const string TtfPath = "Assets/_Sandbox/nilly-ctrl/Fonts/TTF/HoldTheHillPixel-Regular.ttf";
+        internal const string TtfPath = "Assets/_Game/Shared/Fonts/Pixel/TTF/HoldTheHillPixel-Regular.ttf";
 
         internal const string InputActionsPath = "Assets/Settings/InputSystem_Actions.inputactions";
 

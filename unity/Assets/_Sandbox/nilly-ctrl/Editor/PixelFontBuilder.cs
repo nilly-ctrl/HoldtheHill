@@ -1,3 +1,4 @@
+using HoldTheHill.Features.DamageNumbers;
 using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -13,7 +14,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// </summary>
     public static class PixelFontBuilder
     {
-        private const string FontsFolder = "Assets/_Sandbox/nilly-ctrl/Fonts";
+        private const string FontsFolder = "Assets/_Game/Shared/Fonts/Pixel";
         private const string AtlasFolder = FontsFolder + "/Atlases";
         private const string OutputFolder = FontsFolder + "/Generated";
         private const string LibraryPath = OutputFolder + "/PixelFontThemes.asset";
