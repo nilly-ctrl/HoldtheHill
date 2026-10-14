@@ -44,7 +44,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 
         private void OnEnable()
         {
-            _effectTypes = ContentWizardBuilder.EffectTypes();
+            _effectTypes = ContentWizardPickupBuilder.EffectTypes();
             _effectNames = _effectTypes.ConvertAll(t => t.Name).ToArray();
             if (_pickup.Resource == null)
             {
@@ -115,7 +115,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                 error = "The 'Variant of' prefab has no Tower component.";
             }
 
-            CreateButton(error, taken, () => ContentWizardBuilder.CreateTower(_tower));
+            CreateButton(error, taken, () => ContentWizardUnitBuilder.CreateTower(_tower));
         }
 
         // ---------- enemy ----------
@@ -150,7 +150,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                 : new List<string>();
             taken.Remove(string.Empty);
 
-            CreateButton(error, taken, () => ContentWizardBuilder.CreateEnemy(_enemy));
+            CreateButton(error, taken, () => ContentWizardUnitBuilder.CreateEnemy(_enemy));
         }
 
         // ---------- pickup ----------
@@ -178,7 +178,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             List<string> taken = ContentWizardBuilder.CheckId(_pickup.Id) == null
                 ? ContentWizardBuilder.Collisions(ContentWizardBuilder.PickupPrefabPath(_pickup.Id))
                 : new List<string>();
-            CreateButton(error, taken, () => ContentWizardBuilder.CreatePickup(_pickup));
+            CreateButton(error, taken, () => ContentWizardPickupBuilder.CreatePickup(_pickup));
         }
 
         // ---------- power-up ----------
@@ -222,7 +222,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                     ContentWizardBuilder.PowerUpEffectPath(_powerUp.Id),
                     ContentWizardBuilder.PowerUpPickupPath(_powerUp.Id))
                 : new List<string>();
-            CreateButton(error, taken, () => ContentWizardBuilder.CreatePowerUp(_powerUp));
+            CreateButton(error, taken, () => ContentWizardPickupBuilder.CreatePowerUp(_powerUp));
         }
 
         // ---------- shared ----------
