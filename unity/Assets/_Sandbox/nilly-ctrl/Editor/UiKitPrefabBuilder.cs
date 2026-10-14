@@ -49,11 +49,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             EnsureFolder(UiKitBuilder.Root, "Prefabs");
             EnsureFolder(UiKitBuilder.Root, "Fonts");
-            AssetDatabase.ImportAsset(UiKitBuilder.SpriteDir, ImportAssetOptions.ImportRecursive);
+            AssetDatabase.ImportAsset(UiKitPrimitives.SpriteDir, ImportAssetOptions.ImportRecursive);
 
             // Prefabs are assembled in a scratch scene so nothing leaks into the user's scene.
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-            UiKitBuilder.s_font = BuildFont();
+            UiKitPrimitives.s_font = BuildFont();
 
             SavePrefab(UiKitWidgetBuilder.MakeButton("Button", "Button", "ButtonHover", "ButtonPressed", "ButtonDisabled", new Vector2(120f, UiKitStyle.RowHeight)));
             SavePrefab(UiKitWidgetBuilder.MakeButton("TabButton", "TabInactive", "TabHover", "TabActive", "ButtonDisabled", new Vector2(72f, UiKitStyle.RowHeight)));
@@ -112,7 +112,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (font == null)
             {
                 EnsureFolder(UiKitBuilder.Root, "Fonts");
-                UiKitBuilder.s_font = CreateFont();
+                UiKitPrimitives.s_font = CreateFont();
                 return;
             }
 
@@ -120,7 +120,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             font.atlasPopulationMode = AtlasPopulationMode.Dynamic; // brings the TTF back as the source
             font.ClearFontAssetData(false);
             Populate(font);
-            UiKitBuilder.s_font = font;
+            UiKitPrimitives.s_font = font;
             Debug.Log($"[UiKit] Rebuilt {UiKitBuilder.FontPath}: {font.characterTable.Count} characters.");
         }
 
@@ -213,7 +213,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             {
                 if (refs.TryGetValue("UI/" + action, out InputActionReference reference))
                 {
-                    UiKitBuilder.Set(module, field, reference);
+                    UiKitPrimitives.Set(module, field, reference);
                 }
                 else
                 {
@@ -221,7 +221,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 }
             }
 
-            UiKitBuilder.Set(module, "m_ActionsAsset", actions);
+            UiKitPrimitives.Set(module, "m_ActionsAsset", actions);
             WireAction("m_PointAction", "Point");
             WireAction("m_LeftClickAction", "Click");
             WireAction("m_RightClickAction", "RightClick");
@@ -249,11 +249,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             UiKitBuilder.InstantiatePrefab("UiEventSystem", null);
             Transform canvas = UiKitBuilder.InstantiatePrefab("UiRoot", null).transform;
 
-            RectTransform screenRect = UiKitBuilder.NewRect("GalleryScreen", canvas);
-            UiKitBuilder.Stretch(screenRect);
+            RectTransform screenRect = UiKitPrimitives.NewRect("GalleryScreen", canvas);
+            UiKitPrimitives.Stretch(screenRect);
             screenRect.gameObject.AddComponent<CanvasGroup>();
             var screen = screenRect.gameObject.AddComponent<UiScreen>();
-            UiKitBuilder.Set(screen, "_closeOnBack", false);
+            UiKitPrimitives.Set(screen, "_closeOnBack", false);
 
             RectTransform panel = UiKitBuilder.AddPanel(screenRect, 300f);
             UiKitBuilder.AddTitle(panel, "UI Kit");
@@ -284,14 +284,14 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             TextMeshProUGUI status = UiKitBuilder.AddBody(panel, "Last cue: none");
             status.color = UiKitStyle.Dim;
 
-            UiKitBuilder.Set(screen, "_firstSelected", firstTab.Button);
+            UiKitPrimitives.Set(screen, "_firstSelected", firstTab.Button);
 
             var dialog = UiKitBuilder.InstantiatePrefab("ConfirmDialog", canvas).GetComponent<UiConfirmDialog>();
 
             var demo = screenRect.gameObject.AddComponent<UiKitGalleryDemo>();
-            UiKitBuilder.Set(demo, "_openDialog", openDialog);
-            UiKitBuilder.Set(demo, "_dialog", dialog);
-            UiKitBuilder.Set(demo, "_status", status);
+            UiKitPrimitives.Set(demo, "_openDialog", openDialog);
+            UiKitPrimitives.Set(demo, "_dialog", dialog);
+            UiKitPrimitives.Set(demo, "_status", status);
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene, UiKitBuilder.GalleryPath);
