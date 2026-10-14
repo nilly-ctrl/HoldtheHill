@@ -67,14 +67,21 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Instance = this;
         }
 
+        // The placer in the scene, found once when recording starts; its events are instance events.
+        private TowerPlacer _placer;
+
         private void OnEnable()
         {
             if (Instance != this) return;
 
             GrayboxWardenAbility.Used += OnAbilityUsed;
-            GrayboxTowerPlacer.TowerPlaced += OnTowerPlaced;
-            GrayboxTowerPlacer.TowerUpgraded += OnTowerUpgraded;
-            GrayboxTowerPlacer.TowerSold += OnTowerSold;
+            _placer = FindAnyObjectByType<TowerPlacer>();
+            if (_placer != null)
+            {
+                _placer.TowerPlaced += OnTowerPlaced;
+                _placer.TowerUpgraded += OnTowerUpgraded;
+                _placer.TowerSold += OnTowerSold;
+            }
             GrayboxSkillTree.OnSkillUnlocked += OnSkillUnlocked;
             GrayboxGameFlow.FieldReset += OnFieldReset;
             GrayboxGameFlow.StateChanged += OnStateChanged;
@@ -85,9 +92,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private void OnDisable()
         {
             GrayboxWardenAbility.Used -= OnAbilityUsed;
-            GrayboxTowerPlacer.TowerPlaced -= OnTowerPlaced;
-            GrayboxTowerPlacer.TowerUpgraded -= OnTowerUpgraded;
-            GrayboxTowerPlacer.TowerSold -= OnTowerSold;
+            if (_placer != null)
+            {
+                _placer.TowerPlaced -= OnTowerPlaced;
+                _placer.TowerUpgraded -= OnTowerUpgraded;
+                _placer.TowerSold -= OnTowerSold;
+            }
             GrayboxSkillTree.OnSkillUnlocked -= OnSkillUnlocked;
             GrayboxGameFlow.FieldReset -= OnFieldReset;
             GrayboxGameFlow.StateChanged -= OnStateChanged;

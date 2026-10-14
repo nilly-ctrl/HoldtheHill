@@ -42,7 +42,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             }
             else
             {
-                PutDown(GrayboxTowerPlacer.Snap(Warden.transform.position));
+                PutDown(TowerPlacer.Snap(Warden.transform.position));
             }
         }
 
