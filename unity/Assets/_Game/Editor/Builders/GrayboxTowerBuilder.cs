@@ -51,7 +51,7 @@ namespace HoldTheHill.EditorTools.Builders
             }
         }
 
-        public static string PrefabPath(string id) => $"{GrayboxRoot}/Prefabs/{PrefabFolder}/{id}.prefab";
+        public static string PrefabPath(string id) => $"{GrayboxRoot}/Prefabs/{id}.prefab";
 
         /// <summary>Builds every tower prefab and data asset, and the catalog in build bar order.</summary>
         public static void BuildPrefabs(

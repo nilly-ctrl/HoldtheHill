@@ -23,7 +23,7 @@ namespace HoldTheHill.EditorTools.Builders
 
         private static bool s_madeAnAbility;
 
-        public static string PrefabPath(string name) => $"{GrayboxRoot}/Prefabs/{PrefabFolder}/{name}.prefab";
+        public static string PrefabPath(string name) => $"{GrayboxRoot}/Prefabs/{name}.prefab";
 
         public static void BuildPrefabs(Sprite square)
         {

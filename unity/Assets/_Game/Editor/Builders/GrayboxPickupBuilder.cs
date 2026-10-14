@@ -19,7 +19,7 @@ namespace HoldTheHill.EditorTools.Builders
 
         public const string FoodPath = GrayboxRoot + "/Data/Food.asset";
 
-        public static string PrefabPath(string name) => $"{GrayboxRoot}/Prefabs/{PrefabFolder}/{name}.prefab";
+        public static string PrefabPath(string name) => $"{GrayboxRoot}/Prefabs/{name}.prefab";
 
         /// <summary>The run's main resource. Made on first use.</summary>
         public static ResourceData Food()
