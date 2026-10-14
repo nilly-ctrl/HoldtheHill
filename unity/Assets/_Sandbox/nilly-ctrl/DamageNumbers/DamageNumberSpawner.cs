@@ -383,6 +383,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return style != null ? style : _physical;
         }
 
+        // Not ??: PixelFontStyle is a ScriptableObject, and a destroyed one must count as missing (rule 16).
+        private static PixelFontStyle Pick(PixelFontStyle found, PixelFontStyle current) => found != null ? found : current;
+
         /// <summary>
         /// Points every kind of number at an art theme's set. A style the theme does not have keeps
         /// the one already assigned. <see cref="PixelFontTheme"/> calls this.
@@ -394,15 +397,15 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 return;
             }
 
-            _physical = library.Find(theme, "DamageNormal", preferPairings) ?? _physical;
-            _magic = library.Find(theme, "DamageMagic", preferPairings) ?? _magic;
-            _true = library.Find(theme, "DamageTrue", preferPairings) ?? _true;
-            _fire = library.Find(theme, "DamageFire", preferPairings) ?? _fire;
-            _poison = library.Find(theme, "DamagePoison", preferPairings) ?? _poison;
-            _lightning = library.Find(theme, "DamageLightning", preferPairings) ?? _lightning;
-            _critical = library.Find(theme, "DamageCrit", preferPairings) ?? _critical;
-            _heal = library.Find(theme, "Heal", preferPairings) ?? _heal;
-            _resource = library.Find(theme, "Resource", preferPairings) ?? _resource;
+            _physical = Pick(library.Find(theme, "DamageNormal", preferPairings), _physical);
+            _magic = Pick(library.Find(theme, "DamageMagic", preferPairings), _magic);
+            _true = Pick(library.Find(theme, "DamageTrue", preferPairings), _true);
+            _fire = Pick(library.Find(theme, "DamageFire", preferPairings), _fire);
+            _poison = Pick(library.Find(theme, "DamagePoison", preferPairings), _poison);
+            _lightning = Pick(library.Find(theme, "DamageLightning", preferPairings), _lightning);
+            _critical = Pick(library.Find(theme, "DamageCrit", preferPairings), _critical);
+            _heal = Pick(library.Find(theme, "Heal", preferPairings), _heal);
+            _resource = Pick(library.Find(theme, "Resource", preferPairings), _resource);
         }
 
         private Material MaterialFor(PixelFontStyle style)
