@@ -27,6 +27,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private float _nextKeysRefresh;
 
         // The last numbers shown, so a frame where nothing moved builds no strings.
+        private GrayboxEconomy _economy;
         private int _foodShown = -1;
         private int _waveShown = -1;
         private int _totalShown = -1;
@@ -65,7 +66,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             if (!pixelHud)
             {
-                int gold = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentFood : 500;
+                if (_economy == null) _economy = FindAnyObjectByType<GrayboxEconomy>();
+                int gold = _economy != null ? _economy.CurrentFood : 500;
                 if (gold != _foodShown || _spawner.CurrentWaveNumber != _waveShown || _spawner.TotalWaves != _totalShown)
                 {
                     _foodShown = gold;

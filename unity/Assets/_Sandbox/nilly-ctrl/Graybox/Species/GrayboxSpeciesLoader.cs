@@ -73,9 +73,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 _warden.name = species.WardenPrefab.name;
             }
 
-            if (species.StartingFood > 0 && GrayboxEconomy.Instance != null)
+            GrayboxEconomy economy = FindAnyObjectByType<GrayboxEconomy>();
+            if (species.StartingFood > 0 && economy != null)
             {
-                GrayboxEconomy.Instance.ResetFood(species.StartingFood);
+                economy.ResetFood(species.StartingFood);
             }
 
             Loaded?.Invoke(species);

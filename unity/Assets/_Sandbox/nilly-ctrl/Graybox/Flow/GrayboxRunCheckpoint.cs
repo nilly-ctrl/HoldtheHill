@@ -51,10 +51,11 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public static GrayboxRunCheckpoint Capture(int waveIndex, GrayboxRunStats stats, Transform storeParent)
         {
             Queen hill = Object.FindAnyObjectByType<Queen>();
+            GrayboxEconomy economy = Object.FindAnyObjectByType<GrayboxEconomy>();
             var checkpoint = new GrayboxRunCheckpoint
             {
                 WaveIndex = Mathf.Max(0, waveIndex),
-                Food = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentFood : 0,
+                Food = economy != null ? economy.CurrentFood : 0,
                 HillHealth = hill != null ? hill.CurrentHealth : 0f,
                 SkillPoints = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.SkillPoints : 0,
                 UnlockedSkills = GrayboxSkillTree.Instance != null ? GrayboxSkillTree.Instance.GetUnlockedIds() : new List<string>(),
@@ -101,7 +102,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 tower.name = stored.Copy.name;
             }
 
-            if (GrayboxEconomy.Instance != null) GrayboxEconomy.Instance.ResetFood(Food);
+            GrayboxEconomy economy = Object.FindAnyObjectByType<GrayboxEconomy>();
+            if (economy != null) economy.ResetFood(Food);
             if (GrayboxSkillTree.Instance != null) GrayboxSkillTree.Instance.RestoreState(SkillPoints, UnlockedSkills);
             Queen hill = Object.FindAnyObjectByType<Queen>();
             if (hill != null) hill.RestoreHealth(HillHealth);

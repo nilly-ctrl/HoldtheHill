@@ -27,8 +27,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         internal static GrayboxEconomy RequireEconomy()
         {
-            if (GrayboxEconomy.Instance == null) throw new DevCommandException("No economy in the scene.");
-            return GrayboxEconomy.Instance;
+            GrayboxEconomy economy = UnityEngine.Object.FindAnyObjectByType<GrayboxEconomy>();
+            if (economy == null) throw new DevCommandException("No economy in the scene.");
+            return economy;
         }
 
         internal static string Give(DevCommandArgs a)
@@ -38,7 +39,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (amount <= 0) throw new DevCommandException("<n> must be above zero.");
 
             string key = what.ToLowerInvariant();
-            GrayboxEconomy economy = GrayboxEconomy.Instance;
+            GrayboxEconomy economy = UnityEngine.Object.FindAnyObjectByType<GrayboxEconomy>();
 
             if (key == "gold" || key == "main" || (economy != null && economy.MainResource != null && MatchesResource(economy.MainResource, key)))
             {

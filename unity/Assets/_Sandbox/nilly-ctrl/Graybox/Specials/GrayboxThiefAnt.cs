@@ -42,7 +42,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private IEnumerator StealAndRun()
         {
-            GrayboxEconomy economy = GrayboxEconomy.Instance;
+            GrayboxEconomy economy = FindAnyObjectByType<GrayboxEconomy>();
             if (economy != null)
             {
                 _stolen = Mathf.Min(_stealAmount, economy.CurrentFood);
@@ -99,9 +99,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 return;
             }
 
-            if (GrayboxEconomy.Instance != null)
+            GrayboxEconomy economy = FindAnyObjectByType<GrayboxEconomy>();
+            if (economy != null)
             {
-                GrayboxEconomy.Instance.EarnFood(_stolen);
+                economy.EarnFood(_stolen);
             }
 
             Say($"+{_stolen} RECOVERED", DamageNumberKind.Resource, transform.position);

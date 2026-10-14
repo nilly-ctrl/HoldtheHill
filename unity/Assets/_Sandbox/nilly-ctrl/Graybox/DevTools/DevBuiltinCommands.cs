@@ -85,7 +85,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
                 case "resources":
                     text.Append("gold  honeydew  skillpoints");
-                    GrayboxEconomy economy = GrayboxEconomy.Instance;
+                    GrayboxEconomy economy = UnityEngine.Object.FindAnyObjectByType<GrayboxEconomy>();
                     if (economy != null && economy.MainResource != null)
                     {
                         text.Append("  ").Append(economy.MainResource.Id).Append(" (main)");

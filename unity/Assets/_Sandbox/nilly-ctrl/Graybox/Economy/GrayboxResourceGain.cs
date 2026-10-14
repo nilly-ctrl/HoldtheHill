@@ -18,9 +18,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public override void Apply(GrayboxPickup pickup)
         {
-            if (GrayboxEconomy.Instance != null)
+            GrayboxEconomy economy = UnityEngine.Object.FindAnyObjectByType<GrayboxEconomy>();
+            if (economy != null)
             {
-                GrayboxEconomy.Instance.Earn(_resource, _amount);
+                economy.Earn(_resource, _amount);
             }
 
             DamageNumberSpawner.ShowText("+" + _amount, DamageNumberKind.Resource, pickup.transform.position);

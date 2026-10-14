@@ -23,6 +23,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private EnemySpawner _spawner;
         private GrayboxRunCounters _hud;
+        private GrayboxEconomy _economy;
         private PixelFontTheme _theme;
         private PixelText _food;
         private PixelText _wave;
@@ -58,7 +59,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 _hud = FindAnyObjectByType<GrayboxRunCounters>();
             }
 
-            int gold = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentFood : 0;
+            if (_economy == null)
+            {
+                _economy = FindAnyObjectByType<GrayboxEconomy>();
+            }
+
+            int gold = _economy != null ? _economy.CurrentFood : 0;
             _food.Text = $"{PixelGlyphs.IconFood} {gold:N0}";
             _wave.Text = _spawner != null
                 ? $"{PixelGlyphs.IconWave} {_spawner.CurrentWaveNumber}/{_spawner.TotalWaves}"

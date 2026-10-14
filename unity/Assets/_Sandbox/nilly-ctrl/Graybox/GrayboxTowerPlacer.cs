@@ -7,7 +7,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 {
     /// <summary>
     /// The graybox's <see cref="TowerPlacer"/>: reads the graybox controls (pointer, confirm,
-    /// cancel and the build keys 1 to 0), pays from <see cref="GrayboxEconomy"/>, follows
+    /// cancel and the build keys 1 to 0), pays from the <see cref="GrayboxEconomy"/> it finds once, follows
     /// <see cref="GrayboxGameFlow"/>, takes its towers from a <see cref="GrayboxTowerCatalog"/>
     /// (a species swaps it), and plays the build and sell sounds and effects. Its events are the
     /// base class's instance events.
@@ -32,7 +32,16 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         protected override IReadOnlyList<TowerData> Towers => _catalog != null ? _catalog.Towers : System.Array.Empty<TowerData>();
 
-        protected override Wallet WalletNow => GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.Wallet : null;
+        private GrayboxEconomy _economy;
+
+        protected override Wallet WalletNow
+        {
+            get
+            {
+                if (_economy == null) _economy = FindAnyObjectByType<GrayboxEconomy>();
+                return _economy != null ? _economy.Wallet : null;
+            }
+        }
 
         protected override bool GameplayActive => GrayboxGameFlow.GameplayActive;
 

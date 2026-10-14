@@ -108,7 +108,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         {
             yield return null;
             float builtHealth = _hill.MaxHealth;
-            int builtFood = GrayboxEconomy.Instance.CurrentFood;
+            int builtFood = UnityEngine.Object.FindAnyObjectByType<GrayboxEconomy>().CurrentFood;
 
             _flow.QuitToHome();
             yield return null;
@@ -134,12 +134,12 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             yield return null;
             Assert.AreEqual(builtHealth + 10f, _hill.MaxHealth);
             Assert.AreEqual(_hill.MaxHealth, _hill.CurrentHealth);
-            Assert.AreEqual(builtFood + 50, GrayboxEconomy.Instance.CurrentFood);
+            Assert.AreEqual(builtFood + 50, UnityEngine.Object.FindAnyObjectByType<GrayboxEconomy>().CurrentFood);
 
             // A restart hands the bonus out once, not on top of the last one.
             _flow.StartNewRun();
             yield return null;
-            Assert.AreEqual(builtFood + 50, GrayboxEconomy.Instance.CurrentFood);
+            Assert.AreEqual(builtFood + 50, UnityEngine.Object.FindAnyObjectByType<GrayboxEconomy>().CurrentFood);
             Assert.AreEqual(builtHealth + 10f, _hill.MaxHealth);
         }
 

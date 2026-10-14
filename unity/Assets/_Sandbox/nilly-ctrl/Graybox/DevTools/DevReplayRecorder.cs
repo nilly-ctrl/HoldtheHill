@@ -150,6 +150,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             UnityEngine.Random.InitState(seed);
 
             Tower.GetActive(_towers);
+            GrayboxEconomy economy = FindAnyObjectByType<GrayboxEconomy>();
             _recording = new ReplayRecording
             {
                 unityVersion = Application.unityVersion,
@@ -158,7 +159,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 seed = seed,
                 fixedDeltaTime = Time.fixedDeltaTime,
                 startWave = _spawner != null ? _spawner.CurrentWaveIndex : 0,
-                startFood = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentFood : 0,
+                startFood = economy != null ? economy.CurrentFood : 0,
                 startTowers = _towers.Count,
             };
 

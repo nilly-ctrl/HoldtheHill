@@ -66,6 +66,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private EnemySpawner _spawner;
         private GrayboxTowerPlacer _placer;
         private Queen _hill;
+        private GrayboxEconomy _economy;
         private readonly List<Tower> _towers = new List<Tower>();
         private GrayboxCustomSpawner _custom;
         private float _autoStartTimer;
@@ -120,6 +121,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             _placer = FindAnyObjectByType<GrayboxTowerPlacer>();
             _custom = FindAnyObjectByType<GrayboxCustomSpawner>();
             _hill = FindAnyObjectByType<Queen>();
+            _economy = FindAnyObjectByType<GrayboxEconomy>();
             base.Awake();
 
             // Home loaded this scene to play it (GrayboxLevels.LoadAndPlay): skip the menus.
@@ -135,7 +137,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             base.StateChanged += ForwardStateChanged;
             EnemyHealth.Defeated += OnEnemyDefeated;
-            GrayboxEconomy.OnBountyPaid += OnBountyPaid;
+            if (_economy == null) _economy = FindAnyObjectByType<GrayboxEconomy>();
+            if (_economy != null) _economy.BountyPaid += OnBountyPaid;
             if (_hill == null) _hill = FindAnyObjectByType<Queen>();
             if (_hill != null) _hill.Finished += OnGameFinished;
             if (_spawner != null) _spawner.onWaveStarted.AddListener(OnWaveStarted);
@@ -145,7 +148,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             base.StateChanged -= ForwardStateChanged;
             EnemyHealth.Defeated -= OnEnemyDefeated;
-            GrayboxEconomy.OnBountyPaid -= OnBountyPaid;
+            if (_economy != null) _economy.BountyPaid -= OnBountyPaid;
             if (_hill != null) _hill.Finished -= OnGameFinished;
             if (_spawner != null) _spawner.onWaveStarted.RemoveListener(OnWaveStarted);
         }
@@ -314,7 +317,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         {
             if (_hill != null) _hill.SetBonusHealth(GrayboxUpgrades.HillHealthBonus);
 
-            GrayboxEconomy economy = GrayboxEconomy.Instance;
+            GrayboxEconomy economy = _economy;
             int food = GrayboxUpgrades.StartingFoodBonus;
             if (economy != null && food > 0) economy.ResetFood(economy.CurrentFood + food);
         }

@@ -56,7 +56,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             ResourceData changed = null;
             int amount = -1;
             System.Action<ResourceData, int> listen = (r, a) => { changed = r; amount = a; };
-            GrayboxEconomy.OnResourceChanged += listen;
+            economy.Wallet.Changed += listen;
             try
             {
                 Assert.AreEqual(0, economy.Get(_jelly));
@@ -73,7 +73,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
             }
             finally
             {
-                GrayboxEconomy.OnResourceChanged -= listen;
+                economy.Wallet.Changed -= listen;
             }
         }
 

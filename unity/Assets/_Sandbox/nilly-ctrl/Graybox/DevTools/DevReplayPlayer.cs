@@ -28,6 +28,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private readonly StringBuilder _problems = new StringBuilder();
         private ReplayRecording _recording;
         private GrayboxTowerPlacer _placer;
+        private GrayboxEconomy _economy;
         private EnemySpawner _spawner;
         private int _tick;
         private int _next;
@@ -93,6 +94,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             _placer = FindAnyObjectByType<GrayboxTowerPlacer>();
             _spawner = FindAnyObjectByType<EnemySpawner>();
+            _economy = FindAnyObjectByType<GrayboxEconomy>();
             if (_placer == null)
             {
                 message = "No tower placer in the scene; there is nothing to replay into.";
@@ -215,7 +217,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (!_placer.CanBuildAt(cell)) return "cell is blocked or occupied";
 
             int cost = _placer.CostOf(data);
-            GrayboxEconomy economy = GrayboxEconomy.Instance;
+            GrayboxEconomy economy = _economy;
             if (economy != null && !economy.TrySpend(data.CostResource, cost)) return "cannot afford " + cost;
 
             _placer.Place(data, cell, cost);
@@ -227,7 +229,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             Tower tower = FindTowerAt(c.x, c.y, c.name);
             if (tower == null) return "no tower on that cell";
 
-            GrayboxEconomy economy = GrayboxEconomy.Instance;
+            GrayboxEconomy economy = _economy;
             if (economy != null) economy.EarnFood(tower.RefundValue);
             // Without the sell sound and puff the placer adds, which need its selection.
             Destroy(tower.gameObject);
@@ -241,7 +243,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             if (!tower.CanUpgrade) return "tower is already at its top level";
 
             int cost = _placer.UpgradeCost(tower);
-            GrayboxEconomy economy = GrayboxEconomy.Instance;
+            GrayboxEconomy economy = _economy;
             if (economy != null && !economy.TrySpendFood(cost)) return "cannot afford " + cost;
 
             tower.Upgrade();

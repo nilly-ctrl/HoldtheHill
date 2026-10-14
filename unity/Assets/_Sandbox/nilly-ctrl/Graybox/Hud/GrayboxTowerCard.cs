@@ -40,6 +40,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public override bool WantsToShow => FindPlacer() != null && _placer.SelectedTower != null;
 
+        private GrayboxEconomy _economy;
+
+
         private void Awake()
         {
             var names = new List<string>();
@@ -114,7 +117,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private void RefreshButtons(Tower tower)
         {
             int upgradeCost = _placer.UpgradeCost(tower);
-            bool canAfford = GrayboxEconomy.Instance == null || GrayboxEconomy.Instance.CanAfford(upgradeCost);
+            if (_economy == null) _economy = FindAnyObjectByType<GrayboxEconomy>();
+            bool canAfford = _economy == null || _economy.CanAfford(upgradeCost);
             bool canUpgrade = tower.CanUpgrade;
 
             // The label changes with the level and the price; whether it can be pressed changes with the gold.

@@ -163,7 +163,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         public void ReportFoodEarned(int amount)
         {
-            int currentFood = GrayboxEconomy.Instance != null ? GrayboxEconomy.Instance.CurrentFood : 0;
+            GrayboxEconomy economy = FindAnyObjectByType<GrayboxEconomy>();
+            int currentFood = economy != null ? economy.CurrentFood : 0;
             Report(AchievementTrigger.FoodHeld, currentFood);
         }
 
