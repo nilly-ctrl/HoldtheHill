@@ -1,7 +1,7 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 using System;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>
     /// Frame times over the last N frames (a ring buffer, no allocation after construction).

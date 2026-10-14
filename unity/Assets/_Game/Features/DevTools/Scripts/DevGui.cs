@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>
     /// Shared IMGUI styles for the dev tools: dark panels and text that scales with the screen.

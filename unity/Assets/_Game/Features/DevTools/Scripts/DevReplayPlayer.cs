@@ -10,7 +10,7 @@ using System.Text;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>
     /// Plays a <see cref="ReplayRecording"/> back by giving the game the same commands at the same

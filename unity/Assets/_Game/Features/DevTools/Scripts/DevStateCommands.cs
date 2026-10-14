@@ -10,7 +10,7 @@ using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>
     /// The dev console's run-state commands: god, speed, win, lose, unlock. Registered by <see cref="DevBuiltinCommands"/>.

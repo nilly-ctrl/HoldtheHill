@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>One number, switch or choice on a component that the tuning panel can change.</summary>
     public sealed class DevTunedField

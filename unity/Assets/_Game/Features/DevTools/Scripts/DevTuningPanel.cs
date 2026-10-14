@@ -6,7 +6,7 @@ using HoldTheHill.Features.Towers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>
     /// A panel for changing the selected tower's or an enemy's numbers while the game runs, with

@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>
     /// Reads and writes private fields by name. Dev tools only: it exists so the console and the

@@ -3,7 +3,7 @@ using HoldTheHill.Features.Warden;
 using HoldTheHill.Features.GameFlow;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>
     /// The state behind the cheat commands that need to keep acting after the command has run:

@@ -9,7 +9,7 @@ using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>
     /// A small overlay: FPS, frame time (average and worst over the last 120 frames), counts of

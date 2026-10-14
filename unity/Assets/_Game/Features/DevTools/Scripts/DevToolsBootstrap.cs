@@ -2,7 +2,7 @@
 using HoldTheHill.Features.GameFlow;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>
     /// Puts the dev tools in a scene: the console, the live tuning panel, the replay recorder and

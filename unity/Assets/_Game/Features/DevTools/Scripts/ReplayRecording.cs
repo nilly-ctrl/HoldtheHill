@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>The kinds of player command a replay holds. Stored as text so the JSON stays readable.</summary>
     public static class ReplayCommandType

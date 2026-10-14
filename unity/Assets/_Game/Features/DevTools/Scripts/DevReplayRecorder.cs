@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>
     /// Records a run as a seed plus the player's commands on a fixed-step clock, and writes it to

@@ -10,7 +10,7 @@ using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>
     /// The dev console's resource commands: setfood and give. Registered by <see cref="DevBuiltinCommands"/>.

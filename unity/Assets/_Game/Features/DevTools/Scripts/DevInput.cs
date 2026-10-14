@@ -3,7 +3,7 @@ using HoldTheHill.Core.Input;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>
     /// Switches the game's input off while a dev text box has focus, so typing "n" or "3" into the

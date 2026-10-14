@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.DevTools
 {
     /// <summary>Where replays are kept (<c>persistentDataPath/replays</c>) and how they are named.</summary>
     public static class DevReplayFiles
