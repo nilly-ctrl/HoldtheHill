@@ -7,6 +7,7 @@ using HoldTheHill.Features.Towers;
 using UnityEditor;
 using UnityEngine;
 
+
 namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 {
     /// <summary>
@@ -22,7 +23,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 
         public static void Run(string root, List<ValidationFinding> findings)
         {
-            foreach (var (path, tower) in GrayboxProjectValidator.FindAll<GrayboxTowerData>(root)) CheckTower(tower, path, findings);
+            foreach (var (path, tower) in GrayboxProjectValidator.FindAll<HoldTheHill.Features.Towers.TowerData>(root)) CheckTower(tower, path, findings);
             foreach (var (path, boss) in GrayboxProjectValidator.FindAll<GrayboxBossData>(root)) CheckBoss(boss, path, findings);
             foreach (var (path, resource) in GrayboxProjectValidator.FindAll<ResourceData>(root)) CheckResource(resource, path, findings);
             foreach (var (path, powerUp) in GrayboxProjectValidator.FindAll<GrayboxPowerUpData>(root)) CheckPowerUp(powerUp, path, findings);
@@ -33,7 +34,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             foreach (var (path, waves) in GrayboxProjectValidator.FindAll<MapWaveDataSO>(root)) CheckWaves(waves, path, findings);
         }
 
-        private static void CheckTower(GrayboxTowerData data, string path, List<ValidationFinding> findings)
+        private static void CheckTower(HoldTheHill.Features.Towers.TowerData data, string path, List<ValidationFinding> findings)
         {
             Empty(findings, data.DisplayName, "display name", path, ValidationSeverity.Error);
             CheckIcon(findings, data.IconName, path);

@@ -77,7 +77,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                     if (placer == null || placer.Catalog == null) throw new DevCommandException("No tower catalog in the scene.");
                     for (int i = 0; i < placer.Catalog.Count; i++)
                     {
-                        GrayboxTowerData data = placer.Catalog[i];
+                        TowerData data = placer.Catalog[i];
                         if (data != null) text.Append(i + 1).Append(' ').Append(data.DisplayName).Append(" (").Append(data.BaseCost).Append(")\n");
                     }
 

@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Towers;
 using HoldTheHill.Sandbox.UiKit;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,7 +16,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         private string _name;
         private int _costShown = -1;
 
-        public void Bind(GrayboxTowerData data, UnityAction onClick)
+        public void Bind(TowerData data, UnityAction onClick)
         {
             Sprite icon = GrayboxIcons.GetSprite(data.IconName);
             _icon.sprite = icon;

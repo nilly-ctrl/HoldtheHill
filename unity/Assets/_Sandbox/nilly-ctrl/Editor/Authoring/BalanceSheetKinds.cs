@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Towers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,6 +9,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using Field = HoldTheHill.Sandbox.NillyCtrl.Editor.BalanceSheet.Field;
 using Kind = HoldTheHill.Sandbox.NillyCtrl.Editor.BalanceSheet.Kind;
+
 
 namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 {
@@ -23,8 +25,8 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             {
                 Name = "Towers",
                 FileName = "towers.csv",
-                Accepts = o => o is GrayboxTowerData,
-                Roots = () => FindAssets<GrayboxTowerData>(),
+                Accepts = o => o is HoldTheHill.Features.Towers.TowerData,
+                Roots = () => FindAssets<HoldTheHill.Features.Towers.TowerData>(),
             };
             kind.Fields.Add(new Field { Column = "displayName", Property = "_displayName", Target = r => r });
             kind.Fields.Add(new Field { Column = "archetype", Property = "_archetype", Target = r => r });
@@ -143,7 +145,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             return found;
         }
 
-        internal static Object TowerOf(Object root) => (root as GrayboxTowerData)?.Prefab;
+        internal static Object TowerOf(Object root) => (root as HoldTheHill.Features.Towers.TowerData)?.Prefab;
 
         internal static Object Part<T>(Object root) where T : Component =>
             root is GameObject go ? go.GetComponent<T>() : null;

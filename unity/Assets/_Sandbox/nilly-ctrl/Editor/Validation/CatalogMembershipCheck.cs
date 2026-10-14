@@ -1,7 +1,9 @@
+using HoldTheHill.Features.Towers;
 using HoldTheHill.Features.Economy;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
 
 namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 {
@@ -28,13 +30,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 
         private static void CheckTowers(string root, List<ValidationFinding> findings)
         {
-            var listed = new HashSet<GrayboxTowerData>();
+            var listed = new HashSet<HoldTheHill.Features.Towers.TowerData>();
             foreach (var (path, catalog) in GrayboxProjectValidator.FindAll<GrayboxTowerCatalog>(root))
             {
-                var inThisCatalog = new HashSet<GrayboxTowerData>();
+                var inThisCatalog = new HashSet<HoldTheHill.Features.Towers.TowerData>();
                 for (int i = 0; i < catalog.Count; i++)
                 {
-                    GrayboxTowerData tower = catalog[i];
+                    HoldTheHill.Features.Towers.TowerData tower = catalog[i];
                     if (tower == null)
                     {
                         GrayboxProjectValidator.Add(findings, ValidationSeverity.Error, Name,
@@ -52,7 +54,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                 }
             }
 
-            foreach (var (path, tower) in GrayboxProjectValidator.FindAll<GrayboxTowerData>(root))
+            foreach (var (path, tower) in GrayboxProjectValidator.FindAll<HoldTheHill.Features.Towers.TowerData>(root))
             {
                 if (!listed.Contains(tower))
                 {

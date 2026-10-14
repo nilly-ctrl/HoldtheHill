@@ -6,6 +6,7 @@ using HoldTheHill.Features.Towers;
 using UnityEditor;
 using UnityEngine;
 
+
 namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 {
     /// <summary>
@@ -39,7 +40,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 
             for (int i = 0; i < catalog.Count; i++)
             {
-                GrayboxTowerData data = catalog[i];
+                HoldTheHill.Features.Towers.TowerData data = catalog[i];
                 if (data != null)
                 {
                     towers.Add(FromData(data, notes));
@@ -102,7 +103,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 
         // ---------- towers ----------
 
-        private static BalanceTower FromData(GrayboxTowerData data, List<string> notes)
+        private static BalanceTower FromData(HoldTheHill.Features.Towers.TowerData data, List<string> notes)
         {
             string label = string.IsNullOrEmpty(data.DisplayName) ? data.name : data.DisplayName;
             Tower tower = data.Prefab;

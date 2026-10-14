@@ -46,7 +46,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             for (int i = 0; i < _options.Count; i++)
             {
-                GrayboxTowerData data = catalog[i];
+                TowerData data = catalog[i];
                 _options[i].Show(_placer.CostOf(data), _placer.CanAfford(data));
             }
 
@@ -98,7 +98,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             for (int i = 0; i < catalog.Count; i++)
             {
-                GrayboxTowerData data = catalog[i];
+                TowerData data = catalog[i];
                 GrayboxBuildOption option = Instantiate(_optionPrefab, _optionRoot);
                 option.Bind(data, () =>
                 {

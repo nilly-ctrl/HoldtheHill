@@ -15,7 +15,7 @@ Editor-only tools for making levels, content and balance changes. Menu root: **T
 
 Tabs for **Tower**, **Enemy / Boss**, **Pickup**, **Power-up**. Each makes the data asset and a prefab variant of the existing base prefab, the way the graybox builders do. Anything that already exists is left untouched (the Create button is disabled and says why).
 
-- Tower: variant of `TowerBase` or of another tower, `GrayboxTowerData`, optional catalog entry. Note "Rebuild Graybox Tower Prefabs" resets the catalog list to the built-in towers.
+- Tower: variant of `TowerBase` or of another tower, `TowerData`, optional catalog entry. Note "Rebuild Graybox Tower Prefabs" resets the catalog list to the built-in towers.
 - Enemy / Boss: variant of `GrayboxEnemyBase` or `GrayboxBossBase` (`Graybox<Id>.prefab`), plus a `GrayboxBossData` for bosses. Special behaviour is added by hand.
 - Pickup: variant of `PickupBase` paying a `GrayboxResourceData`.
 - Power-up: `GrayboxPowerUpData`, effect prefab (pick any `GrayboxPowerUpEffect` subclass) and pickup variant. Can add it to the open scene's `GrayboxPowerUpSpawner`; save the scene afterwards.

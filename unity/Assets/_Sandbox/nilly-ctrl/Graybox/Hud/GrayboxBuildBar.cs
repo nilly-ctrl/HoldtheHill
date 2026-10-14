@@ -37,7 +37,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
             for (int i = 0; i < _slots.Count; i++)
             {
-                GrayboxTowerData data = catalog[i];
+                TowerData data = catalog[i];
                 _slots[i].Show(GrayboxControls.Name(GrayboxControls.BuildId(i)), _placer.CostOf(data),
                     _placer.ActivePlacementIndex == i, _placer.CanAfford(data));
             }

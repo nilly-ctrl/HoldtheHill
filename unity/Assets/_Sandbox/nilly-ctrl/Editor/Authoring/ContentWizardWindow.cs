@@ -6,6 +6,7 @@ using HoldTheHill.Features.Towers;
 using UnityEditor;
 using UnityEngine;
 
+
 namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 {
     /// <summary>
@@ -85,7 +86,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
         private void TowerForm()
         {
             EditorGUILayout.HelpBox(
-                "Makes a variant of a tower prefab, a GrayboxTowerData asset and (optionally) a catalog entry. " +
+                "Makes a variant of a tower prefab, a HoldTheHill.Features.Towers.TowerData asset and (optionally) a catalog entry. " +
                 "Nothing existing is overwritten. 'Rebuild Graybox Tower Prefabs' resets the catalog list to the built-in towers.",
                 MessageType.None);
 

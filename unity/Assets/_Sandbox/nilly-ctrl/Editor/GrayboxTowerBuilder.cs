@@ -5,11 +5,12 @@ using HoldTheHill.Features.Towers;
 using UnityEditor;
 using UnityEngine;
 
+
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
     /// <summary>
     /// The graybox towers: a base prefab, one prefab variant per tower, a
-    /// <see cref="GrayboxTowerData"/> asset for each and the <see cref="GrayboxTowerCatalog"/>
+    /// <see cref="HoldTheHill.Features.Towers.TowerData"/> asset for each and the <see cref="GrayboxTowerCatalog"/>
     /// the build bar reads. Called from <see cref="GrayboxBuilder"/>.
     /// </summary>
     /// <remarks>
@@ -73,7 +74,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // build nothing died for the opening six seconds, which reads as "the towers
             // are broken" even though they were working. Enemy health goes up to
             // compensate, so the defence is not made easier overall.
-            var towers = new List<GrayboxTowerData>
+            var towers = new List<HoldTheHill.Features.Towers.TowerData>
             {
                 Build("TowerLinear", "Bullet Tower", 100, TargetingPriority.First, 3.6f, 0.45f, new Color(0.4f, 0.7f, 1f),
                     go => SetProjectile(go, bullet)),
@@ -132,12 +133,12 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             // folder that this list did not make is appended, so a rebuild does not drop it.
             // Subfolders belong to other catalogs (Towers/FireAnt is the sample species'), so only
             // assets sitting directly in the folder count.
-            foreach (string guid in AssetDatabase.FindAssets("t:GrayboxTowerData", new[] { TowerDataRoot }))
+            foreach (string guid in AssetDatabase.FindAssets("t:HoldTheHill.Features.Towers.TowerData", new[] { TowerDataRoot }))
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
                 if (path.LastIndexOf('/') != TowerDataRoot.Length) continue;
 
-                var extra = AssetDatabase.LoadAssetAtPath<GrayboxTowerData>(path);
+                var extra = AssetDatabase.LoadAssetAtPath<HoldTheHill.Features.Towers.TowerData>(path);
                 if (extra != null && !towers.Contains(extra))
                 {
                     towers.Add(extra);
@@ -219,7 +220,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return GrayboxBuildKit.SavePrefab(go, $"{PrefabFolder}/TowerBase");
         }
 
-        private static GrayboxTowerData Build(
+        private static HoldTheHill.Features.Towers.TowerData Build(
             string id,
             string label,
             int cost,
@@ -253,7 +254,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return BuildData(id, label, cost, prefab);
         }
 
-        private static GrayboxTowerData BuildMelee(string id, string label, int cost, GrayboxMeleeTower.Caste caste)
+        private static HoldTheHill.Features.Towers.TowerData BuildMelee(string id, string label, int cost, GrayboxMeleeTower.Caste caste)
         {
             GrayboxMeleeTower.Stats stats = GrayboxMeleeTower.StatsFor(caste);
             return Build(id, label, cost, TargetingPriority.Closest, stats.Range, stats.Interval, MeleeColor,
@@ -279,9 +280,9 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             });
         }
 
-        private static GrayboxTowerData BuildData(string id, string label, int cost, GameObject prefab)
+        private static HoldTheHill.Features.Towers.TowerData BuildData(string id, string label, int cost, GameObject prefab)
         {
-            var data = LoadOrCreate<GrayboxTowerData>($"{TowerDataRoot}/{id}Data.asset", out bool created);
+            var data = LoadOrCreate<HoldTheHill.Features.Towers.TowerData>($"{TowerDataRoot}/{id}Data.asset", out bool created);
             SpriteAnimClip idle = s_anim != null ? s_anim.Find(id)?.Find("Idle") : null;
 
             GrayboxBuildKit.Apply(data, so =>

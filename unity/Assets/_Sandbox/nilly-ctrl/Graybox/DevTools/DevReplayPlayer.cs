@@ -208,7 +208,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         private string DoPlace(ReplayCommand c)
         {
-            GrayboxTowerData data = FindTowerData(c.name);
+            TowerData data = FindTowerData(c.name);
             if (data == null) return "no tower called '" + c.name + "' in the catalog";
 
             var cell = new Vector3(c.x, c.y, 0f);
@@ -315,7 +315,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
 
         // ---------- lookups ----------
 
-        private GrayboxTowerData FindTowerData(string name)
+        private TowerData FindTowerData(string name)
         {
             GrayboxTowerCatalog catalog = _placer.Catalog;
             if (catalog == null) return null;

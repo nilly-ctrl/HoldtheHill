@@ -11,6 +11,7 @@ using EnemySpec = HoldTheHill.Sandbox.NillyCtrl.Editor.ContentWizardBuilder.Enem
 using PickupSpec = HoldTheHill.Sandbox.NillyCtrl.Editor.ContentWizardBuilder.PickupSpec;
 using PowerUpSpec = HoldTheHill.Sandbox.NillyCtrl.Editor.ContentWizardBuilder.PowerUpSpec;
 
+
 namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 {
     /// <summary>
@@ -53,7 +54,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
 
             GameObject prefab = GrayboxBuildKit.SavePrefab(go, $"Towers/{spec.Id}");
 
-            var data = ScriptableObject.CreateInstance<GrayboxTowerData>();
+            var data = ScriptableObject.CreateInstance<HoldTheHill.Features.Towers.TowerData>();
             AssetDatabase.CreateAsset(data, dataPath);
             GrayboxBuildKit.Apply(data, so =>
             {

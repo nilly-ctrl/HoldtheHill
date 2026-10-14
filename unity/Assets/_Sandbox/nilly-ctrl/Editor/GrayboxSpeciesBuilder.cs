@@ -3,6 +3,7 @@ using HoldTheHill.Features.Towers;
 using UnityEditor;
 using UnityEngine;
 
+
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
     /// <summary>
@@ -93,10 +94,10 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Prefabs/Towers", "FireAnt");
             GrayboxBuildKit.CreateFolderIfMissing(GrayboxRoot + "/Data/Towers", "FireAnt");
 
-            var towers = new List<GrayboxTowerData>();
+            var towers = new List<HoldTheHill.Features.Towers.TowerData>();
             foreach (string id in new[] { "TowerWorker", "TowerSoldier", "TowerLinear" })
             {
-                GrayboxTowerData source = Find(shared, id);
+                HoldTheHill.Features.Towers.TowerData source = Find(shared, id);
                 if (source == null)
                 {
                     continue;
@@ -116,7 +117,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
                 });
                 GameObject prefab = GrayboxBuildKit.SavePrefab(go, $"Towers/FireAnt/{id}_FireAnt");
 
-                var data = ScriptableObject.CreateInstance<GrayboxTowerData>();
+                var data = ScriptableObject.CreateInstance<HoldTheHill.Features.Towers.TowerData>();
                 AssetDatabase.CreateAsset(data, $"{GrayboxRoot}/Data/Towers/FireAnt/{id}_FireAntData.asset");
                 GrayboxBuildKit.Apply(data, so =>
                 {
@@ -145,7 +146,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             return catalog;
         }
 
-        private static GrayboxTowerData Find(GrayboxTowerCatalog catalog, string prefabName)
+        private static HoldTheHill.Features.Towers.TowerData Find(GrayboxTowerCatalog catalog, string prefabName)
         {
             for (int i = 0; catalog != null && i < catalog.Count; i++)
             {

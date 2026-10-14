@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Towers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -35,7 +36,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
         public Button Button => _button;
 
         /// <summary>Shows a tower in the slot. <paramref name="onClick"/> is run when the slot is clicked.</summary>
-        public void Bind(GrayboxTowerData data, UnityAction onClick)
+        public void Bind(TowerData data, UnityAction onClick)
         {
             Sprite icon = GrayboxIcons.GetSprite(data.IconName);
             _icon.sprite = icon;

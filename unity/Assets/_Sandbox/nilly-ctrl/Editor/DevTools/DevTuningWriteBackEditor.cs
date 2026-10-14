@@ -1,9 +1,11 @@
+using HoldTheHill.Features.Towers;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using HoldTheHill.Features.Enemies;
 using UnityEditor;
 using UnityEngine;
+
 
 namespace HoldTheHill.Sandbox.NillyCtrl
 {
@@ -14,7 +16,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// </summary>
     /// <remarks>
     /// Tower numbers (range, fire interval, weapon fields) live on the tower prefab, not on
-    /// <c>GrayboxTowerData</c>, so that is where they are written. Tower prefabs are made only when
+    /// <c>HoldTheHill.Features.Towers.TowerData</c>, so that is where they are written. Tower prefabs are made only when
     /// missing, so the values stick. Enemy, boss and pickup prefabs are rebuilt by their builders,
     /// so a value written there is overwritten on the next build; the message says so.
     /// </remarks>

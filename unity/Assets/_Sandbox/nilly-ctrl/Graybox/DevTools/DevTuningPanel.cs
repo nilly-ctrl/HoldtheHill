@@ -322,7 +322,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
             {
                 for (int i = 0; i < _placer.Catalog.Count; i++)
                 {
-                    GrayboxTowerData data = _placer.Catalog[i];
+                    TowerData data = _placer.Catalog[i];
                     if (data != null && data.DisplayName == _target.name && data.Prefab != null) hint = data.Prefab.gameObject;
                 }
             }

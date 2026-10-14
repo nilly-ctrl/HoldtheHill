@@ -40,7 +40,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
 
             for (int i = 0; i < catalog.Count; i++)
             {
-                GrayboxTowerData data = catalog[i];
+                TowerData data = catalog[i];
                 Assert.IsNotNull(data, $"slot {i}");
                 Assert.IsFalse(string.IsNullOrEmpty(data.DisplayName), $"slot {i} name");
                 Assert.Greater(data.BaseCost, 0, data.DisplayName);
@@ -116,7 +116,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
         {
             _placerObject = new GameObject("Placer");
             var placer = _placerObject.AddComponent<GrayboxTowerPlacer>();
-            GrayboxTowerData frost = null;
+            TowerData frost = null;
             for (int i = 0; i < Catalog.Count; i++)
             {
                 if (Catalog[i].Prefab.GetComponent<FrostAuraTower>() != null) frost = Catalog[i];
@@ -201,7 +201,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
 
             for (int i = 0; i < Catalog.Count; i++)
             {
-                GrayboxTowerData data = Catalog[i];
+                TowerData data = Catalog[i];
                 Assert.AreNotEqual(TowerArchetype.Unspecified, data.Archetype, data.DisplayName);
                 if (expected.TryGetValue(data.DisplayName, out TowerArchetype role))
                 {
