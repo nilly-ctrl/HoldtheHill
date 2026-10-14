@@ -3,7 +3,17 @@
     "rootNamespace": "HoldTheHill.EditorTools",
     "references": [
         "HoldTheHill.Runtime",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "HoldTheHill.Core.UiKit",
+        "HoldTheHill.Features.DevTools",
+        "HoldTheHill.Editor.Validation",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "Unity.2D.Tilemap.Extras",
+        "Unity.2D.Tilemap.Editor",
+        "Unity.2D.Sprite.Editor",
+        "Unity.2D.Aseprite.Editor",
+        "Unity.RenderPipelines.Universal.Runtime"
     ],
     "includePlatforms": [
         "Editor"
