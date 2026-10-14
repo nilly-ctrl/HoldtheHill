@@ -33,8 +33,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
         /// <summary>PathClearanceBlocker, same as CLEARANCE in level_grid.py.</summary>
         public const float Clearance = 1.2f;
 
-        private static readonly (int Dx, int Dy)[] Steps = { (0, -1), (1, 0), (0, 1), (-1, 0) };
-
         private readonly List<(int X, int Y)> _route = new List<(int X, int Y)>();
         private readonly List<(int X, int Y)> _waypoints = new List<(int X, int Y)>();
         private readonly HashSet<(int X, int Y)> _buildCells = new HashSet<(int X, int Y)>();
@@ -154,13 +152,13 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
             map.Name = map.Meta.TryGetValue("name", out string name) && name.Length > 0 ? name : "Level";
             map.Theme = map.Meta.TryGetValue("theme", out string theme) && theme.Length > 0 ? theme : "kitchen";
 
-            if (!map.TraceRoute())
+            if (!LevelGridRoute.Trace(map, map._route, map._routeSet))
             {
                 return map;
             }
 
-            map.FindCorners();
-            map.FindBuildCells();
+            LevelGridRoute.Corners(map._route, map._waypoints);
+            LevelGridRoute.BuildCells(map, map._waypoints, map._buildCells);
             if (map._buildCells.Count == 0)
             {
                 map.Warnings.Add("No cell is buildable: towers need floor or mat at least 1.2 cells from the road.");
@@ -247,219 +245,6 @@ namespace HoldTheHill.Sandbox.NillyCtrl.Editor
                 case '*': kind = Kind.Crumbs; return true;
                 case '~': kind = Kind.Spill; return true;
                 default: kind = Kind.Floor; return false;
-            }
-        }
-
-        private List<(int X, int Y)> Cells(params Kind[] kinds)
-        {
-            var found = new List<(int X, int Y)>();
-            for (int y = 0; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    if (Array.IndexOf(kinds, KindAt(x, y)) >= 0)
-                    {
-                        found.Add((x, y));
-                    }
-                }
-            }
-
-            return found;
-        }
-
-        private int CountRegions(Kind kind)
-        {
-            var seen = new HashSet<(int X, int Y)>();
-            int regions = 0;
-            foreach ((int X, int Y) start in Cells(kind))
-            {
-                if (!seen.Add(start))
-                {
-                    continue;
-                }
-
-                regions++;
-                var todo = new Stack<(int X, int Y)>();
-                todo.Push(start);
-                while (todo.Count > 0)
-                {
-                    (int x, int y) = todo.Pop();
-                    foreach ((int dx, int dy) in Steps)
-                    {
-                        var n = (X: x + dx, Y: y + dy);
-                        if (n.X >= 0 && n.Y >= 0 && n.X < Width && n.Y < Height && KindAt(n.X, n.Y) == kind && seen.Add(n))
-                        {
-                            todo.Push(n);
-                        }
-                    }
-                }
-            }
-
-            return regions;
-        }
-
-        private bool TraceRoute()
-        {
-            List<(int X, int Y)> spawns = Cells(Kind.Spawn);
-            if (spawns.Count != 1)
-            {
-                Errors.Add($"Needs exactly one S, found {spawns.Count}.");
-                return false;
-            }
-
-            if (Cells(Kind.Hill).Count == 0)
-            {
-                Errors.Add("Needs at least one H.");
-                return false;
-            }
-
-            if (CountRegions(Kind.Hill) != 1)
-            {
-                Errors.Add("The H cells must touch each other (one hill).");
-                return false;
-            }
-
-            _route.Add(spawns[0]);
-            var inRoute = new HashSet<(int X, int Y)> { spawns[0] };
-            while (true)
-            {
-                (int x, int y) = _route[_route.Count - 1];
-                (int X, int Y)? previous = _route.Count > 1 ? _route[_route.Count - 2] : ((int X, int Y)?)null;
-
-                var nexts = new List<(int X, int Y)>();
-                foreach ((int dx, int dy) in Steps)
-                {
-                    var n = (X: x + dx, Y: y + dy);
-                    if (n.X < 0 || n.Y < 0 || n.X >= Width || n.Y >= Height)
-                    {
-                        continue;
-                    }
-
-                    Kind kind = KindAt(n.X, n.Y);
-                    if ((kind == Kind.Road || kind == Kind.Hill) && (!previous.HasValue || previous.Value != n))
-                    {
-                        nexts.Add(n);
-                    }
-                }
-
-                (int X, int Y)? hill = null;
-                foreach ((int X, int Y) n in nexts)
-                {
-                    if (KindAt(n.X, n.Y) == Kind.Hill)
-                    {
-                        hill = n;
-                        break;
-                    }
-                }
-
-                if (hill.HasValue)
-                {
-                    _route.Add(hill.Value);
-                    break;
-                }
-
-                if (nexts.Count == 0)
-                {
-                    Errors.Add($"The road stops at row {y + 1}, column {x + 1} before reaching H.");
-                    return false;
-                }
-
-                if (nexts.Count > 1)
-                {
-                    Errors.Add($"The road forks at row {y + 1}, column {x + 1}.");
-                    return false;
-                }
-
-                if (inRoute.Contains(nexts[0]))
-                {
-                    Errors.Add($"The road loops back on itself at row {y + 1}, column {x + 1}.");
-                    return false;
-                }
-
-                _route.Add(nexts[0]);
-                inRoute.Add(nexts[0]);
-            }
-
-            var routeIndex = new Dictionary<(int X, int Y), int>();
-            for (int i = 0; i < _route.Count; i++)
-            {
-                routeIndex[_route[i]] = i;
-                _routeSet.Add(_route[i]);
-            }
-
-            List<(int X, int Y)> stray = Cells(Kind.Road).FindAll(c => !_routeSet.Contains(c));
-            if (stray.Count > 0)
-            {
-                Errors.Add($"{stray.Count} road cell(s) are not on the route, first at row {stray[0].Y + 1}, " +
-                           $"column {stray[0].X + 1}.");
-                return false;
-            }
-
-            // Two stretches side by side would read as one wide road.
-            for (int i = 0; i < _route.Count; i++)
-            {
-                (int x, int y) = _route[i];
-                foreach ((int dx, int dy) in Steps)
-                {
-                    var n = (X: x + dx, Y: y + dy);
-                    if (routeIndex.TryGetValue(n, out int j) && Math.Abs(j - i) != 1)
-                    {
-                        Errors.Add($"The road touches itself at row {y + 1}, column {x + 1}; leave a cell between stretches.");
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        private void FindCorners()
-        {
-            _waypoints.Add(_route[0]);
-            for (int i = 1; i < _route.Count - 1; i++)
-            {
-                (int X, int Y) a = _route[i - 1];
-                (int X, int Y) b = _route[i];
-                (int X, int Y) c = _route[i + 1];
-                if ((b.X - a.X, b.Y - a.Y) != (c.X - b.X, c.Y - b.Y))
-                {
-                    _waypoints.Add(b);
-                }
-            }
-
-            _waypoints.Add(_route[_route.Count - 1]);
-        }
-
-        private float DistanceToRoute(int x, int y)
-        {
-            float best = float.PositiveInfinity;
-            for (int i = 0; i + 1 < _waypoints.Count; i++)
-            {
-                (int ax, int ay) = _waypoints[i];
-                (int bx, int by) = _waypoints[i + 1];
-                float abx = bx - ax;
-                float aby = by - ay;
-                float length = abx * abx + aby * aby;
-                float t = length > 0f ? ((x - ax) * abx + (y - ay) * aby) / length : 0f;
-                t = Math.Max(0f, Math.Min(1f, t));
-                float px = ax + abx * t;
-                float py = ay + aby * t;
-                float dx = x - px;
-                float dy = y - py;
-                best = Math.Min(best, (float)Math.Sqrt(dx * dx + dy * dy));
-            }
-
-            return best;
-        }
-
-        private void FindBuildCells()
-        {
-            foreach ((int X, int Y) c in Cells(Kind.Floor, Kind.Mat))
-            {
-                if (DistanceToRoute(c.X, c.Y) >= Clearance)
-                {
-                    _buildCells.Add(c);
-                }
             }
         }
     }
