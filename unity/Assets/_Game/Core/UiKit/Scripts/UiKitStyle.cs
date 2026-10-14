@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.UiKit
+namespace HoldTheHill.Core.UiKit
 {
     /// <summary>Colours and sizes shared by every kit widget, in canvas units (pixels at 1x).</summary>
     public static class UiKitStyle

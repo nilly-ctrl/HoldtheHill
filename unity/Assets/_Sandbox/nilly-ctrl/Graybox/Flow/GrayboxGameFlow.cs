@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Towers;
-using HoldTheHill.Sandbox.UiKit;
+using HoldTheHill.Core.UiKit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

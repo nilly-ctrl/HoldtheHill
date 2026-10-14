@@ -1,6 +1,6 @@
 using System;
 
-namespace HoldTheHill.Sandbox.UiKit
+namespace HoldTheHill.Core.UiKit
 {
     /// <summary>The moments a menu makes a sound or other feedback.</summary>
     public enum UiCue

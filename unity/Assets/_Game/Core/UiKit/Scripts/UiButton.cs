@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HoldTheHill.Sandbox.UiKit
+namespace HoldTheHill.Core.UiKit
 {
     /// <summary>A kit button: Unity's Button plus its label, kept in step when it is disabled.</summary>
     [RequireComponent(typeof(Button))]

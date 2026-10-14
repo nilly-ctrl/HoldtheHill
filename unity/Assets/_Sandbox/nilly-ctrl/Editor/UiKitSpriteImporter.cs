@@ -11,7 +11,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// </summary>
     public class UiKitSpriteImporter : AssetPostprocessor
     {
-        public const string SpriteFolder = "Assets/_Sandbox/nilly-ctrl/UiKit/Sprites/";
+        public const string SpriteFolder = "Assets/_Game/Core/UiKit/Sprites/";
 
         private void OnPreprocessTexture()
         {

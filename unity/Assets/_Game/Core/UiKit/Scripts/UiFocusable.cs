@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace HoldTheHill.Sandbox.UiKit
+namespace HoldTheHill.Core.UiKit
 {
     /// <summary>
     /// Goes on every selectable kit control. Shows the focus ring while the control is selected,

@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
-using HoldTheHill.Sandbox.UiKit;
+using HoldTheHill.Core.UiKit;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -23,7 +23,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
     /// </remarks>
     public class UiKitTests
     {
-        private const string PrefabDir = "Assets/_Sandbox/nilly-ctrl/UiKit/Prefabs/";
+        private const string PrefabDir = "Assets/_Game/Core/UiKit/Prefabs/";
 
         private readonly List<GameObject> _made = new List<GameObject>();
         private readonly List<UiCue> _cues = new List<UiCue>();

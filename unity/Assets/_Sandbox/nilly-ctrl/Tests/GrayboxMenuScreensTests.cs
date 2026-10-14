@@ -4,7 +4,7 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using HoldTheHill.Sandbox.NillyCtrl;
-using HoldTheHill.Sandbox.UiKit;
+using HoldTheHill.Core.UiKit;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;

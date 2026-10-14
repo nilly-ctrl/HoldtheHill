@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace HoldTheHill.Sandbox.UiKit
+namespace HoldTheHill.Core.UiKit
 {
     /// <summary>
     /// A labelled slider row with its value written beside it ("Music   [====  ]  60%").

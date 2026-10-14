@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using HoldTheHill.Sandbox.UiKit;
+using HoldTheHill.Core.UiKit;
 using UnityEngine;
 
 namespace HoldTheHill.Sandbox.NillyCtrl

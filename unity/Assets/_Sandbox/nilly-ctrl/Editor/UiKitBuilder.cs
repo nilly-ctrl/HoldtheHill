@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using HoldTheHill.Sandbox.UiKit;
+using HoldTheHill.Core.UiKit;
 using TMPro;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -28,7 +28,7 @@ namespace HoldTheHill.Sandbox.NillyCtrl
     /// </remarks>
     public static class UiKitBuilder
     {
-        public const string Root = "Assets/_Sandbox/nilly-ctrl/UiKit";
+        public const string Root = "Assets/_Game/Core/UiKit";
         public const string PrefabDir = Root + "/Prefabs";
         public const string FontPath = Root + "/Fonts/HoldTheHillPixel.asset";
         public const string GalleryPath = Root + "/UiKitGallery.unity";

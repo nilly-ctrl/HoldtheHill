@@ -4,7 +4,7 @@ using System.Collections;
 using System.IO;
 using HoldTheHill.Features.Enemies;
 using HoldTheHill.Sandbox.NillyCtrl;
-using HoldTheHill.Sandbox.UiKit;
+using HoldTheHill.Core.UiKit;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;

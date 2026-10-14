@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using HoldTheHill.Sandbox.UiKit;
+using HoldTheHill.Core.UiKit;
 using TMPro;
 using UnityEngine;
 

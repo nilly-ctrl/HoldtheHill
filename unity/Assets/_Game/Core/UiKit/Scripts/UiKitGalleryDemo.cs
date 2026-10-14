@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.UiKit
+namespace HoldTheHill.Core.UiKit
 {
     /// <summary>
     /// Wires up the UI kit gallery scene: opens the confirm dialog from a button and prints the

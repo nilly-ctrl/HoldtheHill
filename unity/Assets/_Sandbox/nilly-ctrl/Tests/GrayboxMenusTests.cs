@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HoldTheHill.Sandbox.NillyCtrl;
-using HoldTheHill.Sandbox.UiKit;
+using HoldTheHill.Core.UiKit;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -28,7 +28,7 @@ namespace HoldTheHill.Sandbox.Graybox.Tests
     public partial class GrayboxMenusTests
     {
         private const string MenusPrefab = "Assets/_Sandbox/nilly-ctrl/Graybox/Prefabs/GrayboxMenus.prefab";
-        private const string EventSystemPrefab = "Assets/_Sandbox/nilly-ctrl/UiKit/Prefabs/UiEventSystem.prefab";
+        private const string EventSystemPrefab = "Assets/_Game/Core/UiKit/Prefabs/UiEventSystem.prefab";
 
         private readonly List<Object> _made = new List<Object>();
         private readonly List<GameObject> _spawnedEnemies = new List<GameObject>();

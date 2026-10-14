@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace HoldTheHill.Sandbox.UiKit
+namespace HoldTheHill.Core.UiKit
 {
     /// <summary>A labelled on/off row. The whole row is the click target, not just the box.</summary>
     [AddComponentMenu("Hold the Hill/UI Kit/Toggle Field")]
