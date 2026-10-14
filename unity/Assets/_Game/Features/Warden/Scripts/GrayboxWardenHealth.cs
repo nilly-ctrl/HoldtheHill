@@ -1,8 +1,9 @@
+using HoldTheHill.Features.GameFlow;
 using System;
 using HoldTheHill.Features.Combat;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Warden
 {
     /// <summary>
     /// The Warden's health. Anything that can hurt the Warden calls <see cref="TakeDamage"/>;

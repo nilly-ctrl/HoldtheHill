@@ -1,3 +1,8 @@
+using HoldTheHill.Core.Input;
+using HoldTheHill.Core.Localization;
+using HoldTheHill.Core.Save;
+using HoldTheHill.Features.GameFlow;
+using HoldTheHill.Features.Progression;
 using HoldTheHill.Features.DamageNumbers;
 using System;
 using System.Collections.Generic;
@@ -5,7 +10,7 @@ using HoldTheHill.Core.UiKit;
 using TMPro;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Menus
 {
     /// <summary>
     /// The hub between runs. Four tabs: Play (campaign or endless), Upgrades (the permanent shop,

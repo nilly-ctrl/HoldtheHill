@@ -2,7 +2,7 @@ using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.GameFlow
 {
     /// <summary>
     /// Runs an endless game: sends procedural waves one after another, each a few seconds after

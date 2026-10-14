@@ -1,4 +1,5 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+using HoldTheHill.Features.Specials;
 using System;
 using System.Collections;
 using System.Collections.Generic;

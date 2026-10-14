@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Economy;
 using System;
 using System.Collections.Generic;
 using HoldTheHill.Features.Towers;
@@ -5,7 +6,7 @@ using HoldTheHill.Core.UiKit;
 using TMPro;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// The card for the selected tower: its targeting priority, level, combat record, and the

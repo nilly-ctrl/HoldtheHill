@@ -1,6 +1,7 @@
 // PlayMode tests run inside the editor, so UnityEditor is available - but this
 // assembly also compiles for players, where it is not. The guard keeps both happy.
 #if UNITY_EDITOR
+using HoldTheHill.Core.Save;
 using HoldTheHill.Features.GameFlow;
 using System.Collections;
 using System.Collections.Generic;

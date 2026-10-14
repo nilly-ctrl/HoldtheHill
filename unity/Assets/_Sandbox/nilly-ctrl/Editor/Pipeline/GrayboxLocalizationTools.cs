@@ -1,3 +1,4 @@
+using HoldTheHill.Core.Localization;
 using System;
 using System.Collections.Generic;
 using System.IO;

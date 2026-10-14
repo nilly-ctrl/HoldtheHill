@@ -2,7 +2,7 @@ using HoldTheHill.Features.DamageNumbers;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Input
 {
     /// <summary>
     /// Turns an Input System control path into what the menus show for it: the key or button

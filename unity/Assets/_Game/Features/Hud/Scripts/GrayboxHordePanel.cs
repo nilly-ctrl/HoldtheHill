@@ -1,7 +1,8 @@
+using HoldTheHill.Features.Enemies;
 using HoldTheHill.Core.UiKit;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// Buttons that send a preset horde down the trail, for testing the towers against crowds.

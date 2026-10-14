@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Props;
 using HoldTheHill.Core.Animation;
 using System.Collections.Generic;
 using System.Linq;

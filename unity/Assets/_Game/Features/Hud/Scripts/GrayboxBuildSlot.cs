@@ -1,10 +1,11 @@
+using HoldTheHill.Core.Icons;
 using HoldTheHill.Features.Towers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// One tower on the build bar: its icon in a slot frame, the hotkey on a keycap above the corner

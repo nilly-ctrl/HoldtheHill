@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.PowerUps
 {
     /// <summary>
     /// Puts a power-up on the map at the start of every few waves, beside the trail and away

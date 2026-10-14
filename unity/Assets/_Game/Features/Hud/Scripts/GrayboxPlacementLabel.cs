@@ -2,7 +2,7 @@ using HoldTheHill.Features.Towers;
 using TMPro;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// The line above the placement ghost: what will be built and for how much, or why it can't be.

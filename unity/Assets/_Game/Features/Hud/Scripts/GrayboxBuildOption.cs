@@ -1,10 +1,11 @@
+using HoldTheHill.Core.Icons;
 using HoldTheHill.Features.Towers;
 using HoldTheHill.Core.UiKit;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>One tower in the build menu: a kit button with the tower's icon, name and price.</summary>
     [AddComponentMenu("Hold the Hill/Graybox/HUD/Build Option")]

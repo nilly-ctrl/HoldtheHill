@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>A small framed label for the HUD strips: an ability, a power-up timer, the Warden's health.</summary>
     [AddComponentMenu("Hold the Hill/Graybox/HUD/Chip")]

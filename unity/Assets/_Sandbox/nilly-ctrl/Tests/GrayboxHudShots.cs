@@ -1,4 +1,8 @@
 #if UNITY_EDITOR
+using HoldTheHill.Core.Save;
+using HoldTheHill.Features.Hud;
+using HoldTheHill.Features.Menus;
+using HoldTheHill.Features.Warden;
 using HoldTheHill.Features.DamageNumbers;
 using HoldTheHill.Features.GameFlow;
 using System.Collections;

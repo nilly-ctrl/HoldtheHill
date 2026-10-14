@@ -1,9 +1,10 @@
+using HoldTheHill.Features.Progression;
 using System.Collections.Generic;
 using HoldTheHill.Core.UiKit;
 using TMPro;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// The achievements window over the field: how many are earned, and a line per achievement

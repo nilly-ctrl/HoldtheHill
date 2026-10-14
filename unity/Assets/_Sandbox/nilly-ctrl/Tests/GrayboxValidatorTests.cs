@@ -5,6 +5,7 @@
 // HTH_VALIDATION_TESTS is defined for it (see Editor/Validation/README.md). Until then the file is
 // empty on purpose, so the test assembly keeps compiling.
 #if UNITY_EDITOR && HTH_VALIDATION_TESTS
+using HoldTheHill.Features.Towers;
 using System.Collections.Generic;
 using HoldTheHill.Sandbox.NillyCtrl.Editor;
 using NUnit.Framework;

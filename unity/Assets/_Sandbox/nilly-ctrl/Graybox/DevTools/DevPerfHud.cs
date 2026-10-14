@@ -1,4 +1,5 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+using HoldTheHill.Features.Economy;
 using System;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;

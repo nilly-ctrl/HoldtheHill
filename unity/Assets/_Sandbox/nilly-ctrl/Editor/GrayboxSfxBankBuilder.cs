@@ -1,3 +1,5 @@
+using HoldTheHill.Core.Audio;
+using HoldTheHill.Features.Enemies;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

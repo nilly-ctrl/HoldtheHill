@@ -1,8 +1,9 @@
+using HoldTheHill.Core.Input;
 using HoldTheHill.Features.DamageNumbers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// Steps the scene's font theme while playing, to compare the themed number, banner and label

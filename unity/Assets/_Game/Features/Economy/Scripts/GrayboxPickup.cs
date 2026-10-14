@@ -1,10 +1,13 @@
+using HoldTheHill.Core.Input;
+using HoldTheHill.Features.GameFlow;
+using HoldTheHill.Features.Specials;
 using HoldTheHill.Core.Animation;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Economy
 {
     /// <summary>
     /// Something lying on the map that is collected by passing the mouse over it, or by anything

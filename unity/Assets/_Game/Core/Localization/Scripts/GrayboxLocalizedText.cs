@@ -1,6 +1,6 @@
 using System;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Localization
 {
     /// <summary>One translation: the text of a string in one language.</summary>
     [Serializable]

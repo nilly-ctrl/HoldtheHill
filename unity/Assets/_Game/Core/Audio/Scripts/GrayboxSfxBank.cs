@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Audio
 {
     /// <summary>One sound cue: its variants, how loud, and how often it may repeat.</summary>
     [Serializable]

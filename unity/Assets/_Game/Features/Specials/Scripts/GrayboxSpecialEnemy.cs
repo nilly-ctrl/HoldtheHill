@@ -6,7 +6,7 @@ using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// Shared plumbing for the bosses and special enemies: the components they all read, the

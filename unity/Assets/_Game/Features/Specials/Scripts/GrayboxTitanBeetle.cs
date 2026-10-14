@@ -5,7 +5,7 @@ using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// Boss. Armoured from the front: hits from towers ahead of it are cut down, hits from

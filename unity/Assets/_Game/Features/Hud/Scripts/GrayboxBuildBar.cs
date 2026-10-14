@@ -1,8 +1,9 @@
+using HoldTheHill.Core.Input;
 using HoldTheHill.Features.Towers;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// The row of buildable towers along the bottom of the screen. It follows the tower placer's

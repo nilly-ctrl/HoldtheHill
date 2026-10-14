@@ -1,6 +1,6 @@
 using System;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.GameFlow
 {
     /// <summary>
     /// Numbers for the run in progress: what the run-end screen shows and what records are made from.

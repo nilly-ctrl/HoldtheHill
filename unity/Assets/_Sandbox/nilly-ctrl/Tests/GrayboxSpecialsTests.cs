@@ -1,4 +1,7 @@
 #if UNITY_EDITOR
+using HoldTheHill.Features.Economy;
+using HoldTheHill.Features.GameFlow;
+using HoldTheHill.Features.Specials;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;

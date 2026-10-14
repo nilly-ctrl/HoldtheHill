@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Localization
 {
     /// <summary>
     /// Key -> per-language text. English (<see cref="DefaultLanguage"/>) is the fallback language.

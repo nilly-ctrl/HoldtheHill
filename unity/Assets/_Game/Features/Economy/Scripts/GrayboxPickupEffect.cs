@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Economy
 {
     /// <summary>
     /// What a <see cref="GrayboxPickup"/> does when it is collected. A pickup can carry several.

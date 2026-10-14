@@ -3,7 +3,7 @@ using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Props
 {
     /// <summary>
     /// The two set pieces at the ends of the trail: the hill being defended, which looks more

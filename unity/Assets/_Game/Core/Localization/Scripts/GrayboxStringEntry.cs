@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Localization
 {
     /// <summary>One key of a <see cref="GrayboxStringTable"/> with its text in each language.</summary>
     [Serializable]

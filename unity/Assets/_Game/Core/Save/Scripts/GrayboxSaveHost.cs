@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Save
 {
     /// <summary>
     /// Attaches the player's save file for this scene and writes it when the game closes.

@@ -3,7 +3,7 @@ using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// Big pixel-font announcements in the middle of the screen: WAVE 3 when a wave starts,

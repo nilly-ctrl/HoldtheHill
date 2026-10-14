@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using HoldTheHill.Features.Specials;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;

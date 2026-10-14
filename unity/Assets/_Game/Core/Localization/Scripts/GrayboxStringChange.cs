@@ -1,4 +1,4 @@
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Localization
 {
     /// <summary>One cell-level difference between a string table and an incoming CSV.</summary>
     public readonly struct GrayboxStringChange

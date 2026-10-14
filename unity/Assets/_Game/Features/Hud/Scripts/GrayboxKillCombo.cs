@@ -2,7 +2,7 @@ using HoldTheHill.Features.DamageNumbers;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// A combo counter for kills that come quickly one after another. From the third kill of a

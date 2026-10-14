@@ -1,4 +1,9 @@
 #if UNITY_EDITOR
+using HoldTheHill.Core.Input;
+using HoldTheHill.Core.Save;
+using HoldTheHill.Features.Economy;
+using HoldTheHill.Features.Hud;
+using HoldTheHill.Features.Menus;
 using HoldTheHill.Features.DamageNumbers;
 using HoldTheHill.Features.GameFlow;
 using System.Collections;

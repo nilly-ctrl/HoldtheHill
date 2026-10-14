@@ -5,7 +5,7 @@ using HoldTheHill.Features.Enemies;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// Holds the boss and special-enemy prefabs for the graybox scene, spawns any of them on

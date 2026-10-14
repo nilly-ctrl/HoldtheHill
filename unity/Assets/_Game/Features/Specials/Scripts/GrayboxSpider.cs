@@ -2,7 +2,7 @@ using System.Collections;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// Stops now and then to rear up and web the nearest tower, halving its rate of fire until

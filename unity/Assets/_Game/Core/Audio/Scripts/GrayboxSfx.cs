@@ -5,7 +5,7 @@ using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Audio
 {
     /// <summary>
     /// Plays the graybox's placeholder sound effects from a <see cref="GrayboxSfxBank"/>.

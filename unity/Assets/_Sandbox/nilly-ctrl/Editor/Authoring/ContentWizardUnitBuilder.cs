@@ -1,3 +1,5 @@
+using HoldTheHill.Features.Enemies;
+using HoldTheHill.Features.Specials;
 using HoldTheHill.Features.Economy;
 using System;
 using System.Collections.Generic;

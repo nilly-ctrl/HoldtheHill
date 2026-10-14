@@ -1,8 +1,10 @@
+using HoldTheHill.Core.Localization;
+using HoldTheHill.Core.Save;
 using System.Collections.Generic;
 using HoldTheHill.Core.UiKit;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Menus
 {
     /// <summary>
     /// The settings screen: audio, display, gameplay and accessibility tabs. Opens over the title

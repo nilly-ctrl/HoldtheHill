@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Progression
 {
     /// <summary>The achievements in the game, in the order they are listed to the player.</summary>
     [CreateAssetMenu(menuName = "Hold the Hill/Sandbox/Graybox Achievement Catalog", fileName = "GrayboxAchievementCatalog")]

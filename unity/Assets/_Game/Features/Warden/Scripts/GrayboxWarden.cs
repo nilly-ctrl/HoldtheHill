@@ -1,8 +1,11 @@
+using HoldTheHill.Core.Input;
+using HoldTheHill.Features.Economy;
+using HoldTheHill.Features.GameFlow;
 using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Warden
 {
     /// <summary>
     /// The ant the player walks around the map. It does no fighting of its own to speak of:

@@ -4,7 +4,7 @@ using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Warden
 {
     /// <summary>
     /// Picks up the nearest tower, and on the next press puts it down on the grid cell the

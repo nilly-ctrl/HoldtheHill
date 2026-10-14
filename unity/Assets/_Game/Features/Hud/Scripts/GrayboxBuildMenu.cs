@@ -4,7 +4,7 @@ using HoldTheHill.Core.UiKit;
 using TMPro;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// The menu that opens beside an empty cell when it is clicked: every tower in the catalog,

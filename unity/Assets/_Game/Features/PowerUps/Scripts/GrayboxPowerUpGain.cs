@@ -1,7 +1,8 @@
+using HoldTheHill.Features.Economy;
 using HoldTheHill.Features.DamageNumbers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.PowerUps
 {
     /// <summary>A pickup effect that starts a power-up when the pickup is collected.</summary>
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Power-Up Gain")]

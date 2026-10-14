@@ -1,4 +1,8 @@
 #if UNITY_EDITOR
+using HoldTheHill.Core.Input;
+using HoldTheHill.Features.Economy;
+using HoldTheHill.Features.Specials;
+using HoldTheHill.Features.Warden;
 using System.Collections.Generic;
 using System.Linq;
 using HoldTheHill.Features.Combat;

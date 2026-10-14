@@ -1,7 +1,7 @@
 using HoldTheHill.Core.Animation;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// The burrow the Rival Queen digs beside the path. While she digs it only shows how far

@@ -1,10 +1,11 @@
+using HoldTheHill.Features.Progression;
 using System.Collections.Generic;
 using HoldTheHill.Core.UiKit;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// The skill tree window over the field: one column per branch, a button per skill, the

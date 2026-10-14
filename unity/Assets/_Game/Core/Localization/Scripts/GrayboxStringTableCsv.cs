@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Localization
 {
     /// <summary>
     /// CSV export, import and diff for <see cref="GrayboxStringTable"/>. Pure logic with no file or

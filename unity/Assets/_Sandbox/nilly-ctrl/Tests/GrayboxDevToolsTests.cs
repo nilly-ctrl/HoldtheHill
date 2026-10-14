@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using HoldTheHill.Features.Enemies;
 using System.Collections.Generic;
 using HoldTheHill.Sandbox.NillyCtrl;
 using NUnit.Framework;

@@ -2,7 +2,7 @@ using System;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// Marks an enemy as a boss and says which one. Sits on the boss base prefab, so every

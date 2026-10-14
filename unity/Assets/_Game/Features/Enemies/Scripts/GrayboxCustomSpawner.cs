@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Enemies
 {
     /// <summary>
     /// Custom horde spawner for stress-testing tower defense setups on demand.

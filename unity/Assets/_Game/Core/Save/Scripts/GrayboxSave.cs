@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Save
 {
     /// <summary>
     /// Loads and writes the save file. One file, one <see cref="GrayboxSaveData"/>.

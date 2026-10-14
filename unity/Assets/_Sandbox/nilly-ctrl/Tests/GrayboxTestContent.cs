@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using HoldTheHill.Features.Progression;
 using HoldTheHill.Sandbox.NillyCtrl;
 
 namespace HoldTheHill.Sandbox.Graybox.Tests

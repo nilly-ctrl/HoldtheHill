@@ -1,6 +1,8 @@
+using HoldTheHill.Features.Towers;
+using HoldTheHill.Features.Warden;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Species
 {
     /// <summary>
     /// One species of ant the player can play as: which towers it can build, which Warden it

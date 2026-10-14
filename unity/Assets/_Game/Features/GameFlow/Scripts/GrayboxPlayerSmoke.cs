@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.GameFlow
 {
     /// <summary>
     /// Opt-in check for a player build, started with <c>-hthSmoke</c> on the command line (best with

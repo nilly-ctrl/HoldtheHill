@@ -3,7 +3,7 @@ using HoldTheHill.Features.Enemies;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// A progress line under the hill bar: a flag for each wave (changed once cleared), a skull on

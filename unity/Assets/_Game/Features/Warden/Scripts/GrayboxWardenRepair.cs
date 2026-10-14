@@ -1,10 +1,11 @@
+using HoldTheHill.Features.Specials;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Warden
 {
     /// <summary>Held next to a stunned, webbed, cocooned or scalded tower, sets it right.</summary>
     [AddComponentMenu("Hold the Hill/Graybox/Warden/Repair")]

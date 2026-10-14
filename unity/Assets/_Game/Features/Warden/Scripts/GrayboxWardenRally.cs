@@ -4,7 +4,7 @@ using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Warden
 {
     /// <summary>Makes the towers around the Warden attack faster for a few seconds.</summary>
     [AddComponentMenu("Hold the Hill/Graybox/Warden/Rally")]

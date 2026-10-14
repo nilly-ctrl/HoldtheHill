@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Warden
 {
     /// <summary>
     /// Something the Warden can do. Each ability is a child prefab of the Warden prefab, so

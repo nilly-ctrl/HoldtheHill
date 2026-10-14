@@ -1,8 +1,9 @@
+using HoldTheHill.Features.Hud;
 using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Core.UiKit;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Menus
 {
     /// <summary>
     /// Opens and closes the menu screens to match <see cref="GrayboxGameFlow"/>: title, home, the

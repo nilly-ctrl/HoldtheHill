@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Economy;
 using HoldTheHill.Features.DamageNumbers;
 using HoldTheHill.Core.Animation;
 using HoldTheHill.Features.Enemies;
@@ -5,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// Runs to the hill, takes food from the stockpile, and runs it back to the burrow. Kill it

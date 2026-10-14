@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Hud;
 using HoldTheHill.Core.UiKit;
 using TMPro;
 using UnityEditor;

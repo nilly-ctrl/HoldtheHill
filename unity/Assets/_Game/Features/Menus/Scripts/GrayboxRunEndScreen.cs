@@ -1,9 +1,13 @@
+using HoldTheHill.Core.Localization;
+using HoldTheHill.Core.Save;
+using HoldTheHill.Features.Enemies;
+using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.DamageNumbers;
 using HoldTheHill.Core.UiKit;
 using TMPro;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Menus
 {
     /// <summary>
     /// Shown when a run ends, in defeat or victory: the run's numbers, whether it set a record,

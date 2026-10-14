@@ -1,8 +1,11 @@
+using HoldTheHill.Core.Localization;
+using HoldTheHill.Features.Enemies;
+using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Core.UiKit;
 using TMPro;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Menus
 {
     /// <summary>
     /// The pause menu: Resume, Restart, Settings, Controls, Quit to Home. Restart and Quit ask

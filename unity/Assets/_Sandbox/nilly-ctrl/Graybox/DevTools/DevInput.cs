@@ -1,4 +1,5 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+using HoldTheHill.Core.Input;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 

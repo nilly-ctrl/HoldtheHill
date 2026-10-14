@@ -2,7 +2,7 @@ using HoldTheHill.Features.DamageNumbers;
 using HoldTheHill.Features.Economy;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Economy
 {
     /// <summary>A pickup effect that pays a resource into the wallet: a crumb of Food.</summary>
     [AddComponentMenu("Hold the Hill/Graybox/Graybox Resource Gain")]

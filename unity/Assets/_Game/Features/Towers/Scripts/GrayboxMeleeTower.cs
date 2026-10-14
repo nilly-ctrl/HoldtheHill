@@ -5,7 +5,7 @@ using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Towers
 {
     /// <summary>
     /// The three close-range castes. Each sits on an ordinary <see cref="Tower"/>, which does the

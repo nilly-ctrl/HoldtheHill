@@ -1,3 +1,6 @@
+using HoldTheHill.Features.GameFlow;
+using HoldTheHill.Features.Hud;
+using HoldTheHill.Features.Specials;
 using HoldTheHill.Core.Animation;
 using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;

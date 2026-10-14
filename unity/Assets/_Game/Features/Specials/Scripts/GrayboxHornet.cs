@@ -5,7 +5,7 @@ using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// Boss, and a flyer. It ignores the path and goes for towers: it picks the one that has

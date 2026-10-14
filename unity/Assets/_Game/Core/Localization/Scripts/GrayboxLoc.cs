@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Localization
 {
     /// <summary>
     /// Static text lookup: <c>GrayboxLoc.Get("hud.wave")</c>. Falls back from the current language

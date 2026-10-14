@@ -1,7 +1,7 @@
 using HoldTheHill.Features.Combat;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>How a tower archetype is named and coloured on the HUD.</summary>
     public static class GrayboxArchetypeStyle

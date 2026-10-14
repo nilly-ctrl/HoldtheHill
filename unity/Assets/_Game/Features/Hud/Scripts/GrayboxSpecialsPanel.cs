@@ -1,8 +1,9 @@
+using HoldTheHill.Features.Specials;
 using System.Collections.Generic;
 using HoldTheHill.Core.UiKit;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// A button per boss and special enemy that spawns one at the burrow, for trying them out.

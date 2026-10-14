@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// The boiling puddle a bombardier beetle leaves. Towers within reach are silenced for as

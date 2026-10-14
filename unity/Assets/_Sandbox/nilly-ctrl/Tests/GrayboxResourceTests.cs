@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using HoldTheHill.Features.Specials;
 using HoldTheHill.Features.Economy;
 using HoldTheHill.Sandbox.NillyCtrl;
 using NUnit.Framework;

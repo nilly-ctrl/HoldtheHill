@@ -2,7 +2,7 @@ using HoldTheHill.Features.DamageNumbers;
 using HoldTheHill.Features.GameFlow;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.GameFlow
 {
     /// <summary>
     /// The graybox hill: a <see cref="Queen"/> that shows the breach text. No statics: the sandbox

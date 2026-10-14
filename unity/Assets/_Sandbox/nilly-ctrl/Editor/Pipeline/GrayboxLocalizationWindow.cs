@@ -1,3 +1,4 @@
+using HoldTheHill.Core.Localization;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;

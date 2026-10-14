@@ -1,6 +1,7 @@
+using HoldTheHill.Features.GameFlow;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Save
 {
     /// <summary>What a finished run changed in the records, for the run-end screen.</summary>
     public struct RunRecordResult

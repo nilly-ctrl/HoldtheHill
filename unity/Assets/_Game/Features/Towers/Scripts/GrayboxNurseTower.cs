@@ -3,7 +3,7 @@ using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Combat;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Towers
 {
     /// <summary>
     /// The Nurse caste. She does not fight: every few seconds she mends the hill a little,

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Towers
 {
     /// <summary>
     /// The towers the player can build, in build bar order. Slot i uses build hotkey i.

@@ -1,3 +1,5 @@
+using HoldTheHill.Core.Input;
+using HoldTheHill.Core.Localization;
 using System;
 using System.Collections.Generic;
 using HoldTheHill.Core.UiKit;
@@ -6,7 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Menus
 {
     /// <summary>
     /// The controls screen: every action in <see cref="GrayboxControls"/> with its key. Press a

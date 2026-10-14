@@ -1,4 +1,9 @@
 #if UNITY_EDITOR
+using HoldTheHill.Core.Input;
+using HoldTheHill.Core.Save;
+using HoldTheHill.Features.Economy;
+using HoldTheHill.Features.Menus;
+using HoldTheHill.Features.Progression;
 using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Features.Enemies;
 using System.Collections;

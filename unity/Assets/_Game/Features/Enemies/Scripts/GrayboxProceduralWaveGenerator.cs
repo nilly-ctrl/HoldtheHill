@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Enemies
 {
     /// <summary>
     /// Procedural wave generator dynamically creating infinite scaling waves beyond static wave assets.

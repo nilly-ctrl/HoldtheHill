@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Progression
 {
     /// <summary>
     /// The nodes of a skill tree, in display order. The tree draws one column per branch name,

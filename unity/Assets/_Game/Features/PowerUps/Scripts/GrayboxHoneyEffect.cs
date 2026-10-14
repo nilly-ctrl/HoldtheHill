@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.PowerUps
 {
     /// <summary>
     /// Honey Drop: while it lasts every raider on the map is stuck in honey and walks slower.

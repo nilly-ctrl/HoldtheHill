@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Towers
 {
     /// <summary>
     /// The cells of a hand-drawn level where nothing can be built: cabinets, the fridge, table

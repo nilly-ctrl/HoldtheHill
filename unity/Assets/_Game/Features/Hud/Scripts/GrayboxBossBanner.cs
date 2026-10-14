@@ -1,7 +1,8 @@
+using HoldTheHill.Features.Specials;
 using HoldTheHill.Features.DamageNumbers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// Announces a boss. When one appears its name fills the screen in the dripping Gothic blood

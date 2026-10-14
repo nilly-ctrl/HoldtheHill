@@ -1,4 +1,10 @@
 #if UNITY_EDITOR
+using HoldTheHill.Core.Audio;
+using HoldTheHill.Core.Icons;
+using HoldTheHill.Features.Economy;
+using HoldTheHill.Features.Enemies;
+using HoldTheHill.Features.GameFlow;
+using HoldTheHill.Features.Progression;
 using HoldTheHill.Core.Animation;
 using HoldTheHill.Sandbox.NillyCtrl;
 using NUnit.Framework;

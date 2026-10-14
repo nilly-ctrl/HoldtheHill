@@ -1,9 +1,11 @@
+using HoldTheHill.Core.Icons;
+using HoldTheHill.Features.Progression;
 using HoldTheHill.Core.UiKit;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>One skill in the skill tree window: a kit button with the skill's icon, name, price and description.</summary>
     [AddComponentMenu("Hold the Hill/Graybox/HUD/Skill Node Row")]

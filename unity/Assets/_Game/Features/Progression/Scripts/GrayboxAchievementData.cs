@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Progression
 {
     /// <summary>What happens in the game that moves an achievement forward.</summary>
     public enum AchievementTrigger

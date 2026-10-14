@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Progression
 {
     /// <summary>A number the skill tree can change. These are the ones towers and the economy read.</summary>
     public enum SkillStat

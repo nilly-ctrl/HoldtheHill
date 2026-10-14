@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Specials;
 using HoldTheHill.Core.Animation;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
@@ -5,7 +6,7 @@ using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Warden
 {
     /// <summary>Pushes every enemy close by back along the trail and staggers it. Barely hurts.</summary>
     [AddComponentMenu("Hold the Hill/Graybox/Warden/Shove")]

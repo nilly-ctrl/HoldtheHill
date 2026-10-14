@@ -1,8 +1,9 @@
+using HoldTheHill.Features.GameFlow;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.PowerUps
 {
     /// <summary>
     /// A power-up while it is running. One of these is made from the effect prefab when the

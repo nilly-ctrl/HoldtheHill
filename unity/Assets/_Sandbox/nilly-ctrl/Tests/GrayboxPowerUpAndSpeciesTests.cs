@@ -1,4 +1,8 @@
 #if UNITY_EDITOR
+using HoldTheHill.Features.Economy;
+using HoldTheHill.Features.PowerUps;
+using HoldTheHill.Features.Species;
+using HoldTheHill.Features.Warden;
 using System.Collections.Generic;
 using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;

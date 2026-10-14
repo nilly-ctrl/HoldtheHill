@@ -1,7 +1,7 @@
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Warden
 {
     /// <summary>
     /// Combines everything that changes how fast one tower fires (a web slows it, a rally speeds

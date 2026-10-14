@@ -1,7 +1,7 @@
 using HoldTheHill.Features.Combat;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// A bombardier beetle. Where it dies it leaves a boiling puddle, and towers standing in

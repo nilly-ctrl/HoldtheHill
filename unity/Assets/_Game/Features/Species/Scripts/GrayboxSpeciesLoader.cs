@@ -1,8 +1,10 @@
+using HoldTheHill.Features.Economy;
+using HoldTheHill.Features.Warden;
 using HoldTheHill.Features.Towers;
 using System;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Species
 {
     /// <summary>
     /// Sets the scene up for one species when it starts: hands the tower placer that species'

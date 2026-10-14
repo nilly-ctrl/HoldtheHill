@@ -3,7 +3,7 @@ using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// Evaluates and triggers elemental combos (Frost Shatter, Overcharged Chain, Mine Chain Reaction)

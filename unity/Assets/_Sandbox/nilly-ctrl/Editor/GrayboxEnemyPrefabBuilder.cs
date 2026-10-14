@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Hud;
 using System.Collections.Generic;
 using System.Linq;
 using HoldTheHill.Features.Combat;

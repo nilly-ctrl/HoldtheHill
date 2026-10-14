@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Save
 {
     /// <summary>
     /// Everything that outlives a play session, written as one JSON file by <see cref="GrayboxSave"/>.

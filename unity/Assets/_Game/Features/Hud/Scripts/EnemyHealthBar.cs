@@ -1,8 +1,9 @@
+using HoldTheHill.Features.GameFlow;
 using HoldTheHill.Core.Animation;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// A small health bar above an enemy, and a thinner shield bar above that when the enemy has

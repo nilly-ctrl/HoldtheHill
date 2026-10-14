@@ -1,10 +1,11 @@
+using HoldTheHill.Features.Warden;
 using HoldTheHill.Core.Animation;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// What enemies can do to a tower: stun it, web it, cocoon it, scald it, mark it, carry it off.

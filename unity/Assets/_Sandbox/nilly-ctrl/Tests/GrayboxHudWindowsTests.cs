@@ -1,4 +1,7 @@
 #if UNITY_EDITOR
+using HoldTheHill.Features.Hud;
+using HoldTheHill.Features.Progression;
+using HoldTheHill.Features.Specials;
 using System.Collections;
 using System.Collections.Generic;
 using HoldTheHill.Features.Combat;

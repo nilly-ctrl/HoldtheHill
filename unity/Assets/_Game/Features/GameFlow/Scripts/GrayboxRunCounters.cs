@@ -1,7 +1,7 @@
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.GameFlow
 {
     /// <summary>
     /// The tuning numbers for the run in progress: enemies spawned, killed and leaked, and real

@@ -2,6 +2,7 @@
 //Gemini generated code
 //10.9.2026
 
+using HoldTheHill.Features.Towers;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;

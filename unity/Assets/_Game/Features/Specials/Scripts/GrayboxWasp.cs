@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// Flies in a straight line from the burrow to the hill, and stings the first tower it

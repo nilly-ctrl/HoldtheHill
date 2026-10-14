@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Localization
 {
     /// <summary>
     /// Put one in a scene to hand a <see cref="GrayboxStringTable"/> to <see cref="GrayboxLoc"/>.

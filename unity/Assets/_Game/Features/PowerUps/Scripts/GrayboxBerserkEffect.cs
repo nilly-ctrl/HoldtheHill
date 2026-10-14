@@ -1,6 +1,7 @@
+using HoldTheHill.Features.Warden;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.PowerUps
 {
     /// <summary>
     /// Berserk Berry: while it lasts the Warden's Shove hits three times as hard, reaches

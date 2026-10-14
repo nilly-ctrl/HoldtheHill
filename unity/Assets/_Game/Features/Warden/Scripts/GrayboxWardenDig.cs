@@ -4,7 +4,7 @@ using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Towers;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Warden
 {
     /// <summary>Held, digs up a crumb of food where the Warden stands.</summary>
     [AddComponentMenu("Hold the Hill/Graybox/Warden/Dig")]

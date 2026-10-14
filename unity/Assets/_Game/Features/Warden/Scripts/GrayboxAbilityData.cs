@@ -1,6 +1,7 @@
+using HoldTheHill.Core.Input;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Warden
 {
     /// <summary>
     /// One Warden ability as the HUD and the controls screen see it: its name, its key and

@@ -1,4 +1,5 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+using HoldTheHill.Features.Warden;
 using HoldTheHill.Features.GameFlow;
 using UnityEngine;
 

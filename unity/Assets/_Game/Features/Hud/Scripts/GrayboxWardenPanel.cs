@@ -1,8 +1,11 @@
+using HoldTheHill.Core.Input;
+using HoldTheHill.Features.PowerUps;
+using HoldTheHill.Features.Warden;
 using HoldTheHill.Features.DamageNumbers;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// A strip of chips above the build bar: the Warden's health, then each ability with its key and

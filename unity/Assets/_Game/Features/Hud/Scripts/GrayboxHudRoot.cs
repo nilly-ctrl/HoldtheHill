@@ -1,7 +1,8 @@
+using HoldTheHill.Features.GameFlow;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// The in-game HUD canvas. Shows each <see cref="GrayboxHudPanel"/> under it while gameplay is

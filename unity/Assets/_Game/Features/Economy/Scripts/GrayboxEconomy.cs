@@ -1,6 +1,6 @@
 using HoldTheHill.Features.Economy;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Economy
 {
     /// <summary>
     /// The graybox wallet: a <see cref="WalletBehaviour"/> with the Food shorthands the sandbox

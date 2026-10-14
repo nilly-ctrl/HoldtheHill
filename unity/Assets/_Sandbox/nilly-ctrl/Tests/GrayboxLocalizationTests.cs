@@ -1,3 +1,5 @@
+using HoldTheHill.Core.Localization;
+using HoldTheHill.Features.Enemies;
 using System;
 using System.Collections.Generic;
 using HoldTheHill.Sandbox.NillyCtrl;

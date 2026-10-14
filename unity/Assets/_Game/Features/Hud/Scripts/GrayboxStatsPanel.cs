@@ -1,9 +1,13 @@
+using HoldTheHill.Core.Input;
+using HoldTheHill.Features.Economy;
+using HoldTheHill.Features.GameFlow;
+using HoldTheHill.Features.Progression;
 using HoldTheHill.Features.DamageNumbers;
 using HoldTheHill.Features.Enemies;
 using TMPro;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// The tuning readout in the top left corner: food and wave (when the pixel HUD is not already

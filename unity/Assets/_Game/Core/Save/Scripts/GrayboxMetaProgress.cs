@@ -1,6 +1,6 @@
 using System;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Save
 {
     /// <summary>
     /// The permanent layer of progression: a currency kept between runs and the upgrades bought

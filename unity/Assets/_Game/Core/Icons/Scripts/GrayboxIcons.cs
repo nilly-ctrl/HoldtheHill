@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Core.Icons
 {
     /// <summary>
     /// Holds the 32x32 pixel icons so HUD scripts can look them up by file name, e.g.

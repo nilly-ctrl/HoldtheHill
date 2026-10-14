@@ -1,3 +1,4 @@
+using HoldTheHill.Features.Hud;
 using HoldTheHill.Core.Animation;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Towers
 {
     /// <summary>
     /// A viewer for the weapon library (the Wpn* sets): fires the chosen weapon over and over

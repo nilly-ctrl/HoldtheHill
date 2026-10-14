@@ -5,7 +5,7 @@ using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Hud
 {
     /// <summary>
     /// A small word with its icon when a status lands on an enemy: BURN, POISON, SHOCK, FROZEN,

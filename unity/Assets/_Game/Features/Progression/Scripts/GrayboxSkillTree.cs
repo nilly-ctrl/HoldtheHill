@@ -1,9 +1,10 @@
+using HoldTheHill.Core.Save;
 using System;
 using System.Collections.Generic;
 using HoldTheHill.Features.Progression;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Progression
 {
     /// <summary>A skill node in play: its data asset and whether the player owns it yet.</summary>
     public class SkillNode

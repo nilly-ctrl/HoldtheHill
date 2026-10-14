@@ -2,7 +2,7 @@ using HoldTheHill.Features.DamageNumbers;
 using System.Collections;
 using UnityEngine;
 
-namespace HoldTheHill.Sandbox.NillyCtrl
+namespace HoldTheHill.Features.Specials
 {
     /// <summary>
     /// Boss. The queen of a red colony. She walks part of the way, stops, and digs a burrow of
