@@ -160,50 +160,20 @@ namespace HoldTheHill.Features.Enemies
         }
 
         /// <summary>
-        /// Loads the wave data for the specified map identifier.
-        /// Priority:
-        /// 1. activeMapConfigOverride (if assigned)
-        /// 2. scriptableMapConfigs matching mapId
-        /// 3. inlineMapConfigs matching mapId
+        /// Loads the wave data for the specified map identifier, by <see cref="MapWaveLookup"/>'s
+        /// priority: the override asset, then the asset list, then the inline list.
         /// </summary>
         private void LoadMapConfiguration(string mapId)
         {
-            activeWaves = new List<Wave>();
-
-            // 1. Check direct override
-            if (activeMapConfigOverride != null)
+            List<Wave> found = MapWaveLookup.Find(activeMapConfigOverride, scriptableMapConfigs, inlineMapConfigs, mapId);
+            if (found == null)
             {
-                activeWaves = activeMapConfigOverride.waves;
+                activeWaves = new List<Wave>();
+                Debug.LogWarning($"[EnemySpawner] No wave configuration found for Map ID '{mapId}'.");
                 return;
             }
 
-            // 2. Search ScriptableObject list
-            if (scriptableMapConfigs != null)
-            {
-                foreach (var config in scriptableMapConfigs)
-                {
-                    if (config != null && string.Equals(config.mapId, mapId, System.StringComparison.OrdinalIgnoreCase))
-                    {
-                        activeWaves = config.waves;
-                        return;
-                    }
-                }
-            }
-
-            // 3. Search Inline Inspector configurations
-            if (inlineMapConfigs != null)
-            {
-                foreach (var inlineConfig in inlineMapConfigs)
-                {
-                    if (inlineConfig != null && string.Equals(inlineConfig.mapId, mapId, System.StringComparison.OrdinalIgnoreCase))
-                    {
-                        activeWaves = inlineConfig.waves;
-                        return;
-                    }
-                }
-            }
-
-            Debug.LogWarning($"[EnemySpawner] No wave configuration found for Map ID '{mapId}'.");
+            activeWaves = found;
         }
 
         /// <summary>
