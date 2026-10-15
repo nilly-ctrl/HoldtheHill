@@ -16,5 +16,6 @@ until the team has chosen whose code stays; the decision column is blank until t
 | `Economy_Documentation.md` | `ResourceData`, `Wallet`, `WalletBehaviour` | none; the Indev shop reads a cost and spends nothing | |
 | `GameFlow_Documentation.md` | `GameFlowState`, `GameFlowController` | none; `SceneLoader.cs` is the nearest thing | |
 | `Placement_Documentation.md` | `TowerPlacer`, `TowerCommands`, `BuildRules`, `BuildGrid`, `IBuildBlocker`, `PathClearanceBlocker`, `PlacementGhost` | `TowerPlacer.cs` on Indev and the path's old `Blocks` rule | |
+| `TowerData_Documentation.md` | `TowerData` asset: cost, size, upgrade tiers and the modifiers towers and the placer read | `UI/TowerListScripts/TowerData.cs` on Indev (global namespace, read by the shop and card) | |
 
 Template for new ones: `_TEMPLATE_Documentation.md`. Plan: `../../docs/DOCUMENTATION_PLAN.md`.
