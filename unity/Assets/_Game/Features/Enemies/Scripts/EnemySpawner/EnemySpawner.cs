@@ -307,6 +307,23 @@ public class EnemySpawner : MonoBehaviour
     }
 
     /// <summary>
+    /// Stops any spawning and moves to the given wave (0-based) without reloading the map.
+    /// The wave does not start until <see cref="StartNextWave"/> is called.
+    /// </summary>
+    public void RestartFromWave(int waveIndex)
+    {
+        if (spawnCoroutine != null)
+        {
+            StopCoroutine(spawnCoroutine);
+            spawnCoroutine = null;
+        }
+
+        currentWaveIndex = Mathf.Clamp(waveIndex, 0, Mathf.Max(0, TotalWaves - 1));
+        currentState = currentWaveIndex == 0 ? SpawnerState.Idle : SpawnerState.WaitingForNextWave;
+        activeLivingEnemies.Clear();
+    }
+
+    /// <summary>
     /// Immediately stops any active wave spawning.
     /// </summary>
     public void StopSpawning()
