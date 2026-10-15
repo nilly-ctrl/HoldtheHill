@@ -160,7 +160,6 @@ namespace HoldTheHill.Features.Combat
             }
         }
 
-        /// <summary>Squared distance between two transforms, for cheap comparisons.</summary>
         /// <summary>
         /// Who should be credited for damage from <paramref name="source"/>. Shots and the
         /// hazards they leave are loose objects, not children of the tower that fired them,
@@ -182,6 +181,7 @@ namespace HoldTheHill.Features.Combat
             return source;
         }
 
+        /// <summary>Squared distance between two transforms, for cheap comparisons.</summary>
         public static float SqrDistance(Transform a, Transform b)
         {
             return a == null || b == null
