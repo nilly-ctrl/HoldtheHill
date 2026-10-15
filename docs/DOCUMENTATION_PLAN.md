@@ -122,3 +122,14 @@ document starts the same way and the tool knows where to write.
 Write the template and the tool's first version against `EnemyHealth`, then produce document 1 and
 show it to Jason before the other three, so the format is agreed on one example rather than argued
 over four.
+
+## How the remaining five are produced (2026-10-14)
+
+Documents 6 to 10 (Queen, Economy, GameFlow, TowerData, Placement) each run in a session of
+their own, on Opus 5.5, on a git branch of their own off `nilly/c1-player-build`:
+`nilly/docs-queen`, `nilly/docs-economy`, `nilly/docs-gameflow`, `nilly/docs-towerdata`,
+`nilly/docs-placement`. Each writes one file under `Documentation/Fork/` and nothing else; the
+index rows in `Documentation/Fork/README.md` are added when the five are merged back, so the
+branches cannot conflict. Opus 5.5 because the task is well specified by the template and five
+finished examples, needs careful reading of the code to avoid invented fields, and does not need
+the top model; Sonnet would be cheaper but the documents are what Jason judges the code by.
