@@ -3,6 +3,7 @@ using HoldTheHill.Features.Combat;
 using HoldTheHill.Features.Enemies;
 using HoldTheHill.Features.Progression;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace HoldTheHill.Features.Towers
 {
@@ -92,17 +93,17 @@ namespace HoldTheHill.Features.Towers
         /// <summary>True if this tower can be upgraded further.</summary>
         public bool CanUpgrade => Level < MaxLevel;
 
-        /// <summary>Total Gold spent to build and upgrade this tower.</summary>
-        [field: SerializeField, HideInInspector]
-        public int TotalGoldInvested { get; set; } = 100;
+        /// <summary>Total Food spent to build and upgrade this tower.</summary>
+        [field: SerializeField, HideInInspector, FormerlySerializedAs("<TotalGoldInvested>k__BackingField")]
+        public int TotalFoodInvested { get; set; } = 100;
 
-        /// <summary>Gold returned when dismantling this tower (75% to 90% return value based on Skill Tree).</summary>
+        /// <summary>Food returned when dismantling this tower (75% to 90% return value based on Skill Tree).</summary>
         public int RefundValue
         {
             get
             {
                 float pct = UpgradeModifiers.Current.RefundPercentage;
-                return Mathf.RoundToInt(TotalGoldInvested * pct);
+                return Mathf.RoundToInt(TotalFoodInvested * pct);
             }
         }
 
