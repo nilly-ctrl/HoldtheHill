@@ -12,5 +12,9 @@ until the team has chosen whose code stays; the decision column is blank until t
 | `MapWaveData_Documentation.md` | `EnemySpawnEntry`, `Wave`, `MapWaveData`, `MapWaveDataSO` | `../MapWaveData_Documentation.md` | |
 | `Combat_Documentation.md` | `IDamageable`, `IHealthReadable`, `IOwned`, `DamageInfo`, `StatusEffectData`, `CombatUtil` | none | |
 | `Towers_Documentation.md` | `Tower`, `TargetingPriority`, `TowerCredit`, `TowerWeapon` and the weapon catalogue, `Projectile`, `ProjectileFlight`, `ProjectilePool` | none for the weapons; `Tower.cs` on Indev was a range-and-cell stub | |
+| `Queen_Documentation.md` | `Queen`: the hill's health, breaches from `EnemyMover.ReachedEnd`, defeat | `Queen.cs` on Indev (health pool only) | |
+| `Economy_Documentation.md` | `ResourceData`, `Wallet`, `WalletBehaviour` | none; the Indev shop reads a cost and spends nothing | |
+| `GameFlow_Documentation.md` | `GameFlowState`, `GameFlowController` | none; `SceneLoader.cs` is the nearest thing | |
+| `Placement_Documentation.md` | `TowerPlacer`, `TowerCommands`, `BuildRules`, `BuildGrid`, `IBuildBlocker`, `PathClearanceBlocker`, `PlacementGhost` | `TowerPlacer.cs` on Indev and the path's old `Blocks` rule | |
 
 Template for new ones: `_TEMPLATE_Documentation.md`. Plan: `../../docs/DOCUMENTATION_PLAN.md`.
