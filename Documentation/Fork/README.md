@@ -11,5 +11,6 @@ until the team has chosen whose code stays; the decision column is blank until t
 | `EnemySpawner_Documentation.md` | `EnemySpawner`, `MapWaveLookup` | `../EnemySpawner_Documentation.md` | |
 | `MapWaveData_Documentation.md` | `EnemySpawnEntry`, `Wave`, `MapWaveData`, `MapWaveDataSO` | `../MapWaveData_Documentation.md` | |
 | `Combat_Documentation.md` | `IDamageable`, `IHealthReadable`, `IOwned`, `DamageInfo`, `StatusEffectData`, `CombatUtil` | none | |
+| `Towers_Documentation.md` | `Tower`, `TargetingPriority`, `TowerCredit`, `TowerWeapon` and the weapon catalogue, `Projectile`, `ProjectileFlight`, `ProjectilePool` | none for the weapons; `Tower.cs` on Indev was a range-and-cell stub | |
 
 Template for new ones: `_TEMPLATE_Documentation.md`. Plan: `../../docs/DOCUMENTATION_PLAN.md`.
