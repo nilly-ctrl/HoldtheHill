@@ -17,7 +17,7 @@ The fork's enemy is not one class but a small set of components on one GameObjec
 - **Contracts over classes**: damage arrives through `IDamageable.TakeDamage(DamageInfo)`, and `IHealthReadable` lets towers target Strongest or Weakest without knowing the concrete type.
 - **Instance plus static events**: each important moment is raised twice, once on the instance (`Hurt`, `Died`, `Arrived`) and once as a static "any enemy" event (`Damaged`, `Healed`, `StatusApplied`, `Defeated`, `ReachedEnd`) that other assemblies subscribe to without a reference.
 - **Interceptable damage**: components implementing `IIncomingDamageModifier` and an `EnemyShield` get to reduce or cancel a hit before health is touched.
-- **Pool ready**: both main components reset in `OnEnable`, and `EnemyHealth` can deactivate instead of destroy on death.
+- **Pool ready**: both main components reset in `OnEnable`, and `EnemyHealth.Despawn()` is the one exit from the scene: it deactivates instead of destroying when the flag is on, whether the enemy died or walked in.
 <!-- /prose -->
 
 ---
@@ -59,7 +59,7 @@ Status effects follow the same entry point: `IDamageable.ApplyStatusEffect(Statu
 | Field | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `_despawnDelay` | `float` | `0` | Seconds to wait before the body disappears, leaving room for a death animation. `[Min(0)]`. |
-| `_deactivateInsteadOfDestroy` | `bool` | `false` | If on, the enemy is deactivated instead of destroyed, ready for pooling. |
+| `_deactivateInsteadOfDestroy` | `bool` | `false` | If on, the enemy is deactivated instead of destroyed, ready for pooling. Applies on death and when the mover despawns it at the end of the path. |
 
 ### EnemyMover
 | Field | Type | Default | Description |
@@ -68,7 +68,7 @@ Status effects follow the same entry point: `IDamageable.ApplyStatusEffect(Statu
 | `_speed` | `float` | `1.5` | Base movement speed in world units per second, before any slows. `[Min(0.01)]`. |
 | `_arriveDistance` | `float` | `0.05` | How close counts as reaching a waypoint. `[Min(0.01)]`. |
 | `_faceTravelDirection` | `bool` | `false` | If on, the enemy turns to face the direction it is walking. |
-| `_onReachEnd` | `EndBehaviour` | `Despawn` | What happens on reaching the last waypoint: `Despawn` (disappears, as if it reached the Queen), `Stop` (stays where it is) or `Loop` (starts again from the first waypoint). |
+| `_onReachEnd` | `EndBehaviour` | `Despawn` | What happens on reaching the last waypoint: `Despawn` (leaves through `EnemyHealth.Despawn()`, as if it reached the Queen), `Stop` (stays where it is) or `Loop` (starts again from the first waypoint, raising no arrival events). |
 
 ### EnemyShield: Shield Parameters
 | Field | Type | Default | Description |
@@ -135,8 +135,8 @@ Status effects follow the same entry point: `IDamageable.ApplyStatusEffect(Statu
 | `EnemyHealth.StatusApplied` (static) | `Action<EnemyHealth, StatusEffectData>` | A status effect starts or restarts on any enemy. For visuals. |
 | `EnemyHealth.Hurt` | `Action<DamageInfo, float>` | This enemy takes a hit, just before `Damaged`. |
 | `EnemyHealth.Died` | `Action` | This enemy dies, just before `Defeated`. |
-| `EnemyMover.ReachedEnd` (static) | `Action<GameObject>` | Any enemy reaches the end of its path, right after that enemy's `Arrived`. Raised for every `EndBehaviour`, including `Loop`. |
-| `EnemyMover.Arrived` | `Action` | This enemy reaches the end of its path. |
+| `EnemyMover.ReachedEnd` (static) | `Action<GameObject>` | Any enemy reaches the end of its path and stops or despawns there, right after that enemy's `Arrived`. Not raised by a looping enemy. |
+| `EnemyMover.Arrived` | `Action` | This enemy reaches the end of its path and stops or despawns there. Not raised by a looping enemy. |
 | `EnemyHealer.Pulsed` | `Action` | Every heal pulse, whether or not anyone needed healing. For visuals. |
 
 ### Public Methods
@@ -149,6 +149,9 @@ Applies a damage-over-time and/or slow. Re-applying an effect with the same `Eff
 
 #### `void Heal(float amount)` (EnemyHealth)
 Heals the enemy, never above its maximum. Does nothing once dead or for amounts of zero or less; raises `Healed` only if health actually rose.
+
+#### `void Despawn()` (EnemyHealth)
+Takes the enemy out of the scene at once: `SetActive(false)` when `_deactivateInsteadOfDestroy` is on, `Destroy(gameObject)` otherwise. Raises no `Died` or `Defeated` and pays no bounty; death goes through `TakeDamage`. The mover calls it for `EndBehaviour.Despawn`, and death calls it after `_despawnDelay`.
 
 #### `void SnapToStart()` (EnemyMover)
 Drops the enemy on the first waypoint and aims it at the second, resetting `DistanceTravelled` and the finished flag. Finds the path if the field is empty. The spawner calls this when it spawns.
@@ -186,7 +189,8 @@ Returns the damage that should carry on, given the hit as it stands. Returning z
 - **Update**: `EnemyMover` returns early when finished, pathless, or when its `EnemyHealth` is dead, so a dying enemy stops while a death animation plays. Otherwise it moves `_speed * SpeedMultiplier * SpeedScale * Time.deltaTime` toward the current waypoint, keeps z, adds the distance moved to `DistanceTravelled`, optionally rotates to face travel, and advances the index within `_arriveDistance`. Once the index runs past the last waypoint it calls the end-of-path behaviour. `EnemyShield` regenerates after `_regenDelay`. `EnemyHealer` counts down and pulses.
 - **OnDisable**: `EnemyHealth` stops all coroutines and clears effects. `EnemySplitter` unsubscribes.
 - **Static state**: `EnemyHealth.Defeated`, `Damaged`, `Healed`, `StatusApplied` and `EnemyMover.ReachedEnd` are cleared in a `[RuntimeInitializeOnLoadMethod(SubsystemRegistration)]` method on each class, so listeners never outlive a Play session when domain reload is off.
-- **Despawn versus deactivate**: on death `EnemyHealth` marks `IsDead`, stops coroutines, raises `Died` then `Defeated`, waits `_despawnDelay` if above zero, then either `SetActive(false)` (when `_deactivateInsteadOfDestroy` is on) or `Destroy(gameObject)`. Reaching the end of the path with `EndBehaviour.Despawn` always calls `Destroy(gameObject)` from `EnemyMover`; the deactivate flag applies to death only.
+- **Despawn versus deactivate**: on death `EnemyHealth` marks `IsDead`, stops coroutines, raises `Died` then `Defeated`, waits `_despawnDelay` if above zero, then either `SetActive(false)` (when `_deactivateInsteadOfDestroy` is on) or `Destroy(gameObject)`. Reaching the end of the path with `EndBehaviour.Despawn` goes through the same `EnemyHealth.Despawn()` (at once, with no `Died` or `Defeated`), so the flag means the same on both exits; only when the object has no `EnemyHealth` does the mover `Destroy` it itself.
+- **End of path**: `Loop` snaps back to the first waypoint and raises nothing. `Stop` and `Despawn` raise `Arrived` then `ReachedEnd`, set `HasFinished`, and `Despawn` then removes the enemy. See `docs/ENEMY_END_OF_PATH_NOTE.md`.
 <!-- /prose -->
 
 ---
@@ -195,7 +199,7 @@ Returns the damage that should carry on, given the hit as it stands. Returning z
 
 <!-- prose:integration -->
 ### With `EnemySpawner.cs`
-`Spawn(prefab)` instantiates at the default spawn point and calls `EnemyMover.SnapToStart()`; `Spawn(prefab, position, rotation, snapToStart)` does the same at a given position, and both call `Track(enemy)` to add it to the living count and raise `onEnemySpawned`. The spawner subscribes in `OnEnable` to `EnemyHealth.Defeated` (removing the enemy from the living count) and `EnemyMover.ReachedEnd` (removing it too, but only when the enemy has no `EnemyMover` or `DespawnsAtEnd` is true, so a looping test enemy stays counted).
+`Spawn(prefab)` instantiates at the default spawn point and calls `EnemyMover.SnapToStart()`; `Spawn(prefab, position, rotation, snapToStart)` does the same at a given position, and both call `Track(enemy)` to add it to the living count and raise `onEnemySpawned`. The spawner subscribes in `OnEnable` to `EnemyHealth.Defeated` (removing the enemy from the living count) and `EnemyMover.ReachedEnd` (removing it too, but only when the enemy has no `EnemyMover` or `DespawnsAtEnd` is true, so a thief ant that stops at the hill stays counted; a looping enemy never raises the event).
 
 ### With `Queen.cs`
 The Queen subscribes to `EnemyMover.ReachedEnd`. For an enemy whose mover despawns at the end, she reads `EnemyHealth.BreachDamage` and takes that much damage at the enemy's position; zero breach damage is ignored. Nothing on the enemy references the Queen.

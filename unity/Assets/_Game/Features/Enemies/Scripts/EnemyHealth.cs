@@ -289,7 +289,13 @@ namespace HoldTheHill.Features.Enemies
             Despawn();
         }
 
-        private void Despawn()
+        /// <summary>
+        /// Takes the enemy out of the scene at once: deactivated when
+        /// <c>Deactivate Instead Of Destroy</c> is on, destroyed otherwise. Raises no
+        /// <see cref="Died"/> or <see cref="Defeated"/> and pays no bounty; death goes through
+        /// <see cref="TakeDamage"/>. <see cref="EnemyMover"/> calls this when the enemy walks in.
+        /// </summary>
+        public void Despawn()
         {
             if (_deactivateInsteadOfDestroy)
             {

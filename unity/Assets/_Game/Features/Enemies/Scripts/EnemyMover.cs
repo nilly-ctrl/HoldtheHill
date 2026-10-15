@@ -31,13 +31,19 @@ namespace HoldTheHill.Features.Enemies
         /// <summary>What an enemy does once it runs out of path.</summary>
         public enum EndBehaviour
         {
-            /// <summary>Disappears, as if it reached the Queen.</summary>
+            /// <summary>
+            /// Disappears, as if it reached the Queen. <see cref="EnemyHealth.Despawn"/> decides
+            /// whether that means deactivated (for a pool) or destroyed.
+            /// </summary>
             Despawn,
 
             /// <summary>Stops where it is. Handy in a test scene.</summary>
             Stop,
 
-            /// <summary>Starts again from the first waypoint, for endless testing.</summary>
+            /// <summary>
+            /// Starts again from the first waypoint, for endless testing. A lap is not an arrival:
+            /// neither <see cref="Arrived"/> nor <see cref="ReachedEnd"/> is raised.
+            /// </summary>
             Loop
         }
 
@@ -241,13 +247,20 @@ namespace HoldTheHill.Features.Enemies
             ReachEnd();
         }
 
-        /// <summary>Raised whenever any enemy reaches the end of its path.</summary>
+        /// <summary>
+        /// Raised whenever any enemy reaches the end of its path and stops or despawns there.
+        /// Not raised by a looping enemy. Listeners check <see cref="DespawnsAtEnd"/> to tell a
+        /// breach from an enemy that only stops at the hill.
+        /// </summary>
         public static event System.Action<GameObject> ReachedEnd;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => ReachedEnd = null;
 
-        /// <summary>Raised when this enemy reaches the end of its path, just before <see cref="ReachedEnd"/>.</summary>
+        /// <summary>
+        /// Raised when this enemy reaches the end of its path, just before <see cref="ReachedEnd"/>.
+        /// Not raised by a looping enemy.
+        /// </summary>
         public event System.Action Arrived;
 
         /// <summary>True if this enemy is removed when it reaches the end, rather than looping or stopping.</summary>
@@ -255,23 +268,35 @@ namespace HoldTheHill.Features.Enemies
 
         private void ReachEnd()
         {
+            if (_onReachEnd == EndBehaviour.Loop)
+            {
+                // A lap of a test loop is not an arrival: nothing breached and nothing is gone,
+                // so the spawner, the Queen and the animator hear nothing.
+                SnapToStart();
+                return;
+            }
+
             Arrived?.Invoke();
             ReachedEnd?.Invoke(gameObject);
+            _finished = true;
 
-            switch (_onReachEnd)
+            if (_onReachEnd == EndBehaviour.Despawn)
             {
-                case EndBehaviour.Loop:
-                    SnapToStart();
-                    break;
+                Remove();
+            }
+        }
 
-                case EndBehaviour.Stop:
-                    _finished = true;
-                    break;
-
-                default:
-                    _finished = true;
-                    Destroy(gameObject);
-                    break;
+        // How an enemy leaves the scene is EnemyHealth's call (deactivate for a pool, or destroy),
+        // so a pooled enemy that walks in comes back the same way as one that died.
+        private void Remove()
+        {
+            if (_health != null)
+            {
+                _health.Despawn();
+            }
+            else
+            {
+                Destroy(gameObject);
             }
         }
     }
